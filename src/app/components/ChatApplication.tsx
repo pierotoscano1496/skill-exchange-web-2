@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Client, Message } from "@stomp/stompjs";
-import { cookies } from "next/headers";
+import { getCookieParam, removeCookieParam } from "@/utils/cookieManager";
+//import { cookies } from "next/headers";
 
 interface ChatProps {
     roomId: string
@@ -14,18 +15,19 @@ interface Mensaje {
 }
 
 const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
-    const [socketUrl, webSocketUrl] = useState("ws://localhost:9081/api/websockets");
     const [mensaje, setMensaje] = useState("");
     const [messageHistory, setMessageHistory] = useState<Mensaje[]>([]);
     const [connected, setConnected] = useState<boolean>(false);
-    //const [stompClient, setStompClient] = useState<Client | null>(null);
-    let stompClient: Client;
+    const [stompClient, setStompClient] = useState<Client | null>(null);
+    //let stompClient: Client;
 
     useEffect(() => {
-        const socket = new WebSocket(socketUrl);
-        const token=cookies.
+        const token = getCookieParam("token");
+        const socket = new WebSocket(`ws://localhost:9081/api/websockets?token=${token}`);
+
+        /*
         stompClient = new Client({
-            brokerURL: `ws://localhost:9081/api/websockets?token=${}`
+            brokerURL: `ws://localhost:9081/api/websockets?token=${token}`
         });
 
         stompClient.onConnect = (frame) => {
@@ -44,14 +46,14 @@ const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
         stompClient.onStompError = (frame) => {
             console.error('Error de broker: ' + frame.headers['message']);
             console.error('Detalles adicionales: ' + frame.body);
-        };
+        }; */
 
-        /* const stomp = new Client({
+        const stomp = new Client({
             webSocketFactory: () => socket,
             debug: (str: string) => console.log(str),
             reconnectDelay: 5000
         });
-        
+
         stomp.onConnect = () => {
             stomp.subscribe(`/topic/mensajes/${roomId}`, (message: Message) => {
                 const newMessage: Mensaje = JSON.parse(message.body as string);
@@ -67,7 +69,7 @@ const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
             if (stomp.active) {
                 stomp.deactivate();
             }
-        }; */
+        };
     }, [roomId]);
 
 
@@ -80,9 +82,9 @@ const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
             });
             setMensaje("");
         } */
-        stompClient.publish({
+        stompClient!.publish({
             destination: `/app/chat/${roomId}`,
-            body: JSON.stringify({ nombre: 'Usuario', contenido: mensaje })
+            body: JSON.stringify({ user: 'Usuario', message: mensaje })
         });
     };
 
@@ -102,6 +104,8 @@ const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
                 placeholder="Escribe tu mensaje..."
             />
             <button onClick={enviarMensaje}>Enviar</button>
+
+            <button onClick={() => removeCookieParam("valor")}>Quitar cookie</button>
         </div>
     );
 };

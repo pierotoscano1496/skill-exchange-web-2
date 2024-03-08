@@ -29,3 +29,32 @@ export async function GET(req: NextRequest) {
     });
 
 }
+
+export async function POST(req: NextRequest) {
+    const data = await req.json();
+    const token = data.token;
+
+    if (token) {
+        const response = await fetch("http://localhost:9081/api/usuario", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        if (response.status === 200) {
+            const usuario: Usuario = await response.json() as Usuario;
+
+            return new Response(JSON.stringify(usuario), {
+                status: 200
+            });
+        }
+
+        return new Response("Usuario no autenticado", {
+            status: 404
+        });
+    }
+
+    return new Response("Usuario no autorizado", {
+        status: 401
+    });
+}

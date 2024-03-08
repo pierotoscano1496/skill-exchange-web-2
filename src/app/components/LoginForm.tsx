@@ -1,32 +1,46 @@
 "use client";
 
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const LoginForm: React.FC = () => {
-    const [correo, setCorreo] = useState("");
-    const [contrasena, setContrasena] = useState("");
+    const [correo, setCorreo] = useState<string>("");
+    const [contrasena, setContrasena] = useState<string>("");
+    const [csrfToken, setCsrfToken] = useState<string>();
     const router = useRouter();
 
+    useEffect(() => {
+        getCsrfToken();
+    }, []);
+
+    const getCsrfToken = async () => {
+        const res = await axios.get("/api/csrf");
+        setCsrfToken(res.data);
+    }
+
     const login = async () => {
-        const response = await fetch("/api/login", {
+        const response = await axios.post("/api/login", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "XSRF-TOKEN": csrfToken
             },
             body: JSON.stringify({
                 correo,
-                contrasena
+                contrasena,
+                csrfToken
             })
         });
 
         if (response.status === 200) {
             // Guardar token
-            const bearerToken = response.headers.get("Authorization")!!;
+            const bearerToken = response.headers["Authorization"]!!;
 
             const duracion = 60 * 60 * 1000;
 
-            document.cookie = `token="${bearerToken.replace("Bearer ", "")}`;
+            document.cookie = `token=${bearerToken.replace("Bearer ", "")}`;
             /* cookiesStorage.set("token", bearerToken.replace("Bearer ", ""), {
                 expires: duracion
             }); */
