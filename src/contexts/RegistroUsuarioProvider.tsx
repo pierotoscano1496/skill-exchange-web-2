@@ -143,7 +143,7 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
         })
     };
 
-    const removeSkill = (id: number) => {
+    const removeSkill = (id: string) => {
         let skills = [...usuarioDatos.skills];
         skills.splice(skills.findIndex(s => s.id === id));
 
@@ -190,7 +190,13 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
             setTipoRegistro,
             setCorreo,
             setClave,
-
+            setIntroduccion,
+            setPerfilFacebook,
+            setPerfilInstagram,
+            setPerfilLinkedin,
+            setPerfilTiktok,
+            addSkill,
+            removeSkill,
             validateRegistroUsuario,
             validateRegistroDatosContacto,
             validateRegistroSkills

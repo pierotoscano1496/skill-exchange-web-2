@@ -22,7 +22,7 @@ interface RegistroUsuarioContextType {
     setPerfilLinkedin: (perfilLinkedin: string) => void,
     setPerfilTiktok: (perfilTiktok: string) => void,
     addSkill: (skill: RegistroSkill) => void,
-    removeSkill: (id: number) => void,
+    removeSkill: (id: string) => void,
     validateRegistroUsuario: () => boolean,
     validateRegistroDatosContacto: () => boolean,
     validateRegistroSkills: () => boolean
