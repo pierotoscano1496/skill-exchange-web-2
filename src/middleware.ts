@@ -1,12 +1,13 @@
-import { estadoSesion } from "@/utils/auth";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 const protectedRoute = ["/middlewareside", "/chats", "/clientsidehoc"];
 
 export function middleware(req: NextRequest) {
-    const token = req.headers.get("Authorization")!!;
+    const cookiesStore = cookies();
+    const bearerTokenFromCookies = cookiesStore.get("bearertoken")?.value;
 
-    if (!token && protectedRoute.includes(req.nextUrl.pathname)) {
+    if (!bearerTokenFromCookies && protectedRoute.includes(req.nextUrl.pathname)) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 

@@ -1,37 +1,46 @@
 "use client";
 
-import axios from "axios";
+import UsuarioCredenciales from "@/interfaces/requestbody/UsuarioCredenciales";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const LoginForm: React.FC = () => {
     const [correo, setCorreo] = useState<string>("");
     const [contrasena, setContrasena] = useState<string>("");
-    const [csrfToken, setCsrfToken] = useState<string>();
     const router = useRouter();
 
-    useEffect(() => {
-        getCsrfToken();
-    }, []);
-
-    const getCsrfToken = async () => {
-        const res = await axios.get("/api/csrf");
-        setCsrfToken(res.data);
-    }
-
     const login = async () => {
+        try {
+            const response = await axios.post("/api/login", {
+                correo,
+                contrasena
+            });
+
+            alert(response.data);
+
+
+
+            router.push("/middlewareside");
+        } catch (error) {
+            const err = error as AxiosError;
+            alert(err.message)
+        }
+
+
+
+        /* const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append(csrfData!.headerName, csrfData!.token);
+        
         const response = await axios.post("/api/login", {
-            method: "POST",
+            correo,
+            contrasena
+        }, {
             headers: {
                 "Content-Type": "application/json",
-                "Accept": "application/json",
-                "XSRF-TOKEN": csrfToken
-            },
-            body: JSON.stringify({
-                correo,
-                contrasena,
-                csrfToken
-            })
+                "X-XSRF-TOKEN": csrfData!.token
+            }
         });
 
         if (response.status === 200) {
@@ -41,12 +50,8 @@ const LoginForm: React.FC = () => {
             const duracion = 60 * 60 * 1000;
 
             document.cookie = `token=${bearerToken.replace("Bearer ", "")}`;
-            /* cookiesStorage.set("token", bearerToken.replace("Bearer ", ""), {
-                expires: duracion
-            }); */
-            //localStorage.setItem("token", bearerToken.replace("Bearer ", ""));
             router.push("/middlewareside");
-        }
+        } */
     }
 
     return (

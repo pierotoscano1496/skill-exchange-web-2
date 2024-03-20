@@ -6,7 +6,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
     if (response.ok) {
         const data = await response.json() as CsrfData;
-        return new Response(data.token);
+        return NextResponse.json(data);
     }
 
     return new Response("Error de solicitud", {

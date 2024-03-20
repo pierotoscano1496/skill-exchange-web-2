@@ -1,33 +1,37 @@
 import Usuario from "@/interfaces/Usuario";
+import UsuarioApiTools from "@/utils/apitools/UsuarioApiTools";
+import { JWT_COOKIE_TOKEN_NAME } from "@/utils/constants";
+import axios, { AxiosInstance } from "axios";
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
-    const token = req.cookies.get("Authorization")?.value;
+const axiosInstance: AxiosInstance = axios.create({
+    baseURL: `http://localhost:9081/api`,
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
 
-    if (token) {
-        const response = await fetch("http://localhost:9081/api/usuario", {
+export async function GET(req: NextRequest) {
+    try {
+        const cookiesStore = cookies();
+        const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
+
+        const response = await axiosInstance.get("/usuario", {
             headers: {
-                "Authorization": "Bearer " + token
+                "Authorization": `Bearer ${bearerToken}`
             }
         });
 
-        if (response.status === 200) {
-            const usuario: Usuario = await response.json() as Usuario;
+        const usuario = response.data;
 
-            return new Response(JSON.stringify(usuario), {
-                status: 200
-            });
-        }
-
+        return new Response(JSON.stringify(usuario));
+    } catch (error) {
         return new Response("Usuario no autenticado", {
             status: 404
         });
     }
-
-    return new Response("Usuario no autorizado", {
-        status: 401
-    });
-
 }
 
 export async function POST(req: NextRequest) {

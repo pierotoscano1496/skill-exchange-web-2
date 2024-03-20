@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, TikTokEmbed, TwitterEmbed, YouTubeEmbed } from "react-social-media-embed";
@@ -8,6 +9,7 @@ import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, TikTokEmbed, TwitterEmbed
 const SocialMediaForm: React.FC = () => {
     const [socialMediaLink, setSocialMediaLink] = useState('');
     const [preview, setPreview] = useState('');
+    const route = useRouter()
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSocialMediaLink(event.target.value);
@@ -46,6 +48,10 @@ const SocialMediaForm: React.FC = () => {
         return match && match[1];
     };
 
+    const goToLogin = () => {
+        route.push("/login")
+    }
+
     return (
         <div>
             <label>Enlace de la publicación:</label>
@@ -55,6 +61,8 @@ const SocialMediaForm: React.FC = () => {
             <div>
                 {renderPreview()}
             </div>
+
+            <button onClick={goToLogin}>Login</button>
         </div>
     );
 }

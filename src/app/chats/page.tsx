@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation"
 import React from "react";
-import ChatApplication from "../components/ChatApplication";
-import PanelNavigation from "@/app/components/PanelNavigation";
+import ChatApplication from "../../components/ChatApplication";
+import PanelNavigation from "@/components/PanelNavigation";
 
 const Chats = () => {
     return (

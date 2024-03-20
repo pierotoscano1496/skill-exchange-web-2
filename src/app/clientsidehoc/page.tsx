@@ -1,7 +1,7 @@
 "use client";
 
-import PanelNavigation from "@/app/components/PanelNavigation";
-import withAuth from "@/app/components/WithAuth";
+import PanelNavigation from "@/components/PanelNavigation";
+import withAuth from "@/components/WithAuth";
 
 const ClientSideHOC = () => {
     return (
