@@ -7,12 +7,18 @@ import { TipoDocumento, TipoRegistroUsuario } from "@/utils/types";
 import Skill from "@/interfaces/models/Skill";
 import SkillUsuario from "@/interfaces/models/SkillUsuario";
 import { RegistroSkill } from "@/interfaces/registro-usuario/RegistroSkill";
+import axios from "axios";
+import AsignacionSkillToUsuarioRequest from "@/interfaces/requestbody/AsignacionSkillToUsuarioRequest";
+import UsuarioSkillsAsignadosResponse from "@/interfaces/responsebody/usuario/UsuarioSkillsAsignadosResponse";
+import CreateUsuarioBody from "@/interfaces/requestbody/CreateUsuarioBody";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 
 export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const fechaNacimientoMax = new Date();
     fechaNacimientoMax.setFullYear(fechaNacimientoMax.getFullYear() - 18);
 
     const [usuarioDatos, setUsuarioDatos] = useState<RegistroUsuarioBodySkills>({
+        id: "",
         dni: "",
         carnetExtranjeria: "",
         tipoDocumento: undefined,
@@ -178,6 +184,43 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
         return usuarioDatos.skills.length > 0;
     };
 
+    const registrarUsuarioAndSkills = async () => {
+        const usuarioBodyRequest: CreateUsuarioBody = {
+            dni: usuarioDatos.dni!,
+            tipo: usuarioDatos.tipo!,
+            tipoDocumento: usuarioDatos.tipoDocumento!,
+            nombres: usuarioDatos.nombres!,
+            apellidos: usuarioDatos.apellidos!,
+            carnetExtranjeria: usuarioDatos.carnetExtranjeria!,
+            correo: usuarioDatos.correo!,
+            clave: usuarioDatos.clave!,
+            fechaNacimiento: usuarioDatos.fechaNacimiento!,
+            introduccion: usuarioDatos.introduccion!,
+            perfilFacebook: usuarioDatos.perfilFacebook!,
+            perfilInstagram: usuarioDatos.perfilInstagram!,
+            perfilLinkedin: usuarioDatos.perfilLinkedin!,
+            perfilTiktok: usuarioDatos.perfilTiktok!
+        };
+        const responseUsuarioRegistered = await axios.post(`/api/usuario`, usuarioBodyRequest);
+
+        const { id } = responseUsuarioRegistered.data as UsuarioRegisteredResponse;
+
+        setUsuarioDatos({
+            ...usuarioDatos,
+            id
+        });
+
+        const responseSkillsAsignados = await axios.patch(`api/usuario/skills/${usuarioDatos.id}`, usuarioDatos.skills.map(s => ({
+            idSkill: s.id,
+            descripcion: s.desempeno,
+            nivelConocimiento: s.nivelConocimiento
+        })) as AsignacionSkillToUsuarioRequest[]);
+
+        const { skillsAsignados } = responseSkillsAsignados.data as UsuarioSkillsAsignadosResponse;
+
+        return { id, skillsAsignados }
+    }
+
     return (
         <RegistroUsuarioContext.Provider value={{
             usuarioDatos,
@@ -199,7 +242,8 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
             removeSkill,
             validateRegistroUsuario,
             validateRegistroDatosContacto,
-            validateRegistroSkills
+            validateRegistroSkills,
+            registrarUsuarioAndSkills
         }}>
             {children}
         </RegistroUsuarioContext.Provider>

@@ -3,6 +3,7 @@ import SkillUsuario from "../models/SkillUsuario";
 import { RegistroSkill } from "./RegistroSkill";
 
 export interface RegistroUsuarioBodyFirstStep {
+    id?: string;
     dni?: string;
     carnetExtranjeria?: string;
     tipoDocumento?: TipoDocumento;

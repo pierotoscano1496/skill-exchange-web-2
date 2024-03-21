@@ -2,6 +2,7 @@
 
 import { RegistroSkill } from "@/interfaces/registro-usuario/RegistroSkill";
 import { RegistroUsuarioBodySkills } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
+import SkillAsignado from "@/interfaces/responsebody/usuario/SkillAsignado";
 import { TipoRegistroUsuario } from "@/utils/types";
 import React from "react";
 
@@ -25,7 +26,11 @@ interface RegistroUsuarioContextType {
     removeSkill: (id: string) => void,
     validateRegistroUsuario: () => boolean,
     validateRegistroDatosContacto: () => boolean,
-    validateRegistroSkills: () => boolean
+    validateRegistroSkills: () => boolean,
+    registrarUsuarioAndSkills: () => Promise<{
+        id: string;
+        skillsAsignados: SkillAsignado[];
+    }>
 };
 
 export const RegistroUsuarioContext = React.createContext<RegistroUsuarioContextType>({} as RegistroUsuarioContextType);

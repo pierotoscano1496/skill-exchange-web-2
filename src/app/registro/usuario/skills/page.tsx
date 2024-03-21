@@ -4,7 +4,6 @@ import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import Categoria from "@/interfaces/models/Categoria";
 import Skill from "@/interfaces/models/Skill";
 import SubCategoria from "@/interfaces/models/SubCategoria";
-import { RegistroSkill } from "@/interfaces/registro-usuario/RegistroSkill";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -13,6 +12,7 @@ const RegistroUsuarioSkills = () => {
         usuarioDatos,
         addSkill,
         removeSkill,
+        registrarUsuarioAndSkills,
     } = useRegistroUsuarioContext();
 
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -64,6 +64,13 @@ const RegistroUsuarioSkills = () => {
             desempeno: comentarioDesempeno,
             nivelConocimiento
         })
+    }
+
+    const finalizarRegistro = async () => {
+        const data = await registrarUsuarioAndSkills();
+        if (data) {
+            alert("éxito al registrarse")
+        }
     }
 
     return (
@@ -126,6 +133,7 @@ const RegistroUsuarioSkills = () => {
                     }
                 </div>
             </div>
+            <button onClick={finalizarRegistro}>Finalizar</button>
         </div>
     )
 }
