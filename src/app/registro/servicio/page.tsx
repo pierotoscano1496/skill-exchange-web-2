@@ -2,12 +2,13 @@
 
 import ModalidadPagoForm from "@/components/registro-servicio/ModalidadPagoForm";
 import RecursoMultimediaForm from "@/components/registro-servicio/RecursoMultimediaForm";
-import Skill from "@/interfaces/models/Skill";
 import AsignacionMedioPago from "@/interfaces/registro-servicio/AsignacionMedioPago";
 import AsignacionRecursoMultimedia from "@/interfaces/registro-servicio/AsignacionRecursoMultimedia";
-import { TipoModalidadPago } from "@/utils/types";
-import axios from "axios";
-import { list } from "postcss";
+import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicioBody";
+import ModalidadPagoBody from "@/interfaces/requestbody/servicio/ModalidadPagoBody";
+import ServicioRegisteredResponse from "@/interfaces/responsebody/servicio/ServicioRegisteredResponse";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react"
 
 type SkillOption = {
@@ -16,6 +17,7 @@ type SkillOption = {
 };
 
 const RegistroSevicio = () => {
+    const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
     const [titulo, setTitulo] = useState<string>("");
     const [precio, setPrecio] = useState<number>(0);
     const [descripcion, setDescripcion] = useState<string>("");
@@ -29,7 +31,13 @@ const RegistroSevicio = () => {
     useEffect(() => {
         //Obtener skills registrados del usuario
         obtenerSkillsFromUsuario();
+        obtenerDatosUsuario();
     }, []);
+
+    const obtenerDatosUsuario = async () => {
+        const response = await axios.get("/api/usuario");
+        setUsuario(response.data as UsuarioRegisteredResponse);
+    }
 
     const obtenerSkillsFromUsuario = async () => {
         const response = await axios.get(`/api/usuario/skills`);
@@ -38,7 +46,7 @@ const RegistroSevicio = () => {
 
     const addRecursoMultimedia = (recursoMultimedia: AsignacionRecursoMultimedia) => {
         let listRecursosMultimediaCopy = [...listRecursosMultimedia];
-        listRecursosMultimediaCopy.push(recursoMultimedia)
+        listRecursosMultimediaCopy.push(recursoMultimedia);
         setListRecursosMultimedia(listRecursosMultimediaCopy);
     };
 
@@ -77,6 +85,41 @@ const RegistroSevicio = () => {
 
     const goToEditMedioPago = (medioPago: AsignacionMedioPago) => {
 
+    }
+
+    const registrarServicio = async () => {
+        try {
+
+            const servicio: CreateServicioBody = {
+                descripcion,
+                idSkill: skill!.id,
+                idUsuario: usuario!.id,
+                precio,
+                titulo,
+                modalidadesPago: listMediosPago.map(m => {
+                    return {
+                        cuentaBancaria: m.cci,
+                        numeroCelular: m.celular,
+                        tipo: m.tipo
+                    }
+                }),
+                recursosMultimedia: listRecursosMultimedia.map(r => {
+                    return {
+                        medio: r.medio,
+                        url: r.url
+                    }
+                })
+            };
+
+            const response = await axios.post("/api/servicio");
+            const servicioRegistrado: ServicioRegisteredResponse = response.data as ServicioRegisteredResponse;
+            if (servicioRegistrado) {
+                alert("Éxito a registrar el servicio");
+            }
+        } catch (error) {
+            const err = error as AxiosError;
+            alert(err.message);
+        }
     }
 
     return (
@@ -179,8 +222,11 @@ const RegistroSevicio = () => {
                     </table>
                 </div>
             </div>
+            <button onClick={registrarServicio}>Registrar</button>
             <ModalidadPagoForm show={openModalMedioPago} sendModalidadPagoToParent={(modalidadPago) => addModalidadPago(modalidadPago)} />
             <RecursoMultimediaForm show={openModalRecursoMultimedia} sendRecursoMultimediaToParent={(recursoMultimedia) => addRecursoMultimedia(recursoMultimedia)} />
         </>
     )
-}
+};
+
+export default RegistroSevicio;
