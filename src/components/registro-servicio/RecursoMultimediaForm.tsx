@@ -41,8 +41,11 @@ const RecursoMultimediaForm = ({ show, sendRecursoMultimediaToParent }: {
             <div>
                 <h2>Añade contenido a tu servicio</h2>
                 <div className="tabs-content">
-                    <div className={`tab ${openTabPlataforma && "active"}`}>
-                        <div>
+                    <div className="tab" onClick={() => {
+                        setOpenTabPlataforma(true);
+                        setOpenTabArchivo(false);
+                    }}>
+                        <div className={`${openTabPlataforma && "active"}`}>
                             <label>Link:
                                 <input type="url"
                                     value={linkPost}
@@ -55,12 +58,16 @@ const RecursoMultimediaForm = ({ show, sendRecursoMultimediaToParent }: {
                         </div>
                     </div>
 
-                    <div className={`tab ${openTabArchivo && "active"}`}>
-                        <div>
+                    <div className="tab" onClick={() => {
+                        setOpenTabArchivo(true);
+                        setOpenTabPlataforma(false);
+                    }}>
+                        <div className={`${openTabArchivo && "active"}`}>
                             <p>Seleccione un archivo:</p>
                             <DragAndDrop sendFileHandler={(file) => {
                                 setArchivo(file);
-                                setMedio()
+                            }} sendMedio={(medioArchivo) => {
+                                setMedio(medioArchivo);
                             }} />
                             <button onClick={() => addRecursoMultimedia("archivo")}>Añadir</button>
                         </div>

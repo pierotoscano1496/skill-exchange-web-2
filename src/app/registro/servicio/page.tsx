@@ -1,6 +1,7 @@
 "use client";
 
 import ModalidadPagoForm from "@/components/registro-servicio/ModalidadPagoForm";
+import RecursoMultimediaForm from "@/components/registro-servicio/RecursoMultimediaForm";
 import Skill from "@/interfaces/models/Skill";
 import AsignacionMedioPago from "@/interfaces/registro-servicio/AsignacionMedioPago";
 import AsignacionRecursoMultimedia from "@/interfaces/registro-servicio/AsignacionRecursoMultimedia";
@@ -23,6 +24,7 @@ const RegistroSevicio = () => {
     const [listRecursosMultimedia, setListRecursosMultimedia] = useState<AsignacionRecursoMultimedia[]>([]);
     const [listMediosPago, setListMediosPago] = useState<AsignacionMedioPago[]>([]);
     const [openModalMedioPago, setOpenModalMedioPago] = useState<boolean>(false);
+    const [openModalRecursoMultimedia, setOpenModalRecursoMultimedia] = useState<boolean>(false);
 
     useEffect(() => {
         //Obtener skills registrados del usuario
@@ -109,8 +111,8 @@ const RegistroSevicio = () => {
                     </label>
                 </div>
                 <div>
-                    <button>Añadir método de pago</button>
-                    <button>Añadir contenido</button>
+                    <button onClick={() => setOpenModalMedioPago(true)}>Añadir método de pago</button>
+                    <button onClick={() => setOpenModalRecursoMultimedia(true)}>Añadir contenido</button>
                 </div>
                 <div>
                     <label>Habilidad a desempeñar:
@@ -178,6 +180,7 @@ const RegistroSevicio = () => {
                 </div>
             </div>
             <ModalidadPagoForm show={openModalMedioPago} sendModalidadPagoToParent={(modalidadPago) => addModalidadPago(modalidadPago)} />
+            <RecursoMultimediaForm show={openModalRecursoMultimedia} sendRecursoMultimediaToParent={(recursoMultimedia) => addRecursoMultimedia(recursoMultimedia)} />
         </>
     )
 }

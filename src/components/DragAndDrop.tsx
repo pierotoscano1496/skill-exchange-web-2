@@ -1,19 +1,11 @@
+import { MedioRecursoMultimedia } from "@/utils/types";
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-const DragAndDrop = ({ sendFileHandler }: {
-    sendFileHandler: (file: File) => void
+const DragAndDrop = ({ sendFileHandler, sendMedio }: {
+    sendFileHandler: (file: File) => void,
+    sendMedio: (medio: MedioRecursoMultimedia) => void
 }) => {
-    /* const [archivo, setArchivo] = useState<File>();
-
-    const handleOnChange = (e: React.FormEvent<HTMLInputElement>) => {
-        const target = e.target as HTMLInputElement & {
-            files: FileList
-        };
-
-        setArchivo(target.files[0]);
-    } */
-
     const {
         acceptedFiles,
         fileRejections,
@@ -21,7 +13,15 @@ const DragAndDrop = ({ sendFileHandler }: {
         getInputProps
     } = useDropzone({
         onDrop: (acceptedFiles) => {
-            sendFileHandler(acceptedFiles[0]);
+            const archivo: File = acceptedFiles[0];
+            sendFileHandler(archivo);
+
+            const tipoArchivo = archivo.name.split(".").slice(-1)[0];
+            if (tipoArchivo.toLowerCase() in ["mp4", "mov", "wmv", "avi"]) {
+                sendMedio("video");
+            } else if (tipoArchivo.toLowerCase() in ["jpg", "jpeg", "png", "bmp", "gif"]) {
+                sendMedio("imagen")
+            }
         },
         maxFiles: 1
     });
@@ -49,7 +49,6 @@ const DragAndDrop = ({ sendFileHandler }: {
             <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
                 <p>Arrastre un archivo o haga click para elegir uno</p>
-                {/* <em>(2 files are the maximum number of files you can drop here)</em> */}
             </div>
             <aside>
                 <h4>Archivos:</h4>
