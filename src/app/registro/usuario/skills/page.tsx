@@ -50,7 +50,7 @@ const RegistroUsuarioSkills = () => {
 
     const obtenerSkills = async (idSubCategoria: string) => {
         if (idSubCategoria) {
-            const response = await axios.get(`api/skills/${idSubCategoria}`);
+            const response = await axios.get(`/api/skills/${idSubCategoria}`);
             if (response.data) {
                 setSkills(response.data as Skill[]);
             }
@@ -133,7 +133,7 @@ const RegistroUsuarioSkills = () => {
                         usuarioDatos.skills.map(s => (
                             <div className="skill-card">
                                 <p>{s.descripcion}</p>
-                                <button onClick={() => removeSkill(s.id)}>X</button>
+                                <button onClick={() => removeSkill(s.id)} className="delete">X</button>
                             </div>
                         ))
                     }

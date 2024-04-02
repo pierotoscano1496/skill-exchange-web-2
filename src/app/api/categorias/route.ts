@@ -1,10 +1,11 @@
 import { JWT_COOKIE_TOKEN_NAME } from "@/utils/constants";
+import { MAIN_SERVER_URL } from "@/utils/constants.server";
 import axios, { AxiosInstance } from "axios";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: `http://localhost:9081/api`,
+    baseURL: MAIN_SERVER_URL,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"

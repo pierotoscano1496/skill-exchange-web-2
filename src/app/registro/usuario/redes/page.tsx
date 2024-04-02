@@ -73,8 +73,8 @@ const RegistroUsuarioContacto = () => {
                     </label>
                 </div>
             </div>
-            <button onClick={nextStepRegistration}>Siguiente</button>
-            <button onClick={() => console.log(usuarioDatos)}>Corroborar</button>
+            <button onClick={nextStepRegistration} className="btn-primary">Siguiente</button>
+            <button onClick={() => console.log(usuarioDatos)} className="btn-secondary">Corroborar</button>
         </div>
     )
 };

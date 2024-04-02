@@ -1,0 +1,50 @@
+$color-primary: hsl(228, 100%, 61%);
+$color-secondary: hsl(125, 96%, 41%);
+$color-danger: hsl(0, 100%, 61%);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+  background-color: skyblue;
+}
+
+button {
+  border: #000000;
+  border-radius: 1rem;
+  color: #4c4c4c;
+  
+  &.btn-primary {
+    color: white;
+    background-color: $color-primary;
+  }
+
+  &.btn-secondary {
+    color: white;
+    background-color: $color-secondary;
+  }
+
+  &.btn-danger {
+    color: white;
+    background-color: $color-danger;
+  }
+}
+
+div {
+  &.skill-card {
+    background-color: aquamarine;
+
+    p {
+      color: $color-primary;
+    }
+
+    button.delete {
+      border-radius: 50%;
+      color: $color-danger;
+    }
+  }
+}

@@ -104,7 +104,7 @@ const RegistroDatosUsuario = () => {
                 </label>
             </div>
 
-            <button type="button" onClick={nextStepRegistration}>Siguiente</button>
+            <button type="button" className="btn-primary" onClick={nextStepRegistration}>Siguiente</button>
         </div>
     )
 };
