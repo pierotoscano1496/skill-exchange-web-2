@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Login() {
+const Login=()=> {
     const [correo, setCorreo] = useState<string>("");
     const [contrasena, setContrasena] = useState<string>("");
     const router = useRouter();
@@ -41,6 +41,10 @@ export default function Login() {
         console.log(response)
     }
 
+    const goToRegistrar = () => {
+        router.push("/registro/usuario/datos");
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -49,8 +53,11 @@ export default function Login() {
                     <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
                     <button type="button" onClick={login}>Ingresar</button>
                     <button type="button" onClick={verifyToken}>Verificar</button>
+                    <button type="button" onClick={goToRegistrar}>Registrarse</button>
                 </div>
             </div>
         </main>
     )
-}
+};
+
+export default Login;

@@ -1,19 +1,16 @@
 "use client";
 
-import RegistroUsuarioDatosForm from "@/components/registro-usuario/RegistroUsuarioDatosForm";
-import { RegistroUsuarioProvider } from "@/contexts/RegistroUsuarioProvider";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import { getMaxDateToISOString } from "@/utils/auxiliares";
-import { TipoDocumento, TipoRegistroUsuario } from "@/utils/types";
+import { TipoDocumento } from "@/utils/types";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 type TipoDocumentoOptions = {
     value: TipoDocumento;
     name: string;
 }
 
-const RegistroDatosUsuario = () => {
+const RegistroUsuarioDatosForm = () => {
     const {
         usuarioDatos,
         setNombres,
@@ -60,7 +57,7 @@ const RegistroDatosUsuario = () => {
                     <select onChange={(e) => setTipoDocumento(e.target.value)}>
                         <option>--Seleccione--</option>
                         {tipoDocummentoOptions.map(t => (
-                            <option key={t.value} value={t.value}>{t.name}</option>
+                            <option value={t.value}>{t.name}</option>
                         ))}
                     </select>
                 </label>
@@ -109,4 +106,4 @@ const RegistroDatosUsuario = () => {
     )
 };
 
-export default RegistroDatosUsuario;
+export default RegistroUsuarioDatosForm;

@@ -33,4 +33,4 @@ interface RegistroUsuarioContextType {
     }>
 };
 
-export const RegistroUsuarioContext = React.createContext<RegistroUsuarioContextType>({} as RegistroUsuarioContextType);
+export const RegistroUsuarioContext = React.createContext<RegistroUsuarioContextType | null>(null);

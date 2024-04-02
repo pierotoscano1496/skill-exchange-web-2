@@ -16,11 +16,12 @@ export async function GET(req: NextRequest) {
         const cookiesStore = cookies();
         const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
 
-        const response = await axiosInstance.get("/categoria", {
+        /* const response = await axiosInstance.get("/categoria", {
             headers: {
                 "Authorization": `Bearer ${bearerToken}`
             }
-        });
+        }); */
+        const response = await axiosInstance.get("/categoria");
 
         const categorias = response.data;
 

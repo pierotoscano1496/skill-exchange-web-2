@@ -6,4 +6,6 @@ const RegistroUsuarioLayout = ({ children }: { children: React.ReactNode }) => {
             {children}
         </RegistroUsuarioProvider>
     )
-}
+};
+
+export default RegistroUsuarioLayout;

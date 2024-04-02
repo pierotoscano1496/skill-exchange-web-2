@@ -1,10 +1,7 @@
-"use client";
-
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-const RegistroUsuarioContacto = () => {
+const RegistroUsuarioRedesForm=()=>{
     const {
         usuarioDatos,
         setCorreo,
@@ -14,21 +11,14 @@ const RegistroUsuarioContacto = () => {
         setPerfilFacebook,
         setPerfilInstagram,
         setPerfilTiktok,
-        validateRegistroUsuario,
         validateRegistroDatosContacto
     } = useRegistroUsuarioContext();
 
     const router = useRouter();
 
-    useEffect(() => {
-        if (!validateRegistroUsuario()) {
-            router.push("/registro/usuario/datos");
-        }
-    })
-
     const nextStepRegistration = () => {
         if (validateRegistroDatosContacto()) {
-            router.push("/registro/usuario/skills");
+            router.push("/registro/usuario/redes");
         }
     }
 
@@ -74,9 +64,9 @@ const RegistroUsuarioContacto = () => {
                 </div>
             </div>
             <button onClick={nextStepRegistration}>Siguiente</button>
-            <button onClick={() => console.log(usuarioDatos)}>Corroborar</button>
+            <button onClick={()=>console.log(usuarioDatos)}>Corroborar</button>
         </div>
     )
 };
 
-export default RegistroUsuarioContacto;
+export default RegistroUsuarioRedesForm;

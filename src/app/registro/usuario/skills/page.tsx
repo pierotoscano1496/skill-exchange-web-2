@@ -5,6 +5,7 @@ import Categoria from "@/interfaces/models/Categoria";
 import Skill from "@/interfaces/models/Skill";
 import SubCategoria from "@/interfaces/models/SubCategoria";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const RegistroUsuarioSkills = () => {
@@ -23,6 +24,7 @@ const RegistroUsuarioSkills = () => {
     const [subCategoriaSelected, setSubCategoriaSelected] = useState<SubCategoria>();
     const [skillSelected, setSkillSelected] = useState<Skill>();
     const [nivelConocimiento, setNivelConocimiento] = useState<number>(0);
+    const router = useRouter();
 
     const indexOfSkill = 1;
 
@@ -31,13 +33,13 @@ const RegistroUsuarioSkills = () => {
     }, []);
 
     const obtenerCategorias = async () => {
-        const response = await axios.get("api/categorias");
+        const response = await axios.get("/api/categorias");
         setCategorias(response.data as Categoria[]);
     }
 
     const obtenerSubcategorias = async (idCategoria: string) => {
         if (idCategoria) {
-            const response = await axios.get(`/api/subcategorias/${idCategoria}`);
+            const response = await axios.get(`/api/subcategorias/categoria/${idCategoria}`);
             if (response.data) {
                 setSubCategorias(response.data as SubCategoria[]);
             }
@@ -71,6 +73,10 @@ const RegistroUsuarioSkills = () => {
         if (data) {
             alert("éxito al registrarse")
         }
+    }
+
+    const goBack = () => {
+        router.back();
     }
 
     return (
@@ -134,6 +140,9 @@ const RegistroUsuarioSkills = () => {
                 </div>
             </div>
             <button onClick={finalizarRegistro}>Finalizar</button>
+            <button onClick={goBack}>Atrás</button>
         </div>
     )
-}
+};
+
+export default RegistroUsuarioSkills;
