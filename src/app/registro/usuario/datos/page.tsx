@@ -42,20 +42,20 @@ const RegistroDatosUsuario = () => {
     }
 
     return (
-        <div>
+        <div className="form">
             <h2>Registro de usuario</h2>
 
-            <div>
+            <div className="form-control">
                 <label>Nombres:
                     <input type="text" value={usuarioDatos.nombres} onChange={(e) => setNombres(e.target.value)} />
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Apellidos:
                     <input type="text" value={usuarioDatos.apellidos} onChange={(e) => setApellidos(e.target.value)} />
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Tipo de documento:
                     <select onChange={(e) => setTipoDocumento(e.target.value)}>
                         <option>--Seleccione--</option>
@@ -65,7 +65,7 @@ const RegistroDatosUsuario = () => {
                     </select>
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>{usuarioDatos.tipoDocumento === "carnet_extranjeria" ? "Carnet de extranjería" : "DNI"}:
                     {
                         usuarioDatos.tipoDocumento === "dni" &&
@@ -85,12 +85,12 @@ const RegistroDatosUsuario = () => {
                     }
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Fecha de nacimiento:
                     <input type="date" defaultValue={maxFechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} max={maxFechaNacimiento} />
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Registrarse como</label>
 
                 <label>

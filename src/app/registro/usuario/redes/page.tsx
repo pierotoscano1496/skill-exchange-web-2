@@ -33,24 +33,24 @@ const RegistroUsuarioContacto = () => {
     }
 
     return (
-        <div>
-            <div>
+        <div className="form">
+            <div className="form-control">
                 <label>Correo:
                     <input type="email" placeholder="ejemplo@mail.com" value={usuarioDatos.correo} onChange={(e) => setCorreo(e.target.value)} />
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Contraseña:
                     <input type="password" placeholder="ejemplo@mail.com" value={usuarioDatos.clave} onChange={(e) => setClave(e.target.value)} />
                 </label>
             </div>
-            <div>
+            <div className="form-control">
                 <label>Introducción:
                     <textarea placeholder="Escríbenos sobre ti" value={usuarioDatos.introduccion} onChange={(e) => setIntroduccion(e.target.value)} />
                 </label>
             </div>
 
-            <div>
+            <div className="form-panel">
                 <h3>Tus redes</h3>
                 <div>
                     <label>Linkedin:
