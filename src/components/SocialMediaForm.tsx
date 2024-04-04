@@ -63,6 +63,7 @@ const SocialMediaForm: React.FC = () => {
             </div>
 
             <button onClick={goToLogin}>Login</button>
+            <button onClick={() => route.push("/paginator")}>Test paginator</button>
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Paginator from '@/app/paginator/page';
+import Paginator from '@/app/paginator/public-api/page';
 
 describe('Paginator', () => {
     beforeEach(() => {
