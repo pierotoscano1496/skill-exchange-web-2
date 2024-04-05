@@ -1,0 +1,7 @@
+$color-primary: hsl(228, 100%, 61%);
+$color-secondary: hsl(125, 96%, 41%);
+$color-danger: hsl(0, 100%, 61%);
+
+:export {
+    primaryColor: $color-primary;
+}
