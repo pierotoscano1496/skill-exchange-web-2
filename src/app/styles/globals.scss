@@ -1,3 +1,8 @@
+@import "./fontawesome/fontawesome.scss";
+@import "./fontawesome/brands.scss";
+@import "./fontawesome/regular.scss";
+@import "./fontawesome/solid.scss";
+
 $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
@@ -37,24 +42,13 @@ button {
 }
 
 div {
-  &.skill-card {
-    background-color: aquamarine;
-
-    p {
-      color: $color-primary;
-    }
-
-    button.delete {
-      border-radius: 50%;
-      color: $color-danger;
-    }
-  }
 
   &.form {
-    &>.form-panel{
+    &>.form-panel {
       margin: 2rem 1rem;
       border: 0.1em solid #000000;
     }
+
     .form-control {
       padding: 0.5rem;
     }
