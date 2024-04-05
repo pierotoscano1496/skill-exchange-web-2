@@ -1,0 +1,20 @@
+@use "./variables.module.scss" as variables;
+
+.skillCard {
+    background-color: aquamarine;
+    width: fit-content;
+    padding: 1em;
+
+    span.texto {
+        font-weight: bold;
+        color: variables.$color-primary;
+    }
+
+    button.delete {
+        border-radius: 50%;
+        color: #e4e3e3;
+        background-color: variables.$color-danger;
+        padding: 0.5em;
+        margin: 0.5em 0 0.5em 0.5em;
+    }
+}

@@ -12,6 +12,7 @@ import AsignacionSkillToUsuarioRequest from "@/interfaces/requestbody/Asignacion
 import UsuarioSkillsAsignadosResponse from "@/interfaces/responsebody/usuario/UsuarioSkillsAsignadosResponse";
 import CreateUsuarioBody from "@/interfaces/requestbody/CreateUsuarioBody";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import { backendInstance } from "@/utils/constants.backend";
 
 export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const fechaNacimientoMax = new Date();
@@ -201,7 +202,7 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
             perfilLinkedin: usuarioDatos.perfilLinkedin!,
             perfilTiktok: usuarioDatos.perfilTiktok!
         };
-        const responseUsuarioRegistered = await axios.post(`/api/usuario`, usuarioBodyRequest);
+        const responseUsuarioRegistered = await backendInstance.post(`usuario`, usuarioBodyRequest);
 
         const { id } = responseUsuarioRegistered.data as UsuarioRegisteredResponse;
 
@@ -210,7 +211,7 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
             id
         });
 
-        const responseSkillsAsignados = await axios.patch(`api/usuario/skills/${usuarioDatos.id}`, usuarioDatos.skills.map(s => ({
+        const responseSkillsAsignados = await backendInstance.patch(`usuario/skills/${usuarioDatos.id}`, usuarioDatos.skills.map(s => ({
             idSkill: s.id,
             descripcion: s.desempeno,
             nivelConocimiento: s.nivelConocimiento

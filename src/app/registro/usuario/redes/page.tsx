@@ -41,7 +41,7 @@ const RegistroUsuarioContacto = () => {
             </div>
             <div className="form-control">
                 <label>Contraseña:
-                    <input type="password" placeholder="ejemplo@mail.com" value={usuarioDatos.clave} onChange={(e) => setClave(e.target.value)} />
+                    <input type="password" value={usuarioDatos.clave} onChange={(e) => setClave(e.target.value)} />
                 </label>
             </div>
             <div className="form-control">
