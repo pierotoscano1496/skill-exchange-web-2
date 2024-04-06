@@ -8,6 +8,7 @@ import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicio
 import ModalidadPagoBody from "@/interfaces/requestbody/servicio/ModalidadPagoBody";
 import ServicioRegisteredResponse from "@/interfaces/responsebody/servicio/ServicioRegisteredResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import { backendInstance } from "@/utils/constants.backend";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react"
 
@@ -35,12 +36,12 @@ const RegistroSevicio = () => {
     }, []);
 
     const obtenerDatosUsuario = async () => {
-        const response = await axios.get("/api/usuario");
+        const response = await backendInstance.get("usuario");
         setUsuario(response.data as UsuarioRegisteredResponse);
     }
 
     const obtenerSkillsFromUsuario = async () => {
-        const response = await axios.get(`/api/usuario/skills`);
+        const response = await backendInstance.get(`usuario/skills`);
         setSkillsUsuario(response.data as SkillOption[]);
     };
 
@@ -96,22 +97,18 @@ const RegistroSevicio = () => {
                 idUsuario: usuario!.id,
                 precio,
                 titulo,
-                modalidadesPago: listMediosPago.map(m => {
-                    return {
-                        cuentaBancaria: m.cci,
-                        numeroCelular: m.celular,
-                        tipo: m.tipo
-                    }
-                }),
-                recursosMultimedia: listRecursosMultimedia.map(r => {
-                    return {
-                        medio: r.medio,
-                        url: r.url
-                    }
-                })
+                modalidadesPago: listMediosPago.map(m => ({
+                    cuentaBancaria: m.cci,
+                    numeroCelular: m.celular,
+                    tipo: m.tipo
+                })),
+                recursosMultimedia: listRecursosMultimedia.map(r => ({
+                    medio: r.medio,
+                    url: r.url
+                }))
             };
 
-            const response = await axios.post("/api/servicio");
+            const response = await backendInstance.post("servicio", servicio);
             const servicioRegistrado: ServicioRegisteredResponse = response.data as ServicioRegisteredResponse;
             if (servicioRegistrado) {
                 alert("Éxito a registrar el servicio");
