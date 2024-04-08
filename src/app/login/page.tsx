@@ -22,7 +22,7 @@ const Login=()=> {
 
             alert(response.data.mensaje);
 
-            router.push("/middlewareside");
+            router.push("/principal/buscador-servicio");
         } catch (error) {
             let mensaje: string;
             if (error instanceof AxiosError) {
