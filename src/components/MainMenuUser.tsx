@@ -1,6 +1,8 @@
 "use client";
 
-export default ({ children }: { children: React.ReactNode }) => {
+import Usuario from "@/interfaces/Usuario";
+
+export default ({ children, usuario }: { children: React.ReactNode, usuario: Usuario }) => {
     return (
         <div className="content">
             <div className="navbar">
@@ -12,6 +14,9 @@ export default ({ children }: { children: React.ReactNode }) => {
                     <span>
                         <i className="fa-solid fa-comment"></i>
                     </span>
+                </div>
+                <div className="user-data">
+                    {usuario.nombres}
                 </div>
             </div>
             <div className="sidebar">
