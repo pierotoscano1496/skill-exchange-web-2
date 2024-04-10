@@ -12,6 +12,16 @@ export const serverInstance = axios.create({
     }
 });
 
+export const getServerInstance = () => {
+    return axios.create({
+        baseURL: MAIN_SERVER_URL,
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+}
+
 export const getServerInstanceAuthorized = () => {
     const bearerToken = cookies().get(JWT_COOKIE_TOKEN_NAME)?.value;
 

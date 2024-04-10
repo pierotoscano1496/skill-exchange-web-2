@@ -9,4 +9,5 @@ export default interface ServicioBusquedaResponse {
     correoUsuario: string;
     idSkill: string;
     descripcionSkill: string;
+    previewImageSource: string;
 }

@@ -7,6 +7,120 @@ $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
 
+$colors: (
+  primary: hsl(228, 100%, 61%),
+  secondary: hsl(125, 96%, 41%),
+  danger: hsl(0, 100%, 61%)
+);
+
+@mixin select-color {
+  @each $name, $color in $colors {
+    &-#{$name} {
+      color: $color;
+    }
+  }
+}
+
+@mixin button-styles {
+  border: 2px solid #000000;
+  border-radius: 0.3rem;
+  color: #4c4c4c;
+  padding: 1em;
+  margin: 1rem;
+
+  &.btn {
+    @include select-color;
+  }
+}
+
+$justify-content-options: (
+  flex-start,
+  flex-end,
+  center,
+  space-between,
+  space-around,
+  space-evenly,
+  start,
+  end,
+  left,
+  right
+);
+
+$flex-direction-options: (
+  wrap,
+  row,
+  column
+);
+
+$align-items-options: (
+  stretch: stretch,
+  flex-start: flex-start,
+  flex-end: flex-end,
+  center: center,
+  baseline: baseline,
+  first-baseline: first baseline,
+  last-baseline: last baseline,
+  start: start,
+  end: end,
+  self-start: self-start,
+  self-end:self-end
+);
+
+/// Replace `$search` with `$replace` in `$string`
+/// @author Kitty Giraudel
+/// @param {String} $string - Initial string
+/// @param {String} $search - Substring to replace
+/// @param {String} $replace ('') - New value
+/// @return {String} - Updated string
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str_slice($string, 1, $index - 1)+$replace +str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+/*
+  Flex container mixinS
+*/
+@mixin flex-align-items {
+  @each $name, $option in $align-items-options {
+    &.#{$name} {
+      align-items: $option;
+    }
+  }
+}
+
+@mixin flex-justify-content {
+  @each $option in $justify-content-options {
+    &.content-#{$option} {
+      justify-content: $option;
+    }
+  }
+}
+
+@mixin flex-direction {
+  @each $option in $flex-direction-options {
+    &.#{$option} {
+      flex-direction: $option;
+    }
+  }
+}
+
+/*
+  Flex items mixins
+*/
+@mixin flex-grow {
+  @for $i from 1 through 5 {
+    &.flex-grow-#{$i} {
+      flex-grow: $i;
+    }
+  }
+
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -19,25 +133,13 @@ body {
 }
 
 button {
-  border: #000000;
-  border-radius: 0.3rem;
-  color: #4c4c4c;
-  padding: 1em;
-  margin: 1rem;
+  @include button-styles;
+}
 
-  &.btn-primary {
-    color: white;
-    background-color: $color-primary;
-  }
-
-  &.btn-secondary {
-    color: white;
-    background-color: $color-secondary;
-  }
-
-  &.btn-danger {
-    color: white;
-    background-color: $color-danger;
+a {
+  &.link-button {
+    text-decoration: none;
+    @include button-styles;
   }
 }
 
@@ -52,5 +154,49 @@ div {
     .form-control {
       padding: 0.5rem;
     }
+  }
+}
+
+p,
+label,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  &.text {
+    @include select-color;
+  }
+}
+
+img {
+  &.brand {
+    height: auto;
+    max-width: 12rem;
+    min-width: 8rem;
+
+    &.yape {
+      content: url(../../../public/img/yape.png);
+    }
+
+    &.credit-card {
+      content: url(/public/img/credit-card.png);
+    }
+  }
+}
+
+/*
+  Fexbox basics
+*/
+.container {
+  display: flex;
+
+  @include flex-direction;
+  @include flex-align-items;
+  @include flex-justify-content;
+
+  .item {
+    @include flex-grow;
   }
 }
