@@ -1,13 +1,8 @@
 "use client";
 
 import AsignacionMedioPago from "@/interfaces/registro-servicio/AsignacionMedioPago";
-import { TipoModalidadPago } from "@/utils/types";
+import { TipoModalidadPago, TipoModalidadPagoOption } from "@/utils/types";
 import { useState } from "react";
-
-type TipoModalidadPagoOption = {
-    nombre: string;
-    valor: TipoModalidadPago;
-}
 
 const ModalidadPagoForm = ({ show, sendModalidadPagoToParent }: {
     show: boolean,
