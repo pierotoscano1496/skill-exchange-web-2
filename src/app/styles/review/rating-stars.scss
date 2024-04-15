@@ -1,0 +1,36 @@
+@mixin star-base {
+    font-size: 50px;
+    text-align: left;
+    font-style: normal;
+    display: inline-block;
+    position: relative;
+    unicode-bidi: bidi-override;
+
+    &::before {
+        display: block;
+        content: "★★★★★";
+        color: #9c9c9c;
+    }
+
+    &::after {
+        white-space: nowrap;
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: "★★★★★";
+        width: 0;
+        color: #ff8c00;
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
+[data-puntaje] {
+    @include star-base;
+}
+
+@for $i from 1 through 50 {
+    [data-puntaje^="#{$i / 10}"]::after {
+        width: percentage($i * 2/100) !important;
+    }
+}

@@ -6,17 +6,24 @@
 $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
+$color-no-avalable: hsl(0, 0%, 57%);
 
 $colors: (
-  primary: hsl(228, 100%, 61%),
-  secondary: hsl(125, 96%, 41%),
-  danger: hsl(0, 100%, 61%)
+  primary: $color-primary,
+  secondary: $color-secondary,
+  danger: $color-danger
 );
 
-@mixin select-color {
+@mixin select-color($propperty: null) {
   @each $name, $color in $colors {
     &-#{$name} {
-      color: $color;
+      @if($propperty =="background") {
+        background-color: $color;
+      }
+
+      @else {
+        color: $color;
+      }
     }
   }
 }
@@ -29,7 +36,7 @@ $colors: (
   margin: 1rem;
 
   &.btn {
-    @include select-color;
+    @include select-color("background");
   }
 }
 
@@ -167,6 +174,10 @@ h5,
 h6 {
   &.text {
     @include select-color;
+
+    &-no-avalable {
+      color: $color-no-avalable;
+    }
   }
 }
 
@@ -184,6 +195,10 @@ img {
       content: url(/public/img/credit-card.png);
     }
   }
+}
+
+hr {
+  border-top: 3px solid #bbb;
 }
 
 /*
