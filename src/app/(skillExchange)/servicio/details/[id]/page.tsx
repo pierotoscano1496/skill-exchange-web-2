@@ -1,8 +1,12 @@
 import ContactForm from "@/components/busqueda-servicio/ContactForm";
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
-import { checkUsuario } from "@/utils/apitools/SessionManager";
+import { checkUsuario, getUsuario } from "@/utils/apitools/SessionManager";
 import { getServerInstance } from "@/utils/constants.server";
 import { TipoModalidadPagoOption } from "@/utils/types";
+import commentStyles from "./comment.module.scss";
+import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
+import FormReviewServicio from "@/components/review-servicio/FormReviewServicio";
+import "../../../../styles/review/rating-stars.scss";
 
 type ParamsType = {
     id: string;
@@ -30,7 +34,8 @@ const getServicioDetails = async (params: ParamsType) => {
 }
 
 const getServicioReview = async (params: ParamsType) => {
-    const response = await getServerInstance().get(`servicio/review/${params.id}`)
+    const response = await getServerInstance().get(`servicios/review/${params.id}`);
+    return response.data as ServicioReviewResponse;
 }
 
 export default async ({ params }: {
@@ -42,7 +47,7 @@ export default async ({ params }: {
 
     const servicioReview = await getServicioReview(params as ParamsType);
 
-    const checkUsuarioIsLogged = await checkUsuario();
+    const usuarioLogged = await getUsuario();
 
     return (
         <div>
@@ -60,20 +65,40 @@ export default async ({ params }: {
                 )}
             </div>
             <div>
-                {checkUsuarioIsLogged ? <ContactForm idUsuario={servicioDetails.usuario.id}>Enviar mensaje</ContactForm> :
-                    <>
-                        <p>
-                            <a className="link-button btn-primary" href="/login">Inicia sesión</a>&nbsp;o
-                            &nbsp;<a className="link-button btn-secondary" href="/registro/usuario">Regístrate</a>
-                        </p>
-                    </>
+                {usuarioLogged ? <ContactForm idUsuario={servicioDetails.usuario.id}>Enviar mensaje</ContactForm> :
+                    <p>
+                        <a className="link-button btn-primary" href="/login">Inicia sesión</a>&nbsp;o
+                        &nbsp;<a className="link-button btn-secondary" href="/registro/usuario">Regístrate</a>
+                    </p>
                 }
             </div>
+
 
             {/**
              * Reseñas
              */}
-            <div className="review"></div>
-        </div>
+            <hr />
+            <div className="review">
+                {usuarioLogged &&
+                    <>
+                        <h3>Emite tu opinión</h3>
+                        <FormReviewServicio idServicio={servicioDetails.id} comentarista={{
+                            id: usuarioLogged.id,
+                            nombres: usuarioLogged.nombres,
+                            apellidos: usuarioLogged.apellidos
+                        }} />
+                    </>}
+                <hr />
+                {servicioReview.comentarios.map(c =>
+                    <div className={commentStyles.comentario}>
+                        <span className={commentStyles.usuarioNombres}>{`${c.nombresComentarista} ${c.apellidosComentarista}`}</span>
+                        <div className={commentStyles.rating}>
+                            <span data-puntaje={c.puntaje}></span>
+                            <span className={commentStyles.puntaje}>{c.puntaje}</span>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div >
     )
 }

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { JWT_COOKIE_TOKEN_NAME } from "../constants"
 import { getServerInstanceAuthorized } from "../constants.server"
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 
 export const checkUsuario = async () => {
     if (cookies().get(JWT_COOKIE_TOKEN_NAME)) {
@@ -14,4 +15,13 @@ export const checkUsuario = async () => {
     }
 
     return false;
+}
+
+export const getUsuario = async () => {
+    if (cookies().get(JWT_COOKIE_TOKEN_NAME)) {
+        const response = await getServerInstanceAuthorized().get("usuario");
+        return response.data as UsuarioRegisteredResponse;
+    }
+
+    return undefined;
 }
