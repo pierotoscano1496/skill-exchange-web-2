@@ -6,7 +6,6 @@ import { TipoModalidadPagoOption } from "@/utils/types";
 import commentStyles from "./comment.module.scss";
 import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
 import FormReviewServicio from "@/components/review-servicio/FormReviewServicio";
-import "../../../../styles/review/rating-stars.scss";
 
 type ParamsType = {
     id: string;
