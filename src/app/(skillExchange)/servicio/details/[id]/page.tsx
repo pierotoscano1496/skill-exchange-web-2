@@ -4,6 +4,7 @@ import { checkUsuario, getUsuario } from "@/utils/apitools/SessionManager";
 import { getServerInstance } from "@/utils/constants.server";
 import { TipoModalidadPagoOption } from "@/utils/types";
 import commentStyles from "./comment.module.scss";
+import reviewStyles from "@/app/styles/review/review-servicio.module.scss";
 import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
 import FormReviewServicio from "@/components/review-servicio/FormReviewServicio";
 
@@ -91,9 +92,9 @@ export default async ({ params }: {
                 {servicioReview.comentarios.map(c =>
                     <div className={commentStyles.comentario}>
                         <span className={commentStyles.usuarioNombres}>{`${c.nombresComentarista} ${c.apellidosComentarista}`}</span>
-                        <div className={commentStyles.rating}>
+                        <div className={reviewStyles.rating}>
                             <span data-puntaje={c.puntaje}></span>
-                            <span className={commentStyles.puntaje}>{c.puntaje}</span>
+                            <span className={reviewStyles.puntaje}>{c.puntaje}</span>
                         </div>
                     </div>
                 )}
