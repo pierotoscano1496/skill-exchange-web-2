@@ -1,54 +1,57 @@
 "use client";
 
-import { getServerInstanceAuthorized } from "@/utils/constants.server";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import modalStyles from "@/styles/modal.module.scss";
+import Close from "@/vectors/times-solid-svgrepo-com.svg";
+import { sendContactMessage } from "@/actions/chatting.actions";
 
 type Props = {
-    children: React.ReactNode
-    idUsuario: string;
+    children: React.ReactNode;
+    idPrestamista: string;
 }
 
-type ModalProps = {
-    idDestinatario: string;
-    open: boolean;
-}
+export default ({ children, idPrestamista }: Props) => {
+    const [newMessage, setNewMessage] = useState<string>("");
+    const [openContactForm, setOpenContactForm] = useState(false);
 
-const ModalContact = ({ idDestinatario, open }: ModalProps) => {
-    const [mensaje, setMensaje] = useState("");
+    const enviarMensaje = async () => {
+        const mensajeEnviado = await sendContactMessage({
+            idReceptor: idPrestamista,
+            mensaje: newMessage,
+            fecha: new Date()
+        });
 
-    const sendMessage = async () => {
-        /**
-         * Remplazar con websockets
-         */
-        const response = await getServerInstanceAuthorized().post(`/message/send/${idDestinatario}`);
-        if (response.data) {
-            alert("Enviado");
+        if (mensajeEnviado) {
+            setNewMessage("");
+            setOpenContactForm(false);
         }
     }
 
     return (
-        <div className="modal">
-            <h3>Contáctate</h3>
-            <textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} />
-            <button className="btn-primary" onClick={sendMessage}>Enviar</button>
-        </div>
-    )
-}
-
-export default ({ children, idUsuario }: Props) => {
-    const router = useRouter();
-    const [openContactForm, setOpenContactForm] = useState(false);
-
-    const goToContactForm = () => {
-        //router.push(`/contacto/enviar-mensaje/${idUsuario}`);
-        setOpenContactForm(true);
-    }
-
-    return (
         <>
-            <button className="btn-primary" onClick={goToContactForm}>{children}</button>
-            <ModalContact idDestinatario={idUsuario} open={openContactForm} />
+            <button className="btn-primary" onClick={() => setOpenContactForm(true)}>{children}</button>
+            {
+                openContactForm &&
+                <div className={modalStyles.modalContainer}>
+                    <div className={modalStyles.modal}>
+                        <header className={modalStyles.modalHeader}>
+                            <h2>Contáctate</h2>
+                            <button className={modalStyles.close} >
+                                <img src={Close} alt="close" />
+                            </button>
+                        </header>
+
+                        <main className={modalStyles.modalContent}>
+                            <textarea value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
+                        </main>
+
+                        <footer className={modalStyles.modalFooter}>
+                            <button className="btn-primary" onClick={enviarMensaje}>Enviar</button>&nbsp;
+                            <button className="btn-danger" onClick={() => setOpenContactForm(false)}>Cancelar</button>
+                        </footer>
+                    </div>
+                </div>
+            }
         </>
 
     )
