@@ -1,0 +1,28 @@
+.chattingModule {
+    .contactName h3 {
+        font-weight: bolder;
+    }
+
+    .bubbleContent {
+        display: flex;
+        width: 350px;
+        height: 400px;
+        overflow-y: scroll;
+        scroll-behavior: smooth;
+
+        .bubbleMessage {
+            width: 20em;
+            height: fit-content;
+
+            &.myself {
+                justify-content: flex-end;
+            }
+
+            &.themself {
+                justify-content: flex-start;
+            }
+        }
+    }
+
+    .sendOption {}
+}

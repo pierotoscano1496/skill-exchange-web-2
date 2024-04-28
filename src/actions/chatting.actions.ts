@@ -22,3 +22,8 @@ export const sendContactMessage = async (mensajeChat: FirstMessageChatBody) => {
 
     return resp.data;
 }
+
+export const getChats=async (idReceptor:string)=>{
+    const resp = await backendInstanceAuth.get(`chat/with/${idReceptor}`);
+    return resp.data;
+}
