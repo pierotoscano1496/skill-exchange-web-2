@@ -65,7 +65,7 @@ export default async ({ params }: {
                 )}
             </div>
             <div>
-                {usuarioLogged ? <ContactForm idPrestamista={servicioDetails.usuario.id}>Enviar mensaje</ContactForm> :
+                {usuarioLogged ? <ContactForm cliente={usuarioLogged} servicio={servicioDetails}>Enviar mensaje</ContactForm> :
                     <p>
                         <a className="link-button btn-primary" href="/login">Inicia sesión</a>&nbsp;o
                         &nbsp;<a className="link-button btn-secondary" href="/registro/usuario">Regístrate</a>
