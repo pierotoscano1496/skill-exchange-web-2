@@ -6,11 +6,8 @@ class ChatWsService {
     private client: Client;
 
     constructor() {
-        /**
-         * REL: Remplaza los urls hardcodeados
-         */
         this.client = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:9081/api/message-broker"),
+            webSocketFactory: () => new SockJS(`${process.env.NEXT_PUBLIC_MAIN_URL_BACKEND}message-broker`),
             debug: (str) => console.log(str),
             onWebSocketError: (error) => {
                 console.error("Error con websocket", error);

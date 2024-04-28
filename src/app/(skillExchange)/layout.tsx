@@ -1,4 +1,5 @@
 import MainMenuUser from "@/components/MainMenuUser";
+import ChatPanel from "@/components/chats/ChatPanel";
 import Usuario from "@/interfaces/Usuario";
 import { backendInstance } from "@/utils/constants.backend"
 import { getServerInstanceAuthorized } from "@/utils/constants.server"
@@ -9,9 +10,12 @@ export default async ({ children }: { children: React.ReactNode }) => {
 
     if (usuario) {
         return (
-            <MainMenuUser usuario={usuario}>
-                {children}
-            </MainMenuUser>
+            <>
+                <MainMenuUser usuario={usuario}>
+                    {children}
+                </MainMenuUser>
+                <ChatPanel idUsuario={usuario.id} />
+            </>
         )
     }
     return (
