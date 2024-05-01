@@ -1,0 +1,8 @@
+@use "@/styles/variables.module.scss" as variables;
+
+.cardServicio {
+    display: flex;
+    .title {
+        color: variables.$color-primary;
+    }
+}

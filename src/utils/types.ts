@@ -10,3 +10,5 @@ export type TipoModalidadPagoOption = {
     nombre: string;
     valor: TipoModalidadPago;
 }
+
+export type TipoMatchServicioEstado = "solicitado" | "pendiente-pago" | "rechazado" | "ejecucion" | "finalizado";

@@ -19,6 +19,10 @@ $colors: (
     &-#{$name} {
       @if($propperty =="background") {
         background-color: $color;
+
+        @if($name =="primary") {
+          color: white;
+        }
       }
 
       @else {
@@ -33,7 +37,7 @@ $colors: (
   border-radius: 0.3rem;
   color: #4c4c4c;
   padding: 1em;
-  margin: 1rem;
+  margin: 1rem 0rem;
 
   &.btn {
     @include select-color("background");
@@ -145,6 +149,7 @@ button {
 
 a {
   &.link-button {
+    display: inline-block;
     text-decoration: none;
     @include button-styles;
   }
@@ -199,6 +204,10 @@ img {
 
 hr {
   border-top: 3px solid #bbb;
+}
+
+.principal {
+  padding: 1rem;
 }
 
 /*
