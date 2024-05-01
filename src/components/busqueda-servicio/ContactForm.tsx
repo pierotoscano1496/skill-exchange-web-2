@@ -48,7 +48,7 @@ export default ({ children, servicio, cliente }: Props) => {
                 <div className={modalStyles.modalContainer}>
                     <div className={modalStyles.modal}>
                         <header className={modalStyles.modalHeader}>
-                            <h2>Contáctate</h2>
+                            <h2>Contáctate</h2> 
                             <button className={modalStyles.close} >
                                 <img src={Close} alt="close" />
                             </button>
