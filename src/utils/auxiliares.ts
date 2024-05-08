@@ -1,3 +1,5 @@
+import { FileExtension } from "./types";
+
 export const convertDateToISOString = (date: Date) => {
     const year = date.getFullYear();
     const month = `0${date.getMonth() + 1}`.slice(-2);
@@ -26,11 +28,11 @@ export const getMaxDateToISOString = (): string => {
     return convertDateToISOString(date);
 }
 
-export const getFormatFile = (fileName: string): string | null => {
+export const getFormatFile = (fileName: string): FileExtension | null => {
     const partes = fileName.split('.');
     if (partes.length === 1) {
         return null; // No se encontró ninguna extensión
     } else {
-        return partes[partes.length - 1];
+        return partes[partes.length - 1].toLowerCase() as FileExtension;
     }
 }

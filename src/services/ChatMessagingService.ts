@@ -1,13 +1,14 @@
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
+import MessageBody from "@/interfaces/requestbody/messaging/MessageBody";
 import { Client, IMessage, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-class ChatWsService {
+class ChatMessagingService {
     private client: Client;
 
     constructor() {
         this.client = new Client({
-            webSocketFactory: () => new SockJS(`${process.env.NEXT_PUBLIC_MAIN_URL_BACKEND}message-broker`),
+            webSocketFactory: () => new SockJS("http://localhost:9081/api/messaging-socket"),
             debug: (str) => console.log(str),
             onWebSocketError: (error) => {
                 console.error("Error con websocket", error);
@@ -23,9 +24,9 @@ class ChatWsService {
         this.client.deactivate();
     }
 
-    public connectAndSubscribe(callback: (message: IMessage) => void) {
+    public connectAndSubscribe(idConversation: string, callback: (message: IMessage) => void) {
         this.client.onConnect = (frame) => {
-            this.client.subscribe(`/chatting/save`, callback);
+            this.client.subscribe(`/chatting/${idConversation}`, callback);
             console.log('Connected to WebSocket, frame ' + frame);
         }
     }
@@ -34,12 +35,12 @@ class ChatWsService {
         this.client.activate();
     }
 
-    public sendMessage(mensaje: MensajeChat) {
+    public sendMessage(idConversation: string, message: MessageBody) {
         this.client.publish({
-            destination: `/app-broker/chat/enviar`,
-            body: JSON.stringify(mensaje)
+            destination: `/app/chat/${idConversation}/send`,
+            body: JSON.stringify(message)
         });
     }
 };
 
-export default new ChatWsService();
+export default new ChatMessagingService();

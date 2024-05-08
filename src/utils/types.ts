@@ -12,3 +12,5 @@ export type TipoModalidadPagoOption = {
 }
 
 export type TipoMatchServicioEstado = "solicitado" | "pendiente-pago" | "rechazado" | "ejecucion" | "finalizado";
+
+export type FileExtension="jpg"| "jpeg"| "png"| "doc"| "docx"| "pdf"| "doc"| "docx"| "ppt"| "pptx"| "xls"| "xlsx";

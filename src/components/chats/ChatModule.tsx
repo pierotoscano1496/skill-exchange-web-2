@@ -1,86 +1,133 @@
 "use client";
 
-import { getChats } from "@/actions/chatting.actions";
+import { getChats, getConversationById, saveChatFile } from "@/actions/chatting.actions";
 import ContactModule from "@/interfaces/chatting/ContactModule";
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import ChatMessagingService from "@/services/ChatMessagingService";
 import { useEffect, useState } from "react";
 import chattingStyles from "@/styles/chats/chatting.module.scss";
 import UsuarioBasicInfo from "@/interfaces/chatting/UsuarioBasicInfo";
+import Message from "@/interfaces/models/chats/Message";
+import BubbleMessage from "./BubbleMessage";
+import Contact from "@/interfaces/models/chats/Contact";
 
 type Params = {
-    idUsuario: string,
-    receptor: UsuarioBasicInfo,
-    open: boolean,
-    sendMessageToMainWSPanel: (mensaje: string, receptor: UsuarioBasicInfo) => void,
-    isLastMenssageSent: boolean
+    idUsuarioLogged: string,
+    idConversacion: string
 }
 
-export default ({ idUsuario, receptor, open, sendMessageToMainWSPanel, isLastMenssageSent }: Params) => {
-    const [messages, setMessages] = useState<MensajeChat[]>([]);
+export default ({ idConversacion, idUsuarioLogged }: Params) => {
+    const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [newMensaje, setNewMensaje] = useState<string>("");
+    const [newFile, setNewFile] = useState<File | null>(null);
+    const [attempMensajeEnviado, setAttempMensajeEnviado] = useState<boolean>(false);
+    const [receptor, setReceptor] = useState<Contact>();
 
     useEffect(() => {
-        /* ChatMessagingService.connectAndSubscribe((message) => {
-            const receivedMessage = JSON.parse(message.body) as MensajeChat;
-            setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-        });
-        ChatMessagingService.activate(); */
+        const setupChat = async () => {
+            if (!isSubscribed) {
+                console.log("Iniciando");
 
-        // Obtener mensajes:
-        loadMensajes();
+                const conversacion = await getConversationById(idConversacion);
+                if (conversacion) {
+                    setMessages(conversacion.messages);
+                    const contactReceptor = conversacion.contacts.find(c => c.idContact != idUsuarioLogged)!;
+                    setReceptor(contactReceptor);
 
-        /* return () => {
-            ChatMessagingService.deactivate();
-        } */
-    }, []);
+                    ChatMessagingService.connectAndSubscribe(conversacion.id, (message) => {
+                        const receivedMessage = JSON.parse(message.body) as Message;
+                        //setMessages([...messages, receivedMessage]);
+                        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+                    });
+                    ChatMessagingService.activate();
 
-    const loadMensajes = async () => {
-        const mensajes = await getChats(receptor.id);
-        setMessages(mensajes);
+                    setIsSubscribed(true);
+                }
+            }
+        };
+
+        setupChat();
+
+        return () => {
+            if (isSubscribed) {
+                ChatMessagingService.deactivate();
+                setIsSubscribed(false);
+            }
+            setMessages([]);
+            setNewMensaje("");
+            setNewFile(null);
+            setAttempMensajeEnviado(false);
+        }
+    }, [idConversacion]);
+
+    const enviarMensaje = async (mensaje: string) => {
+        if (isSubscribed && newMensaje) {
+            let savedFileUrl: string | undefined = undefined;
+
+            // Verificar si se enviará un archivo:
+            if (newFile) {
+                const formData = new FormData();
+                formData.append("file", newFile);
+
+                savedFileUrl = await saveChatFile(formData);
+            }
+
+            ChatMessagingService.sendMessage(idConversacion, {
+                sentBy: idUsuarioLogged,
+                mensaje,
+                resourceUrl: savedFileUrl
+            });
+
+            setNewMensaje("");
+            setNewFile(null);
+            setAttempMensajeEnviado(false);
+        } else {
+            setAttempMensajeEnviado(true);
+        }
     }
 
-    const enviarMensaje = () => {
-        /* ChatMessagingService.sendMessage({
-            id: crypto.randomUUID(),
-            idEmisor: idUsuario,
-            idReceptor: receptor.id,
-            mensaje: newMensaje,
-            fecha: new Date()
-        }); */
-
-        // Enviar mensaje al web socket del panel
-        sendMessageToMainWSPanel(newMensaje, receptor);
-
-        //Actualizar mensajes
-        setNewMensaje("");
+    const handleLoadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            setNewFile(file);
+        }
     }
 
     return (
-        <>
-            {open &&
-                <div className={chattingStyles.chattingModule}>
-                    <div className={chattingStyles.contactName}>
-                        <h3>{`${receptor.nombres} ${receptor.apellidos}`}</h3>
-                    </div>
-                    <div className={chattingStyles.bubbleContent}>
-                        {messages.map(m => (
-                            <div className={`${chattingStyles.bubbleMessage} ${m.idEmisor == idUsuario ? chattingStyles.myself : chattingStyles.themself}`}>
-                                <span>{m.mensaje}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <div className={chattingStyles.sendOption}>
+        <div className={`${chattingStyles.chattingModule} flex-grow-3`}>
+            <div className={chattingStyles.contactName}>
+                <h3>{`${receptor?.fullName}`}</h3>
+            </div>
+            <div className={chattingStyles.bubbleContent}>
+                {messages.map((m, i) => (
+                    <BubbleMessage key={i}
+                        myself={m.sentBy === idUsuarioLogged}
+                        resourceUrl={m.resourceUrl}
+                        text={m.mensaje} />
+                ))}
+            </div>
+            <div className={chattingStyles.sendOption}>
+                <div className="form">
+                    <div className="form-control">
                         <input type="text"
                             value={newMensaje}
                             onChange={(e) => setNewMensaje(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && enviarMensaje()} />
-                        {
-                            !isLastMenssageSent && <span>No se pudo enviar el mensaje. Inténtelo de nuevo</span>
-                        }
+                            onKeyDown={(e) => e.key === 'Enter' && enviarMensaje(e.currentTarget.value)} />
+                        {(attempMensajeEnviado && !newMensaje) && <p>Mensaje requerido</p>}
+                    </div>
+                    <div className="form-control">
+                        <input type="file" name="" id="file-message"
+                            onChange={handleLoadImage}
+                            accept=".jpg, .jpeg, .png" />
                     </div>
                 </div>
-            }
-        </>
+                {newFile &&
+                    <div className="form-control">
+                        <img className="form-img-previsualizer" src={URL.createObjectURL(newFile)} alt="Preview" />
+                    </div>
+                }
+            </div>
+        </div>
     )
 }

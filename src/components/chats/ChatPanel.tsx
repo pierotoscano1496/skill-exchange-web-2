@@ -7,79 +7,58 @@ import chatPanelStyles from "@/styles/chats/chatpanel.module.scss";
 import ChatMessagingService from "@/services/ChatMessagingService";
 import UsuarioBasicInfo from "@/interfaces/chatting/UsuarioBasicInfo";
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
+import { getConversationWithUser, getConversationsFromUserLogged } from "@/actions/chatting.actions";
+import Message from "@/interfaces/models/chats/Message";
+import Contact from "@/interfaces/models/chats/Contact";
 
 type Props = {
-    idUsuario: string
+    idUserLogged: string
+    onOpenChatModule: (idConversacion: string) => void
 }
 
-export default ({ idUsuario }: Props) => {
-    const [contacts, setContacts] = useState<ContactModule[]>([]);
+interface ContactoUnico {
+    idConversation: string;
+    contact: Contact;
+    active: boolean;
+}
+
+export default ({ idUserLogged, onOpenChatModule }: Props) => {
+    const [contactosUnicos, setContactosUnicos] = useState<ContactoUnico[]>([]);
 
     useEffect(() => {
-        ChatMessagingService.connectAndSubscribe((message) => {
-            const receivedMessage = JSON.parse(message.body) as MensajeChat;
+        const loadConversaciones = async () => {
+            const conversations = await getConversationsFromUserLogged();
 
-            // Actualizar mensajes del módulo correspondiente
-            updateContactModuleLastMessageSent(receivedMessage.idReceptor);
-        });
-        ChatMessagingService.activate();
+            const uniqueContacts: ContactoUnico[] = [];
+            conversations.forEach(conversation => {
+                const contactoUnico = conversation.contacts
+                    .filter(contact => contact.idContact !== idUserLogged)
+                    .map(contact => ({
+                        idConversation: conversation.id,
+                        contact,
+                        active: false
+                    } as ContactoUnico));
 
-        return () => {
-            ChatMessagingService.deactivate();
+                uniqueContacts.push(...contactoUnico);
+            });
+            setContactosUnicos(uniqueContacts);
         }
-    })
 
-    const openChatModule = (idContact: string) => {
-        setContacts([...contacts].map(c => {
-            if (c.contactInfo.id === idContact) {
-                c.active = !c.active;
-            }
+        loadConversaciones();
 
-            return c;
-        }));
-    }
-
-    const handleSentMensajeFromModuleToMainWS = (mensaje: string, receptor: UsuarioBasicInfo) => {
-        ChatMessagingService.sendMessage({
-            id: crypto.randomUUID(),
-            idEmisor: idUsuario,
-            idReceptor: receptor.id,
-            mensaje: mensaje,
-            fecha: new Date()
-        });
-    }
-
-    const updateContactModuleLastMessageSent = (idContact: string) => {
-        setContacts([...contacts].map(c => {
-            if (c.contactInfo.id === idContact) {
-                c.lastMessageSent = true;
-            }
-
-            return c;
-        }));
-    }
+        return (() => {
+            setContactosUnicos([]);
+        })
+    }, []);
 
     return (
-        <>
-            <aside className={chatPanelStyles.chatpanel}>
-                <h3>Chats</h3>
-                {contacts.map(c =>
-                    <div onClick={() => openChatModule(c.contactInfo.id)}>
-                        <span key={c.contactInfo.id}>{`${c.contactInfo.nombres} ${c.contactInfo.apellidos}`}</span>
-                    </div>
-                )}
-            </aside>
-            {
-                contacts.map(c =>
-                    <ChatModule key={c.contactInfo.id}
-                        open={c.active}
-                        idUsuario={idUsuario}
-                        receptor={c.contactInfo}
-                        sendMessageToMainWSPanel={handleSentMensajeFromModuleToMainWS}
-                        isLastMenssageSent={c.lastMessageSent}
-                    />
-                )
-            }
-        </>
+        <aside className={`${chatPanelStyles.chatpanel} flex-grow-1`}>
+            <h3>Chats</h3>
+            {contactosUnicos.map(c =>
+                <div onClick={() => onOpenChatModule(c.idConversation)}>
+                    <span key={c.idConversation}>{c.contact.fullName}</span>
+                </div>
+            )}
+        </aside>
     )
 }

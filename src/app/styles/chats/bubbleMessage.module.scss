@@ -1,0 +1,29 @@
+.bubbleMessage {
+    display: flex;
+    flex-direction: column;
+    width: 20em;
+    margin: 0.5rem;
+    height: fit-content;
+    padding: 0.5rem 0.4rem;
+    border: solid 1px #4c4c4c;
+    border-radius: 0.5rem;
+
+    &>img[data-file=image] {
+        max-width: 15rem;
+        max-height: 15rem;
+    }
+
+    &>a>img[data-file=file-icon] {
+        max-width: 3.25rem;
+        max-height: 3.25rem;
+    }
+
+    &.myself {
+        background-color: #ffbc00;
+        justify-content: flex-end;
+    }
+
+    &.themself {
+        justify-content: flex-start;
+    }
+}

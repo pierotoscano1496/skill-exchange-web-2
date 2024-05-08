@@ -29,7 +29,11 @@ export default ({ children, usuario }: { children: React.ReactNode, usuario: Usu
                     <span><i className="fa-solid fa-gear"></i> Servicios</span>
                 </div>
                 <div className="sidebar-item">
-                    <span><i className="fa-solid fa-envelope"></i> Mis solicitudes</span></div>
+                    <span><i className="fa-solid fa-envelope"></i> Mis solicitudes</span>
+                </div>
+                <div className="sidebar-item">
+                    <span><i className="fa-solid fa-comment"></i> Mensajes</span>
+                </div>
             </div>
             <div className="">{children}</div>
         </div>
