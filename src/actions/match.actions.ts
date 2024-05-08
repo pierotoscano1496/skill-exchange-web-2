@@ -2,6 +2,7 @@
 
 import CreateMatchServicioBody from "@/interfaces/requestbody/matching/CreateMatchServicioBody";
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
+import MatchServicioProveedorDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioProveedorDetailsResponse";
 import MatchServicioResponse from "@/interfaces/responsebody/matching/MatchServicioResponse";
 import { TipoMatchServicioEstado } from "@/utils/types";
 import axios from "axios";
@@ -27,6 +28,12 @@ export const obtenerDetailsMatchsPrestamistaAndOptionalEstado = async (idPrestam
     const endpoint: string = `match/details/prestamista/${idPrestamista}${estado && `/estado/${estado}`}`;
     const resp = await backendInstanceAuth.get(endpoint);
     return resp.data as MatchServicioDetailsResponse[];
+}
+
+
+export const obtenerDetailsMatchsByCliente = async (idCliente: string) => {
+    const resp = await backendInstanceAuth.get(`details/cliente/${idCliente}`);
+    return resp.data as MatchServicioProveedorDetailsResponse[];
 }
 
 export const actualizarMatchEstado = async (id: string, estado: TipoMatchServicioEstado) => {

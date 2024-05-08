@@ -1,4 +1,4 @@
-import MensajeChat from "@/interfaces/models/MensajeChat";
+import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import { Client, IMessage, Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 

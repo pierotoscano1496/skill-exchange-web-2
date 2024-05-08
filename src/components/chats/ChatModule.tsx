@@ -2,7 +2,7 @@
 
 import { getChats } from "@/actions/chatting.actions";
 import ContactModule from "@/interfaces/chatting/ContactModule";
-import MensajeChat from "@/interfaces/models/MensajeChat";
+import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import ChatMessagingService from "@/services/ChatMessagingService";
 import { useEffect, useState } from "react";
 import chattingStyles from "@/styles/chats/chatting.module.scss";

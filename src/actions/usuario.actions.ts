@@ -3,6 +3,8 @@
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import FirstMessageChatBody from "@/interfaces/requestbody/messaging/FirstMessageChatBody";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import { backendInstance } from "@/utils/constants.backend";
 import axios from "axios";
 import { cookies } from "next/headers";
@@ -18,7 +20,7 @@ const backendInstanceAuth = axios.create({
     }
 });
 
-export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
-    const resp = await backendInstanceAuth.get(`servicio/usuario/${idPrestamista}`);
-    return resp.data as ServicioResponse[];
-}
+export const obtenerUsuarioLogged = async () => {
+    const resp = await backendInstanceAuth("usuario");
+    return resp.data as UsuarioRegisteredResponse;
+};
