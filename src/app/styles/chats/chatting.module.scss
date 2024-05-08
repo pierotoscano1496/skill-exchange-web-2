@@ -1,28 +1,58 @@
 .chattingModule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30em;
+
     .contactName h3 {
         font-weight: bolder;
     }
 
     .bubbleContent {
         display: flex;
-        width: 350px;
+        flex-direction: column;
+        width: 100%;
         height: 400px;
         overflow-y: scroll;
         scroll-behavior: smooth;
 
-        .bubbleMessage {
+        /* .bubbleMessage {
+            display: flex;
+            flex-direction: column;
             width: 20em;
+            margin: 0.5rem;
             height: fit-content;
+            padding: 0.5rem 0.4rem;
+            border: solid 1px #4c4c4c;
+            border-radius: 0.5rem;
+
+            &>img[data-file=image] {
+                max-width: 15rem;
+                max-height: 15rem;
+            }
+
+            &>a>img[data-file=file-icon] {
+                max-width: 3.25rem;
+                max-height: 3.25rem;
+            }
 
             &.myself {
+                background-color: #ffbc00;
                 justify-content: flex-end;
             }
 
             &.themself {
                 justify-content: flex-start;
             }
-        }
+        } */
     }
 
-    .sendOption {}
+    .sendOption {
+        padding: 0.5rem;
+        width: 100%;
+
+        .image-chat {
+            max-width: 10rem;
+        }
+    }
 }

@@ -7,17 +7,6 @@ import { backendInstance } from "@/utils/constants.backend";
 import axios from "axios";
 import { cookies } from "next/headers";
 
-const bearerToken = process.env.BEARER_TOKEN_NAME ? cookies().get(process.env.BEARER_TOKEN_NAME)?.value : "bearertoken";
-
-const backendInstanceAuth = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${bearerToken}`
-    }
-});
-
 const getBackendInstanceAuth = () => {
     const bearerToken = process.env.BEARER_TOKEN_NAME ? cookies().get(process.env.BEARER_TOKEN_NAME)?.value : "";
     const backendInstanceAuth = axios.create({
@@ -30,6 +19,21 @@ const getBackendInstanceAuth = () => {
     });
 
     return backendInstanceAuth;
+}
+
+export const getConversationById = async (idConversation: string) => {
+    const resp = await getBackendInstanceAuth().get(`chat/${idConversation}`);
+    return resp.data as MensajeChat;
+}
+
+export const getConversationWithUser = async (idUsuario: string) => {
+    const resp = await getBackendInstanceAuth().get(`chat/with/${idUsuario}`);
+    return resp.data as MensajeChat;
+}
+
+export const getConversationsFromUserLogged = async () => {
+    const resp = await getBackendInstanceAuth().get("chat/own");
+    return resp.data as MensajeChat[];
 }
 
 export const sendContactMessage = async (mensajeChat: FirstMessageChatBody) => {
