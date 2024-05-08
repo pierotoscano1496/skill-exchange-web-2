@@ -25,3 +25,12 @@ export const getMaxDateToISOString = (): string => {
     date.setFullYear(date.getFullYear() - 18);
     return convertDateToISOString(date);
 }
+
+export const getFormatFile = (fileName: string): string | null => {
+    const partes = fileName.split('.');
+    if (partes.length === 1) {
+        return null; // No se encontró ninguna extensión
+    } else {
+        return partes[partes.length - 1];
+    }
+}

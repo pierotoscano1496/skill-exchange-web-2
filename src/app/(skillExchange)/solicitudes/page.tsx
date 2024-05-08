@@ -58,14 +58,15 @@ export default ({ prestamista }: Params) => {
         setClienteAceptado(cliente);
     }
 
-    const handleConfirmSolicitudForRechazo = (match: MatchServicioDetailsResponse) => {
-        setOpenModalConfirmSolicitudRechazo(true);
-        setMatchForRechazo(match);
-    }
-
     const closeSolicitudAprobada = () => {
         setOpenModalSolicitudAprobada(false);
         setClienteAceptado(undefined);
+    }
+
+    const handleConfirmSolicitudForRechazo = (match: MatchServicioDetailsResponse) => {
+        // Abrir modal de confirmación de rechazar solicitud
+        setOpenModalConfirmSolicitudRechazo(true);
+        setMatchForRechazo(match);
     }
 
     const cancelarRechazoSolicitud = () => {
@@ -74,12 +75,13 @@ export default ({ prestamista }: Params) => {
     }
 
     const rechazarSolicitud = async () => {
-        setOpenModalConfirmSolicitudRechazo(false);
-
         // Rechazar solicitud
-        const matchRezadado = await actualizarMatchEstado(matchForRechazo!.id, "rechazado");
-        if (matchRezadado) {
+        const matchRechazado = await actualizarMatchEstado(matchForRechazo!.id, "rechazado");
+        if (matchRechazado) {
+            setOpenModalConfirmSolicitudRechazo(false); // Cerrar modal de confirmar rechazo
             setMatchForRechazo(undefined);
+
+            // Abrir modal de solicitud rechazada correctamente
             setOpenModalSolicitudRechazada(true);
         }
     }
@@ -92,7 +94,7 @@ export default ({ prestamista }: Params) => {
         <>
             <div className="principal">
                 <div className="form">
-                    <form>
+                    <div className="form">
                         <div className="form-control">
                             <label htmlFor="servicio">Servicio:</label>
                             <select name="servicio" value={servicio?.id}
@@ -103,7 +105,7 @@ export default ({ prestamista }: Params) => {
                                 )}
                             </select>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <div>
                     {matchsServicioSelected.length > 0 ? matchsServicioSelected.map(m =>
@@ -129,7 +131,7 @@ export default ({ prestamista }: Params) => {
                 <p>Contáctate para que pueda realizar el pago.</p>
             </ModalAlert>
 
-            <ModalConfirm isOpen={openModalConfirmSolicitudRechazo}
+            <ModalConfirm isOpen={openModalConfirmSolicitudRechazo && !!matchForRechazo}
                 onConfirm={rechazarSolicitud}
                 onCancel={cancelarRechazoSolicitud}
                 onClose={cancelarRechazoSolicitud}>

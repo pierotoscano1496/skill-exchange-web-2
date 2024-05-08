@@ -6,7 +6,7 @@ import ChatModule from "./ChatModule";
 import chatPanelStyles from "@/styles/chats/chatpanel.module.scss";
 import ChatMessagingService from "@/services/ChatMessagingService";
 import UsuarioBasicInfo from "@/interfaces/chatting/UsuarioBasicInfo";
-import MensajeChat from "@/interfaces/models/MensajeChat";
+import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 
 type Props = {
     idUsuario: string

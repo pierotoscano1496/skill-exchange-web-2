@@ -6,12 +6,16 @@
 $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
+$color-warning: hsl(59, 100%, 56%);
+$color-info: hsl(303, 100%, 41%);
 $color-no-avalable: hsl(0, 0%, 57%);
 
 $colors: (
   primary: $color-primary,
   secondary: $color-secondary,
-  danger: $color-danger
+  danger: $color-danger,
+  warning: $color-warning,
+  info: $color-info
 );
 
 @mixin select-color($propperty: null) {
@@ -20,7 +24,7 @@ $colors: (
       @if($propperty =="background") {
         background-color: $color;
 
-        @if($name =="primary") {
+        @if($name =="primary" or $name =="info") {
           color: white;
         }
       }
@@ -44,6 +48,26 @@ $colors: (
   }
 }
 
+@mixin form-styles {
+  &>.form-panel {
+    margin: 2rem 1rem;
+    border: 0.1em solid #000000;
+  }
+
+  .form-control {
+    padding: 0.5rem;
+
+    &>input {
+      width: 100%;
+    }
+
+    .form-img-previsualizer {
+      max-width: 10rem;
+      max-height: 10rem;
+    }
+  }
+}
+
 $justify-content-options: (
   flex-start,
   flex-end,
@@ -60,7 +84,9 @@ $justify-content-options: (
 $flex-direction-options: (
   wrap,
   row,
-  column
+  row-reverse,
+  column,
+  column-reverse
 );
 
 $align-items-options: (
@@ -145,6 +171,15 @@ body {
 
 button {
   @include button-styles;
+
+  &.btn-link {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 
 a {
@@ -155,18 +190,9 @@ a {
   }
 }
 
-div {
-
-  &.form {
-    &>.form-panel {
-      margin: 2rem 1rem;
-      border: 0.1em solid #000000;
-    }
-
-    .form-control {
-      padding: 0.5rem;
-    }
-  }
+div.form,
+form {
+  @include form-styles;
 }
 
 p,
