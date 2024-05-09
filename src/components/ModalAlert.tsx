@@ -13,7 +13,7 @@ type Params = {
 
 export default ({ children, onClose }: Params) => {
     return (
-        <div className={modalStyles.modalContainer}>
+        <div className={`${modalStyles.modalContainer} ${modalStyles.super}`}>
             <div className={modalStyles.modal}>
                 <header className={modalStyles.modalHeader}>
                     <h2>Mensaje</h2>
