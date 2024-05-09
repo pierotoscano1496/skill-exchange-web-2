@@ -8,34 +8,28 @@ import Image from "next/image";
 
 type Params = {
     children: React.ReactNode;
-    isOpen: boolean;
     onClose: () => void;
 }
 
-export default ({ children, isOpen, onClose }: Params) => {
+export default ({ children, onClose }: Params) => {
     return (
-        <>
-            {isOpen &&
-                <div className={modalStyles.modalContainer}>
-                    <div className={modalStyles.modal}>
-                        <header className={modalStyles.modalHeader}>
-                            <h2>Mensaje</h2>
-                            <button className={modalStyles.close} onClick={onClose} >
-                                <Image src={Close} alt="close" />
-                            </button>
-                        </header>
+        <div className={modalStyles.modalContainer}>
+            <div className={modalStyles.modal}>
+                <header className={modalStyles.modalHeader}>
+                    <h2>Mensaje</h2>
+                    <button className={modalStyles.close} onClick={onClose} >
+                        <Image src={Close} alt="close" />
+                    </button>
+                </header>
 
-                        <main className={modalStyles.modalContent}>
-                            {children}
-                        </main>
+                <main className={modalStyles.modalContent}>
+                    {children}
+                </main>
 
-                        <footer className={modalStyles.modalFooter}>
-                            <button className="btn-secondary" onClick={onClose}>Cerrar</button>
-                        </footer>
-                    </div>
-                </div>
-            }
-        </>
-
+                <footer className={modalStyles.modalFooter}>
+                    <button className="btn-secondary" onClick={onClose}>Cerrar</button>
+                </footer>
+            </div>
+        </div>
     )
 }
