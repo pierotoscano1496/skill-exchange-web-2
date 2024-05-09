@@ -1,3 +1,5 @@
+import { TipoMatchServicioEstado } from "@/utils/types";
+
 export default interface MatchServicioResponse {
     id: string;
     idServicio: string;
@@ -5,7 +7,7 @@ export default interface MatchServicioResponse {
     fecha: Date;
     fechaInicio: Date;
     fechaCierre: Date;
-    estado: string;
+    estado: TipoMatchServicioEstado;
     puntuacion: number;
     costo: number;
 }

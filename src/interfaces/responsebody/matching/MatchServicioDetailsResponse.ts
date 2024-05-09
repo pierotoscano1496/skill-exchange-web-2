@@ -1,3 +1,4 @@
+import { TipoMatchServicioEstado } from "@/utils/types";
 import ServicioResponse from "../servicio/ServicioResponse";
 import UsuarioResponse from "../usuario/UsuarioResponse";
 
@@ -10,7 +11,7 @@ export default interface MatchServicioDetailsResponse {
     fecha: Date;
     fechaInicio: Date;
     fechaCierre: Date;
-    estado: string;
+    estado: TipoMatchServicioEstado;
     puntuacion: number;
     costo: number;
 }
