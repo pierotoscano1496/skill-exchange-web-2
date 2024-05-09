@@ -6,6 +6,7 @@ import ModalAlert from "@/components/ModalAlert";
 import ModalConfirm from "@/components/ModalConfirm";
 import MatchContratoItem from "@/components/contratos/MatchContratoItem";
 import ModalVerPerfilUsuario from "@/components/solicitudes/ModalVerPerfilUsuario";
+import EstadoMatchOption from "@/interfaces/busqueda-servicio/EstadoMatchOption";
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
@@ -15,11 +16,6 @@ import { useEffect, useState } from "react";
 interface ServicioOption {
     id: string;
     titulo: string;
-}
-
-interface EstadoMatchOption {
-    estado: TipoMatchServicioEstado;
-    nombre: string;
 }
 
 export default ({ }) => {
