@@ -8,14 +8,17 @@ import { useEffect, useState } from "react";
 import { enviarMensajeByForm, getChatsNoMessages, saveChatFile } from "@/actions/chatting.actions";
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import ModalAlert from "../ModalAlert";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import MatchServicioProveedorDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioProveedorDetailsResponse";
 
 type Props = {
-    isOpen: boolean;
     onClose: () => void;
+    onMessageSent: (sentStatus: boolean) => void;
+    cliente: UsuarioRegisteredResponse;
     proveedor: UsuarioResponse;
 }
 
-export default ({ isOpen, onClose, proveedor }: Props) => {
+export default ({ onClose, onMessageSent, proveedor, cliente }: Props) => {
     const [newFile, setNewFile] = useState<File | null>(null);
     const [mensaje, setMensaje] = useState<string>("");
     const [attemptedSending, setAttemptedSending] = useState<boolean>(false);
@@ -29,32 +32,22 @@ export default ({ isOpen, onClose, proveedor }: Props) => {
             setConversation(chat);
         }
 
-        if (isOpen) {
-            getConversationWithProveedor();
-        }
-    }, [])
+        getConversationWithProveedor();
+
+        return (() => {
+            setNewFile(null);
+            setMensaje("");
+            setAttemptedSending(false);
+            setConversation(undefined);
+            setMensajeEnviado(false);
+        });
+    }, [proveedor])
 
     const handleLoadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files[0];
         if (file) {
             setNewFile(file);
-            /* const reader = new FileReader();
-            reader.onloadend = () => {
-                setNewFileUrl(reader.result as string);
-            };
-            reader.readAsDataURL(file); */
         }
-    }
-
-    const closeModal = () => {
-        // Resetear entradas
-        setNewFile(null);
-        setMensaje("");
-        setAttemptedSending(false);
-        setConversation(undefined);
-        setMensajeEnviado(false);
-
-        onClose();
     }
 
     const enviarMensajeContancia = async () => {
@@ -68,12 +61,13 @@ export default ({ isOpen, onClose, proveedor }: Props) => {
             savedFileUrl = await saveChatFile(formData);
             if (savedFileUrl) {
                 const messageSent = await enviarMensajeByForm(conversation!.id, {
+                    sentBy: cliente.id,
                     mensaje,
                     resourceUrl: savedFileUrl
                 });
 
                 if (messageSent) {
-                    setMensajeEnviado(true);
+                    onMessageSent(true);
                 }
             }
         } else {
@@ -82,53 +76,43 @@ export default ({ isOpen, onClose, proveedor }: Props) => {
     }
 
     return (
-        <>
-            {isOpen &&
-                <>
-                    <div className={modalStyles.modalContainer}>
-                        <div className={modalStyles.modal}>
-                            <header className={modalStyles.modalHeader}>
-                                <h2>Mensaje</h2>
-                                <button className={modalStyles.close} onClick={closeModal}>
-                                    <Image src={Close} alt="close" />
-                                </button>
-                            </header>
+        <div className={modalStyles.modalContainer}>
+            <div className={modalStyles.modal}>
+                <header className={modalStyles.modalHeader}>
+                    <h2>Mensaje</h2>
+                    <button className={modalStyles.close} onClick={onClose}>
+                        <Image src={Close} alt="close" />
+                    </button>
+                </header>
 
-                            <main className={modalStyles.modalContent}>
-                                <div className="form">
-                                    <div className="form-control">
-                                        <input type="text" name="mensaje" id="mensaje"
-                                            value={mensaje}
-                                            onChange={(e) => setMensaje(e.target.value)}
-                                        />
-                                        {(attemptedSending && !mensaje) && <p>Escriba un mensaje</p>}
-                                    </div>
-                                    <div className="form-control">
-                                        <input type="file" name="" id="file-message"
-                                            accept=".jpg, .jpeg, .png"
-                                            onChange={handleLoadImage} />
-                                        {(attemptedSending && !newFile) && <p>Adjunte el archivo de la constancia</p>}
-                                    </div>
-                                </div>
-                                {newFile &&
-                                    <div className="form-control">
-                                        <img className="form-img-previsualizer" src={URL.createObjectURL(newFile)} alt="Preview" />
-                                    </div>
-                                }
-                            </main>
-
-                            <footer className={modalStyles.modalFooter}>
-                                <button className="btn-primary" onClick={enviarMensajeContancia}>Enviar</button>
-                                <button className="btn-secondary" onClick={closeModal}>Cancelar</button>
-                            </footer>
+                <main className={modalStyles.modalContent}>
+                    <div className="form">
+                        <div className="form-control">
+                            <input type="text" name="mensaje" id="mensaje"
+                                value={mensaje}
+                                onChange={(e) => setMensaje(e.target.value)}
+                            />
+                            {(attemptedSending && !mensaje) && <p>Escriba un mensaje</p>}
+                        </div>
+                        <div className="form-control">
+                            <input type="file" name="" id="file-message"
+                                accept=".jpg, .jpeg, .png"
+                                onChange={handleLoadImage} />
+                            {(attemptedSending && !newFile) && <p>Adjunte el archivo de la constancia</p>}
                         </div>
                     </div>
-                    <ModalAlert isOpen={mensajeEnviado}
-                        onClose={closeModal}>
-                        <p>Constancia enviada con éxito</p>
-                    </ModalAlert>
-                </>
-            }
-        </>
+                    {newFile &&
+                        <div className="form-control">
+                            <img className="form-img-previsualizer" src={URL.createObjectURL(newFile)} alt="Preview" />
+                        </div>
+                    }
+                </main>
+
+                <footer className={modalStyles.modalFooter}>
+                    <button className="btn-primary" onClick={enviarMensajeContancia}>Enviar</button>
+                    <button className="btn-secondary" onClick={onClose}>Cancelar</button>
+                </footer>
+            </div>
+        </div>
     )
 }
