@@ -1,9 +1,13 @@
 "use server";
 
+import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import FirstMessageChatBody from "@/interfaces/requestbody/messaging/FirstMessageChatBody";
+import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
+import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
+import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
-import { backendInstance } from "@/utils/constants.backend";
+import { getBackendInstance, getBackendInstanceAuth } from "@/utils/constants.backend";
 import axios from "axios";
 import { cookies } from "next/headers";
 
@@ -19,6 +23,21 @@ const backendInstanceAuth = axios.create({
 });
 
 export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
-    const resp = await backendInstanceAuth.get(`servicio/usuario/${idPrestamista}`);
+    const resp = await getBackendInstanceAuth().get(`servicio/usuario/${idPrestamista}`);
     return resp.data as ServicioResponse[];
+}
+
+export const searchServicioWithParams = async (params: SearchServiciosParametersBody) => {
+    const resp = await getBackendInstanceAuth().post("servicio/busqueda", params);
+    return resp.data as ServicioBusquedaResponse[];
+}
+
+export const getServicioDetails = async (id: string) => {
+    const response = await getBackendInstance().get(`servicio/details/preview/${id}`);
+    return response.data as ServicioDetailsResponse;
+}
+
+export const getServicioReview = async (id: string) => {
+    const response = await getBackendInstance().get(`servicios/review/${id}`);
+    return response.data as ServicioReviewResponse;
 }

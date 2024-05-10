@@ -1,9 +1,11 @@
 "use client";
 
+import { obtenerCategorias } from "@/actions/categoria.actions";
+import { obtenerSkillsBySubCategoria } from "@/actions/skill.action";
+import { obtenerSubCategoriasByCategoria } from "@/actions/subcategoria.actions";
 import Categoria from "@/interfaces/models/Categoria";
 import Skill from "@/interfaces/models/Skill";
 import SubCategoria from "@/interfaces/models/SubCategoria";
-import { backendInstance } from "@/utils/constants.backend";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
@@ -18,20 +20,30 @@ export default () => {
     const router = useRouter();
 
     useEffect(() => {
-        obtenerCategorias();
+        const setup = async () => {
+            setCategorias(await obtenerCategorias());
+        }
+
+        setup();
+
+        return (() => {
+            setCategorias([]);
+            setSubCategorias([]);
+            setSkills([]);
+
+            setKeyWord("");
+            setIdCategoria("");
+            setIdSubCategoria("");
+            setIdSkill("");
+        })
     }, [])
 
-    const obtenerCategorias = async () => {
-        const response = await backendInstance.get("categoria");
-        setCategorias(response.data as Categoria[]);
-    }
+
 
     const obtenerSubCategorias = async (idCategoria: string) => {
         if (idCategoria) {
-            const response = await backendInstance.get(`sub-categoria/categoria/${idCategoria}`);
-            if (response.data) {
-                setSubCategorias(response.data as SubCategoria[]);
-            }
+            const subCategoriasFromCategoria = await obtenerSubCategoriasByCategoria(idCategoria);
+            setSubCategorias(subCategoriasFromCategoria);
         } else {
             setSubCategorias([]);
         }
@@ -39,10 +51,8 @@ export default () => {
 
     const obtenerSkills = async (idSubCategoria: string) => {
         if (idSubCategoria) {
-            const response = await backendInstance.get(`skill/sub-categoria/${idSubCategoria}`);
-            if (response.data) {
-                setSkills(response.data as Skill[]);
-            }
+            const skillsFromSubCategoria = await obtenerSkillsBySubCategoria(idSubCategoria);
+            setSkills(skillsFromSubCategoria);
         } else {
             setSkills([]);
         }
