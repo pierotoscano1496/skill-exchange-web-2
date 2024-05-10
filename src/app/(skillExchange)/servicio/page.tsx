@@ -1,10 +1,11 @@
+import { searchServicioWithParams } from "@/actions/servicio.actions";
 import SearchServicioForm from "@/components/busqueda-servicio/SearchServicioForm";
 import ServicioItem from "@/components/busqueda-servicio/ServicioItem";
 import Categoria from "@/interfaces/models/Categoria";
+import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
 import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
-import { getServerInstanceAuthorized } from "@/utils/constants.server";
 
-type SearchParamsType = {
+/* type SearchParamsType = {
     keyWord: string;
     idCategoria: string;
     idSubCategoria: string;
@@ -12,21 +13,21 @@ type SearchParamsType = {
 }
 
 const obtenerServicios = async (searchParams: SearchParamsType): Promise<ServicioBusquedaResponse[]> => {
-    const response = await getServerInstanceAuthorized().post("servicio/busqueda", searchParams || {
+    const serviciosPreview = await searchServicioWithParams(searchParams).post("servicio/busqueda", searchParams || {
         keyWord: "",
         idCategoria: "",
         idSkill: "",
         idSubCategoria: ""
     });
     return (response.data as ServicioBusquedaResponse[]).slice(0, 50);
+} */
+
+type Props = {
+    searchParams: SearchServiciosParametersBody
 }
 
-export default async ({ searchParams }: {
-    searchParams: {
-        [key: string]: string
-    }
-}) => {
-    const servicios: ServicioBusquedaResponse[] = await obtenerServicios(searchParams as SearchParamsType);
+export default async ({ searchParams }: Props) => {
+    const servicios: ServicioBusquedaResponse[] = await searchServicioWithParams(searchParams as SearchServiciosParametersBody);
 
     return (
         <div>

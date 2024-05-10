@@ -1,12 +1,14 @@
 import ContactForm from "@/components/busqueda-servicio/ContactForm";
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
 import { checkUsuario, getUsuario } from "@/utils/apitools/SessionManager";
-import { getServerInstance } from "@/utils/constants.server";
 import { TipoModalidadPagoOption } from "@/utils/types";
 import commentStyles from "./comment.module.scss";
 import reviewStyles from "@/app/styles/review/review-servicio.module.scss";
 import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
 import FormReviewServicio from "@/components/review-servicio/FormReviewServicio";
+import { getServicioDetails, getServicioReview } from "@/actions/servicio.actions";
+import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 
 type ParamsType = {
     id: string;
@@ -28,26 +30,23 @@ const tipoModalidadOptions: ModalidadOption[] = [
     }
 ];
 
-const getServicioDetails = async (params: ParamsType) => {
-    const response = await getServerInstance().get(`servicio/details/${params.id}`);
-    return response.data as ServicioDetailsResponse;
-}
-
-const getServicioReview = async (params: ParamsType) => {
-    const response = await getServerInstance().get(`servicios/review/${params.id}`);
-    return response.data as ServicioReviewResponse;
-}
 
 export default async ({ params }: {
     params: {
         [key: string]: string
     }
 }) => {
-    const servicioDetails = await getServicioDetails(params as ParamsType);
+    const servicioDetails: ServicioDetailsResponse = await getServicioDetails(params.id);
 
-    const servicioReview = await getServicioReview(params as ParamsType);
+    const servicioReview: ServicioReviewResponse = await getServicioReview(params.id);
 
-    const usuarioLogged = await getUsuario();
+    let usuarioLogged: UsuarioRegisteredResponse | undefined = undefined;
+
+    try {
+        usuarioLogged = await obtenerUsuarioLogged();
+    } catch {
+        usuarioLogged = undefined;
+    }
 
     return (
         <div>
@@ -65,7 +64,8 @@ export default async ({ params }: {
                 )}
             </div>
             <div>
-                {usuarioLogged ? <ContactForm cliente={usuarioLogged} servicio={servicioDetails}>Enviar mensaje</ContactForm> :
+                {usuarioLogged ?
+                    <ContactForm cliente={usuarioLogged} servicio={servicioDetails}>Enviar mensaje</ContactForm> :
                     <p>
                         <a className="link-button btn-primary" href="/login">Inicia sesión</a>&nbsp;o
                         &nbsp;<a className="link-button btn-secondary" href="/registro/usuario">Regístrate</a>

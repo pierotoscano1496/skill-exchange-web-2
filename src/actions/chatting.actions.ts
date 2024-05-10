@@ -3,23 +3,7 @@
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import FirstMessageChatBody from "@/interfaces/requestbody/messaging/FirstMessageChatBody";
 import MessageBody from "@/interfaces/requestbody/messaging/MessageBody";
-import { backendInstance } from "@/utils/constants.backend";
-import axios from "axios";
-import { cookies } from "next/headers";
-
-const getBackendInstanceAuth = () => {
-    const bearerToken = process.env.BEARER_TOKEN_NAME ? cookies().get(process.env.BEARER_TOKEN_NAME)?.value : "";
-    const backendInstanceAuth = axios.create({
-        baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
-        withCredentials: true,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${bearerToken}`
-        }
-    });
-
-    return backendInstanceAuth;
-}
+import { getBackendInstanceAuth } from "@/utils/constants.backend";
 
 export const getConversationById = async (idConversation: string) => {
     const resp = await getBackendInstanceAuth().get(`chat/${idConversation}`);
@@ -37,9 +21,9 @@ export const getConversationsFromUserLogged = async () => {
 }
 
 export const sendContactMessage = async (mensajeChat: FirstMessageChatBody) => {
+    // Enviar primer mensaje o enviar a la conversación existente
     const resp = await getBackendInstanceAuth().post("chat", mensajeChat);
-
-    return resp.data;
+    return resp.data as MensajeChat;
 }
 
 export const getChats = async (idReceptor: string) => {

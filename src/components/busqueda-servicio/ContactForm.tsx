@@ -7,6 +7,7 @@ import { sendContactMessage } from "@/actions/chatting.actions";
 import { registrarMatch } from "@/actions/match.actions";
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import { useRouter } from "next/navigation";
 
 type Props = {
     children: React.ReactNode;
@@ -17,6 +18,14 @@ type Props = {
 export default ({ children, servicio, cliente }: Props) => {
     const [newMessage, setNewMessage] = useState<string>("");
     const [openContactForm, setOpenContactForm] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        return (() => {
+            setNewMessage("");
+            setOpenContactForm(false);
+        })
+    }, []);
 
     const enviarMensaje = async () => {
         const mensajeEnviado = await sendContactMessage({
@@ -34,8 +43,7 @@ export default ({ children, servicio, cliente }: Props) => {
             });
 
             if (matchRegistrado) {
-                setNewMessage("");
-                setOpenContactForm(false);
+                router.push("/servicio");
             }
         }
     }
@@ -43,12 +51,11 @@ export default ({ children, servicio, cliente }: Props) => {
     return (
         <>
             <button className="btn-primary" onClick={() => setOpenContactForm(true)}>{children}</button>
-            {
-                openContactForm &&
+            {openContactForm &&
                 <div className={modalStyles.modalContainer}>
                     <div className={modalStyles.modal}>
                         <header className={modalStyles.modalHeader}>
-                            <h2>Contáctate</h2> 
+                            <h2>Contáctate</h2>
                             <button className={modalStyles.close} >
                                 <img src={Close} alt="close" />
                             </button>

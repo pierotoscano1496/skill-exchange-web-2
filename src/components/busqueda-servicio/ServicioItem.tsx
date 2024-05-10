@@ -15,7 +15,7 @@ export default async ({ servicio }: ItemParams) => {
                 <span>S/. {servicio.precio}</span>
             </div>
             <div>
-                <img src={servicio.previewImageSource} />
+                {/* <img src={servicio.previewImageSource} /> */}
 
                 <a href={`/servicio/details/${servicio.id}`}>Ver más</a>
             </div>
