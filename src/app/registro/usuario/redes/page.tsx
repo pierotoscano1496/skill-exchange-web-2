@@ -2,9 +2,9 @@
 
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const RegistroUsuarioContacto = () => {
+export default () => {
     const {
         usuarioDatos,
         setCorreo,
@@ -18,17 +18,26 @@ const RegistroUsuarioContacto = () => {
         validateRegistroDatosContacto
     } = useRegistroUsuarioContext();
 
+    const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
     const router = useRouter();
 
     useEffect(() => {
         if (!validateRegistroUsuario()) {
             router.push("/registro/usuario/datos");
         }
-    })
+    });
+
+    useEffect(() => {
+        return (() => {
+            setAttempSubmit(false);
+        })
+    }, [])
 
     const nextStepRegistration = () => {
         if (validateRegistroDatosContacto()) {
             router.push("/registro/usuario/skills");
+        } else {
+            setAttempSubmit(true);
         }
     }
 
@@ -38,11 +47,13 @@ const RegistroUsuarioContacto = () => {
                 <label>Correo:
                     <input type="email" placeholder="ejemplo@mail.com" value={usuarioDatos.correo} onChange={(e) => setCorreo(e.target.value)} />
                 </label>
+                {(attempSubmit && !usuarioDatos.correo) && <p className="text-danger">Indique su correo</p>}
             </div>
             <div className="form-control">
                 <label>Contraseña:
                     <input type="password" value={usuarioDatos.clave} onChange={(e) => setClave(e.target.value)} />
                 </label>
+                {(attempSubmit && !usuarioDatos.clave) && <p className="text-danger">Escriba una contraseña</p>}
             </div>
             <div className="form-control">
                 <label>Introducción:
@@ -72,11 +83,14 @@ const RegistroUsuarioContacto = () => {
                         <input value={usuarioDatos.perfilTiktok} onChange={(e) => setPerfilTiktok(e.target.value)} />
                     </label>
                 </div>
+                {(attempSubmit && (!usuarioDatos.perfilLinkedin
+                    && !usuarioDatos.perfilFacebook
+                    && !usuarioDatos.perfilInstagram
+                    && !usuarioDatos.perfilTiktok
+                )) && <p className="text-danger">Indique al menos una de sus redes</p>}
             </div>
             <button onClick={nextStepRegistration} className="btn-primary">Siguiente</button>
             <button onClick={() => console.log(usuarioDatos)} className="btn-secondary">Corroborar</button>
         </div>
     )
 };
-
-export default RegistroUsuarioContacto;

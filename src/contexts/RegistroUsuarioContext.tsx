@@ -1,5 +1,3 @@
-"use client"
-
 import { RegistroSkill } from "@/interfaces/registro-usuario/RegistroSkill";
 import { RegistroUsuarioBodySkills } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
 import SkillAsignado from "@/interfaces/responsebody/usuario/SkillAsignado";

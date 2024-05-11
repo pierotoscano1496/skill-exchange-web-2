@@ -1,20 +1,16 @@
-@use "./variables.module.scss" as variables;
+.skillsSelected {
+    .skillContent {
+        .skillCard {
+            background-color: rgb(255, 208, 0);
+            width: fit-content;
+            padding: 1em;
+            margin: 0.5em;
+            border-radius: 0.5rem;
 
-.skillCard {
-    background-color: aquamarine;
-    width: fit-content;
-    padding: 1em;
-
-    span.texto {
-        font-weight: bold;
-        color: variables.$color-primary;
-    }
-
-    button.delete {
-        border-radius: 50%;
-        color: #e4e3e3;
-        background-color: variables.$color-danger;
-        padding: 0.5em;
-        margin: 0.5em 0 0.5em 0.5em;
+            .texto {
+                font-weight: bold;
+                /* color: variables.$color-primary; */
+            }
+        }
     }
 }

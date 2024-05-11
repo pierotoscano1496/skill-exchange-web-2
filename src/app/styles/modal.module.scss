@@ -16,7 +16,7 @@
     }
 
     .modal {
-        width: 30wv;
+        width: 30vw;
         height: auto;
         background-color: #fff;
         padding: 2rem;
@@ -25,19 +25,22 @@
         &Header {
             position: relative;
             border-bottom: 1px solid #dddddd;
+            display: flex;
+            justify-content: space-between;
 
             &Title {
                 text-align: center;
             }
 
             .close {
-                position: absolute;
-                top: 0;
-                right: 0;
+                position: relative;
                 background: transparent;
+                padding: 0;
+                border: none;
+                margin: 0;
 
                 img {
-                    width: 1rem;
+                    width: 1.5rem;
                     height: auto;
                     transition: all 0.3s;
                 }

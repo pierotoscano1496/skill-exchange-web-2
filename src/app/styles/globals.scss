@@ -1,107 +1,13 @@
+/* Main Tools */
+@import "./tools/variables";
+@import "./tools/flexbasics";
+@import "./tools/mixins";
+
+/* Font Awesome */
 @import "./fontawesome/fontawesome.scss";
 @import "./fontawesome/brands.scss";
 @import "./fontawesome/regular.scss";
 @import "./fontawesome/solid.scss";
-
-$color-primary: hsl(228, 100%, 61%);
-$color-secondary: hsl(125, 96%, 41%);
-$color-danger: hsl(0, 100%, 61%);
-$color-warning: hsl(59, 100%, 56%);
-$color-info: hsl(303, 100%, 41%);
-$color-no-avalable: hsl(0, 0%, 57%);
-
-$colors: (
-  primary: $color-primary,
-  secondary: $color-secondary,
-  danger: $color-danger,
-  warning: $color-warning,
-  info: $color-info
-);
-
-@mixin select-color($propperty: null) {
-  @each $name, $color in $colors {
-    &-#{$name} {
-      @if($propperty =="background") {
-        background-color: $color;
-
-        @if($name =="primary" or $name =="info") {
-          color: white;
-        }
-      }
-
-      @else {
-        color: $color;
-      }
-    }
-  }
-}
-
-@mixin button-styles {
-  border: 2px solid #000000;
-  border-radius: 0.3rem;
-  color: #4c4c4c;
-  padding: 1em;
-  margin: 1rem 0rem;
-
-  &.btn {
-    @include select-color("background");
-  }
-}
-
-@mixin form-styles {
-  &>.form-panel {
-    margin: 2rem 1rem;
-    border: 0.1em solid #000000;
-  }
-
-  .form-control {
-    padding: 0.5rem;
-
-    &>input {
-      width: 100%;
-    }
-
-    .form-img-previsualizer {
-      max-width: 10rem;
-      max-height: 10rem;
-    }
-  }
-}
-
-$justify-content-options: (
-  flex-start,
-  flex-end,
-  center,
-  space-between,
-  space-around,
-  space-evenly,
-  start,
-  end,
-  left,
-  right
-);
-
-$flex-direction-options: (
-  wrap,
-  row,
-  row-reverse,
-  column,
-  column-reverse
-);
-
-$align-items-options: (
-  stretch: stretch,
-  flex-start: flex-start,
-  flex-end: flex-end,
-  center: center,
-  baseline: baseline,
-  first-baseline: first baseline,
-  last-baseline: last baseline,
-  start: start,
-  end: end,
-  self-start: self-start,
-  self-end:self-end
-);
 
 /// Replace `$search` with `$replace` in `$string`
 /// @author Kitty Giraudel
@@ -117,45 +23,6 @@ $align-items-options: (
   }
 
   @return $string;
-}
-
-/*
-  Flex container mixinS
-*/
-@mixin flex-align-items {
-  @each $name, $option in $align-items-options {
-    &.#{$name} {
-      align-items: $option;
-    }
-  }
-}
-
-@mixin flex-justify-content {
-  @each $option in $justify-content-options {
-    &.content-#{$option} {
-      justify-content: $option;
-    }
-  }
-}
-
-@mixin flex-direction {
-  @each $option in $flex-direction-options {
-    &.#{$option} {
-      flex-direction: $option;
-    }
-  }
-}
-
-/*
-  Flex items mixins
-*/
-@mixin flex-grow {
-  @for $i from 1 through 5 {
-    &.flex-grow-#{$i} {
-      flex-grow: $i;
-    }
-  }
-
 }
 
 * {
@@ -179,6 +46,18 @@ button {
     color: #069;
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  &.btn-close {
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &>img {
+      width: 1.5rem;
+    }
   }
 }
 
@@ -205,10 +84,6 @@ h5,
 h6 {
   &.text {
     @include select-color;
-
-    &-no-avalable {
-      color: $color-no-avalable;
-    }
   }
 }
 
@@ -246,7 +121,24 @@ hr {
   @include flex-align-items;
   @include flex-justify-content;
 
-  .item {
+  &>div,
+  span,
+  img,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  form,
+  label,
+  input,
+  select,
+  textarea,
+  button {
     @include flex-grow;
+    @include flex-order;
+    @include flex-align-self;
   }
 }

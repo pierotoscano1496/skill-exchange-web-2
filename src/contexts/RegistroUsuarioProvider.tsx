@@ -1,18 +1,11 @@
-"use client";
-
 import { useState } from "react";
 import { RegistroUsuarioContext } from "./RegistroUsuarioContext";
 import { RegistroUsuarioBodySkills } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
 import { TipoDocumento, TipoRegistroUsuario } from "@/utils/types";
-import Skill from "@/interfaces/models/Skill";
-import SkillUsuario from "@/interfaces/models/SkillUsuario";
 import { RegistroSkill } from "@/interfaces/registro-usuario/RegistroSkill";
-import axios from "axios";
 import AsignacionSkillToUsuarioRequest from "@/interfaces/requestbody/AsignacionSkillToUsuarioRequest";
-import UsuarioSkillsAsignadosResponse from "@/interfaces/responsebody/usuario/UsuarioSkillsAsignadosResponse";
 import CreateUsuarioBody from "@/interfaces/requestbody/CreateUsuarioBody";
-import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import { backendInstance } from "@/utils/constants.backend";
+import { asignarSkillsToUsuario, registrarUsuarioDatos } from "@/actions/usuario.actions";
 
 export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const fechaNacimientoMax = new Date();
@@ -152,7 +145,7 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
 
     const removeSkill = (id: string) => {
         let skills = [...usuarioDatos.skills];
-        skills.splice(skills.findIndex(s => s.id === id));
+        skills.splice(skills.findIndex(s => s.id === id), 1);
 
         setUsuarioDatos({
             ...usuarioDatos,
@@ -175,10 +168,11 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
     const validateRegistroDatosContacto = (): boolean => {
         return !!(usuarioDatos.correo
             && usuarioDatos.clave
-            && usuarioDatos.perfilFacebook
-            && usuarioDatos.perfilInstagram
-            && usuarioDatos.perfilLinkedin
-            && usuarioDatos.perfilTiktok)
+            && (usuarioDatos.perfilFacebook
+                || usuarioDatos.perfilInstagram
+                || usuarioDatos.perfilLinkedin
+                || usuarioDatos.perfilTiktok
+            ));
     };
 
     const validateRegistroSkills = (): boolean => {
@@ -202,22 +196,22 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
             perfilLinkedin: usuarioDatos.perfilLinkedin!,
             perfilTiktok: usuarioDatos.perfilTiktok!
         };
-        const responseUsuarioRegistered = await backendInstance.post(`usuario`, usuarioBodyRequest);
+        const usuarioRegistered = await registrarUsuarioDatos(usuarioBodyRequest);
 
-        const { id } = responseUsuarioRegistered.data as UsuarioRegisteredResponse;
+        const { id } = usuarioRegistered;
 
         setUsuarioDatos({
             ...usuarioDatos,
             id
         });
 
-        const responseSkillsAsignados = await backendInstance.patch(`usuario/skills/${usuarioDatos.id}`, usuarioDatos.skills.map(s => ({
+        const usuarioSkillsAsignados = await asignarSkillsToUsuario(usuarioRegistered.id, usuarioDatos.skills.map(s => ({
             idSkill: s.id,
             descripcion: s.desempeno,
             nivelConocimiento: s.nivelConocimiento
         })) as AsignacionSkillToUsuarioRequest[]);
 
-        const { skillsAsignados } = responseSkillsAsignados.data as UsuarioSkillsAsignadosResponse;
+        const { skillsAsignados } = usuarioSkillsAsignados;
 
         return { id, skillsAsignados }
     }

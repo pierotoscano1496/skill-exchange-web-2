@@ -1,0 +1,104 @@
+/* Global mixins */
+@mixin select-color($propperty: null) {
+    @each $name, $color in $colors {
+        &-#{$name} {
+            @if($propperty =="background") {
+                background-color: $color;
+
+                @if($name =="primary") {
+                    color: white;
+                }
+            }
+
+            @else {
+                color: $color;
+            }
+        }
+    }
+}
+
+@mixin button-styles {
+    border: 2px solid #000000;
+    border-radius: 0.3rem;
+    color: #4c4c4c;
+    padding: 1em;
+    margin: 1rem 0rem;
+
+    &.btn {
+        @include select-color("background");
+    }
+}
+
+@mixin form-styles {
+    &>.form-panel {
+        margin: 2rem 1rem;
+        border: 0.1em solid #000000;
+    }
+
+    .form-control {
+        padding: 0.5rem;
+
+        &>input {
+            width: 100%;
+        }
+
+        .form-img-previsualizer {
+            max-width: 10rem;
+            max-height: 10rem;
+        }
+    }
+}
+
+/*
+  Flex container mixins
+*/
+@mixin flex-align-items {
+    @each $name, $option in $align-items-options {
+        &.#{$name} {
+            align-items: $option;
+        }
+    }
+}
+
+@mixin flex-justify-content {
+    @each $option in $justify-content-options {
+        &.content-#{$option} {
+            justify-content: $option;
+        }
+    }
+}
+
+@mixin flex-direction {
+    @each $option in $flex-direction-options {
+        &.#{$option} {
+            flex-direction: $option;
+        }
+    }
+}
+
+/*
+    Flex items mixins
+*/
+@mixin flex-grow {
+    @for $i from 1 through 5 {
+        &.flex-grow-#{$i} {
+            flex-grow: $i;
+        }
+    }
+}
+
+@mixin flex-order {
+    @for $i from 0 through 100 {
+        &.flex-order-#{$i} {
+            order: $i;
+        }
+    }
+}
+
+@mixin flex-align-self {
+    @each $name, $option in $align-self-options {
+        &.#{$name} {
+            align-self: $option;
+        }
+    }
+}
