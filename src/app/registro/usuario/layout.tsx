@@ -1,11 +1,13 @@
 import { RegistroUsuarioProvider } from "@/contexts/RegistroUsuarioProvider"
 
-const RegistroUsuarioLayout = ({ children }: { children: React.ReactNode }) => {
+export default ({
+    children
+}: Readonly<{
+    children: React.ReactNode;
+}>) => {
     return (
         <RegistroUsuarioProvider>
             {children}
         </RegistroUsuarioProvider>
     )
 };
-
-export default RegistroUsuarioLayout;

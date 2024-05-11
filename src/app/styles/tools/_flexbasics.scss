@@ -1,0 +1,42 @@
+$justify-content-options: (
+    flex-start,
+    flex-end,
+    center,
+    space-between,
+    space-around,
+    space-evenly,
+    start,
+    end,
+    left,
+    right
+);
+
+$flex-direction-options: (
+    row,
+    row-reverse,
+    column,
+    column-reverse
+);
+
+$align-items-options: (
+    stretch: stretch,
+    flex-start: flex-start,
+    flex-end: flex-end,
+    center: center,
+    baseline: baseline,
+    first-baseline: first baseline,
+    last-baseline: last baseline,
+    start: start,
+    end: end,
+    self-start: self-start,
+    self-end:self-end
+);
+
+$align-self-options: (
+    auto,
+    flex-start,
+    flex-end,
+    center,
+    baseline,
+    stretch
+);

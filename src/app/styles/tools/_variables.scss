@@ -1,0 +1,15 @@
+$color-primary: hsl(228, 100%, 61%);
+$color-secondary: hsl(125, 96%, 41%);
+$color-danger: hsl(0, 100%, 61%);
+$color-warning: hsl(59, 100%, 56%);
+$color-info: hsl(303, 100%, 41%);
+$color-no-available: hsl(0, 0%, 57%);
+
+$colors: (
+    primary: $color-primary,
+    secondary: $color-secondary,
+    danger: $color-danger,
+    warning: $color-warning,
+    info: $color-info,
+    no-available: $color-no-available
+);
