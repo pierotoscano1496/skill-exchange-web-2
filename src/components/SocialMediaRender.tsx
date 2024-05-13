@@ -13,7 +13,7 @@ const SocialMediaRender = ({ link, onRender }: {
             link,
             medio: "facebook"
         });
-        return <FacebookEmbed url={link} width={550} onLoad={} />
+        return <FacebookEmbed url={link} width={550} />
     } else if (link.startsWith("https://www.instagram.com/")) {
         onRender({
             link,
