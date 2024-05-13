@@ -1,5 +1,3 @@
-"use server";
-
 import axios from "axios";
 import { cookies } from "next/headers";
 
@@ -37,11 +35,20 @@ export const getBackendInstanceAuth = () => {
     return backendInstanceAuth;
 }
 
-/* export const backendInstanceAuthorized = axios.create({
-    baseURL: "/backend/",
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${bearerToken}`
-    }
-}); */
+/**
+ * Usar para llamadas a Endpoints restringidos (formularios)
+ * @returns AxiosInstance
+ */
+export const getBackendInstanceAuthForms = () => {
+    const bearerToken = cookies().get(process.env.BEARER_TOKEN_NAME!)!.value;
+
+    const backendInstanceAuth = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND!,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${bearerToken}`
+        }
+    });
+
+    return backendInstanceAuth;
+}

@@ -2,6 +2,8 @@
 @import "./tools/variables";
 @import "./tools/flexbasics";
 @import "./tools/mixins";
+@import "./tools/cards";
+@import "./tools/tabs";
 
 /* Font Awesome */
 @import "./fontawesome/fontawesome.scss";
@@ -27,7 +29,7 @@
 
 * {
   margin: 0;
-  padding: 0;
+  padding: 0.3rem;
   box-sizing: border-box;
   font-family: 'Courier New', Courier, monospace;
 }
@@ -140,5 +142,14 @@ hr {
     @include flex-grow;
     @include flex-order;
     @include flex-align-self;
+  }
+}
+
+table {
+  border-collapse: collapse;
+
+  td,
+  th {
+    border: 1px solid;
   }
 }

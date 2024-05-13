@@ -1,31 +1,51 @@
 "use server";
 
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
-import MensajeChat from "@/interfaces/models/chats/MensajeChat";
-import FirstMessageChatBody from "@/interfaces/requestbody/messaging/FirstMessageChatBody";
+import AsignacionModalidadPagoToServicioRequest from "@/interfaces/requestbody/servicio/AsignacionModalidadPagoToServicioRequest";
+import AsignacionRecursoMultimediaToServicioRequest from "@/interfaces/requestbody/servicio/AsignacionRecursoMultimediaToServicioRequest";
+import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicioBody";
 import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
 import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
+import MultimediaResourceUploadedResponse from "@/interfaces/responsebody/servicio/MultimediaResourceUploadedResponse";
 import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
+import ServicioModalidadesPagoAsignadosResponse from "@/interfaces/responsebody/servicio/ServicioModalidadesPagoAsignadosResponse";
+import ServicioRecursosMultimediaAsignadosResponse from "@/interfaces/responsebody/servicio/ServicioRecursosMultimediaAsignadosResponse";
+import ServicioRegisteredResponse from "@/interfaces/responsebody/servicio/ServicioRegisteredResponse";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
-import { getBackendInstance, getBackendInstanceAuth } from "@/utils/constants.backend";
-import axios from "axios";
-import { cookies } from "next/headers";
+import { getBackendInstance, getBackendInstanceAuth, getBackendInstanceAuthForms } from "@/utils/constants.backend";
 
-const bearerToken = process.env.BEARER_TOKEN_NAME ? cookies().get(process.env.BEARER_TOKEN_NAME)?.value : "bearertoken";
-
-const backendInstanceAuth = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${bearerToken}`
-    }
-});
-
+/* Gestión de servicios */
 export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
     const resp = await getBackendInstanceAuth().get(`servicio/usuario/${idPrestamista}`);
     return resp.data as ServicioResponse[];
 }
+
+export const registrarServicio = async (servicio: CreateServicioBody) => {
+    const resp = await getBackendInstanceAuth().post("servicio", servicio);
+    return resp.data as ServicioRegisteredResponse;
+}
+
+export const asignarRecursosMultimediaToServicio = async (idServicio: string, recursosMultimedia: AsignacionRecursoMultimediaToServicioRequest[]) => {
+    const resp = await getBackendInstanceAuth().patch(`servicio/recursos-multimedia/${idServicio}`, recursosMultimedia);
+    return resp.data as ServicioRecursosMultimediaAsignadosResponse;
+}
+
+export const uploadMultimediaFilesToServicio = async (idServicio: string, formDataFile: FormData) => {
+    const resp = await getBackendInstanceAuthForms().patch(`servicio/upload-multimedia/${idServicio}`, formDataFile);
+    return resp.data as MultimediaResourceUploadedResponse[];
+}
+
+export const uploadMetadataModalidadPagoToService = async (idServicio: string, formDataFile: FormData) => {
+    const resp = await getBackendInstanceAuthForms().patch(`servicio/upload-metadata-modalidad-pago/${idServicio}`, formDataFile);
+    return resp.data as string;
+}
+
+export const asignarModalidadesPagoToServicio = async (idServicio: string, modalidadesPago: AsignacionModalidadPagoToServicioRequest[]) => {
+    const resp = await getBackendInstanceAuth().patch(`servicio/modalidad-pago/${idServicio}`, modalidadesPago);
+    return resp.data as ServicioModalidadesPagoAsignadosResponse;
+}
+
+/* Búsqueda de servicios (público) */
 
 export const searchServicioWithParams = async (params: SearchServiciosParametersBody) => {
     const resp = await getBackendInstanceAuth().post("servicio/busqueda", params);

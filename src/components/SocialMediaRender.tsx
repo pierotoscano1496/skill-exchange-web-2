@@ -1,36 +1,58 @@
 "use client";
 
-import { MedioRecursoMultimedia } from "@/utils/types";
+import LinkData from "@/interfaces/registro-servicio/LinkData";
+import { useState } from "react";
 import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, TikTokEmbed, TwitterEmbed, YouTubeEmbed } from "react-social-media-embed";
 
-const SocialMediaRender = ({ link, setterMedio }: {
+const SocialMediaRender = ({ link, onRender }: {
     link: string,
-    setterMedio: (medio: MedioRecursoMultimedia) => void
+    onRender: (linkData: LinkData) => void
 }) => {
     if (link.startsWith("https://www.facebook.com/")) {
-        setterMedio("facebook");
-        return <FacebookEmbed url={link} width={550} />
+        onRender({
+            link,
+            medio: "facebook"
+        });
+        return <FacebookEmbed url={link} width={550} onLoad={} />
     } else if (link.startsWith("https://www.instagram.com/")) {
-        setterMedio("instagram");
+        onRender({
+            link,
+            medio: "instagram"
+        });
         return <InstagramEmbed url={link} width={328} />
     } else if (link.startsWith("https://www.tiktok.com")) {
-        setterMedio("tiktok");
+        onRender({
+            link,
+            medio: "tiktok"
+        });
         return <TikTokEmbed url={link} width={325} />
     } else if (link.startsWith("https://www.youtube.com/")) {
-        setterMedio("youtube");
+        onRender({
+            link,
+            medio: "youtube"
+        });
         return <YouTubeEmbed url={link} width={325} height={220} />
     } else if (link.startsWith("https://twitter.com/")) {
-        setterMedio("twitter");
+        onRender({
+            link,
+            medio: "twitter"
+        });
         return <TwitterEmbed url={link} width={325} />
     } else if (link.startsWith("https://www.linkedin.com/")) {
-        setterMedio("linkedin");
+        onRender({
+            link,
+            medio: "linkedin"
+        });
         return <LinkedInEmbed
             url={link}
             width={325}
             height={570}
         />
     } else {
-        setterMedio("web-externa");
+        onRender({
+            link,
+            medio: "web-externa"
+        });
         return <a href={link}>{link}</a>
     }
 };
