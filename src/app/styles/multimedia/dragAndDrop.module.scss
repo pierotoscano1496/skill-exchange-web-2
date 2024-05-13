@@ -1,0 +1,36 @@
+@import "./tools/variables";
+@import "./tools/mixins";
+
+$color-drag-and-drop: #007f75;
+
+.dropzone {
+    padding: 2rem 4rem;
+    border-radius: 0.5rem;
+    border-style: dashed;
+    border-color: $color-drag-and-drop;
+
+    &>i {
+        color: #007f758f;
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+    }
+
+    &>p {
+        color: $color-drag-and-drop;
+    }
+
+    &.background {
+        @include select-color("background");
+    }
+}
+
+.preview {
+    img {
+        width: 30%;
+    }
+
+    i {
+        font-size: 4rem;
+        color: $color-secondary-transparent-50;
+    }
+}

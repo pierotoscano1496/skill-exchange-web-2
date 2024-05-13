@@ -1,0 +1,23 @@
+.tabs-container {
+    margin: 20px auto;
+}
+
+.tabs {
+    display: flex;
+}
+
+.tab {
+    cursor: pointer;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background-color: #f1f1f1;
+}
+
+.tab.active {
+    background-color: #ddd;
+}
+
+.tab-content {
+    border: 1px solid #ddd;
+}

@@ -7,6 +7,19 @@
     background-color: rgba($color: #000000, $alpha: 0.35);
     z-index: 1;
 
+    &.fullScreen {
+        height: 100%;
+
+        .modal {
+            width: 80vw;
+
+            &Content {
+                overflow-y: auto;
+                height: inherit;
+            }
+        }
+    }
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,15 +30,16 @@
 
     .modal {
         width: 30vw;
-        height: auto;
+        height: inherit;
         background-color: #fff;
         padding: 2rem;
         border-radius: 20px;
+        display: flex;
+        flex-direction: column;
 
         &Header {
             position: relative;
             border-bottom: 1px solid #dddddd;
-            display: flex;
             justify-content: space-between;
 
             &Title {
@@ -55,11 +69,9 @@
 
         &Content {
             border-bottom: 1px solid #dddddd;
-            padding: 2rem 0;
         }
 
         &Footer {
-            padding: 2rem 0;
             padding-bottom: 0;
 
             button {

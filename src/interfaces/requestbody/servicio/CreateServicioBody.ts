@@ -7,6 +7,6 @@ export default interface CreateServicioBody {
     precio: number;
     idUsuario: string
     idSkill: string;
-    modalidadesPago: ModalidadPagoBody[];
-    recursosMultimedia: RecursoMultimediaBody[];
+    /* modalidadesPago: ModalidadPagoBody[];
+    recursosMultimedia: RecursoMultimediaBody[]; */
 }

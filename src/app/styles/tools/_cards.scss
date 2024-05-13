@@ -1,0 +1,14 @@
+.cards-content {
+    .item-card {
+        background-color: rgb(255, 208, 0);
+        width: fit-content;
+        padding: 1em;
+        margin: 0.5em;
+        border-radius: 0.5rem;
+
+        span {
+            font-weight: bold;
+            /* color: variables.$color-primary; */
+        }
+    }
+}
