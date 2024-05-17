@@ -1,6 +1,7 @@
 "use server";
 
 import CreateMatchServicioBody from "@/interfaces/requestbody/matching/CreateMatchServicioBody";
+import UpdateEstadoMatchServicioBody from "@/interfaces/requestbody/matching/UpdateEstadoMatchServicioBody";
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
 import MatchServicioProveedorDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioProveedorDetailsResponse";
 import MatchServicioResponse from "@/interfaces/responsebody/matching/MatchServicioResponse";
@@ -34,7 +35,7 @@ export const obtenerDetailsMatchsFromProveedor = async (idProveedor: string) => 
     return resp.data as MatchServicioProveedorDetailsResponse[];
 }
 
-export const actualizarMatchEstado = async (id: string, estado: TipoMatchServicioEstado) => {
-    const resp = await getBackendInstanceAuth().patch(`match/estado/${id}`, estado);
+export const actualizarMatchEstado = async (id: string, requestbody: UpdateEstadoMatchServicioBody) => {
+    const resp = await getBackendInstanceAuth().patch(`match/estado/${id}`, requestbody);
     return resp.data as MatchServicioResponse;
 }

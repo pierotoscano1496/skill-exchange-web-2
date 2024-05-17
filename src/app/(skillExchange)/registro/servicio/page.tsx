@@ -239,14 +239,14 @@ export default () => {
 
     const goToMisServicios = () => {
         setOpenModalSuccess(false);
-        router.push("/servicios");
+        router.push("/servicio/own");
     }
 
     return (
         <>
-            <div className="container column">
+            <div className="container column center">
                 <h2>Publica tu servicio</h2>
-                <div className="form">
+                <div className="form main">
                     <div className="form-control">
                         <label htmlFor="titulo">Título:</label>
                         <input type="text"
@@ -254,8 +254,8 @@ export default () => {
                             placeholder="Título breve y llamativo"
                             value={titulo}
                             onChange={(e) => setTitulo(e.target.value)} />
-                        {(attempSubmit && !titulo) && <p className="text-danger">Indique el título</p>}
                     </div>
+                    {(attempSubmit && !titulo) && <p className="text-danger">Indique el título</p>}
                     <div className="form-control">
                         <label htmlFor="precio">Precio (S/.):</label>
                         <input type="number"
@@ -267,34 +267,36 @@ export default () => {
                             title="currency"
                             min={0}
                             pattern="^\d*\.\d{2}$" />
-                        {(attempSubmit && !precio) && <p className="text-danger">Especifique el precio de su servicio</p>}
                     </div>
+                    {(attempSubmit && !precio) && <p className="text-danger">Especifique el precio de su servicio</p>}
                     <div className="form-control">
                         <label htmlFor="descripcion">Descripción:</label>
                         <textarea value={descripcion}
                             name="descripcion"
                             onChange={(e) => setDescripcion(e.target.value)}
                             placeholder="Detalla en qué consiste tu servicio" />
-                        {(attempSubmit && !descripcion) && <p className="text-danger">Añada una descripción</p>}
                     </div>
+                    {(attempSubmit && !descripcion) && <p className="text-danger">Añada una descripción</p>}
                     <div className="form-control">
                         <label htmlFor="skill">Habilidad a desempeñar:</label>
                         <select name="skill"
                             value={skill?.id}
                             onChange={(e) => setSkill(skillsUsuario.find((s) => s.id === e.target.value))}>
-                            <option disabled>--Seleccione--</option>
+                            <option value="">--Seleccione--</option>
                             {skillsUsuario.map((s) => (
-                                <option value={s.id}>{s.descripcion}</option>
+                                <option key={s.id} value={s.id}>{s.descripcion}</option>
                             ))}
                         </select>
-                        {(attempSubmit && !skill) && <p className="text-danger">Indique la habilidad a desempeñar</p>}
                     </div>
-                    <button onClick={() => setOpenModalMedioPago(true)}>Añadir método de pago</button>
-                    <button onClick={() => setOpenModalRecursoMultimedia(true)}>Añadir contenido</button>
+                    {(attempSubmit && !skill) && <p className="text-danger">Indique la habilidad a desempeñar</p>}
+                    <div className="btn-group">
+                        <button className="btn-secondary" onClick={() => setOpenModalMedioPago(true)}>Añadir método de pago</button>
+                        <button className="btn-secondary" onClick={() => setOpenModalRecursoMultimedia(true)}>Añadir contenido</button>
+                    </div>
                 </div>
 
-                <h4>Lista de archivos</h4>
-                <div className="cards-content container">
+                <h4 className="text-primary">Lista de archivos</h4>
+                <div className="cards-content">
                     {archivosData.map((a, i) => (
                         <div className="item-card">
                             <span>{a.file.name.substring(0, 15)}...</span>
@@ -306,8 +308,8 @@ export default () => {
                 </div>
                 {archivosData.length === 3 && <p className="text-warning">Solo se admiten hasta 3 archivos</p>}
 
-                <h4>Enlaces a otras plataformas:</h4>
-                <div className="container column">
+                <h4 className="text-primary">Enlaces a otras plataformas:</h4>
+                <div className="container column width-50">
                     {linksData.map((linkData, index) => (
                         <div className="container">
                             <span>{linkData.link} {getIconFromMedioPlataforma(linkData.medio)}</span>
@@ -319,28 +321,30 @@ export default () => {
                 </div>
                 {linksData.length === 5 && <p className="text-warning">Solo se admiten hasta 5 enlaces</p>}
 
-                <h4>Medios de pago:</h4>
-                <div className="container column content-space-between">
+                <h4 className="text-primary">Medios de pago:</h4>
+                <div className="container column content-space-between width-50">
                     {medioPagoYape &&
-                        <div>
-                            <h4>Yape</h4>
+                        < >
+                            <h4 className="text-info">Yape</h4>
                             <p><strong>Número:</strong> {medioPagoYape.numCelular}</p>
                             {medioPagoYape.qrImage &&
                                 <>
                                     <p><strong>QR:</strong></p>
                                     <img className="form-img-previsualizer" src={URL.createObjectURL(medioPagoYape.qrImage)} alt="Preview" />
                                 </>}
-                        </div>}
+                        </>}
                     {medioPagoCCI &&
-                        <div>
-                            <h4>Código de cuenta interbancaria:</h4>
+                        <>
+                            <h4 className="text-secondary">Código de cuenta interbancaria:</h4>
                             <p><strong>CCI:</strong> {medioPagoCCI}</p>
-                        </div>
+                        </>
                     }
                     {(attempSubmit && !medioPagoYape && !medioPagoCCI) && <p className="text-warning">Debe especificar al menos 1 medio de pago</p>}
                 </div>
             </div>
-            <button onClick={registrarServicioWithResourcesAndMediosPago}>Registrar</button>
+            <div className="btn-group">
+                <button className="btn-primary" onClick={registrarServicioWithResourcesAndMediosPago}>Registrar</button>
+            </div>
 
             {openModalMedioPago &&
                 <ModalAddModalidadPago

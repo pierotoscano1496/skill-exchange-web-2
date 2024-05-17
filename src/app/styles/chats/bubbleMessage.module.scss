@@ -19,11 +19,12 @@
     }
 
     &.myself {
-        background-color: #ffbc00;
-        justify-content: flex-end;
+        background-color: #2db9faab;
+        align-self: flex-end;
     }
 
     &.themself {
-        justify-content: flex-start;
+        background-color: #b0fdb3a8;
+        align-self: flex-start;
     }
 }

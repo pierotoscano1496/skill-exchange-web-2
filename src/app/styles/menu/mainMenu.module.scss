@@ -1,0 +1,96 @@
+@import "@/app/styles/tools/variables";
+
+$sidebarWidth: 250px;
+$sidebarCollapsedWidth: 60px;
+
+.navbar {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+
+    .userData {
+        .login {
+            text-decoration: none;
+            color: #fff;
+            transition: colot 0.3s;
+
+            &:hover {
+                color: #a3a3a3;
+            }
+        }
+    }
+}
+
+.brand {
+    font-size: 1.5rem;
+}
+
+/* Estilos del sidebar */
+.sidebar {
+    background-color: #f4f4f4;
+    width: $sidebarWidth;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: width 0.3s ease;
+
+    &.collapsed {
+        width: $sidebarCollapsedWidth;
+
+        ul {
+            li {
+                a {
+                    display: none;
+                }
+            }
+        }
+
+        .toggleButton {
+            padding: 10px;
+        }
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            margin-bottom: 0.5rem;
+
+            i {
+                color: $color-primary;
+            }
+
+            a {
+                text-decoration: none;
+                color: $color-primary;
+            }
+        }
+    }
+
+    .toggleButton {
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+}
+
+.mainContent {
+    transition: margin-left 0.3s ease;
+    margin-left: $sidebarWidth;
+
+    &.leftCollapsed {
+        margin-left: $sidebarCollapsedWidth;
+    }
+
+}

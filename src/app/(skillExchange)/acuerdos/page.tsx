@@ -6,6 +6,7 @@ import ModalAlert from "@/components/ModalAlert";
 import ModalEnviarConstancia from "@/components/acuerdos/ModalEnviarConstancia";
 import SolicitudAcuerdoItem from "@/components/acuerdos/SolicitudAcuerdoItem";
 import ModalVerPerfilUsuario from "@/components/solicitudes/ModalVerPerfilUsuario";
+import MatchDictionary from "@/dictionary/matchDictionary";
 import Usuario from "@/interfaces/Usuario";
 import EstadoMatchOption from "@/interfaces/busqueda-servicio/EstadoMatchOption";
 import MatchServicioProveedorDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioProveedorDetailsResponse";
@@ -24,7 +25,6 @@ interface MensajeSentStatus {
 }
 
 export default ({ }) => {
-    const [serviciosClienteOptions, setServiciosClienteOptions] = useState<ServicioOption[]>([]);
     const [servicioClienteOptionSelected, setServicioClienteOptionSelected] = useState<ServicioOption>();
     const [proveedorPerfil, setProveedorPerfil] = useState<UsuarioResponse>();
     const [matchForEnviarConstancia, setMatchForEnviarConstancia] = useState<MatchServicioProveedorDetailsResponse>();
@@ -33,17 +33,6 @@ export default ({ }) => {
     const [matchsServicios, setMatchsServicios] = useState<MatchServicioProveedorDetailsResponse[]>([]);
     const [estadoSelected, setEstadoSelected] = useState<EstadoMatchOption>();
 
-    const estadosForSearch: EstadoMatchOption[] = [{
-        estado: "pendiente-pago",
-        nombre: "Pendiente de pago"
-    }, {
-        estado: "ejecucion",
-        nombre: "Atendiendo"
-    }, {
-        estado: "finalizado",
-        nombre: "Finalizado"
-    }];
-
     useEffect(() => {
         loadInformation();
     }, []);
@@ -51,20 +40,13 @@ export default ({ }) => {
     const loadInformation = async () => {
         const usuarioLogged = await obtenerUsuarioLogged();
         setCliente(usuarioLogged);
-        const matchsServicioDetails = await obtenerDetailsMatchsByCliente(usuarioLogged.id);
-        //const servicios = await obtenerServiciosByPrestamista(cliente.id);
-        setMatchsServicios(matchsServicioDetails);
 
-        // Mapear los servicios de los matchs del cliente (incluye rechazados)
-        const serviciosOptions = matchsServicioDetails.map(m => ({
-            id: m.servicio.id,
-            titulo: m.servicio.titulo
-        } as ServicioOption))
-            .filter((option, index, options) => (
-                index === options.findIndex(o => o.id === option.id)
-            ));
-
-        setServiciosClienteOptions(serviciosOptions);
+        try {
+            const matchsServicioDetails = await obtenerDetailsMatchsByCliente(usuarioLogged.id);
+            setMatchsServicios(matchsServicioDetails);
+        } catch {
+            setMatchsServicios([]);
+        }
     }
 
     const handleConstanciaEnviada = (constanciaEnviada: boolean) => {
@@ -76,20 +58,36 @@ export default ({ }) => {
         }
     }
 
-    const matchsServiciosFiltered = matchsServicios.filter(match =>
-        match.servicio.id === servicioClienteOptionSelected?.id &&
-        match.estado === estadoSelected?.estado
-    );
+    const matchsServiciosFiltered = matchsServicios.filter(match => {
+        if (servicioClienteOptionSelected || estadoSelected) {
+            return match.servicio.id === servicioClienteOptionSelected?.id ||
+                match.estado === estadoSelected?.estado
+        } else {
+            return match;
+        }
+    });
+
+    const estadoOptions: EstadoMatchOption[] = matchsServicios.map(match => ({
+        estado: match.estado,
+        nombre: MatchDictionary.getEstadoDescripcion(match.estado)!
+    }));
+
+    const serviciosClienteOptions = matchsServicios.map(m => ({
+        id: m.servicio.id,
+        titulo: m.servicio.titulo
+    })).filter((option, index, options) => (
+        index === options.findIndex(o => o.id === option.id)
+    ));
 
     return (
         <>
             <div className="principal">
-                <div className="form">
+                <div className="form-row">
                     <div className="form-control">
                         <label htmlFor="servicio">Servicio:</label>
                         <select name="servicio"
                             onChange={(e) => setServicioClienteOptionSelected(serviciosClienteOptions.find(m => m.id === e.target.id))}>
-                            <option>--Seleccione--</option>
+                            <option value="">--Seleccione--</option>
                             {serviciosClienteOptions.map(s =>
                                 <option key={s.id} value={s.id}>{s.titulo}</option>
                             )}
@@ -98,9 +96,9 @@ export default ({ }) => {
                     <div className="form-control">
                         <label htmlFor="estado">Estado:</label>
                         <select name="estado"
-                            onChange={(e) => setEstadoSelected(estadosForSearch.find(s => s.estado === e.target.value))}>
-                            <option>--Seleccione--</option>
-                            {estadosForSearch.map((e, i) =>
+                            onChange={(e) => setEstadoSelected(estadoOptions.find(s => s.estado === e.target.value))}>
+                            <option value="">--Seleccione--</option>
+                            {estadoOptions.map((e, i) =>
                                 <option key={i} value={e.estado}>{e.nombre}</option>
                             )}
                         </select>
@@ -116,8 +114,8 @@ export default ({ }) => {
                         />
                     ) :
                         <>
-                            <p>No hay solicitudes por ahora</p>
-                            <a className="link-button btn-primary" href="/contratos">Ver mis contratos</a>
+                            <p>No hay acuerdos por ahora</p>
+                            <a className="link-button btn-primary" href="/servicio">Buscar servicios</a>
                         </>
                     }
                 </div>

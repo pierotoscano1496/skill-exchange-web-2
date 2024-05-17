@@ -1,6 +1,7 @@
 "use client";
 
 import modalStyles from "@/app/styles/modal.module.scss";
+import profileStyles from "@/app/styles/profile.module.scss";
 import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import Image from "next/image";
@@ -23,22 +24,19 @@ export default ({ cliente, onClose }: Params) => {
                 </header>
 
                 <main className={modalStyles.modalContent}>
-                    <section>
-                        <p><strong>Nombres:</strong> {cliente.nombres}</p>
-                        <p><strong>Apellidos:</strong> {cliente.apellidos}</p>
-                    </section>
-                    <hr />
-                    <section>
-                        <h3>Redes:</h3>
+                    <p><strong>Nombres:</strong> {cliente.nombres}</p>
+                    <p><strong>Apellidos:</strong> {cliente.apellidos}</p>
+                    <p><strong>Redes:</strong></p>
+                    <div className={`container ${profileStyles.socialMedia}`}>
                         {cliente.perfilFacebook &&
-                            <p><strong>Facebook:</strong> <a href={cliente.perfilFacebook}>{cliente.perfilFacebook}</a></p>}
+                            <a href={cliente.perfilFacebook} target="_blank"><i className={`fa-brands fa-facebook ${profileStyles["icon-fa-color-primary"]}`}></i></a>}
                         {cliente.perfilInstagram &&
-                            <p><strong>Instagram:</strong> <a href={cliente.perfilInstagram}>{cliente.perfilInstagram}</a></p>}
+                            <a href={cliente.perfilInstagram} target="_blank"><i className={`fa-brands fa-instagram ${profileStyles["icon-fa-color-info"]}`}></i></a>}
                         {cliente.perfilLinkedin &&
-                            <p><strong>Linkedin:</strong> <a href={cliente.perfilLinkedin}>{cliente.perfilLinkedin}</a></p>}
+                            <a href={cliente.perfilLinkedin} target="_blank"><i className={`fa-brands fa-linkedin ${profileStyles["icon-fa-color-primary"]}`}></i></a>}
                         {cliente.perfilTiktok &&
-                            <p><strong>Tik Tok:</strong> <a href={cliente.perfilTiktok}>{cliente.perfilTiktok}</a></p>}
-                    </section>
+                            <a href={cliente.perfilTiktok} target="_blank"><i className={`fa-brands fa-tiktok ${profileStyles["icon-fa-color-black"]}`}></i></a>}
+                    </div>
                 </main>
 
                 <footer className={modalStyles.modalFooter}>

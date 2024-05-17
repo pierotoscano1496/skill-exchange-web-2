@@ -24,20 +24,23 @@ export default () => {
     }
 
     return (
-        <div className="container row">
-            {usuarioLogged &&
-                <>
-                    <ChatPanel idUserLogged={usuarioLogged.id}
-                        onOpenChatModule={openChatModule}
-                    />
-                    {idConversacionSelected &&
-                        <ChatModule idConversacion={idConversacionSelected}
-                            idUsuarioLogged={usuarioLogged.id}
+        <main>
+            <div className="container row">
+                {usuarioLogged &&
+                    <>
+                        <ChatPanel idUserLogged={usuarioLogged.id}
+                            onOpenChatModule={openChatModule}
                         />
-                    }
+                        {idConversacionSelected &&
+                            <ChatModule key={idConversacionSelected} idConversacion={idConversacionSelected}
+                                idUsuarioLogged={usuarioLogged.id}
+                            />
+                        }
 
-                </>
-            }
-        </div>
+                    </>
+                }
+            </div>
+
+        </main>
     )
 }

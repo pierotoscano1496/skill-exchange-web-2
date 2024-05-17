@@ -1,16 +1,14 @@
 "use client";
 
-import LoginForm from "@/components/LoginForm";
 import axios, { AxiosError } from "axios";
-import { GetServerSideProps } from "next";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const Login=()=> {
+export default () => {
     const [correo, setCorreo] = useState<string>("");
     const [contrasena, setContrasena] = useState<string>("");
+    const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
     const router = useRouter();
 
     const login = async () => {
@@ -20,9 +18,7 @@ const Login=()=> {
                 password: contrasena
             });
 
-            alert(response.data.mensaje);
-
-            router.push("/principal/buscador-servicio");
+            router.push("/servicio");
         } catch (error) {
             let mensaje: string;
             if (error instanceof AxiosError) {
@@ -31,8 +27,8 @@ const Login=()=> {
             } else {
                 mensaje = "Error occurred";
             }
-
-            alert(mensaje);
+            setAttempSubmit(true);
+            setError(mensaje);
         }
     }
 
@@ -47,17 +43,24 @@ const Login=()=> {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-                <div>
-                    <input type="text" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-                    <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
-                    <button type="button" onClick={login}>Ingresar</button>
-                    <button type="button" onClick={verifyToken}>Verificar</button>
-                    <button type="button" onClick={goToRegistrar}>Registrarse</button>
+            <section className="hero" id="inicio">
+                <div className="hero-content">
+                    <div className="container column center">
+                        <div className="form main">
+                            <div className="form-control">
+                                <label htmlFor="email">Correo:</label>
+                                <input name="email" type="text" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+                            </div>
+                            <div className="form-control">
+                                <label htmlFor="email">Contraseña:</label>
+                                <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
+                            </div>
+                            <button className="btn-primary" type="button" onClick={login}>Ingresar</button>
+                            {attempSubmit && error && <p className="text-danger">{error}</p>}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </main>
     )
 };
-
-export default Login;

@@ -1,12 +1,11 @@
 import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
-import { converDateTimeToStandarString } from "@/utils/auxiliares";
+import { converDateTimeToStandarString, converLocalDateTimeToStandarString } from "@/utils/auxiliares";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
-import { TipoMatchServicioEstado } from "@/utils/types";
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
 
 type Params = {
     match: MatchServicioDetailsResponse;
-    onOpenViewProfile: (proveedor: UsuarioResponse) => void;
+    onOpenViewProfile: (cliente: UsuarioResponse) => void;
     onOpenModalConfirmarConstancia: (match: MatchServicioDetailsResponse) => void;
     onOpenModalConfirmarFinalizacion: (match: MatchServicioDetailsResponse) => void;
 }
@@ -17,20 +16,20 @@ export default ({ match, onOpenViewProfile, onOpenModalConfirmarConstancia, onOp
             <h3 className={cardStyles.title}>{match.servicio.titulo}</h3>
             <div className="container">
                 <div className="item flex-grow-3">
-                    <p>Cliente (a): <button className="btn-link" onClick={() => onOpenViewProfile(match.)}>{`${match.proveedor.nombres} ${match.proveedor.apellidos}`}</button></p>
+                    <p>Cliente (a): <button className="btn-link" onClick={() => onOpenViewProfile(match.cliente)}>{`${match.cliente.nombres} ${match.cliente.apellidos}`}</button></p>
                     <br />
-                    {/* <p>Solicitado el: {converDateTimeToStandarString(match.fecha)}</p> */}
+                    <p>Solicitado el: {converLocalDateTimeToStandarString(match.fecha)}</p>
                     {match.estado === "pendiente-pago" && <p className="text-secondary">Pago pendiente</p>}
                     {match.estado === "ejecucion" &&
                         <>
                             <p className="text-info">En ejecución</p>
-                            <p>Iniciado el {converDateTimeToStandarString(match.fechaInicio)}</p>
+                            <p>Iniciado el {converLocalDateTimeToStandarString(match.fechaInicio)}</p>
                         </>
                     }
                     {match.estado === "finalizado" &&
                         <>
                             <p className="text-warning">Finalizado</p>
-                            <p>Fecha de cierre: {converDateTimeToStandarString(match.fechaCierre)}</p>
+                            <p>Fecha de cierre: {converLocalDateTimeToStandarString(match.fechaCierre)}</p>
                         </>
                     }
                 </div>

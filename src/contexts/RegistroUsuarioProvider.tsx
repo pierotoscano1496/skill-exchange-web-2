@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { RegistroUsuarioContext } from "./RegistroUsuarioContext";
 import { RegistroUsuarioBodySkills } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
@@ -18,7 +20,7 @@ export const RegistroUsuarioProvider: React.FC<{ children: React.ReactNode }> = 
         tipoDocumento: undefined,
         nombres: "",
         apellidos: "",
-        tipo: "cliente",
+        tipo: undefined,
         fechaNacimiento: fechaNacimientoMax,
         correo: "",
         clave: "",

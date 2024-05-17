@@ -48,7 +48,7 @@ export const asignarModalidadesPagoToServicio = async (idServicio: string, modal
 /* Búsqueda de servicios (público) */
 
 export const searchServicioWithParams = async (params: SearchServiciosParametersBody) => {
-    const resp = await getBackendInstanceAuth().post("servicio/busqueda", params);
+    const resp = await getBackendInstance().post("servicio/busqueda", params);
     return resp.data as ServicioBusquedaResponse[];
 }
 

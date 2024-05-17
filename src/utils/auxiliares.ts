@@ -18,6 +18,17 @@ export const converDateTimeToStandarString = (date: Date) => {
     return `${day}/${month}/${year}, ${hours}:${minutes}`;
 }
 
+export const converLocalDateTimeToStandarString = (localDateTime: number[]) => {
+    const year = localDateTime[0];
+    const month = `0${localDateTime[1]}`.slice(-2);
+    const day = `0${localDateTime[2]}`.slice(-2);
+
+    /* const hours = `0${date.getHours()}`.slice(-2);
+    const minutes = `0${date.getMinutes()}`.slice(-2); */
+
+    return `${day}/${month}/${year}`;
+}
+
 export const currentDateToISOString = (): string => {
     return convertDateToISOString(new Date());
 }

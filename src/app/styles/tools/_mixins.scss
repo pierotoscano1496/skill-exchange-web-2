@@ -1,3 +1,6 @@
+@use "sass:map";
+@use 'sass:math';
+
 /* Global mixins */
 @mixin select-color($propperty: null) {
     @each $name, $color in $colors {
@@ -5,46 +8,154 @@
             @if($propperty =="background") {
                 background-color: $color;
 
-                @if($name =="primary") {
-                    color: white;
+                &:hover {
+                    background-color: map.get($colors-on-hover, $name);
+                }
+
+                &:disabled {
+                    background-color: map.get($colors-disabled, $name);
                 }
             }
 
             @else {
                 color: $color;
             }
+
+            &.icon {
+                margin: 0;
+                background-color: transparent;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                width: fit-content;
+
+                &>i {
+                    color: $color;
+                }
+            }
+
+            &.btn-icon {
+                background-color: transparent;
+                border: 2px solid black;
+
+                &:hover {
+                    background-color: #9696967e;
+                }
+
+                &>i {
+                    color: $color;
+                }
+            }
         }
     }
 }
 
 @mixin button-styles {
-    border: 2px solid #000000;
-    border-radius: 0.3rem;
-    color: #4c4c4c;
-    padding: 1em;
-    margin: 1rem 0rem;
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 
     &.btn {
         @include select-color("background");
+
     }
 }
 
-@mixin form-styles {
-    &>.form-panel {
-        margin: 2rem 1rem;
-        border: 0.1em solid #000000;
+@mixin form-styles($row: false) {
+    display: flex;
+
+    @if $row {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    @else {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    h2,
+    h3,
+    h4 {
+        margin-top: 1.5rem;
     }
 
     .form-control {
         padding: 0.5rem;
+        display: flex;
+        /* 
+        button {
+            margin: auto;
+        } */
 
-        &>input {
-            width: 100%;
+        &>label {
+            font-weight: bold;
+            width: 50%;
+        }
+
+        &>.form-radio-group {
+            display: flex;
+            justify-content: center;
+
+            &>.form-radio {
+                flex-grow: 1
+            }
+        }
+
+        &>input,
+        select,
+        textarea,
+        .form-radio-group {
+            width: 50%;
         }
 
         .form-img-previsualizer {
             max-width: 10rem;
             max-height: 10rem;
+        }
+    }
+}
+
+@mixin form-styles-row {
+    @include form-styles(true);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: solid 1px;
+    border-top: solid 1px;
+
+    .form-control {
+        flex-grow: 1;
+    }
+}
+
+@mixin media-min-width-screen-device($minWidthScreenDevice: $minWidthDefaultScreenDevice, $maxWidth: 50%) {
+    @media (min-width: $minWidthDefaultScreenDevice) {
+        max-width: $maxWidth;
+        margin: 0 auto;
+    }
+}
+
+@mixin media-max-width-screen-device($minWidthScreenDevice: $minWidthDefaultScreenDevice, $maxWidth: 50%) {
+    @media (max-width: $minWidthDefaultScreenDevice) {
+        max-width: $maxWidth;
+        margin: 0 auto;
+    }
+}
+
+/*
+    Tamaños
+*/
+@mixin set-widths-out-10 {
+    @for $i from 1 through 10 {
+        $percentage: $i * 10;
+
+        &.width-#{$percentage} {
+            width: $percentage*1%;
         }
     }
 }

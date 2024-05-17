@@ -1,12 +1,9 @@
 "use client";
 
-import { getChats, getConversationById, saveChatFile } from "@/actions/chatting.actions";
-import ContactModule from "@/interfaces/chatting/ContactModule";
-import MensajeChat from "@/interfaces/models/chats/MensajeChat";
+import { getConversationById, saveChatFile } from "@/actions/chatting.actions";
 import ChatMessagingService from "@/services/ChatMessagingService";
 import { useEffect, useState } from "react";
-import chattingStyles from "@/styles/chats/chatting.module.scss";
-import UsuarioBasicInfo from "@/interfaces/chatting/UsuarioBasicInfo";
+import chattingStyles from "@/app/styles/chats/chatting.module.scss";
 import Message from "@/interfaces/models/chats/Message";
 import BubbleMessage from "./BubbleMessage";
 import Contact from "@/interfaces/models/chats/Contact";
@@ -97,7 +94,7 @@ export default ({ idConversacion, idUsuarioLogged }: Params) => {
     return (
         <div className={`${chattingStyles.chattingModule} flex-grow-3`}>
             <div className={chattingStyles.contactName}>
-                <h3>{`${receptor?.fullName}`}</h3>
+                {receptor && <h3>{receptor?.fullName}</h3>}
             </div>
             <div className={chattingStyles.bubbleContent}>
                 {messages.map((m, i) => (

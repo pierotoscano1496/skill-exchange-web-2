@@ -3,7 +3,7 @@
 import MensajeChat from "@/interfaces/models/chats/MensajeChat";
 import FirstMessageChatBody from "@/interfaces/requestbody/messaging/FirstMessageChatBody";
 import MessageBody from "@/interfaces/requestbody/messaging/MessageBody";
-import { getBackendInstanceAuth } from "@/utils/constants.backend";
+import { getBackendInstanceAuth, getBackendInstanceAuthForms } from "@/utils/constants.backend";
 
 export const getConversationById = async (idConversation: string) => {
     const resp = await getBackendInstanceAuth().get(`chat/${idConversation}`);
@@ -37,7 +37,7 @@ export const getChatsNoMessages = async (idReceptor: string) => {
 }
 
 export const saveChatFile = async (formDataFile: FormData) => {
-    const resp = await getBackendInstanceAuth().post("archivos/upload", formDataFile);
+    const resp = await getBackendInstanceAuthForms().post("archivos/upload", formDataFile);
     return resp.data as string;
 }
 

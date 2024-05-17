@@ -31,12 +31,21 @@
   margin: 0;
   padding: 0.3rem;
   box-sizing: border-box;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Montserrat', sans-serif;
+
+  @include set-widths-out-10;
 }
 
 body {
-  background-color: skyblue;
+  background-color: #f8f9fa;
 }
+
+/* main {
+  @media (min-width: $minWidthDefaultScreenDevice) {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+} */
 
 button {
   @include button-styles;
@@ -69,11 +78,39 @@ a {
     text-decoration: none;
     @include button-styles;
   }
+
+  &.link {
+    @include select-color;
+  }
+
+  &.none {
+    text-decoration: none;
+  }
 }
 
 div.form,
 form {
-  @include form-styles;
+  @include form-styles(false);
+
+  &.main {
+    @include media-min-width-screen-device;
+  }
+}
+
+div,
+form {
+  &.form-row {
+    @include form-styles-row;
+  }
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-evenly;
+
+  @media (max-width: $minWidthDefaultScreenDevice) {
+    width: 100%;
+  }
 }
 
 p,
@@ -97,11 +134,17 @@ img {
 
     &.yape {
       content: url(../../../public/img/yape.png);
+      cursor: pointer;
     }
 
     &.credit-card {
       content: url(/public/img/credit-card.png);
     }
+  }
+
+  &.qr-previsualizer {
+    max-width: 75%;
+    align-self: center;
   }
 }
 
@@ -122,6 +165,18 @@ hr {
   @include flex-direction;
   @include flex-align-items;
   @include flex-justify-content;
+
+  @media (max-width: $minWidthDefaultScreenDevice) {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-top: 1.5rem;
+  }
 
   &>div,
   span,
@@ -152,4 +207,62 @@ table {
   th {
     border: 1px solid;
   }
+}
+
+/* Landing */
+.hero {
+  /* Color de fondo */
+  padding: 4rem 0;
+  /* Espaciado interno */
+  text-align: center;
+  /* Alineación del texto */
+}
+
+.hero-content {
+  max-width: 800px;
+  /* Ancho máximo del contenido */
+  margin: 0 auto;
+  /* Centrar el contenido horizontalmente */
+  color: #333;
+  /* Color de texto */
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  /* Tamaño del título principal */
+}
+
+.hero h2 {
+  font-size: 2rem;
+  /* Tamaño del subtítulo */
+  margin-bottom: 1.5rem;
+  /* Espaciado inferior */
+}
+
+section {
+  margin-bottom: 2rem;
+  /* Espaciado inferior */
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Color de fondo semi-transparente */
+  padding: 2rem;
+  /* Espaciado interno */
+  border-radius: 10px;
+
+  /* Borde redondeado */
+  & h3 {
+    font-size: 1.5rem;
+    /* Tamaño del título de la sección */
+    margin-bottom: 1rem;
+    /* Espaciado inferior */
+  }
+
+  & p {
+    margin-bottom: 1rem;
+    /* Espaciado inferior */
+  }
+}
+
+.button-group {
+  margin-top: 2rem;
+  /* Espaciado superior */
 }

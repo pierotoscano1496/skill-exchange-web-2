@@ -26,13 +26,14 @@ export default ({ onSendLinkDataFromPlataformas,
 }: Props) => {
     const [linkPost, setLinkPost] = useState<string>("");
     const [activeTab, setActiveTab] = useState(1);
-    const [newLinkDataFromRender, setNewLinkDataFromRender] = useState<LinkData>();
+    const [medio, setMedio] = useState<MedioRecursoMultimedia>();
+    //const [newLinkDataFromRender, setNewLinkDataFromRender] = useState<LinkData>();
 
     useEffect(() => {
         return (() => {
             setLinkPost("");
             setActiveTab(1);
-            setNewLinkDataFromRender(undefined);
+            setMedio(undefined);
         })
     }, []);
 
@@ -53,8 +54,11 @@ export default ({ onSendLinkDataFromPlataformas,
     };
 
     const sendLinkDataFromRender = () => {
-        if (newLinkDataFromRender) {
-            onSendLinkDataFromPlataformas(newLinkDataFromRender);
+        if (medio && linkPost) {
+            onSendLinkDataFromPlataformas({
+                link: linkPost,
+                medio
+            });
         } else {
             onErrorFromPlataformas();
         }
@@ -73,27 +77,27 @@ export default ({ onSendLinkDataFromPlataformas,
                             {tabs.map((tab, index) => (
                                 <Tab key={index}
                                     label={tab.label}
-                                    onClick={() => setActiveTab(tab.order)}
-                                    isActive={tab.order === activeTab}
+                                    onClick={() => setActiveTab(index)}
+                                    isActive={index === activeTab}
                                 />
                             ))}
                         </div>
                         <div className="tab-content">
-                            {activeTab === 1 &&
+                            {activeTab === 0 &&
                                 <div className="container column content-center center">
                                     <div className="form">
                                         <div className="form-control">
                                             <label htmlFor="link">Link:</label>
-                                            <input type="url"
+                                            <input name="link" type="url"
                                                 value={linkPost}
                                                 onChange={(e) => setLinkPost(e.target.value)}
                                                 placeholder="" />
                                         </div>
                                     </div>
-                                    <SocialMediaRender link={linkPost} onRender={(linkData) => setNewLinkDataFromRender(linkData)} />
+                                    <SocialMediaRender link={linkPost} onRender={(medio) => setMedio(medio)} />
                                     <button className="btn-primary" onClick={sendLinkDataFromRender}>Añadir</button>
                                 </div>}
-                            {activeTab === 2 &&
+                            {activeTab === 1 &&
                                 <DragAndDrop onSendFilesData={(filesData) => onSendFilesDataFromDragAndDrop(filesData)}
                                     acceptSelect={acceptedFilesForMultimedia}
                                     limit={3}

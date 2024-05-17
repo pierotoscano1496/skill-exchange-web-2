@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import modalStyles from "@/styles/modal.module.scss";
-import Close from "@/vectors/times-solid-svgrepo-com.svg";
+import modalStyles from "@/app/styles/modal.module.scss";
+import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import { sendContactMessage } from "@/actions/chatting.actions";
 import { registrarMatch } from "@/actions/match.actions";
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Props = {
     children: React.ReactNode;
@@ -29,7 +30,7 @@ export default ({ children, servicio, cliente }: Props) => {
 
     const enviarMensaje = async () => {
         const mensajeEnviado = await sendContactMessage({
-            idReceptor: servicio.usuario.id,
+            idReceptor: servicio.prestamista.id,
             mensaje: newMessage,
             fecha: new Date()
         });
@@ -57,15 +58,15 @@ export default ({ children, servicio, cliente }: Props) => {
                         <header className={modalStyles.modalHeader}>
                             <h2>Contáctate</h2>
                             <button className={modalStyles.close} >
-                                <img src={Close} alt="close" />
+                                <Image src={Close} alt="close" />
                             </button>
                         </header>
 
-                        <main className={modalStyles.modalContent}>
+                        <main className={`${modalStyles.modalContent} container column`}>
                             <textarea value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
                         </main>
 
-                        <footer className={modalStyles.modalFooter}>
+                        <footer className={`${modalStyles.modalFooter} btn-group`}>
                             <button className="btn-primary" onClick={enviarMensaje}>Enviar</button>&nbsp;
                             <button className="btn-danger" onClick={() => setOpenContactForm(false)}>Cancelar</button>
                         </footer>

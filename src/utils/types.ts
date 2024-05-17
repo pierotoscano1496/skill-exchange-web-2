@@ -9,8 +9,13 @@ export type TipoModalidadPago = "yape" | "tarjeta";
 export type TipoModalidadPagoOption = {
     nombre: string;
     valor: TipoModalidadPago;
-}
+};
+
+export type SelectOptions = {
+    value: string;
+    label: string;
+};
 
 export type TipoMatchServicioEstado = "solicitado" | "pendiente-pago" | "rechazado" | "ejecucion" | "finalizado";
 
-export type FileExtension="jpg"| "jpeg"| "png"| "doc"| "docx"| "pdf"| "doc"| "docx"| "ppt"| "pptx"| "xls"| "xlsx";
+export type FileExtension = "jpg" | "jpeg" | "png" | "doc" | "docx" | "pdf" | "doc" | "docx" | "ppt" | "pptx" | "xls" | "xlsx";

@@ -7,7 +7,7 @@ export default interface ServicioDetailsResponse {
     titulo: string;
     descripcion: string;
     precio: number;
-    usuario: Usuario;
+    prestamista: Usuario;
     modalidadesPago: MedioPagoResponse[];
     recursosMultimedia: RecursoMultimediaResponse[];
 }

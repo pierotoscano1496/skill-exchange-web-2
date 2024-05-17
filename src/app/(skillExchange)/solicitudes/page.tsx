@@ -2,26 +2,24 @@
 
 import { actualizarMatchEstado, obtenerDetailsMatchsPrestamistaAndOptionalEstado } from "@/actions/match.actions";
 import { obtenerServiciosByPrestamista } from "@/actions/servicio.actions";
-import Usuario from "@/interfaces/Usuario";
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
-import MatchServicioResponse from "@/interfaces/responsebody/matching/MatchServicioResponse";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
-import { converDateTimeToStandarString } from "@/utils/auxiliares";
 import { useEffect, useState } from "react";
-import cardServicioStyles from "@/styles/cards/cardservicio.module.scss";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import ModalVerPerfilUsuario from "@/components/solicitudes/ModalVerPerfilUsuario";
 import SolicitudItem from "@/components/solicitudes/SolicitudItem";
 import ModalAlert from "@/components/ModalAlert";
 import ModalConfirm from "@/components/ModalConfirm";
+import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 
-type Params = {
-    prestamista: Usuario
+interface ServicioOption {
+    id: string;
+    titulo: string;
 }
 
-export default ({ prestamista }: Params) => {
+export default () => {
     const [matchsServicioSelected, setMatchsServicioSelected] = useState<MatchServicioDetailsResponse[]>([]);
-    const [serviciosFromPrestamista, setServiciosFromPrestamista] = useState<ServicioResponse[]>([]);
+    const [serviciosOption, setServiciosOption] = useState<ServicioOption[]>([]);
     const [servicio, setServicio] = useState<ServicioResponse>();
     const [clienteModalData, setClienteModalData] = useState<UsuarioResponse>();
     const [openModalCliente, setOpenModalCliente] = useState<boolean>(false);
@@ -38,10 +36,17 @@ export default ({ prestamista }: Params) => {
     }, []);
 
     const loadInformation = async () => {
-        matchsServicioDetails = await obtenerDetailsMatchsPrestamistaAndOptionalEstado(prestamista.id, "solicitado");
-        const servicios = await obtenerServiciosByPrestamista(prestamista.id);
-        setMatchsServicioSelected(matchsServicioDetails);
-        setServiciosFromPrestamista(servicios);
+        const userLogged = await obtenerUsuarioLogged();
+        try {
+            const matchs = await obtenerDetailsMatchsPrestamistaAndOptionalEstado(userLogged.id, "solicitado");
+            setMatchsServicioSelected(matchs);
+            setServiciosOption(matchs.map(m => ({
+                titulo: m.servicio.titulo,
+                id: m.servicio.id
+            })));
+        } finally {
+            console.log("Info loaded");
+        }
     }
 
     const openModalViewProfile = (cliente: UsuarioResponse) => {
@@ -76,7 +81,9 @@ export default ({ prestamista }: Params) => {
 
     const rechazarSolicitud = async () => {
         // Rechazar solicitud
-        const matchRechazado = await actualizarMatchEstado(matchForRechazo!.id, "rechazado");
+        const matchRechazado = await actualizarMatchEstado(matchForRechazo!.id, {
+            estado: "rechazado"
+        });
         if (matchRechazado) {
             setOpenModalConfirmSolicitudRechazo(false); // Cerrar modal de confirmar rechazo
             setMatchForRechazo(undefined);
@@ -93,18 +100,17 @@ export default ({ prestamista }: Params) => {
     return (
         <>
             <div className="principal">
-                <div className="form">
-                    <div className="form">
-                        <div className="form-control">
-                            <label htmlFor="servicio">Servicio:</label>
-                            <select name="servicio" value={servicio?.id}
-                                onChange={(e) => setMatchsServicioSelected([...matchsServicioDetails].filter(m => m.servicio.id === e.target.id))}>
-                                <option>--Seleccione--</option>
-                                {serviciosFromPrestamista.map(s =>
-                                    <option key={s.id} value={s.id}>{s.titulo}</option>
-                                )}
-                            </select>
-                        </div>
+                <div className="form-row">
+                    <div className="form-control">
+                        <label htmlFor="servicio">Servicio:</label>
+                        <select name="servicio" value={servicio?.id}
+                            onChange={(e) => setMatchsServicioSelected([...matchsServicioDetails]
+                                .filter(m => m.servicio.id === e.target.id))}>
+                            <option>--Seleccione--</option>
+                            {serviciosOption.map(s =>
+                                <option key={s.id} value={s.id}>{s.titulo}</option>
+                            )}
+                        </select>
                     </div>
                 </div>
                 <div>
@@ -123,25 +129,30 @@ export default ({ prestamista }: Params) => {
                 </div>
             </div>
 
-            <ModalVerPerfilUsuario isOpen={openModalCliente && !!clienteAceptado} cliente={clienteModalData!} onClose={handleCloseModal} />
-
-            <ModalAlert isOpen={(openModalSolicitudAprobada && !!clienteAceptado)}
-                onClose={closeSolicitudAprobada}>
-                <p>!Excelente! Tienes un trato con ${clienteAceptado?.nombres}</p>
-                <p>Contáctate para que pueda realizar el pago.</p>
-            </ModalAlert>
-
-            <ModalConfirm isOpen={openModalConfirmSolicitudRechazo && !!matchForRechazo}
-                onConfirm={rechazarSolicitud}
-                onCancel={cancelarRechazoSolicitud}
-                onClose={cancelarRechazoSolicitud}>
-                <p>{`¿Está seguro de rechazar la solicitud de ${matchForRechazo?.cliente.nombres}?`}</p>
-            </ModalConfirm>
-
-            <ModalAlert isOpen={(openModalSolicitudRechazada)}
-                onClose={closeSolicitudRechazada}>
-                <p>Solicitud rechazada</p>
-            </ModalAlert>
+            {(openModalCliente && !!clienteModalData) &&
+                <ModalVerPerfilUsuario cliente={clienteModalData!} onClose={handleCloseModal} />
+            }
+            {(openModalSolicitudAprobada && !!clienteAceptado) &&
+                <ModalAlert
+                    onClose={closeSolicitudAprobada}>
+                    <p>!Excelente! Tienes un trato con {clienteAceptado?.nombres}</p>
+                    <p>Contáctate para que pueda realizar el pago.</p>
+                </ModalAlert>
+            }
+            {(openModalConfirmSolicitudRechazo && !!matchForRechazo) &&
+                <ModalConfirm
+                    onConfirm={rechazarSolicitud}
+                    onCancel={cancelarRechazoSolicitud}
+                    onClose={cancelarRechazoSolicitud}>
+                    <p>{`¿Está seguro de rechazar la solicitud de ${matchForRechazo?.cliente.nombres}?`}</p>
+                </ModalConfirm>
+            }
+            {openModalSolicitudRechazada &&
+                <ModalAlert
+                    onClose={closeSolicitudRechazada}>
+                    <p>Solicitud rechazada</p>
+                </ModalAlert>
+            }
         </>
     )
 }

@@ -12,6 +12,11 @@ export const obtenerUsuarioLogged = async () => {
     return resp.data as UsuarioRegisteredResponse;
 };
 
+export const logoutUsuario = async () => {
+    const resp = await getBackendInstanceAuth().post("usuario/logout");
+    return resp.data as string;
+}
+
 export const registrarUsuarioDatos = async (createUsuarioBody: CreateUsuarioBody) => {
     const resp = await getBackendInstance().post(`usuario`, createUsuarioBody);
     return resp.data as UsuarioRegisteredResponse;
@@ -23,6 +28,6 @@ export const asignarSkillsToUsuario = async (idUsuario: string, skillsToAsignar:
 }
 
 export const obtenerSkillsFromUsuario = async (idUsuario: string) => {
-    const resp = await getBackendInstance().patch(`usuario/skills/${idUsuario}`);
+    const resp = await getBackendInstanceAuth().get(`usuario/skills/${idUsuario}`);
     return resp.data as SkillResponse[];
 }

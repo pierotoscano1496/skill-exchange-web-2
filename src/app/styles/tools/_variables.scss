@@ -1,12 +1,40 @@
 $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
-$color-warning: hsl(59, 100%, 56%);
+$color-warning: hsl(56, 92%, 48%);
 $color-info: hsl(303, 100%, 41%);
 $color-no-available: hsl(0, 0%, 57%);
+$color-white: #fff;
+$color-black: #1f1f1f;
 
 $color-primary-transparent-50: hsla(228, 100%, 61%, 0.5);
 $color-secondary-transparent-50: hsla(125, 96%, 41%, 0.5);
+
+/* Hover */
+$color-primary-hover: hsl(228, 82%, 40%);
+$color-secondary-hover: hsl(125, 100%, 32%);
+$color-danger-hover: hsl(0, 75%, 49%);
+$color-warning-hover: hsl(59, 97%, 41%);
+$color-info-hover: hsl(303, 96%, 32%);
+$color-no-available-hover: hsl(0, 0%, 51%);
+
+$color-primary-transparent-50-hover: hsla(228, 82%, 40%, 0.5);
+$color-secondary-transparent-50-hover: hsl(125, 100%, 32%, 0.5);
+$color-white-hover: #a7a7a7;
+$color-black-hover: #474747;
+
+/* Disabled */
+$color-primary-disabled: hsl(228, 100%, 80%);
+$color-secondary-disabled: hsl(125, 100%, 80%);
+$color-danger-disabled: hsl(0, 100%, 83%);
+$color-warning-disabled: hsl(56, 100%, 83%);
+$color-info-disabled: hsl(303, 100%, 83%);
+$color-no-available-disabled: hsl(0, 0%, 80%);
+$color-white-disabled: #fff;
+$color-black-disabled: #9b9b9b;
+
+$color-primary-transparent-50-disabled: hsla(228, 87%, 78%, 0.5);
+$color-secondary-transparent-50-disabled: hsla(125, 100%, 84%, 0.5);
 
 $colors: (
     primary: $color-primary,
@@ -16,5 +44,36 @@ $colors: (
     info: $color-info,
     no-available: $color-no-available,
     primary-transparent-50:$color-primary-transparent-50,
-    secondary-transparent-50:$color-secondary-transparent-50
+    secondary-transparent-50:$color-secondary-transparent-50,
+    white:$color-white,
+    black:$color-black
 );
+
+$colors-on-hover: (
+    primary: $color-primary-hover,
+    secondary: $color-secondary-hover,
+    danger: $color-danger-hover,
+    warning: $color-warning-hover,
+    info: $color-info-hover,
+    no-available: $color-no-available-hover,
+    primary-transparent-50:$color-primary-transparent-50-hover,
+    secondary-transparent-50:$color-secondary-transparent-50-hover,
+    white:$color-white-hover,
+    black:$color-black-hover
+);
+
+$colors-disabled: (
+    primary: $color-primary-disabled,
+    secondary: $color-secondary-disabled,
+    danger: $color-danger-disabled,
+    warning: $color-warning-disabled,
+    info: $color-info-disabled,
+    no-available: $color-no-available-disabled,
+    primary-transparent-50:$color-primary-transparent-50-disabled,
+    secondary-transparent-50:$color-secondary-transparent-50-disabled,
+    white:$color-white-disabled,
+    black:$color-black-disabled
+);
+
+/* Contantes */
+$minWidthDefaultScreenDevice: 768px;
