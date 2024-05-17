@@ -6,8 +6,10 @@ export default ({
     children: React.ReactNode;
 }>) => {
     return (
-        <RegistroUsuarioProvider>
-            {children}
-        </RegistroUsuarioProvider>
+        <main className="hero">
+            <RegistroUsuarioProvider>
+                {children}
+            </RegistroUsuarioProvider>
+        </main>
     )
 };

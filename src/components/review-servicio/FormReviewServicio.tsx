@@ -1,9 +1,9 @@
 "use client";
 
 import ComentarioServicioBody from "@/interfaces/requestbody/review/ComentarioServicioBody";
-import { getServerInstanceAuthorized } from "@/utils/constants.server";
 import { useState } from "react";
 import reviewStyles from "@/app/styles/review/review-servicio.module.scss";
+import { comentarServicio } from "@/actions/servicioreviews.actions";
 
 type Props = {
     comentarista: {
@@ -20,17 +20,18 @@ export default ({ idServicio, comentarista }: Props) => {
 
     const puntajeOptions = [0, 1, 2, 3, 4, 5];
 
-    const comentarServicio = async () => {
-        const bodyRequest: ComentarioServicioBody = {
-            idServicio,
-            idComentarista: comentarista.id,
-            nombresComentarista: comentarista.nombres,
-            apellidosComentarista: comentarista.apellidos,
-            comentario,
-            puntaje: puntaje!
+    const comentar = async () => {
+        if (puntaje && comentario) {
+            const publishedComment = await comentarServicio({
+                idServicio,
+                idComentarista: comentarista.id,
+                nombresComentarista: comentarista.nombres,
+                apellidosComentarista: comentarista.apellidos,
+                comentario,
+                puntaje
+            });
+            return publishedComment;
         }
-        const response = await getServerInstanceAuthorized().post(`servicios/comments/publish`, bodyRequest);
-        return response.data;
     }
 
     return (
@@ -42,17 +43,17 @@ export default ({ idServicio, comentarista }: Props) => {
             <div className="form-control">
                 <label htmlFor="puntaje">Puntaje:</label>
                 <select name="puntaje" onChange={(e) => setPuntaje(e.target.value ? Number.parseInt(e.target.value) : undefined)}>
-                    <option>--Seleccione--</option>
-                    {puntajeOptions.map(n =>
-                        <option value={n}>{n}</option>
+                    <option value="">--Seleccione--</option>
+                    {puntajeOptions.map((n, i) =>
+                        <option key={i} value={n}>{n}</option>
                     )}
                 </select>
-                <div className={reviewStyles.rating}>
-                    <span data-puntaje={puntaje}></span>
-                    <span className={reviewStyles.puntaje}>{puntaje}</span>
-                </div>
             </div>
-            <button onClick={comentarServicio}>Comentar</button>
+            <div className={reviewStyles.rating}>
+                <span data-puntaje={puntaje}></span>
+                <span className={reviewStyles.puntaje}>{puntaje}</span>
+            </div>
+            <button className="btn-primary" onClick={comentar}>Comentar</button>
         </div>
     )
 }

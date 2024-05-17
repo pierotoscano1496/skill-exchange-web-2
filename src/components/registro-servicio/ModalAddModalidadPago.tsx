@@ -79,13 +79,13 @@ export default ({
                             {tabs.map((tab, index) => (
                                 <Tab key={index}
                                     label={tab.label}
-                                    onClick={() => setActiveTab(tab.order)}
-                                    isActive={tab.order === activeTab}
+                                    onClick={() => setActiveTab(index)}
+                                    isActive={index === activeTab}
                                 />
                             ))}
                         </div>
                         <div className="tab-content">
-                            {activeTab === 1 &&
+                            {activeTab === 0 &&
                                 <div className="form">
                                     <div className="form-control">
                                         <label htmlFor="yape-phone">Número de celular:</label>
@@ -96,8 +96,8 @@ export default ({
                                             type="tel"
                                             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                                             maxLength={9} />
-                                        {(attempSubmitYape && !numeroCelular) && <p className="text-danger">Especifique un número donde se pueda yapear</p>}
                                     </div>
+                                    {(attempSubmitYape && !numeroCelular) && <p className="text-danger">Especifique un número donde se pueda yapear</p>}
                                     <div className="form-control">
                                         <label htmlFor="yape-image">QR (opcional)</label>
                                         <DragAndDrop
@@ -109,7 +109,7 @@ export default ({
                                         />
                                     </div>
                                 </div>}
-                            {activeTab === 2 &&
+                            {activeTab === 1 &&
                                 <div className="form">
                                     <label htmlFor="num-cci">Cuenta interbancaria:</label>
                                     <input

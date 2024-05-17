@@ -10,7 +10,6 @@ import EstadoMatchOption from "@/interfaces/busqueda-servicio/EstadoMatchOption"
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
-import { TipoMatchServicioEstado } from "@/utils/types";
 import { useEffect, useState } from "react";
 
 interface ServicioOption {
@@ -52,15 +51,12 @@ export default ({ }) => {
         setMatchsServicios(matchsServicioDetails);
 
         // Mapear los servicios de los matchs del proveedor
-        const serviciosClienteOptions = matchsServicioDetails.map(m => ({
+        setServiciosClienteOptionsForSearch(matchsServicioDetails.map(m => ({
             id: m.servicio.id,
             titulo: m.servicio.titulo
-        } as ServicioOption))
-            .filter((option, index, options) => (
-                index === options.findIndex(o => o.id === option.id)
-            ));
-
-        setServiciosClienteOptionsForSearch(serviciosClienteOptions);
+        })).filter((option, index, options) => (
+            index === options.findIndex(o => o.id === option.id)
+        )));
     }
 
     const openModalConfirmarConstancia = (match: MatchServicioDetailsResponse) => {
@@ -73,7 +69,9 @@ export default ({ }) => {
 
     const confirmarContancia = async () => {
         if (matchForConfirmarConstancia) {
-            const matchConfirmado = await actualizarMatchEstado(matchForConfirmarConstancia.id, "ejecucion");
+            const matchConfirmado = await actualizarMatchEstado(matchForConfirmarConstancia.id, {
+                estado: "ejecucion"
+            });
             if (matchConfirmado) {
                 setMatchForConfirmarConstancia({ ...matchForConfirmarConstancia, estado: matchConfirmado.estado })
             }
@@ -82,22 +80,25 @@ export default ({ }) => {
 
     const confirmarFinalizacion = async () => {
         if (matchForFinalizar) {
-            const matchFinalizado = await actualizarMatchEstado(matchForFinalizar.id, "finalizado");
+            const matchFinalizado = await actualizarMatchEstado(matchForFinalizar.id, {
+                estado: "finalizado"
+            });
             if (matchFinalizado) {
                 setMatchForFinalizar({ ...matchForFinalizar, estado: matchFinalizado.estado });
             }
         }
     }
 
-    const matchsServiciosFiltered = matchsServicios.filter(match =>
-        match.servicio.id === servicioOptionSelected?.id &&
+    const matchsServiciosFiltered = matchsServicios.filter(match => servicioOptionSelected || estadoSelected ?
+        match.servicio.id === servicioOptionSelected?.id ||
         match.estado === estadoSelected?.estado
+        : match
     );
 
     return (
         <>
             <div className="principal">
-                <div className="form container">
+                <div className="form-row">
                     <div className="form-control">
                         <label htmlFor="servicio">Servicio:</label>
                         <select name="servicio"
@@ -130,8 +131,8 @@ export default ({ }) => {
                         />
                     ) :
                         <>
-                            <p>No hay solicitudes por ahora</p>
-                            <a className="link-button btn-primary" href="/contratos">Ver mis contratos</a>
+                            <p>No hay contratos por ahora</p>
+                            <a className="link-button btn-primary" href="/servicio/own">Ver mis servicios</a>
                         </>
                     }
                 </div>
@@ -179,7 +180,9 @@ export default ({ }) => {
              * Ver perfil de usuario
              */}
             {clientePerfil &&
-                <ModalVerPerfilUsuario cliente={clientePerfil} onClose={() => setClientePerfil(undefined)} />
+                <ModalVerPerfilUsuario
+                    cliente={clientePerfil}
+                    onClose={() => setClientePerfil(undefined)} />
             }
         </>
     )

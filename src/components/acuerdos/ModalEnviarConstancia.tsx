@@ -86,7 +86,7 @@ export default ({ onClose, onMessageSent, proveedor, cliente }: Props) => {
                 </header>
 
                 <main className={modalStyles.modalContent}>
-                    <div className="form">
+                    <div className="container column">
                         <div className="form-control">
                             <input type="text" name="mensaje" id="mensaje"
                                 value={mensaje}
@@ -103,7 +103,8 @@ export default ({ onClose, onMessageSent, proveedor, cliente }: Props) => {
                     </div>
                     {newFile &&
                         <div className="form-control">
-                            <img className="form-img-previsualizer" src={URL.createObjectURL(newFile)} alt="Preview" />
+                            <img className="form-img-previsualizer" src={URL.createObjectURL(newFile)} alt="Preview"
+                                style={{ maxHeight: "50%", maxWidth: "50%" }} />
                         </div>
                     }
                 </main>

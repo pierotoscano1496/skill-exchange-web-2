@@ -5,5 +5,5 @@ export default interface MedioPagoResponse {
     tipo: TipoModalidadPago;
     cuentaBancaria: string;
     numeroCelular: string;
-
+    url:string;
 }

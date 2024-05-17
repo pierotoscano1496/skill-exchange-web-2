@@ -51,81 +51,81 @@ export default () => {
     }
 
     return (
-        <div className="form">
+        <div className="form main">
             <h2>Registro de usuario</h2>
 
             <div className="form-control">
-                <label>Nombres:
-                    <input type="text" value={usuarioDatos.nombres} onChange={(e) => setNombres(e.target.value)} />
-                </label>
-                {(attempSubmit && !usuarioDatos.nombres) && <p className="text-danger">Escriba sus nombres</p>}
+                <label>Nombres:</label>
+                <input type="text" value={usuarioDatos.nombres} onChange={(e) => setNombres(e.target.value)} />
             </div>
+            {(attempSubmit && !usuarioDatos.nombres) && <p className="text-danger">Escriba sus nombres</p>}
             <div className="form-control">
-                <label>Apellidos:
-                    <input type="text" value={usuarioDatos.apellidos} onChange={(e) => setApellidos(e.target.value)} />
-                </label>
-                {(attempSubmit && !usuarioDatos.apellidos) && <p className="text-danger">Escriba sus apellidos</p>}
+                <label>Apellidos:</label>
+                <input type="text" value={usuarioDatos.apellidos} onChange={(e) => setApellidos(e.target.value)} />
             </div>
+            {(attempSubmit && !usuarioDatos.apellidos) && <p className="text-danger">Escriba sus apellidos</p>}
             <div className="form-control">
-                <label>Tipo de documento:
-                    <select onChange={(e) => setTipoDocumento(e.target.value)}>
-                        <option>--Seleccione--</option>
-                        {tipoDocummentoOptions.map(t => (
-                            <option key={t.value} value={t.value}>{t.name}</option>
-                        ))}
-                    </select>
-                </label>
-                {(attempSubmit && !usuarioDatos.tipoDocumento) && <p className="text-danger">Indique el tipo de documento</p>}
+                <label>Tipo de documento:</label>
+                <select onChange={(e) => setTipoDocumento(e.target.value)}>
+                    <option value={""}>--Seleccione--</option>
+                    {tipoDocummentoOptions.map(t => (
+                        <option key={t.value} value={t.value}>{t.name}</option>
+                    ))}
+                </select>
             </div>
-            <div className="form-control">
-                <label>{usuarioDatos.tipoDocumento === "carnet_extranjeria" ? "Carnet de extranjería" : "DNI"}:
-                    {
-                        usuarioDatos.tipoDocumento === "dni" &&
-                        <>
-                            <input type="text" value={usuarioDatos.dni}
-                                onChange={(e) => setDocumento(e.target.value)}
-                                maxLength={8} />
-                            {(attempSubmit && !usuarioDatos.dni) && <p className="text-danger">Escriba su DNI</p>}
-                        </>
+            {(attempSubmit && !usuarioDatos.tipoDocumento) && <p className="text-danger">Indique el tipo de documento</p>}
+            {usuarioDatos.tipoDocumento === "dni" &&
+                <>
+                    <div className="form-control">
+                        <label htmlFor="dni">DNI</label>
+                        <input name="dni" type="text" value={usuarioDatos.dni}
+                            pattern="[0-9]{8}"
+                            inputMode="numeric"
+                            onChange={(e) => setDocumento(e.target.value)}
+                            maxLength={8} />
 
-                    }
-                    {
-                        usuarioDatos.tipoDocumento === "carnet_extranjeria" &&
-                        <>
-                            <input type="text" value={usuarioDatos.carnetExtranjeria}
-                                onChange={(e) => setDocumento(e.target.value)}
-                                maxLength={20} />
-                            {(attempSubmit && !usuarioDatos.carnetExtranjeria) && <p className="text-danger">Escriba su carnet de extranjería</p>}
-                        </>
-                    }
-                    {
-                        usuarioDatos.tipoDocumento === undefined &&
-                        <input type="text" disabled={true} />
-                    }
-                </label>
-            </div>
+                    </div>
+                    {(attempSubmit && !usuarioDatos.dni) && <p className="text-danger">Escriba su DNI</p>}
+                </>
+
+            }
+            {usuarioDatos.tipoDocumento === "carnet_extranjeria" &&
+                <>
+                    <div className="form-control">
+                        <label htmlFor="carnet_extranjeria">Carnet de extranjería</label>
+                        <input name="carnet_extranjeria" type="text" value={usuarioDatos.carnetExtranjeria}
+                            pattern="[0-9]{20}"
+                            inputMode="numeric"
+                            onChange={(e) => setDocumento(e.target.value)}
+                            maxLength={20} />
+                    </div>
+                    {(attempSubmit && !usuarioDatos.carnetExtranjeria) && <p className="text-danger">Escriba su carnet de extranjería</p>}
+                </>
+            }
             <div className="form-control">
-                <label>Fecha de nacimiento:
-                    <input type="date" defaultValue={maxFechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} max={maxFechaNacimiento} />
-                </label>
-                {(attempSubmit && !usuarioDatos.fechaNacimiento) && <p className="text-danger">Indique su fecha de nacimiento</p>}
+                <label>Fecha de nacimiento:</label>
+                <input type="date" defaultValue={maxFechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} max={maxFechaNacimiento} />
             </div>
+            {(attempSubmit && !usuarioDatos.fechaNacimiento) && <p className="text-danger">Indique su fecha de nacimiento</p>}
             <div className="form-control">
                 <label>Registrarse como</label>
+                <div className="form-radio-group">
+                    <div className="form-radio">
+                        <label>Cliente</label>
+                        <input type="radio" name="tipoRegistro" value="cliente" onChange={(e) => setTipoRegistro(e.target.value as "cliente")} />
+                    </div>
 
-                <label>
-                    <input type="radio" name="tipoRegistro" value="cliente" onChange={(e) => setTipoRegistro(e.target.value as "cliente")} />
-                    Cliente
-                </label>
-
-                <label>
-                    <input type="radio" name="tipoRegistro" value="proveedor" onChange={(e) => setTipoRegistro(e.target.value as "proveedor")} />
-                    Proveedor
-                </label>
-                {(attempSubmit && !usuarioDatos.tipo) && <p className="text-danger">Indique con qué perfil se registrará</p>}
+                    <div className="form-radio">
+                        <label>Proveedor</label>
+                        <input type="radio" name="tipoRegistro" value="proveedor" onChange={(e) => setTipoRegistro(e.target.value as "proveedor")} />
+                    </div>
+                </div>
+            </div>
+            {(attempSubmit && !usuarioDatos.tipo) && <p className="text-danger">Indique con qué perfil se registrará</p>}
+            <div className="form-control btn-group">
+                <button type="button" className="btn-primary" onClick={nextStepRegistration}>Siguiente</button>
             </div>
 
-            <button type="button" className="btn-primary" onClick={nextStepRegistration}>Siguiente</button>
         </div>
     )
 };

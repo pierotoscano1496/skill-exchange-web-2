@@ -20,7 +20,9 @@ export default ({ match, sendModalState, sendSolicitudAprobada, sendSolicitudFor
     }
 
     const aprobarSolicitud = async () => {
-        const matchAceptado = await actualizarMatchEstado(match.id, "pendiente-pago");
+        const matchAceptado = await actualizarMatchEstado(match.id, {
+            estado: "pendiente-pago"
+        });
         if (matchAceptado) {
             sendSolicitudAprobada(match.cliente);
         }
@@ -35,11 +37,11 @@ export default ({ match, sendModalState, sendSolicitudAprobada, sendSolicitudFor
             <h3 className={cardStyles.title}>{match.servicio.titulo}</h3>
             <div className="container">
                 <div className="item flex-grow-3">
-                    <p>Solicitado por <button onClick={() => openModalViewProfile(match.cliente)}>{`${match.cliente.nombres} ${match.cliente.apellidos}`}</button></p>
+                    <p>Solicitado por <button className="btn-link" onClick={() => openModalViewProfile(match.cliente)}>{`${match.cliente.nombres} ${match.cliente.apellidos}`}</button></p>
                     <br />
-                    <p>Fecha y hora: {converDateTimeToStandarString(match.fecha)}</p>
+                    {/* <p>Fecha y hora: {converDateTimeToStandarString(match.fecha)}</p> */}
                 </div>
-                <div className="item flex-grow-1">
+                <div className="item flex-grow-1 btn-group">
                     <button className="btn-primary" onClick={aprobarSolicitud}>Aprobar</button>
                     <button className="btn-danger" onClick={confirmRechazarSolicitud}>Rechazar</button>
                 </div>

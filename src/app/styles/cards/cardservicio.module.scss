@@ -1,8 +1,13 @@
-@use "@/styles/variables.module.scss" as variables;
+@import "@/app/styles/variables.module.scss";
 
 .cardServicio {
     display: flex;
+
+    border: solid;
+    border-color: #81837b8f;
+    border-radius: 4px;
+
     .title {
-        color: variables.$color-primary;
+        color: $color-primary;
     }
 }

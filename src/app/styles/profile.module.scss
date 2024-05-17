@@ -1,0 +1,13 @@
+@import "@/app/styles/tools/variables";
+@import "@/app/styles/tools/mixins";
+
+.socialMedia {
+    i {
+        font-size: 3rem;
+
+        &.icon-fa-color {
+            font-weight: 3rem;
+            @include select-color;
+        }
+    }
+}

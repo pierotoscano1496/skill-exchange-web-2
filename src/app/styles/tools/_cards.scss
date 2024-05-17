@@ -1,5 +1,10 @@
 .cards-content {
+    display: flex;
+    flex-wrap: wrap;
+
     .item-card {
+        display: flex;
+
         background-color: rgb(255, 208, 0);
         width: fit-content;
         padding: 1em;
@@ -8,6 +13,7 @@
 
         span {
             font-weight: bold;
+            flex-grow: 1;
             /* color: variables.$color-primary; */
         }
     }

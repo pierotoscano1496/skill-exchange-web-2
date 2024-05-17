@@ -52,11 +52,13 @@ const RegistroUsuarioSkills = () => {
             setSkillSelected(undefined);
             setNivelConocimiento(1);
             setAttempSubmit(false);
+            setRegistrationSuccessfully(false);
         })
     }, []);
 
     const obtenerSubcategorias = async (idCategoria: string) => {
         setSubCategorias([]);
+        setSkills([]);
         if (idCategoria) {
             setSubCategorias(await obtenerSubCategoriasByCategoria(idCategoria));
         }
@@ -70,7 +72,9 @@ const RegistroUsuarioSkills = () => {
     }
 
     const addSkillToUsuario = () => {
-        if (skillSelected && (nivelConocimiento >= 1 && nivelConocimiento <= 10)) {
+        if (skillSelected
+            && (nivelConocimiento >= 1 && nivelConocimiento <= 10)
+            && !usuarioDatos.skills.find(s => s.id === skillSelected.id)) {
             addSkill({
                 id: skillSelected!.id,
                 descripcion: skillSelected!.descripcion,
@@ -79,6 +83,13 @@ const RegistroUsuarioSkills = () => {
             });
 
             setAttempSubmit(false);
+
+            // Limpiar entradas
+            setSubCategorias([]);
+            setSkills([]);
+            setSkillSelected(undefined);
+            setNivelConocimiento(1);
+            setComentarioDesempeno("");
         } else {
             setAttempSubmit(true);
         }
@@ -88,7 +99,7 @@ const RegistroUsuarioSkills = () => {
         const data = await registrarUsuarioAndSkills();
         if (data) {
             //Abrir Modal alert de éxito
-
+            setRegistrationSuccessfully(true);
         }
     }
 
@@ -98,60 +109,59 @@ const RegistroUsuarioSkills = () => {
 
     return (
         <>
-            <div>
-                <h2>Registro de habilidades</h2>
-                <div>
-                    <label>Categoría:
-                        <select onChange={(e) => obtenerSubcategorias(e.target.value)}>
-                            <option disabled>--Seleccione--</option>
+            <h2>Registro de habilidades</h2>
+            <div className="container column center">
+                <div className="form main">
+                    <div className="form-control">
+                        <label htmlFor="categoria">Categoría:</label>
+                        <select name="categoria" onChange={(e) => obtenerSubcategorias(e.target.value)}>
+                            <option value="">--Seleccione--</option>
                             {categorias.map(c =>
                                 <option key={c.id} value={c.id}>{c.nombre}</option>
                             )}
                         </select>
-                    </label>
-                </div>
-                <div>
-                    <label>Subcategoría:
-                        <select onChange={(e) => obtenerSkills(e.target.value)}>
-                            <option disabled>--Seleccione--</option>
+                    </div>
+                    <div className="form-control">
+                        <label htmlFor="subcategoria">Subcategoría:</label>
+                        <select name="subcategoria" onChange={(e) => obtenerSkills(e.target.value)}>
+                            <option value="">--Seleccione--</option>
                             {subCategorias.map(s =>
                                 <option key={s.id} value={s.id}>{s.nombre}</option>
                             )}
                         </select>
-                    </label>
-                </div>
-                <div>
-                    <label>Habilidad:
-                        <select onChange={(e) => setSkillSelected(skills.find(s => s.id === e.target.value))}>
-                            <option disabled>--Seleccione--</option>
+                    </div>
+                    <div className="form-control">
+                        <label htmlFor="skill">Habilidad:</label>
+                        <select name="skill" onChange={(e) => setSkillSelected(skills.find(s => s.id === e.target.value))}>
+                            <option value="">--Seleccione--</option>
                             {skills.map(s =>
                                 <option key={s.id} value={s.id}>{s.descripcion}</option>
                             )}
                         </select>
-                    </label>
+                    </div>
                     {(attempSubmit && !skillSelected) && <p className="text-danger">Navegue por las categorías y sibcategorías para encontrar la habilidad que busca</p>}
-                </div>
-                <div>
-                    <label>Nivel de conocimiento:
-                        <input type="number" value={nivelConocimiento} onChange={(e) => setNivelConocimiento(parseInt(e.target.value))} min={1} max={10} />
-                    </label>
+                    <div className="form-control">
+                        <label htmlFor="nivel-conocimiento">Nivel de conocimiento:</label>
+                        <input name="nivel-conocimiento" type="number" value={nivelConocimiento} onChange={(e) => setNivelConocimiento(parseInt(e.target.value))} min={1} max={10} />
+                    </div>
                     {(attempSubmit && (nivelConocimiento < 1 || nivelConocimiento > 10))
                         && <p className="text-danger">Establezca un nivel entre 1 y 10</p>}
+                    <div className="form-control">
+                        <label htmlFor="comment-desempeno">Comenta cómo te desempeñas:</label>
+                        <textarea name="comment-desempeno" value={comentarioDesempeno} onChange={(e) => setComentarioDesempeno(e.target.value)} />
+                        {/* {(attempSubmit && !comentarioDesempeno) && <p className="text-danger">Describanos cómo se desempeña</p>} */}
+                    </div>
+                    {(attempSubmit && usuarioDatos.skills.find(s => s.id === skillSelected?.id)) && <p className="text-danger">No puede agregar la misma habilidad otra vez</p>}
                 </div>
-                <div>
-                    <label>Comenta cómo te desempeñas:
-                        <textarea value={comentarioDesempeno} onChange={(e) => setComentarioDesempeno(e.target.value)} />
-                    </label>
-                    {/* {(attempSubmit && !comentarioDesempeno) && <p className="text-danger">Describanos cómo se desempeña</p>} */}
-                </div>
-                <button onClick={addSkillToUsuario} disabled={!skillSelected}>Agregar</button>
-                <div className={`${skillItemStyles.skillsSelected} container column`}>
+                <button className="btn-secondary" onClick={addSkillToUsuario} disabled={!skillSelected}>Agregar</button>
+
+                <div className="container column">
                     <h3>Habilidades</h3>
-                    <div className={`${skillItemStyles.skillContent} container`}>
+                    <div className='cards-content'>
                         {
                             usuarioDatos.skills.map(s => (
-                                <div key={s.id} className={`${skillItemStyles.skillCard} container`}>
-                                    <span className={`${skillItemStyles["texto-primary"]} flex-grow-1`}>{s.descripcion}</span>
+                                <div key={s.id} className='item-card'>
+                                    <span>{s.descripcion}</span>
                                     <button onClick={() => removeSkill(s.id)} className="btn-close">
                                         <Image src={Close} alt="close" />
                                     </button>
@@ -160,17 +170,21 @@ const RegistroUsuarioSkills = () => {
                         }
                     </div>
                 </div>
-                <button onClick={finalizarRegistro}
-                    className="btn-primary"
-                    disabled={usuarioDatos.skills.length > 0}>Finalizar</button>
-                <button onClick={goBack} className="btn-secondary">Atrás</button>
+                <div className="btn-group width-50">
+                    <button onClick={finalizarRegistro}
+                        className="btn-primary"
+                        disabled={usuarioDatos.skills.length === 0}>Finalizar</button>
+                    <button onClick={goBack} className="btn-secondary">Atrás</button>
+                    <button className="btn-secondary" onClick={() => console.log(usuarioDatos)}>Comprobar</button>
+                </div>
+
+                {registrationSuccessfully &&
+                    <ModalAlert onClose={() => router.push("/login")}>
+                        <p>Gracias por registrarte a Skill Exchange.</p>
+                        <p>Te enviamos un correo para validar tu identificación.</p>
+                    </ModalAlert>
+                }
             </div>
-            {registrationSuccessfully &&
-                <ModalAlert onClose={() => router.push("/login")}>
-                    <p>Gracias por registrarte a Skill Exchange.</p>
-                    <p>Te enviamos un correo para validar tu identificación.</p>
-                </ModalAlert>
-            }
         </>
 
     )

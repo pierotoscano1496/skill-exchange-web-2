@@ -2,7 +2,7 @@
 
 import MatchServicioProveedorDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioProveedorDetailsResponse";
 import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
-import { converDateTimeToStandarString } from "@/utils/auxiliares";
+import { converLocalDateTimeToStandarString } from "@/utils/auxiliares";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import { TipoMatchServicioEstado } from "@/utils/types";
 
@@ -20,19 +20,19 @@ export default ({ match, onOpenViewProfile, onOpenModalEnviarConstancia }: Param
                 <div className="item flex-grow-3">
                     <p>Proveedor (a): <button className="btn-link" onClick={() => onOpenViewProfile(match.proveedor)}>{`${match.proveedor.nombres} ${match.proveedor.apellidos}`}</button></p>
                     <br />
-                    <p>Solicitado el: {converDateTimeToStandarString(match.fecha)}</p>
+                    <p>Solicitado el: {converLocalDateTimeToStandarString(match.fecha)}</p>
                     {match.estado === "solicitado" && <p className="text-primary">En espera de respuesta</p>}
                     {match.estado === "pendiente-pago" && <p className="text-secondary">Pendiente de pago</p>}
                     {match.estado === "ejecucion" &&
                         <>
                             <p className="text-info">Atendiendo</p>
-                            <p>Desde: {converDateTimeToStandarString(match.fechaInicio)}</p>
+                            <p>Desde: {converLocalDateTimeToStandarString(match.fechaInicio)}</p>
                         </>
                     }
                     {match.estado === "finalizado" &&
                         <>
                             <p className="text-warning">Finalizado</p>
-                            <p>Fecha de cierre: {converDateTimeToStandarString(match.fechaCierre)}</p>
+                            <p>Fecha de cierre: {converLocalDateTimeToStandarString(match.fechaCierre)}</p>
                         </>
                     }
                     {match.estado === "rechazado" && <p className="text-danger">Rechazado</p>}

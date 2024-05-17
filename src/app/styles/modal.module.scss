@@ -41,6 +41,7 @@
             position: relative;
             border-bottom: 1px solid #dddddd;
             justify-content: space-between;
+            display: flex;
 
             &Title {
                 text-align: center;
@@ -69,6 +70,11 @@
 
         &Content {
             border-bottom: 1px solid #dddddd;
+
+            &>img.imagePreview {
+                max-height: 100%;
+                max-width: 100%;
+            }
         }
 
         &Footer {

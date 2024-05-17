@@ -1,4 +1,5 @@
-import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse"
+import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
+import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
 
 type ItemParams = {
     servicio: ServicioBusquedaResponse;
@@ -6,9 +7,9 @@ type ItemParams = {
 
 export default async ({ servicio }: ItemParams) => {
     return (
-        <div>
+        <div className={`${cardStyles.cardServicio} container column`}>
             <div>
-                <h2>{servicio.titulo}</h2>
+                <h2 className="cardStyles.title">{servicio.titulo}</h2>
                 <p>{servicio.descripcion.substring(0, 100)}...</p>
                 <br />
                 <span>Por <a href={`/profile/${servicio.idUsuario}`}>{`${servicio.nombresUsuario} ${servicio.apellidosUsuario}`}</a></span>

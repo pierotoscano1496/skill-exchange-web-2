@@ -1,5 +1,22 @@
+@import "@/app/styles/tools/variables";
+@import "@/app/styles/tools/mixins";
+
 .chatpanel {
-    padding-left: 15px;
-    margin-left: 15px;
-    float: right;
+    background: hsla(122, 95%, 84%, 0.35);
+    padding: 0;
+    border-right: solid 1px;
+
+    .contactModule {
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+
+        &:hover,
+        &.active {
+            background: hsl(122, 95%, 84%);
+        }
+
+        span {
+            font-weight: bold;
+        }
+    }
 }

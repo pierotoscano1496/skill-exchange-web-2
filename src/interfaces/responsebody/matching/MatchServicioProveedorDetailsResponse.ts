@@ -8,9 +8,9 @@ export default interface MatchServicioProveedorDetailsResponse {
     proveedor: UsuarioResponse;
     //idServicio: string;
     //idCliente: string;
-    fecha: Date;
-    fechaInicio: Date;
-    fechaCierre: Date;
+    fecha: number[];
+    fechaInicio: number[];
+    fechaCierre: number[];
     estado: TipoMatchServicioEstado;
     puntuacion: number;
     costo: number;

@@ -1,14 +1,8 @@
 "use client";
 
-import ContactModule from "@/interfaces/chatting/ContactModule";
 import { useEffect, useState } from "react";
-import ChatModule from "./ChatModule";
-import chatPanelStyles from "@/styles/chats/chatpanel.module.scss";
-import ChatMessagingService from "@/services/ChatMessagingService";
-import UsuarioBasicInfo from "@/interfaces/chatting/UsuarioBasicInfo";
-import MensajeChat from "@/interfaces/models/chats/MensajeChat";
-import { getConversationWithUser, getConversationsFromUserLogged } from "@/actions/chatting.actions";
-import Message from "@/interfaces/models/chats/Message";
+import chatPanelStyles from "@/app/styles/chats/chatpanel.module.scss";
+import { getConversationsFromUserLogged } from "@/actions/chatting.actions";
 import Contact from "@/interfaces/models/chats/Contact";
 
 type Props = {
@@ -24,6 +18,7 @@ interface ContactoUnico {
 
 export default ({ idUserLogged, onOpenChatModule }: Props) => {
     const [contactosUnicos, setContactosUnicos] = useState<ContactoUnico[]>([]);
+    const [idConversationActive, setIdConversationActive] = useState<string>();
 
     useEffect(() => {
         const loadConversaciones = async () => {
@@ -53,10 +48,14 @@ export default ({ idUserLogged, onOpenChatModule }: Props) => {
 
     return (
         <aside className={`${chatPanelStyles.chatpanel} flex-grow-1`}>
-            <h3>Chats</h3>
             {contactosUnicos.map(c =>
-                <div onClick={() => onOpenChatModule(c.idConversation)}>
-                    <span key={c.idConversation}>{c.contact.fullName}</span>
+                <div key={c.idConversation}
+                    className={`${chatPanelStyles.contactModule} ${idConversationActive === c.idConversation && chatPanelStyles.active}`}
+                    onClick={() => {
+                        onOpenChatModule(c.idConversation);
+                        setIdConversationActive(c.idConversation)
+                    }}>
+                    <span>{c.contact.fullName}</span>
                 </div>
             )}
         </aside>

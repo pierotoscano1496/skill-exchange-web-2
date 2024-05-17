@@ -1,58 +1,36 @@
 "use client";
 
-import LinkData from "@/interfaces/registro-servicio/LinkData";
-import { useState } from "react";
-import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, TikTokEmbed, TwitterEmbed, YouTubeEmbed } from "react-social-media-embed";
+import { MedioRecursoMultimedia } from "@/utils/types";
+import { FacebookEmbed, InstagramEmbed, LinkedInEmbed, TikTokEmbed, TwitterEmbed, XEmbed, YouTubeEmbed } from "react-social-media-embed";
 
 const SocialMediaRender = ({ link, onRender }: {
     link: string,
-    onRender: (linkData: LinkData) => void
+    onRender: (medio: MedioRecursoMultimedia) => void
 }) => {
     if (link.startsWith("https://www.facebook.com/")) {
-        onRender({
-            link,
-            medio: "facebook"
-        });
+        onRender("facebook");
         return <FacebookEmbed url={link} width={550} />
     } else if (link.startsWith("https://www.instagram.com/")) {
-        onRender({
-            link,
-            medio: "instagram"
-        });
+        onRender("instagram");
         return <InstagramEmbed url={link} width={328} />
     } else if (link.startsWith("https://www.tiktok.com")) {
-        onRender({
-            link,
-            medio: "tiktok"
-        });
+        onRender("tiktok");
         return <TikTokEmbed url={link} width={325} />
     } else if (link.startsWith("https://www.youtube.com/")) {
-        onRender({
-            link,
-            medio: "youtube"
-        });
+        onRender("youtube");
         return <YouTubeEmbed url={link} width={325} height={220} />
     } else if (link.startsWith("https://twitter.com/")) {
-        onRender({
-            link,
-            medio: "twitter"
-        });
-        return <TwitterEmbed url={link} width={325} />
+        onRender("twitter");
+        return <XEmbed url={link} width={325} />
     } else if (link.startsWith("https://www.linkedin.com/")) {
-        onRender({
-            link,
-            medio: "linkedin"
-        });
+        onRender("linkedin");
         return <LinkedInEmbed
             url={link}
             width={325}
             height={570}
         />
     } else {
-        onRender({
-            link,
-            medio: "web-externa"
-        });
+        onRender("web-externa");
         return <a href={link}>{link}</a>
     }
 };
