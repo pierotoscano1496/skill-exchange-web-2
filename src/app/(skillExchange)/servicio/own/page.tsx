@@ -48,8 +48,9 @@ export default () => {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="form-control">
+                                    <div className="form-control btn-group">
                                         <button className="btn-primary">Buscar</button>
+                                        <a className="link-button btn-primary" href="/registro/servicio">Crear nuevo</a>
                                     </div>
                                 </div>
                                 <div className="container">

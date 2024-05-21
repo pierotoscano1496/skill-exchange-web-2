@@ -1,8 +1,9 @@
 "use client";
 
 import axios, { AxiosError } from "axios";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default () => {
     const [correo, setCorreo] = useState<string>("");
@@ -10,6 +11,13 @@ export default () => {
     const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const router = useRouter();
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (session) {
+            router.push("/servicio");
+        }
+    }, []);
 
     const login = async () => {
         try {
@@ -57,6 +65,7 @@ export default () => {
                             </div>
                             <button className="btn-primary" type="button" onClick={login}>Ingresar</button>
                             {attempSubmit && error && <p className="text-danger">{error}</p>}
+                            <button className="btn-secondary" onClick={() => signIn("google")}>Inicia sesión con google</button>
                         </div>
                     </div>
                 </div>
