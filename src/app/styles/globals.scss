@@ -37,7 +37,7 @@
 }
 
 body {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
 /* main {
@@ -68,6 +68,18 @@ button {
 
     &>img {
       width: 1.5rem;
+    }
+  }
+}
+
+i {
+  &.inverted {
+    &-x {
+      transform: scaleX(-1);
+    }
+
+    &-y {
+      transform: scaleY(-1);
     }
   }
 }
@@ -115,6 +127,7 @@ form {
 
 p,
 label,
+span,
 h1,
 h2,
 h3,
@@ -124,6 +137,10 @@ h6 {
   &.text {
     @include select-color;
   }
+
+  &.bold {
+    font-weight: bold;
+  }
 }
 
 img {
@@ -131,20 +148,37 @@ img {
     height: auto;
     max-width: 12rem;
     min-width: 8rem;
+    cursor: pointer;
+  }
 
-    &.yape {
-      content: url(../../../public/img/yape.png);
-      cursor: pointer;
+  &.option {
+    cursor: pointer;
+
+    &:active {
+      background-color: #3d3d3d23;
     }
 
-    &.credit-card {
-      content: url(/public/img/credit-card.png);
+    &:active::after {
+      padding: 0;
+      margin: 0;
     }
+  }
+
+  &.yape {
+    content: url(../../../public/img/yape.png);
+  }
+
+  &.credit-card {
+    content: url(../../../public/img/credit-card.png);
   }
 
   &.qr-previsualizer {
     max-width: 75%;
     align-self: center;
+  }
+
+  &.loading-basic {
+    content: url(@images/loading-basic.gif);
   }
 }
 
@@ -165,6 +199,7 @@ hr {
   @include flex-direction;
   @include flex-align-items;
   @include flex-justify-content;
+  @include flex-wrap;
 
   @media (max-width: $minWidthDefaultScreenDevice) {
     max-width: 100%;

@@ -1,3 +1,4 @@
+/* Main colors */
 $color-primary: hsl(228, 100%, 61%);
 $color-secondary: hsl(125, 96%, 41%);
 $color-danger: hsl(0, 100%, 61%);
@@ -9,6 +10,11 @@ $color-black: #1f1f1f;
 
 $color-primary-transparent-50: hsla(228, 100%, 61%, 0.5);
 $color-secondary-transparent-50: hsla(125, 96%, 41%, 0.5);
+
+/* Ligth colors */
+$color-primary-ligth: hsl(228, 82%, 78%);
+$color-secondary-ligth: hsl(125, 77%, 76%);
+$color-warning-ligth: hsl(56, 100%, 81%);
 
 /* Hover */
 $color-primary-hover: hsl(228, 82%, 40%);
@@ -47,6 +53,12 @@ $colors: (
     secondary-transparent-50:$color-secondary-transparent-50,
     white:$color-white,
     black:$color-black
+);
+
+$colors-ligth: (
+    primary: $color-primary-ligth,
+    secondary: $color-secondary-ligth,
+    warning: $color-warning-ligth
 );
 
 $colors-on-hover: (

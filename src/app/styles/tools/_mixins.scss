@@ -187,6 +187,12 @@
     }
 }
 
+@mixin flex-wrap {
+    &.wrap {
+        flex-wrap: wrap;
+    }
+}
+
 /*
     Flex items mixins
 */

@@ -16,6 +16,10 @@ const nextConfig = {
     },
     sassOptions: {
         includePaths: [path.join(__dirname, 'styles')]
+    },
+    webpack: (config) => {
+        config.resolve.alias["./@images"] = path.join(__dirname, "/src/app/images");
+        return config;
     }
 };
 

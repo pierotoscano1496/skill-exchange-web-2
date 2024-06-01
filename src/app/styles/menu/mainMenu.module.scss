@@ -4,12 +4,33 @@ $sidebarWidth: 250px;
 $sidebarCollapsedWidth: 60px;
 
 .navbar {
-    background-color: #333;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
+    .navigation {
+        display: flex;
+        align-items: center;
+        flex-flow: row wrap;
+        justify-content: flex-end;
+        list-style: none;
+        margin: 0;
+        background: $color-primary-ligth;
+
+        &>li> {
+
+            * {
+                text-decoration: none;
+                display: block;
+                padding: 1em;
+                color: white;
+
+                &:hover {
+                    background: $color-primary;
+                }
+            }
+
+            i {
+                cursor: pointer;
+            }
+        }
+    }
 
     .userData {
         .login {
@@ -42,19 +63,23 @@ $sidebarCollapsedWidth: 60px;
     justify-content: space-between;
     transition: width 0.3s ease;
 
+    & i {
+        color: $color-primary;
+    }
+
     &.collapsed {
         width: $sidebarCollapsedWidth;
 
         ul {
             li {
-                a {
+                a>span {
                     display: none;
                 }
             }
         }
 
         .toggleButton {
-            padding: 10px;
+            transform: scaleX(1);
         }
     }
 
@@ -65,10 +90,6 @@ $sidebarCollapsedWidth: 60px;
         li {
             margin-bottom: 0.5rem;
 
-            i {
-                color: $color-primary;
-            }
-
             a {
                 text-decoration: none;
                 color: $color-primary;
@@ -77,11 +98,12 @@ $sidebarCollapsedWidth: 60px;
     }
 
     .toggleButton {
-        padding: 10px;
-        background-color: #007bff;
-        color: #fff;
+        margin: 0;
+        background-color: transparent;
         border: none;
+        padding: 0;
         cursor: pointer;
+        transform: scaleX(-1);
     }
 }
 
@@ -92,5 +114,4 @@ $sidebarCollapsedWidth: 60px;
     &.leftCollapsed {
         margin-left: $sidebarCollapsedWidth;
     }
-
 }

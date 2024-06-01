@@ -12,7 +12,7 @@ export default ({ source, numCelular }: Props) => {
     const [openYapeQR, setOpenYapeQR] = useState<boolean>(false);
 
     return (<>
-        <img className="brand yape" onClick={() => setOpenYapeQR(true)} />
+        <img className="brand yape option" onClick={() => setOpenYapeQR(true)} />
         {openYapeQR &&
             <ModalImagePreview source={source} decripcion={`Número de celular: ${numCelular}`} onClose={() => setOpenYapeQR(false)} />
         }

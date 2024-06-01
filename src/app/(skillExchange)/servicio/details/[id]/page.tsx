@@ -1,14 +1,16 @@
 import ContactForm from "@/components/busqueda-servicio/ContactForm";
 import ServicioDetailsResponse from "@/interfaces/busqueda-servicio/ServicioDetailsResponse";
 import { TipoModalidadPagoOption } from "@/utils/types";
-import commentStyles from "./comment.module.scss";
-import reviewStyles from "@/app/styles/review/review-servicio.module.scss";
 import ServicioReviewResponse from "@/interfaces/responsebody/review/ServicioReviewResponse";
 import FormReviewServicio from "@/components/review-servicio/FormReviewServicio";
 import { getServicioDetails, getServicioReview } from "@/actions/servicio.actions";
 import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import YapeModule from "@/components/busqueda-servicio/YapeModule";
+import servicioDetailsStyles from "@/app/styles/servicios/serviciodetails.module.scss";
+import commentStyles from "./comment.module.scss";
+import reviewStyles from "@/app/styles/review/review-servicio.module.scss";
+import CreditCardModule from "@/components/busqueda-servicio/CreditCardModule";
 
 type ModalidadOption = TipoModalidadPagoOption & {
     brandClassName: string
@@ -35,7 +37,18 @@ export default async ({ params }: {
         <div className="container column">
             <h2 className="text-primary">{servicioDetails.titulo}</h2>
             <p>{servicioDetails.descripcion}</p>
-            <p>Precio: <span className="text-secondary">S/. {servicioDetails.precio}</span></p>
+            <p className="bold">Precio: <span className="text-secondary">S/. {servicioDetails.precio}</span></p>
+            <div className="container baseline wrap">
+                <div className={`flex-grow-1 ${servicioDetailsStyles.feature} ${servicioDetailsStyles.Categoria}`}>
+                    <span>{servicioDetails.categoria.nombre}</span>
+                </div>
+                <div className={`flex-grow-1 ${servicioDetailsStyles.feature} ${servicioDetailsStyles.SubCategoria}`}>
+                    <span>{servicioDetails.subCategoria.nombre}</span>
+                </div>
+                <div className={`flex-grow-1 ${servicioDetailsStyles.feature} ${servicioDetailsStyles.Skill}`}>
+                    <span>{servicioDetails.skill.descripcion}</span>
+                </div>
+            </div>
             <p>Pagar con:</p>
             <div className="container content-space-evenly">
                 {servicioDetails.modalidadesPago.map(m =>
@@ -46,7 +59,7 @@ export default async ({ params }: {
                         </>}
                         {m.tipo === "tarjeta" && <>
                             <span>Tarjeta de débito/crédito</span>
-                            <img className="brand credit-card" />
+                            <CreditCardModule number={m.cuentaBancaria} />
                         </>}
                     </div>
                 )}

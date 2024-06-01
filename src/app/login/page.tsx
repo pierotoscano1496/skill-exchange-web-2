@@ -3,16 +3,19 @@
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import styles from "@/app/styles/login/login.module.scss";
 
 export default () => {
     const [correo, setCorreo] = useState<string>("");
     const [contrasena, setContrasena] = useState<string>("");
     const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
 
     const login = async () => {
         try {
+            setLoading(true);
             const response = await axios.post("/api/login", {
                 email: correo,
                 password: contrasena
@@ -29,6 +32,8 @@ export default () => {
             }
             setAttempSubmit(true);
             setError(mensaje);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -55,7 +60,8 @@ export default () => {
                                 <label htmlFor="email">Contraseña:</label>
                                 <input type="password" value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
                             </div>
-                            <button className="btn-primary" type="button" onClick={login}>Ingresar</button>
+                            <button className="btn-primary" type="button" onClick={login} disabled={loading}>Ingresar</button>
+                            {loading && <img className={styles.waiting} />}
                             {attempSubmit && error && <p className="text-danger">{error}</p>}
                         </div>
                     </div>

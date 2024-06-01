@@ -1,0 +1,25 @@
+@import "@/app/styles/tools/variables";
+@import "@/app/styles/tools/mixins";
+
+.feature {
+    padding: 0.2rem;
+    margin: 0.3rem;
+    border-radius: 0.5rem;
+    text-align: center;
+
+    span {
+        font-weight: bold;
+    }
+
+    &.Categoria {
+        background-color: $color-primary-ligth;
+    }
+
+    &.SubCategoria {
+        background-color: $color-secondary-ligth;
+    }
+
+    &.Skill {
+        background-color: $color-warning-ligth;
+    }
+}

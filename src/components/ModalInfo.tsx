@@ -3,17 +3,23 @@
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import modalStyles from "@/app/styles/modal.module.scss";
 import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 
+type FlexProps = {
+    flexAlignItems?: "stretch" | "flex-start" | "flex-end" | "center" | "baseline" | "first baseline" | "last baseline" | "start" | "end" | "self-start" | "self-end";
+    justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly" | "start" | "end" | "left" | "right"
+    flexDirection?: "row" | "row-reverse" | "column" | "column-reverse";
+    flexWrap?: "wrap"
+}
+
 type Params = {
-    title?: string;
-    container?: boolean;
+    title: string;
+    flexProps?: FlexProps;
     children: React.ReactNode;
     onClose: () => void;
 }
 
-export default ({ title = "Mensaje", container = false, children, onClose }: Params) => {
+export default ({ title, flexProps, children, onClose }: Params) => {
     return (
         <div className={`${modalStyles.modalContainer} ${modalStyles.super}`}>
             <div className={modalStyles.modal}>
@@ -24,7 +30,7 @@ export default ({ title = "Mensaje", container = false, children, onClose }: Par
                     </button>
                 </header>
 
-                <main className={`${modalStyles.modalContent} ${container && "container"}`}>
+                <main className={`${modalStyles.modalContent} container ${flexProps?.flexAlignItems} ${flexProps?.flexDirection} ${flexProps?.justifyContent && `content-${flexProps.justifyContent}`} ${flexProps?.flexWrap}`}>
                     {children}
                 </main>
 

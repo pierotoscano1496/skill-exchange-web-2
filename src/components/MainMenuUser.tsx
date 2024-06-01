@@ -1,10 +1,10 @@
 "use client";
 
 import Usuario from "@/interfaces/Usuario";
-import mainMenuUserStyles from "@/app/styles/menu/mainMenu.module.scss";
 import { useState } from "react";
 import { logoutUsuario } from "@/actions/usuario.actions";
 import { useRouter } from "next/navigation";
+import mainMenuUserStyles from "@/app/styles/menu/mainMenu.module.scss";
 
 export default ({ children, usuario }: { children: React.ReactNode, usuario: Usuario | undefined }) => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Estado para controlar la expansión del sidebar
@@ -22,51 +22,55 @@ export default ({ children, usuario }: { children: React.ReactNode, usuario: Usu
     return (
         <>
             <header className={mainMenuUserStyles.navbar}>
-                <div className="brand"></div>
-                <div className="communication">
-                    <span className="">
+                <ul className={mainMenuUserStyles.navigation}>
+                    <li>
                         <i className="fa-solid fa-bell"></i>
-                    </span>
-                    <span>
-                        <i className="fa-solid fa-comment"></i>
-                    </span>
-                </div>
-                <div className={mainMenuUserStyles.userData}>
+                    </li>
+                    <li>
+                        <a href="/mensajes"><i className="fa-solid fa-comment"></i></a>
+                    </li>
+                    <li>
+                        <a href="/servicio">Buscar Servicios</a>
+                    </li>
                     {usuario ?
                         <>
-                            <span>{usuario.nombres}</span>
-                            <a className="link-white none" href="/servicio">Buscar Servicios</a>
-                            <button className="btn-white icon" onClick={logout}>
-                                <i className="fa-solid fa-right-from-bracket"></i>
-                            </button>
-                        </> :
-                        <>
-                            <a className="link-white none" href="/servicio">Buscar Servicios</a>
+                            <li>
+                                <a href="/profile">{usuario.nombres}</a>
+                            </li>
+                            <li>
+                                <button className="btn-white icon" onClick={logout}>
+                                    <i className="fa-solid fa-door-open"></i>
+                                </button>
+                            </li>
+                        </>
+                        :
+                        <li>
                             <a className={mainMenuUserStyles.login} href="/login">Iniciar sesión</a>
-                        </>}
-                </div>
+                        </li>
+                    }
+                </ul>
             </header>
             {usuario ?
                 <>
                     <aside className={`${mainMenuUserStyles.sidebar} ${sidebarCollapsed ? mainMenuUserStyles.collapsed : ""}`}>
                         <ul>
                             <li>
-                                <span><i className="fa-solid fa-thumbs-up"></i> <a href="/acuerdos">Mis acuerdos</a></span>
+                                <a href="/acuerdos"><i className="fa-solid fa-thumbs-up"></i><span> Acuerdos</span></a>
                             </li>
                             <li>
-                                <span><i className="fa-solid fa-file-contract"></i> <a href="/contratos">Mis contratos</a></span>
+                                <a href="/contratos"><i className="fa-solid fa-file-contract"></i><span> Contratos</span></a>
                             </li>
                             <li>
-                                <span><i className="fa-solid fa-gear"></i> <a href="/servicio/own">Mis Servicios</a></span>
+                                <a href="/servicio/own"><i className="fa-solid fa-gear"></i><span> Servicios</span></a>
                             </li>
                             <li>
-                                <span><i className="fa-solid fa-envelope"></i> <a href="/solicitudes">Mis solicitudes</a></span>
+                                <a href="/solicitudes"><i className="fa-solid fa-envelope"></i><span> Solicitudes</span></a>
                             </li>
-                            <li>
+                            {/* <li>
                                 <span><i className="fa-solid fa-comment"></i> <a href="/mensajes">Mensajes</a></span>
-                            </li>
+                            </li> */}
                         </ul>
-                        <button className={`btn-primary ${sidebarCollapsed ? "icon" : "btn-icon"}`} onClick={toggleSidebar}>
+                        <button className={mainMenuUserStyles.toggleButton} onClick={toggleSidebar}>
                             <i className="fa-solid fa-arrow-right-from-bracket"></i>
                         </button>
                     </aside>

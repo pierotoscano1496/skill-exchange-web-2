@@ -10,28 +10,23 @@ import SkillResponse from "@/interfaces/responsebody/skill/SkillResponse";
 import SubCategoriaResponse from "@/interfaces/responsebody/subCategoria/SubCategoriaResponse";
 import { SelectOptions } from "@/utils/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ReactSelect from "react-select";
+import SearchServicioFallback from "./SearchServicioFallback";
 
 export default () => {
     const [keyWord, setKeyWord] = useState("");
-    const [categoriasOptions, setCategoriasOptions] = useState<SelectOptions[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [subCategorias, setSubCategorias] = useState<SubCategoriaResponse[]>([]);
     const [skills, setSkills] = useState<SkillResponse[]>([]);
-    const [idCategoriaSelected, setIdCategoriaSelected] = useState<string>();
-    const [idSubcategoriaSelected, setIdSubCategoriaSelected] = useState<string>();
-    const [idSkillSelected, setIdSkillSelected] = useState<string>();
+    const [categoriaSelected, setCategoriaSelected] = useState<Categoria>();
+    const [subcategoriaSelected, setSubCategoriaSelected] = useState<SubCategoriaResponse>();
+    const [skillSelected, setSkillSelected] = useState<SkillResponse>();
     const router = useRouter();
 
     useEffect(() => {
         const setup = async () => {
-            obtenerCategorias().then(data => {
-                const dataToOptions = data.map(c => ({
-                    label: c.nombre,
-                    value: c.id
-                }));
-                setCategoriasOptions(dataToOptions);
-            });
+            obtenerCategorias().then(data => setCategorias(data));
             obtenerSubCategorias().then(data => setSubCategorias(data));
             obtenerSkills().then(data => setSkills(data));
         }
@@ -45,14 +40,14 @@ export default () => {
         if (keyWord) {
             parameters.push(`keyWord=${keyWord}`);
         }
-        if (idCategoriaSelected) {
-            parameters.push(`idCategoria=${idCategoriaSelected}`);
+        if (categoriaSelected) {
+            parameters.push(`idCategoria=${categoriaSelected.id}`);
         }
-        if (idSubcategoriaSelected) {
-            parameters.push(`idSubCategoria=${idSubcategoriaSelected}`);
+        if (subcategoriaSelected) {
+            parameters.push(`idSubCategoria=${subcategoriaSelected.id}`);
         }
-        if (idSkillSelected) {
-            parameters.push(`idSkill=${idSkillSelected}`);
+        if (skillSelected) {
+            parameters.push(`idSkill=${skillSelected.id}`);
         }
 
         const searchParams = parameters.reduce((prevParam, param) => `${param}&${prevParam}`);
@@ -60,8 +55,8 @@ export default () => {
         router.push(`/servicio${searchParams.length > 0 ? `?${searchParams}` : ''}`);
     }
 
-    const subCategoriasFiltered = subCategorias.filter(s => s.idCategoria === idCategoriaSelected);
-    const skillsFiltered = skills.filter(s => s.idSubCategoria === idSubcategoriaSelected);
+    const subCategoriasFiltered = subCategorias.filter(s => s.idCategoria === categoriaSelected?.id);
+    const skillsFiltered = skills.filter(s => s.idSubCategoria === subcategoriaSelected?.id);
 
     return (
         <div className="form-row">
@@ -77,29 +72,50 @@ export default () => {
             </div>
             <div className="form-control">
                 <label htmlFor="id-categoria">Categoría:</label>
-                <ReactSelect key={"categoria"} options={categoriasOptions}
+                <ReactSelect key={"categoria"}
+                    options={categorias.map(categoria => ({
+                        label: categoria.nombre,
+                        value: categoria.id
+                    } as SelectOptions))}
+                    value={{
+                        label: categoriaSelected?.nombre,
+                        value: categoriaSelected?.id
+                    }}
                     onChange={option => {
-                        setIdCategoriaSelected(option?.value);
+                        setCategoriaSelected(categorias.find(categoria => categoria.id === option?.value));
+                        setSubCategoriaSelected(undefined);
+                        setSkillSelected(undefined);
                     }} />
             </div>
             <div className="form-control">
                 <label htmlFor="id-sub-categoria">Sub categoría</label>
-                <ReactSelect key={"subCategoria"} options={subCategoriasFiltered.map(s => ({
-                    value: s.id,
-                    label: s.nombre
-                }))}
+                <ReactSelect key={"subCategoria"}
+                    options={subCategoriasFiltered.map(subCategoria => ({
+                        value: subCategoria.id,
+                        label: subCategoria.nombre
+                    } as SelectOptions))}
+                    value={{
+                        label: subcategoriaSelected?.nombre,
+                        value: subcategoriaSelected?.id
+                    }}
                     onChange={option => {
-                        setIdSubCategoriaSelected(option?.value);
+                        setSubCategoriaSelected(subCategoriasFiltered.find(subCategoria => subCategoria.id === option?.value));
+                        setSkillSelected(undefined);
                     }} />
             </div>
             <div className="form-control">
                 <label htmlFor="id-skill-selected">Habilidad</label>
-                <ReactSelect key={"skill"} options={skillsFiltered.map(s => ({
-                    value: s.id,
-                    label: s.descripcion
-                }))}
+                <ReactSelect key={"skill"}
+                    options={skillsFiltered.map(skill => ({
+                        value: skill.id,
+                        label: skill.descripcion
+                    } as SelectOptions))}
+                    value={{
+                        label: skillSelected?.descripcion,
+                        value: skillSelected?.id
+                    }}
                     onChange={option => {
-                        setIdSkillSelected(option?.value);
+                        setSkillSelected(skillsFiltered.find(skill => skill.id === option?.value));
                     }} />
             </div>
 
