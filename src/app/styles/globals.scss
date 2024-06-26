@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Main Tools */
 @import "./tools/variables";
 @import "./tools/flexbasics";
@@ -10,6 +14,7 @@
 @import "./fontawesome/brands.scss";
 @import "./fontawesome/regular.scss";
 @import "./fontawesome/solid.scss";
+
 
 /// Replace `$search` with `$replace` in `$string`
 /// @author Kitty Giraudel
