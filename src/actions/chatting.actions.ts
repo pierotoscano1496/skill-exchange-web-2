@@ -36,8 +36,8 @@ export const getChatsNoMessages = async (idReceptor: string) => {
     return resp.data as MensajeChat;
 }
 
-export const saveChatFile = async (formDataFile: FormData) => {
-    const resp = await getBackendInstanceAuthForms().post("archivos/upload", formDataFile);
+export const saveChatFile = async (idConversation: string, formDataFile: FormData) => {
+    const resp = await getBackendInstanceAuthForms().put(`chat-resources/upload/${idConversation}`, formDataFile);
     return resp.data as string;
 }
 

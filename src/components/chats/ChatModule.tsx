@@ -67,7 +67,7 @@ export default ({ idConversacion, idUsuarioLogged }: Params) => {
                 const formData = new FormData();
                 formData.append("file", newFile);
 
-                savedFileUrl = await saveChatFile(formData);
+                savedFileUrl = await saveChatFile(idConversacion, formData);
             }
 
             ChatMessagingService.sendMessage(idConversacion, {
