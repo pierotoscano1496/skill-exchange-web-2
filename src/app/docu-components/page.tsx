@@ -1,93 +1,164 @@
 "use client";
 
-import React from 'react';
-import Link from 'next/link';
-import Button from '@/components/skill-exchange/Button';
-import Card from '@/components/skill-exchange/Card';
-import Input from '@/components/skill-exchange/Input';
-import Navbar from '@/components/skill-exchange/Navbar';
+import Button from "@/components/skill-exchange/Button";
+import Card from "@/components/skill-exchange/Card";
+import Input from "@/components/skill-exchange/Input";
+import Navbar from "@/components/skill-exchange/Navbar";
+import React from "react";
 
-const DocuComponents: React.FC = () => {
-    const handleClick = () => {
-        alert('Button clicked!');
-    };
-
-    return (
-        <div className="bg-white text-primary min-h-screen">
-            <Navbar />
-            <div className="container mx-auto p-6">
-                <h1 className="text-4xl font-poppins text-accent-red mb-8 text-center">Component Documentation</h1>
-
-                <section id="button" className="mb-12">
-                    <h2 className="text-3xl font-poppins text-accent-red mb-6">Button Component</h2>
-                    <p className="text-secondary mb-6">
-                        The Button component can be customized with different variants and sizes.
-                    </p>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
-                        <Button label="Primary Button" onClick={handleClick} variant="primary" size="large" />
-                    </div>
-                    <pre className="bg-gray-200 p-4 rounded mt-4 overflow-x-auto">
-                        {`<Button label="Primary Button" onClick={handleClick} variant="primary" size="large" />`}
-                    </pre>
-                </section>
-
-                <section id="card" className="mb-12">
-                    <h2 className="text-3xl font-poppins text-accent-red mb-6">Card Component</h2>
-                    <p className="text-secondary mb-6">
-                        The Card component is used to display content in a structured format.
-                    </p>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
-                        <Card title="Card Title" description="This is a description of the card.">
-                            <p>Additional content can go here.</p>
-                        </Card>
-                    </div>
-                    <pre className="bg-gray-200 p-4 rounded mt-4 overflow-x-auto">
-                        {`<Card title="Card Title" description="This is a description of the card.">
-  <p>Additional content can go here.</p>
-</Card>`}
-                    </pre>
-                </section>
-
-                <section id="input" className="mb-12">
-                    <h2 className="text-3xl font-poppins text-accent-red mb-6">Input Component</h2>
-                    <p className="text-secondary mb-6">
-                        The Input component is used to capture user input.
-                    </p>
-                    <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
-                        <Input label="Input Label" value="" onChange={() => { }} />
-                    </div>
-                    <pre className="bg-gray-200 p-4 rounded mt-4 overflow-x-auto">
-                        {`<Input label="Input Label" value="" onChange={() => {}} />`}
-                    </pre>
-                </section>
-
-                <section id="navbar" className="mb-12">
-                    <h2 className="text-3xl font-poppins text-accent-red mb-6">Navbar Component</h2>
-                    <p className="text-secondary mb-6">
-                        The Navbar component provides navigation links for your application.
-                    </p>
-                    <pre className="bg-gray-200 p-4 rounded mt-4 overflow-x-auto">
-                        {`import Navbar from '@/components/skill-exchange/Navbar';
-
-const MyApp = ({ Component, pageProps }) => {
+const Documentation: React.FC = () => {
   return (
-    <>
-      <Navbar />
-      <Component {...pageProps} />
-    </>
+    <div className="bg-fondo-principal text-primary min-h-screen p-8">
+      <h1 className="text-accent-primary font-montserrat text-4xl mb-8">
+        Documentación de Componentes
+      </h1>
+
+      <section className="mb-8">
+        <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
+          Button
+        </h2>
+        <Button
+          label="Example Button"
+          onClick={() => {}}
+          variant="primary"
+          size="medium"
+        />
+        <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
+          {`
+import React from 'react';
+import classNames from 'classnames';
+
+interface ButtonProps {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+  size?: 'small' | 'medium' | 'large';
+}
+
+const Button: React.FC<ButtonProps> = ({ label, onClick, variant = 'primary', size = 'medium' }) => {
+  const baseStyles = 'rounded-md font-montserrat transition-colors';
+  const variantStyles = variant === 'primary' ? 'bg-accent-primary text-white' : 'bg-accent-secondary text-white';
+  const sizeStyles = size === 'small' ? 'py-1 px-2' : size === 'large' ? 'py-3 px-6' : 'py-2 px-4';
+
+  return (
+    <button onClick={onClick} className={classNames(baseStyles, variantStyles, sizeStyles)}>
+      {label}
+    </button>
   );
 };
 
-export default MyApp;`}
-                    </pre>
-                </section>
+export default Button;
+`}
+        </pre>
+      </section>
 
-                <div className="mt-12 text-center">
-                    <Link href="/" className="text-accent-turquoise hover:underline">Back to Home</Link>
-                </div>
-            </div>
-        </div>
-    );
+      <section className="mb-8">
+        <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
+          Card
+        </h2>
+        <Card
+          title="Example Card"
+          description="This is an example card description."
+        >
+          <p>Additional content inside the card.</p>
+        </Card>
+        <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
+          {`
+import React from 'react';
+
+interface CardProps {
+  title: string;
+  description: string;
+  children?: React.ReactNode;
+}
+
+const Card: React.FC<CardProps> = ({ title, description, children }) => {
+  return (
+    <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes">
+      <h2 className="text-accent-primary font-montserrat text-xl mb-2">{title}</h2>
+      <p className="text-secondary font-open-sans mb-4">{description}</p>
+      {children}
+    </div>
+  );
 };
 
-export default DocuComponents;
+export default Card;
+`}
+        </pre>
+      </section>
+
+      <section className="mb-8">
+        <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
+          Input
+        </h2>
+        <Input label="Example Input" value="" onChange={() => {}} />
+        <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
+          {`
+import React from 'react';
+
+interface InputProps {
+  label: string;
+  type?: 'text' | 'password' | 'email';
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Input: React.FC<InputProps> = ({ label, type = 'text', value, onChange }) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-accent-primary font-montserrat mb-2">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="w-full p-2 bg-fondo-tarjetas rounded-md text-primary border border-bordes focus:outline-none focus:border-accent-primary"
+      />
+    </div>
+  );
+};
+
+export default Input;
+`}
+        </pre>
+      </section>
+
+      <section className="mb-8">
+        <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
+          Navbar
+        </h2>
+        <Navbar />
+        <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
+          {`
+import React from 'react';
+import Link from 'next/link';
+
+const Navbar: React.FC = () => {
+  return (
+    <nav className="bg-white py-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="text-accent-primary font-montserrat text-2xl">ServiceExchange</div>
+        <div className="flex space-x-4">
+          <Link href="/">
+            <a className="text-primary hover:text-accent-primary">Home</a>
+          </Link>
+          <Link href="/about">
+            <a className="text-primary hover:text-accent-primary">About</a>
+          </Link>
+          <Link href="/contact">
+            <a className="text-primary hover:text-accent-primary">Contact</a>
+          </Link>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+`}
+        </pre>
+      </section>
+    </div>
+  );
+};
+
+export default Documentation;
