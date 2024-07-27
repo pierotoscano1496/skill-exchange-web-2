@@ -43,9 +43,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
             }
         });
     } catch (error) {
-        return NextResponse.json({
-            mensaje: "Error de autenticación"
-        }, {
+        return new NextResponse("Error de autenticación", {
             status: 401
         });
     }
