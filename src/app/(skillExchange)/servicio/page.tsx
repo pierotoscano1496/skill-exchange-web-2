@@ -9,19 +9,23 @@ import { Suspense } from "react";
 import Skeleton from "react-loading-skeleton";
 
 type Props = {
-    searchParams: SearchServiciosParametersBody
-}
+  searchParams: SearchServiciosParametersBody;
+};
 
 export default async ({ searchParams }: Props) => {
-    const servicios: ServicioBusquedaResponse[] = await searchServicioWithParams(searchParams as SearchServiciosParametersBody);
+  const servicios: ServicioBusquedaResponse[] = await searchServicioWithParams(
+    searchParams as SearchServiciosParametersBody
+  );
 
-    return (
-        <div>
-            <SearchServicioForm />
-            {servicios ? servicios.map(s =>
-                <ServicioItem key={s.id} servicio={s} />
-            ) : <p className="text-no-avalable">Sin resultados</p>}
-            {servicios.length === 0 && new Array(3).fill(0).map(() => <Skeleton count={3} />)}
-        </div>
-    )
-}
+  return (
+    <div>
+      <SearchServicioForm />
+      {servicios ? (
+        servicios.map((s) => <ServicioItem key={s.id} servicio={s} />)
+      ) : (
+        <p className="text-no-avalable">Sin resultados</p>
+      )}
+      {/* {servicios.length === 0 && new Array(3).fill(0).map(() => <Skeleton count={3} />)} */}
+    </div>
+  );
+};

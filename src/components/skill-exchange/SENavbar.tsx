@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-const Navbar: React.FC = () => {
+const SENavbar: React.FC = () => {
   return (
     <nav className="bg-white py-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
@@ -30,4 +30,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default SENavbar;

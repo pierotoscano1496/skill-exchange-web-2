@@ -6,7 +6,7 @@ interface CardProps {
   children?: React.ReactNode;
 }
 
-const Card: React.FC<CardProps> = ({ title, description, children }) => {
+const SECard: React.FC<CardProps> = ({ title, description, children }) => {
   return (
     <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes">
       <h2 className="text-accent-primary font-montserrat text-xl mb-2">
@@ -18,4 +18,4 @@ const Card: React.FC<CardProps> = ({ title, description, children }) => {
   );
 };
 
-export default Card;
+export default SECard;

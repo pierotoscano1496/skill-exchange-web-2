@@ -6,20 +6,21 @@ import AuthenticationError from "@/errorhandling/AuthenticationError";
 import AuthApiTools from "@/utils/apitools/AuthApiTools";
 import cookie from "cookie";
 import { JWT_COOKIE_TOKEN_MAX_AGE, JWT_COOKIE_TOKEN_NAME } from "@/utils/constants";
+import { getBackendInstance } from "@/utils/constants.backend";
 
-const axiosInstance: AxiosInstance = axios.create({
+/* const axiosInstance: AxiosInstance = axios.create({
     baseURL: `http://localhost:9081/api`,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"
     }
-});
+}); */
 
 export async function POST(req: NextRequest, res: NextApiResponse) {
     const { email, password } = await req.json();
 
     try {
-        const response = await axiosInstance.post("/auth/login", {
+        const response = await getBackendInstance().post("/auth/login", {
             email,
             password
         });
@@ -35,9 +36,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
             path: "/"
         });
 
-        return new Response(JSON.stringify({
-            mensaje: "Éxito al autenticar"
-        }), {
+        return new Response("OK", {
             status: 200,
             headers: {
                 "Set-Cookie": bearerTokenSerialized

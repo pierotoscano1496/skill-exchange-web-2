@@ -1,39 +1,40 @@
-import React from "react";
 import classNames from "classnames";
 
-interface ButtonProps {
+interface LinkButtonProps {
+  link: string;
+  className?: string;
   label: string;
-  onClick: () => void;
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
 }
 
-const Button: React.FC<ButtonProps> = ({
+const SELinkButton: React.FC<LinkButtonProps> = ({
+  link,
   label,
-  onClick,
+  className,
   variant = "primary",
   size = "medium",
 }) => {
-  const baseStyles = "rounded-md font-montserrat transition-colors";
+  const baseStyles = "rounded-md font-montserrat transition-colors text-center";
   const variantStyles =
     variant === "primary"
       ? "bg-accent-primary text-white"
       : "bg-accent-secondary text-white";
   const sizeStyles =
     size === "small"
-      ? "py-1 px-2"
+      ? "py-2 px-2"
       : size === "large"
-        ? "py-3 px-6"
-        : "py-2 px-4";
+        ? "py-4 px-6"
+        : "py-3 px-4";
 
   return (
-    <button
-      onClick={onClick}
-      className={classNames(baseStyles, variantStyles, sizeStyles)}
+    <a
+      className={classNames(baseStyles, variantStyles, sizeStyles, className)}
+      href={link}
     >
       {label}
-    </button>
+    </a>
   );
 };
 
-export default Button;
+export default SELinkButton;

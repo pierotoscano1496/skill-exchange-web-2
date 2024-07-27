@@ -1,9 +1,10 @@
 "use client";
 
-import Button from "@/components/skill-exchange/Button";
-import Card from "@/components/skill-exchange/Card";
-import Input from "@/components/skill-exchange/Input";
-import Navbar from "@/components/skill-exchange/Navbar";
+import SEButton from "@/components/skill-exchange/SEButton";
+import SECard from "@/components/skill-exchange/SECard";
+import SEInput from "@/components/skill-exchange/form/SEInput";
+import SELinkButton from "@/components/skill-exchange/SELinkButton";
+import SENavbar from "@/components/skill-exchange/SENavbar";
 import React from "react";
 
 const Documentation: React.FC = () => {
@@ -17,12 +18,19 @@ const Documentation: React.FC = () => {
         <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
           Button
         </h2>
-        <Button
-          label="Example Button"
+        <SEButton
+          label="Small button"
+          onClick={() => {}}
+          variant="secondary"
+          size="small"
+        />
+        <SEButton
+          label="Medium SEButton"
           onClick={() => {}}
           variant="primary"
           size="medium"
         />
+        <SELinkButton label="Link" link="https://google.com" size="medium" />
         <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
           {`
 import React from 'react';
@@ -35,7 +43,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-const Button: React.FC<ButtonProps> = ({ label, onClick, variant = 'primary', size = 'medium' }) => {
+const SEButton: React.FC<ButtonProps> = ({ label, onClick, variant = 'primary', size = 'medium' }) => {
   const baseStyles = 'rounded-md font-montserrat transition-colors';
   const variantStyles = variant === 'primary' ? 'bg-accent-primary text-white' : 'bg-accent-secondary text-white';
   const sizeStyles = size === 'small' ? 'py-1 px-2' : size === 'large' ? 'py-3 px-6' : 'py-2 px-4';
@@ -47,21 +55,21 @@ const Button: React.FC<ButtonProps> = ({ label, onClick, variant = 'primary', si
   );
 };
 
-export default Button;
+export default SEButton;
 `}
         </pre>
       </section>
 
       <section className="mb-8">
         <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
-          Card
+          SECard
         </h2>
-        <Card
-          title="Example Card"
+        <SECard
+          title="Example SECard"
           description="This is an example card description."
         >
           <p>Additional content inside the card.</p>
-        </Card>
+        </SECard>
         <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
           {`
 import React from 'react';
@@ -72,7 +80,7 @@ interface CardProps {
   children?: React.ReactNode;
 }
 
-const Card: React.FC<CardProps> = ({ title, description, children }) => {
+const SECard: React.FC<CardProps> = ({ title, description, children }) => {
   return (
     <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes">
       <h2 className="text-accent-primary font-montserrat text-xl mb-2">{title}</h2>
@@ -82,16 +90,16 @@ const Card: React.FC<CardProps> = ({ title, description, children }) => {
   );
 };
 
-export default Card;
+export default SECard;
 `}
         </pre>
       </section>
 
       <section className="mb-8">
         <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
-          Input
+          SEInput
         </h2>
-        <Input label="Example Input" value="" onChange={() => {}} />
+        <SEInput label="Example SEInput" value="" onChange={() => {}} />
         <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
           {`
 import React from 'react';
@@ -103,7 +111,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({ label, type = 'text', value, onChange }) => {
+const SEInput: React.FC<InputProps> = ({ label, type = 'text', value, onChange }) => {
   return (
     <div className="mb-4">
       <label className="block text-accent-primary font-montserrat mb-2">{label}</label>
@@ -117,22 +125,22 @@ const Input: React.FC<InputProps> = ({ label, type = 'text', value, onChange }) 
   );
 };
 
-export default Input;
+export default SEInput;
 `}
         </pre>
       </section>
 
       <section className="mb-8">
         <h2 className="text-accent-secondary font-montserrat text-2xl mb-4">
-          Navbar
+          SENavbar
         </h2>
-        <Navbar />
+        <SENavbar />
         <pre className="bg-fondo-tarjetas p-4 mt-4 rounded-lg border border-bordes">
           {`
 import React from 'react';
 import Link from 'next/link';
 
-const Navbar: React.FC = () => {
+const SENavbar: React.FC = () => {
   return (
     <nav className="bg-white py-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
@@ -153,7 +161,7 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default SENavbar;
 `}
         </pre>
       </section>

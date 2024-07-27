@@ -1,8 +1,14 @@
 "use client";
 
 import { obtenerCategorias } from "@/actions/categoria.actions";
-import { obtenerSkills, obtenerSkillsBySubCategoria } from "@/actions/skill.action";
-import { obtenerSubCategorias, obtenerSubCategoriasByCategoria } from "@/actions/subcategoria.actions";
+import {
+  obtenerSkills,
+  obtenerSkillsBySubCategoria,
+} from "@/actions/skill.action";
+import {
+  obtenerSubCategorias,
+  obtenerSubCategoriasByCategoria,
+} from "@/actions/subcategoria.actions";
 import Categoria from "@/interfaces/models/Categoria";
 import Skill from "@/interfaces/models/Skill";
 import SubCategoria from "@/interfaces/models/SubCategoria";
@@ -13,113 +19,152 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import ReactSelect from "react-select";
 import SearchServicioFallback from "./SearchServicioFallback";
+import SECard from "../skill-exchange/SECard";
+import SESelect from "../skill-exchange/form/SESelect";
+import SEButton from "../skill-exchange/SEButton";
+import SEInput from "../skill-exchange/form/SEInput";
 
 export default () => {
-    const [keyWord, setKeyWord] = useState("");
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [subCategorias, setSubCategorias] = useState<SubCategoriaResponse[]>([]);
-    const [skills, setSkills] = useState<SkillResponse[]>([]);
-    const [categoriaSelected, setCategoriaSelected] = useState<Categoria>();
-    const [subcategoriaSelected, setSubCategoriaSelected] = useState<SubCategoriaResponse>();
-    const [skillSelected, setSkillSelected] = useState<SkillResponse>();
-    const router = useRouter();
+  const [keyWord, setKeyWord] = useState("");
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [subCategorias, setSubCategorias] = useState<SubCategoriaResponse[]>(
+    []
+  );
+  const [skills, setSkills] = useState<SkillResponse[]>([]);
+  const [categoriaSelected, setCategoriaSelected] = useState<string>();
+  const [subcategoriaSelected, setSubCategoriaSelected] = useState<string>();
+  const [skillSelected, setSkillSelected] = useState<string>();
+  const router = useRouter();
 
-    useEffect(() => {
-        const setup = async () => {
-            obtenerCategorias().then(data => setCategorias(data));
-            obtenerSubCategorias().then(data => setSubCategorias(data));
-            obtenerSkills().then(data => setSkills(data));
-        }
+  useEffect(() => {
+    const setup = async () => {
+      obtenerCategorias().then((data) => setCategorias(data));
+      obtenerSubCategorias().then((data) => setSubCategorias(data));
+      obtenerSkills().then((data) => setSkills(data));
+    };
 
-        setup();
-    }, []);
+    setup();
+  }, []);
 
-    const buscarServicios = () => {
-        const parameters = [];
+  const buscarServicios = () => {
+    const parameters = [];
 
-        if (keyWord) {
-            parameters.push(`keyWord=${keyWord}`);
-        }
-        if (categoriaSelected) {
-            parameters.push(`idCategoria=${categoriaSelected.id}`);
-        }
-        if (subcategoriaSelected) {
-            parameters.push(`idSubCategoria=${subcategoriaSelected.id}`);
-        }
-        if (skillSelected) {
-            parameters.push(`idSkill=${skillSelected.id}`);
-        }
-
-        const searchParams = parameters.reduce((prevParam, param) => `${param}&${prevParam}`);
-
-        router.push(`/servicio${searchParams.length > 0 ? `?${searchParams}` : ''}`);
+    if (keyWord) {
+      parameters.push(`keyWord=${keyWord}`);
+    }
+    if (categoriaSelected) {
+      parameters.push(`idCategoria=${categoriaSelected}`);
+    }
+    if (subcategoriaSelected) {
+      parameters.push(`idSubCategoria=${subcategoriaSelected}`);
+    }
+    if (skillSelected) {
+      parameters.push(`idSkill=${skillSelected}`);
     }
 
-    const subCategoriasFiltered = subCategorias.filter(s => s.idCategoria === categoriaSelected?.id);
-    const skillsFiltered = skills.filter(s => s.idSubCategoria === subcategoriaSelected?.id);
+    const searchParams =
+      parameters.length > 0
+        ? "?" + parameters.reduce((prevParam, param) => `${param}&${prevParam}`)
+        : "";
 
-    return (
-        <div className="form-row">
-            <div className="form-control">
-                <input name="keyWord" type="text" value={keyWord}
-                    onChange={(e) => setKeyWord(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            buscarServicios();
-                        }
-                    }}
-                    placeholder="Palabra clave" />
-            </div>
-            <div className="form-control">
-                <label htmlFor="id-categoria">Categoría:</label>
-                <ReactSelect key={"categoria"}
-                    options={categorias.map(categoria => ({
-                        label: categoria.nombre,
-                        value: categoria.id
-                    } as SelectOptions))}
-                    value={{
-                        label: categoriaSelected?.nombre,
-                        value: categoriaSelected?.id
-                    }}
-                    onChange={option => {
-                        setCategoriaSelected(categorias.find(categoria => categoria.id === option?.value));
-                        setSubCategoriaSelected(undefined);
-                        setSkillSelected(undefined);
-                    }} />
-            </div>
-            <div className="form-control">
-                <label htmlFor="id-sub-categoria">Sub categoría</label>
-                <ReactSelect key={"subCategoria"}
-                    options={subCategoriasFiltered.map(subCategoria => ({
-                        value: subCategoria.id,
-                        label: subCategoria.nombre
-                    } as SelectOptions))}
-                    value={{
-                        label: subcategoriaSelected?.nombre,
-                        value: subcategoriaSelected?.id
-                    }}
-                    onChange={option => {
-                        setSubCategoriaSelected(subCategoriasFiltered.find(subCategoria => subCategoria.id === option?.value));
-                        setSkillSelected(undefined);
-                    }} />
-            </div>
-            <div className="form-control">
-                <label htmlFor="id-skill-selected">Habilidad</label>
-                <ReactSelect key={"skill"}
-                    options={skillsFiltered.map(skill => ({
-                        value: skill.id,
-                        label: skill.descripcion
-                    } as SelectOptions))}
-                    value={{
-                        label: skillSelected?.descripcion,
-                        value: skillSelected?.id
-                    }}
-                    onChange={option => {
-                        setSkillSelected(skillsFiltered.find(skill => skill.id === option?.value));
-                    }} />
-            </div>
+    router.push(`/servicio${searchParams}`);
+  };
 
-            <button className="btn-primary" onClick={buscarServicios}>Buscar</button>
-        </div>
-    )
-}
+  const subCategoriasFiltered = subCategorias.filter(
+    (s) => s.idCategoria === categoriaSelected
+  );
+  const skillsFiltered = skills.filter(
+    (s) => s.idSubCategoria === subcategoriaSelected
+  );
+
+  return (
+    <div className="form-row">
+      <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2">
+        <SEInput
+          className="px-2"
+          name="keyWord"
+          type="text"
+          value={keyWord}
+          onChange={(e) => setKeyWord(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              buscarServicios();
+            }
+          }}
+          placeholder="Palabra clave"
+        />
+        <SESelect
+          className="px-2"
+          key={"categoria"}
+          options={[
+            { label: "--Categoría--", value: "" },
+            ...categorias.map(
+              (categoria) =>
+                ({
+                  label: categoria.nombre,
+                  value: categoria.id,
+                }) as SelectOptions
+            ),
+          ]}
+          value={categoriaSelected}
+          onChange={(e) => {
+            setCategoriaSelected(
+              categorias.find((categoria) => categoria.id === e.target.value)
+                ?.id
+            );
+            setSubCategoriaSelected(undefined);
+            setSkillSelected(undefined);
+          }}
+        />
+        <SESelect
+          className="px-2"
+          key={"subCategoria"}
+          options={[
+            { label: "--Sub categoría--", value: "" },
+            ...subCategoriasFiltered.map(
+              (subCategoria) =>
+                ({
+                  value: subCategoria.id,
+                  label: subCategoria.nombre,
+                }) as SelectOptions
+            ),
+          ]}
+          value={subcategoriaSelected}
+          onChange={(e) => {
+            setSubCategoriaSelected(
+              subCategoriasFiltered.find(
+                (subCategoria) => subCategoria.id === e.target.value
+              )?.id
+            );
+            setSkillSelected(undefined);
+          }}
+        />
+        <SESelect
+          className="px-2"
+          key={"skill"}
+          options={[
+            { label: "--Habilidad--", value: "" },
+            ...skillsFiltered.map(
+              (skill) =>
+                ({
+                  value: skill.id,
+                  label: skill.descripcion,
+                }) as SelectOptions
+            ),
+          ]}
+          value={skillSelected}
+          onChange={(e) => {
+            setSkillSelected(
+              skillsFiltered.find((skill) => skill.id === e.target.value)?.id
+            );
+          }}
+        />
+        <SEButton
+          label="Buscar"
+          className="btn-primary"
+          onClick={buscarServicios}
+        />
+      </div>
+    </div>
+  );
+};
