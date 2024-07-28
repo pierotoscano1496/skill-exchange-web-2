@@ -1,26 +1,29 @@
 import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
-import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
+import SELinkButton from "../skill-exchange/SELinkButton";
+import SECard from "../skill-exchange/SECard";
 
 type ItemParams = {
-    servicio: ServicioBusquedaResponse;
-}
+  servicio: ServicioBusquedaResponse;
+};
 
 export default async ({ servicio }: ItemParams) => {
-    return (
-        <div className={`${cardStyles.cardServicio} container column`}>
-            <div>
-                <h2 className="cardStyles.title">{servicio.titulo}</h2>
-                <p>{servicio.descripcion.substring(0, 100)}...</p>
-                <br />
-                <span>Por <a href={`/profile/${servicio.idUsuario}`}>{`${servicio.nombresUsuario} ${servicio.apellidosUsuario}`}</a></span>
-                <span>S/. {servicio.precio}</span>
-            </div>
-            <div>
-                {/* <img src={servicio.previewImageSource} /> */}
+  return (
+    <SECard
+      title={servicio.titulo}
+      description={`${servicio.descripcion.substring(0, 100)}...`}
+    >
+      <div className="flex flex-col items-start">
+        <a
+          className="font-semibold"
+          href={`/profile/${servicio.idUsuario}`}
+        >{`${servicio.nombresUsuario} ${servicio.apellidosUsuario}`}</a>
 
-                <a href={`/servicio/details/${servicio.id}`}>Ver más</a>
-            </div>
-
-        </div>
-    )
-}
+        <SELinkButton
+          label="Ver más"
+          variant="secondary"
+          link={`/servicio/details/${servicio.id}`}
+        />
+      </div>
+    </SECard>
+  );
+};

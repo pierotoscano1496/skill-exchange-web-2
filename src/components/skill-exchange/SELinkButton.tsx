@@ -1,9 +1,11 @@
 import classNames from "classnames";
+import { ReactNode } from "react";
 
 interface LinkButtonProps {
   link: string;
   className?: string;
   label: string;
+  icon?: ReactNode;
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
 }
@@ -11,6 +13,7 @@ interface LinkButtonProps {
 const SELinkButton: React.FC<LinkButtonProps> = ({
   link,
   label,
+  icon,
   className,
   variant = "primary",
   size = "medium",
@@ -28,12 +31,20 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
         : "py-3 px-4";
 
   return (
-    <a
-      className={classNames(baseStyles, variantStyles, sizeStyles, className)}
-      href={link}
-    >
-      {label}
-    </a>
+    <div className={classNames("mb-5", "mt-2", className)}>
+      <a
+        className={classNames(baseStyles, variantStyles, sizeStyles, className)}
+        href={link}
+      >
+        {icon ? (
+          <>
+            {label} {icon}
+          </>
+        ) : (
+          label
+        )}
+      </a>
+    </div>
   );
 };
 

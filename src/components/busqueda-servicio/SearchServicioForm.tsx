@@ -23,6 +23,8 @@ import SECard from "../skill-exchange/SECard";
 import SESelect from "../skill-exchange/form/SESelect";
 import SEButton from "../skill-exchange/SEButton";
 import SEInput from "../skill-exchange/form/SEInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default () => {
   const [keyWord, setKeyWord] = useState("");
@@ -161,6 +163,7 @@ export default () => {
         />
         <SEButton
           label="Buscar"
+          icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
           className="btn-primary"
           onClick={buscarServicios}
         />

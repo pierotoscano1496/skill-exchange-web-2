@@ -1,8 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 
 interface ButtonProps {
   label: string;
+  icon?: ReactNode;
   onClick: () => void;
   className?: string;
   disabled?: boolean;
@@ -12,6 +13,7 @@ interface ButtonProps {
 
 const SEButton: React.FC<ButtonProps> = ({
   label,
+  icon,
   onClick,
   className,
   disabled = false,
@@ -31,13 +33,21 @@ const SEButton: React.FC<ButtonProps> = ({
         : "py-2 px-4";
 
   return (
-    <button
-      onClick={onClick}
-      className={classNames(baseStyles, variantStyles, sizeStyles, className)}
-      disabled={disabled}
-    >
-      {label}
-    </button>
+    <div className={classNames("mb-4","bg-accent-in", className)}>
+      <button
+        onClick={onClick}
+        className={classNames(baseStyles, variantStyles, sizeStyles, className)}
+        disabled={disabled}
+      >
+        {icon ? (
+          <>
+            {label} {icon}
+          </>
+        ) : (
+          label
+        )}
+      </button>
+    </div>
   );
 };
 
