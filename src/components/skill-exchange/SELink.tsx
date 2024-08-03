@@ -17,9 +17,10 @@ const SELink: React.FC<LinkProps> = ({
   variant = "primary",
 }) => {
   const baseStyles = "rounded-md font-montserrat transition-colors text-center";
+  const variantStyles = `text-${variant}`;
 
   return (
-    <a className={classNames(baseStyles, className)} href={link}>
+    <a className={classNames(baseStyles, className, variantStyles)} href={link}>
       {icon ? (
         <>
           {label} {icon}

@@ -6,7 +6,7 @@ interface LinkButtonProps {
   className?: string;
   label: string;
   icon?: ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "error";
   size?: "small" | "medium" | "large";
 }
 
@@ -19,10 +19,7 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
   size = "medium",
 }) => {
   const baseStyles = "rounded-md font-montserrat transition-colors text-center";
-  const variantStyles =
-    variant === "primary"
-      ? "bg-accent-primary text-white"
-      : "bg-accent-secondary text-white";
+  const variantStyles = `bg-${variant} text-white`;
   const sizeStyles =
     size === "small"
       ? "py-2 px-2"
@@ -31,20 +28,18 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
         : "py-3 px-4";
 
   return (
-    <div className={classNames("mb-5", "mt-2", className)}>
-      <a
-        className={classNames(baseStyles, variantStyles, sizeStyles, className)}
-        href={link}
-      >
-        {icon ? (
-          <>
-            {label} {icon}
-          </>
-        ) : (
-          label
-        )}
-      </a>
-    </div>
+    <a
+      className={classNames(baseStyles, variantStyles, sizeStyles, className)}
+      href={link}
+    >
+      {icon ? (
+        <>
+          {label} {icon}
+        </>
+      ) : (
+        label
+      )}
+    </a>
   );
 };
 

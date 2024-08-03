@@ -47,3 +47,14 @@ export const getFormatFile = (fileName: string): FileExtension | null => {
         return partes[partes.length - 1].toLowerCase() as FileExtension;
     }
 }
+
+export const getFirstWords = (parrafo: string, numWords: number = 10): string => {
+    const palabras = parrafo.split(' ');
+
+    // Si el número de palabras es menor a 10, devolver todas las palabras
+    if (palabras.length <= 10) {
+        return parrafo;
+    }
+
+    return `${palabras.slice(0, numWords).join(' ')}...`;
+}

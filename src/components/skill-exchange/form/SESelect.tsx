@@ -5,6 +5,7 @@ interface SelectProps {
   value: string | number | undefined;
   label?: string;
   name?: string;
+  variant?: "primary" | "secondary";
   className?: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -15,8 +16,11 @@ const SESelect: React.FC<SelectProps> = ({
   value,
   name,
   className,
+  variant = "primary",
   onChange,
 }) => {
+  const variantStyles = `text-${variant} focus:border-${variant} bg-${variant}-100`;
+
   return (
     <div className={classNames("mb-4", className)}>
       {label && (
@@ -31,7 +35,10 @@ const SESelect: React.FC<SelectProps> = ({
         value={value}
         name={name}
         onChange={onChange}
-        className="w-full p-2 bg-fondo-tarjetas rounded-md text-primary border border-bordes focus:outline-none focus:border-accent-primary"
+        className={classNames(
+          "w-full p-2 bg-fondo-tarjetas rounded-md border border-bordes focus:outline-none",
+          variantStyles
+        )}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

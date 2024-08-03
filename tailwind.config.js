@@ -1,4 +1,15 @@
 /** @type {import('tailwindcss').Config} */
+
+import { themes } from "./src/enums/Themes";
+
+const safeThemes = themes.flatMap((theme) => [
+  `bg-${theme}-100`,
+  `bg-${theme}-200`,
+  `focus:border-${theme}`,
+  `bg-${theme}-dark`,
+  `bg-${theme}`,
+]);
+
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,54 +19,87 @@ module.exports = {
     // Or if using `src` directory:
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [...safeThemes],
   theme: {
     extend: {
       colors: {
         "fondo-principal": "#F5F7FA",
 
         primary: {
-          light: "#00ff00",
-          DEFAULT: "#00ff00",
-          dark: "#00ff00",
+          50: "#EBF2FA", // Azul muy claro
+          100: "#D7E6F4", // Azul más claro
+          200: "#AFCDE9", // Azul claro
+          300: "#87B4DF", // Azul intermedio
+          400: "#5F9CD3", // Azul medio
+          500: "#3776C8", // Azul
+          600: "#2B5F9F", // Azul oscuro
+          700: "#204877", // Azul más oscuro
+          800: "#14304F", // Azul profundo
+          900: "#0A1827", // Azul muy profundo
+          light: "#4B9CD3", // Azul claro
+          DEFAULT: "#1E3A8A", // Azul oscuro
+          dark: "#162C55", // Azul más oscuro
         },
         secondary: {
-          light: "#FFC9C9",
-          DEFAULT: "#FF6B6B",
-          dark: "#D6336C",
-        },
-        accent: {
-          light: "#D0BFFF",
-          DEFAULT: "#845EF7",
-          dark: "#5F3DC4",
+          50: "#FFFBEA", // Amarillo muy claro
+          100: "#FFF3C4", // Amarillo más claro
+          200: "#FCE588", // Amarillo claro
+          300: "#FADB5F", // Amarillo intermedio
+          400: "#F7C948", // Amarillo medio
+          500: "#F0B429", // Amarillo
+          600: "#DE911D", // Amarillo oscuro
+          700: "#CB6E17", // Amarillo más oscuro
+          800: "#B44D12", // Amarillo profundo
+          900: "#8D2B0B", // Amarillo muy profundo
+          light: "#FCD34D", // Amarillo claro
+          DEFAULT: "#F59E0B", // Amarillo vibrante
+          dark: "#B45309", // Amarillo oscuro
         },
         neutral: {
-          light: "#F8F9FA",
-          DEFAULT: "#CED4DA",
-          dark: "#495057",
+          50: "#F9FAFB", // Gris muy claro
+          100: "#F3F4F6", // Gris más claro
+          200: "#E5E7EB", // Gris claro
+          300: "#D1D5DB", // Gris intermedio
+          400: "#9CA3AF", // Gris medio
+          500: "#6B7280", // Gris
+          600: "#4B5563", // Gris oscuro
+          700: "#374151", // Gris más oscuro
+          800: "#1F2937", // Gris profundo
+          900: "#111827", // Gris muy profundo
+          light: "#F3F4F6", // Gris claro
+          DEFAULT: "#9CA3AF", // Gris intermedio
+          dark: "#4B5563", // Gris oscuro
         },
-        success: {
-          light: "#B2F2BB",
-          DEFAULT: "#51CF66",
-          dark: "#2B8A3E",
+        accent: {
+          50: "#ECFDF5", // Verde muy claro
+          100: "#D1FAE5", // Verde más claro
+          200: "#A7F3D0", // Verde claro
+          300: "#6EE7B7", // Verde intermedio
+          400: "#34D399", // Verde medio
+          500: "#10B981", // Verde
+          600: "#059669", // Verde oscuro
+          700: "#047857", // Verde más oscuro
+          800: "#065F46", // Verde profundo
+          900: "#064E3B", // Verde muy profundo
+          light: "#D1FAE5", // Verde claro
+          DEFAULT: "#10B981", // Verde brillante
+          dark: "#047857", // Verde oscuro
         },
-        warning: {
-          light: "#FFE066",
-          DEFAULT: "#FFC107",
-          dark: "#F59F00",
+        error: {
+          50: "#FEF2F2", // Rojo muy claro
+          100: "#FEE2E2", // Rojo más claro
+          200: "#FECACA", // Rojo claro
+          300: "#FCA5A5", // Rojo intermedio
+          400: "#F87171", // Rojo medio
+          500: "#EF4444", // Rojo
+          600: "#DC2626", // Rojo oscuro
+          700: "#B91C1C", // Rojo más oscuro
+          800: "#991B1B", // Rojo profundo
+          900: "#7F1D1D", // Rojo muy profundo
+          light: "#FEE2E2", // Rojo claro para fondos de error
+          DEFAULT: "#EF4444", // Rojo brillante para textos y botones de error
+          dark: "#991B1B", // Rojo oscuro para acentos de error
         },
-        danger: {
-          light: "#FF8787",
-          DEFAULT: "#FA5252",
-          dark: "#C92A2A",
-        },
-        info: {
-          light: "#74C0FC",
-          DEFAULT: "#339AF0",
-          dark: "#1C7ED6",
-        },
-
-        "accent-primary": "#cc0099",
-        "accent-secondary": "#E74C3C",
         "fondo-tarjetas": "#FFFFFF",
         bordes: "#E0E0E0",
       },

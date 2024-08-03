@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "@/app/styles/login/login.module.scss";
 import SEInput from "@/components/skill-exchange/form/SEInput";
-import Button from "@/components/skill-exchange/SEButton";
 import { loginUsuario } from "@/actions/auth.actions.client";
+import SEButton from "@/components/skill-exchange/SEButton";
 
 export default () => {
   const [correo, setCorreo] = useState<string>("");
@@ -76,7 +76,7 @@ export default () => {
               type="password"
               value={contrasena}
             />
-            <Button
+            <SEButton
               className="self-center"
               label="Ingresar"
               disabled={loading}

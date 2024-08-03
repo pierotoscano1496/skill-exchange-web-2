@@ -16,7 +16,7 @@ export default async () => {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <section className="hero" id="inicio">
         <div className="grid grid-cols-8">
-          <h1 className="text-4xl py-4 text-center col-span-8 font-medium">
+          <h1 className="text-4xl py-4 text-center col-span-8 font-bold">
             Skill exchange
           </h1>
           <h2 className="text-1xl text-center font-medium col-span-8">
@@ -89,22 +89,33 @@ export default async () => {
               sistema de pagos integrado.
             </p>
           </section>
-          {!usuario ? (
-            <div className="px-8 py-4 my-10 col-span-8 justify-self-center grid grid-cols-2 gap-x-10">
+          <div className="px-8 py-4 my-10 col-span-8 justify-self-center grid grid-cols-2 gap-x-10">
+            {!usuario ? (
+              <>
+                <SELinkButton
+                  label="Regístrate ahora"
+                  link="/registro/usuario"
+                  size="medium"
+                />
+                <SELinkButton
+                  label="Inicia sesión"
+                  link="/login"
+                  size="medium"
+                />
+              </>
+            ) : (
               <SELinkButton
-                label="Regístrate ahora"
-                link="/registro/usuario"
+                label="Ir a mi perfil"
+                link="/profile"
                 size="medium"
               />
-              <SELinkButton label="Inicia sesión" link="/login" size="medium" />
-            </div>
-          ) : (
-            <div className="button-group container content-space-between">
-              <a href="/servicio" className="link-button btn-primary">
-                Ir a mis servicios
-              </a>
-            </div>
-          )}
+            )}
+            <SELinkButton
+              label="Busca servicios"
+              link="/servicio"
+              size="medium"
+            />
+          </div>
         </div>
       </section>
     </main>

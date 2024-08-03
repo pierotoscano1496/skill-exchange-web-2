@@ -6,6 +6,7 @@ interface InputProps {
   placeholder?: string;
   label?: string;
   value: string;
+  variant?: "primary" | "secondary";
   className?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -17,16 +18,23 @@ const SEInput: React.FC<InputProps> = ({
   name,
   placeholder,
   value,
+  variant = "primary",
   className,
   onChange,
   onKeyDown,
 }) => {
+  const labelVariantStyles = `text-${variant}`;
+  const variantStyles = `text-${variant} focus:border-${variant} bg-${variant}-100`;
+
   return (
     <div className={classNames("mb-4", className)}>
       {label && (
         <label
           htmlFor={name}
-          className="block text-accent-primary font-montserrat mb-2"
+          className={classNames(
+            "block font-montserrat mb-2 font-medium",
+            labelVariantStyles
+          )}
         >
           {label}
         </label>
@@ -38,7 +46,10 @@ const SEInput: React.FC<InputProps> = ({
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        className="w-full p-2 bg-fondo-tarjetas rounded-md text-primary border border-bordes focus:outline-none focus:border-accent-primary"
+        className={classNames(
+          "w-full p-2 bg-fondo-tarjetas rounded-md border border-bordes focus:outline-none",
+          variantStyles
+        )}
       />
     </div>
   );

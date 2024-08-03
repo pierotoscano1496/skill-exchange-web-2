@@ -20,12 +20,13 @@ export default async ({ searchParams }: Props) => {
   return (
     <div>
       <SearchServicioForm />
-      {servicios ? (
-        servicios.map((s) => <ServicioItem key={s.id} servicio={s} />)
-      ) : (
-        <p className="text-no-avalable">Sin resultados</p>
-      )}
-      {/* {servicios.length === 0 && new Array(3).fill(0).map(() => <Skeleton count={3} />)} */}
+      <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes grid">
+        {servicios ? (
+          servicios.map((s) => <ServicioItem key={s.id} servicio={s} />)
+        ) : (
+          <p className="text-no-avalable">Sin resultados</p>
+        )}
+      </div>
     </div>
   );
 };
