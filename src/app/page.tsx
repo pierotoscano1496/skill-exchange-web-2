@@ -104,17 +104,19 @@ export default async () => {
                 />
               </>
             ) : (
-              <SELinkButton
-                label="Ir a mi perfil"
-                link="/profile"
-                size="medium"
-              />
+              <>
+                <SELinkButton
+                  label="Ir a mi perfil"
+                  link="/profile"
+                  size="medium"
+                />
+                <SELinkButton
+                  label="Busca servicios"
+                  link="/servicio"
+                  size="medium"
+                />
+              </>
             )}
-            <SELinkButton
-              label="Busca servicios"
-              link="/servicio"
-              size="medium"
-            />
           </div>
         </div>
       </section>
