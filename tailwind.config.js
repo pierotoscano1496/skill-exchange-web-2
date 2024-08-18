@@ -8,6 +8,15 @@ const safeThemes = themes.flatMap((theme) => [
   `focus:border-${theme}`,
   `bg-${theme}-dark`,
   `bg-${theme}`,
+  `text-${theme}-500`,
+  `hover:bg-${theme}-300`,
+  `border-${theme}-400`,
+  `ring-${theme}-600`,
+  `shadow-${theme}-700`,
+  `focus:ring-${theme}-500`,
+  `hover:text-${theme}-600`,
+  `active:bg-${theme}-800`,
+  `disabled:bg-${theme}-50`,
 ]);
 
 module.exports = {
