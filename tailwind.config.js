@@ -26,96 +26,118 @@ module.exports = {
         "fondo-principal": "#F5F7FA",
 
         primary: {
-          50: "#EBF2FA", // Azul muy claro
-          100: "#D7E6F4", // Azul más claro
-          200: "#AFCDE9", // Azul claro
-          300: "#87B4DF", // Azul intermedio
-          400: "#5F9CD3", // Azul medio
-          500: "#3776C8", // Azul
-          600: "#2B5F9F", // Azul oscuro
-          700: "#204877", // Azul más oscuro
-          800: "#14304F", // Azul profundo
-          900: "#0A1827", // Azul muy profundo
-          light: "#4B9CD3", // Azul claro
-          DEFAULT: "#1E3A8A", // Azul oscuro
-          dark: "#162C55", // Azul más oscuro
+          50: "#EBF2FA",
+          100: "#D7E6F4",
+          200: "#AFCDE9",
+          300: "#87B4DF",
+          400: "#5F9CD3",
+          500: "#3776C8",
+          600: "#2B5F9F",
+          700: "#204877",
+          800: "#14304F",
+          900: "#0A1827",
+          light: "#4B9CD3",
+          DEFAULT: "#1E3A8A",
+          dark: "#162C55",
         },
         secondary: {
-          50: "#FFFBEA", // Amarillo muy claro
-          100: "#FFF3C4", // Amarillo más claro
-          200: "#FCE588", // Amarillo claro
-          300: "#FADB5F", // Amarillo intermedio
-          400: "#F7C948", // Amarillo medio
-          500: "#F0B429", // Amarillo
-          600: "#DE911D", // Amarillo oscuro
-          700: "#CB6E17", // Amarillo más oscuro
-          800: "#B44D12", // Amarillo profundo
-          900: "#8D2B0B", // Amarillo muy profundo
-          light: "#FCD34D", // Amarillo claro
-          DEFAULT: "#F59E0B", // Amarillo vibrante
-          dark: "#B45309", // Amarillo oscuro
+          50: "#FFFBEA",
+          100: "#FFF3C4",
+          200: "#FCE588",
+          300: "#FADB5F",
+          400: "#F7C948",
+          500: "#F0B429",
+          600: "#DE911D",
+          700: "#CB6E17",
+          800: "#B44D12",
+          900: "#8D2B0B",
+          light: "#FCD34D",
+          DEFAULT: "#F59E0B",
+          dark: "#B45309",
         },
         neutral: {
-          50: "#F9FAFB", // Gris muy claro
-          100: "#F3F4F6", // Gris más claro
-          200: "#E5E7EB", // Gris claro
-          300: "#D1D5DB", // Gris intermedio
-          400: "#9CA3AF", // Gris medio
-          500: "#6B7280", // Gris
-          600: "#4B5563", // Gris oscuro
-          700: "#374151", // Gris más oscuro
-          800: "#1F2937", // Gris profundo
-          900: "#111827", // Gris muy profundo
-          light: "#F3F4F6", // Gris claro
-          DEFAULT: "#9CA3AF", // Gris intermedio
-          dark: "#4B5563", // Gris oscuro
+          50: "#F9FAFB",
+          100: "#F3F4F6",
+          200: "#E5E7EB",
+          300: "#D1D5DB",
+          400: "#9CA3AF",
+          500: "#6B7280",
+          600: "#4B5563",
+          700: "#374151",
+          800: "#1F2937",
+          900: "#111827",
+          light: "#F3F4F6",
+          DEFAULT: "#9CA3AF",
+          dark: "#4B5563",
         },
         accent: {
-          50: "#ECFDF5", // Verde muy claro
-          100: "#D1FAE5", // Verde más claro
-          200: "#A7F3D0", // Verde claro
-          300: "#6EE7B7", // Verde intermedio
-          400: "#34D399", // Verde medio
-          500: "#10B981", // Verde
-          600: "#059669", // Verde oscuro
-          700: "#047857", // Verde más oscuro
-          800: "#065F46", // Verde profundo
-          900: "#064E3B", // Verde muy profundo
-          light: "#D1FAE5", // Verde claro
-          DEFAULT: "#10B981", // Verde brillante
-          dark: "#047857", // Verde oscuro
+          50: "#ECFDF5",
+          100: "#D1FAE5",
+          200: "#A7F3D0",
+          300: "#6EE7B7",
+          400: "#34D399",
+          500: "#10B981",
+          600: "#059669",
+          700: "#047857",
+          800: "#065F46",
+          900: "#064E3B",
+          light: "#D1FAE5",
+          DEFAULT: "#10B981",
+          dark: "#047857",
         },
         error: {
-          50: "#FEF2F2", // Rojo muy claro
-          100: "#FEE2E2", // Rojo más claro
-          200: "#FECACA", // Rojo claro
-          300: "#FCA5A5", // Rojo intermedio
-          400: "#F87171", // Rojo medio
-          500: "#EF4444", // Rojo
-          600: "#DC2626", // Rojo oscuro
-          700: "#B91C1C", // Rojo más oscuro
-          800: "#991B1B", // Rojo profundo
-          900: "#7F1D1D", // Rojo muy profundo
-          light: "#FEE2E2", // Rojo claro para fondos de error
-          DEFAULT: "#EF4444", // Rojo brillante para textos y botones de error
-          dark: "#991B1B", // Rojo oscuro para acentos de error
+          50: "#FEF2F2",
+          100: "#FEE2E2",
+          200: "#FECACA",
+          300: "#FCA5A5",
+          400: "#F87171",
+          500: "#EF4444",
+          600: "#DC2626",
+          700: "#B91C1C",
+          800: "#991B1B",
+          900: "#7F1D1D",
+          light: "#FEE2E2",
+          DEFAULT: "#EF4444",
+          dark: "#991B1B",
         },
         "fondo-tarjetas": "#FFFFFF",
         bordes: "#E0E0E0",
+        // Agregado para fondo en secciones hero y gradientes
+        hero: {
+          light: "#E0E7FF", // Añadir un fondo claro para secciones destacadas
+          DEFAULT: "#6366F1", // Fondo morado vibrante para elementos hero
+          dark: "#4338CA", // Fondo oscuro para áreas prominentes
+        },
       },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
         openSans: ["Open Sans", "sans-serif"],
+        // Agregado para proporcionar tipografía más moderna
+        poppins: ["Poppins", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
-    },
-    fontSize: {
-      sm: "0.8rem",
-      base: "1rem",
-      xl: "1.25rem",
-      "2xl": "1.563rem",
-      "3xl": "1.953rem",
-      "4xl": "2.441rem",
-      "5xl": "3.052rem",
+      fontSize: {
+        sm: "0.875rem",
+        base: "1rem",
+        xl: "1.25rem",
+        "2xl": "1.5rem", // Ajuste para tamaño de texto más coherente
+        "3xl": "2rem",
+        "4xl": "2.5rem",
+        "5xl": "3.5rem", // Incrementado para resaltar títulos importantes
+        "6xl": "4rem", // Añadido para hero titles o encabezados principales
+      },
+      // Agregado para sombras más sofisticadas
+      boxShadow: {
+        lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+      // Agregado para manejar espaciado extra
+      spacing: {
+        72: "18rem",
+        84: "21rem",
+        96: "24rem",
+        108: "27rem",
+      },
     },
   },
   plugins: [],

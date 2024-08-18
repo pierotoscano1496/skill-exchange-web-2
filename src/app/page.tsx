@@ -13,111 +13,111 @@ export default async () => {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <section className="hero" id="inicio">
-        <div className="grid grid-cols-8">
-          <h1 className="text-4xl py-4 text-center col-span-8 font-bold">
-            Skill exchange
-          </h1>
-          <h2 className="text-1xl text-center font-medium col-span-8">
-            Comparte tus habilidades y conocimientos con otros
-          </h2>
-          <section className="border-solid border-2 rounded-s-2xl border-blue-600 bg-blue-300 px-9 py-4 my-10 col-end-9 col-span-5">
-            <h3 className="text-2xl font-black text-right">
-              Conecta, aprende y prospera en nuestra plataforma de intercambio
-              de habilidades y conocimientos
+    <main className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 p-12">
+      <section className="text-center space-y-8" id="inicio">
+        <h1 className="text-6xl font-extrabold text-gray-800">
+          Skill Exchange
+        </h1>
+        <h2 className="text-2xl font-medium text-gray-700">
+          Comparte tus habilidades y conocimientos con otros
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+          <section className="bg-blue-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
+              Conecta, aprende y prospera
             </h3>
-            <p className="text-right">
+            <p className="mt-4 text-gray-700">
               ¿Eres un experto en alguna habilidad o posees conocimientos
-              valiosos? ¿Te gustaría compartir tus talentos con el mundo y
-              además generar ingresos? ¡SkillExchange es el lugar perfecto para
-              ti! Únete a nuestra comunidad en constante crecimiento y
-              transforma tus habilidades en una fuente de ingresos.
+              valiosos? Únete a nuestra comunidad y transforma tus habilidades
+              en una fuente de ingresos.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-e-2xl border-blue-600 bg-blue-300 px-9 py-4 my-10 col-start-1 col-span-5">
-            <h3 className="text-left font-black text-2xl">
+          <section className="bg-blue-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
               ¿Por qué unirte a SkillExchange?
             </h3>
-            <p className="text-left">
-              Monetiza tus habilidades: Convierte tus conocimientos y
-              experiencia en una oportunidad para generar ingresos. Ofrece
-              tutorías, cursos, talleres y asesorías en línea a personas de todo
-              el mundo interesadas en aprender de ti.
+            <p className="mt-4 text-gray-700">
+              Monetiza tus habilidades: Ofrece tutorías, cursos, talleres y
+              asesorías en línea a personas de todo el mundo interesadas en
+              aprender de ti.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-s-2xl border-cyan-600 bg-cyan-300 px-9 py-4 my-10 col-end-9 col-span-5">
-            <h3 className="text-right font-black text-2xl">Cómo empezar:</h3>
-            <p className="text-right">
-              Regístrate: Crea una cuenta gratuita en SkillExchange y completa
-              tu perfil con tus habilidades, experiencia y formación.
+          <section className="bg-cyan-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">Cómo empezar</h3>
+            <p className="mt-4 text-gray-700">
+              Regístrate: Crea una cuenta gratuita y completa tu perfil con tus
+              habilidades, experiencia y formación.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-e-2xl border-cyan-600 bg-cyan-300 px-9 py-4 my-10 col-start-1 col-span-5">
-            <h3 className="text-left font-black text-2xl">
+          <section className="bg-cyan-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
               Publica tus servicios
             </h3>
-            <p className="text-left">
+            <p className="mt-4 text-gray-700">
               Describe los servicios que ofreces, establece tus tarifas y añade
               imágenes y videos para mostrar tus habilidades.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-s-2xl border-indigo-600 bg-indigo-300 px-9 py-4 my-10 col-end-9 col-span-5">
-            <h3 className="text-right font-black text-2xl">
+          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
               Establece tu disponibilidad
             </h3>
-            <p className="text-right">
-              Configura tu calendario y horarios de atención para que los
-              interesados puedan reservar sesiones contigo.
+            <p className="mt-4 text-gray-700">
+              Configura tu calendario y horarios para que los interesados puedan
+              reservar sesiones contigo.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-e-2xl border-indigo-600 bg-indigo-300 px-9 py-4 my-10 col-start-1 col-span-5">
-            <h3 className="text-left font-black text-2xl">
+          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
               Interactúa y enseña
             </h3>
-            <p className="text-left">
-              Comparte tus habilidades y conocimientos con tus alumnos a través
-              de videollamadas, chats y materiales de apoyo.
+            <p className="mt-4 text-gray-700">
+              Comparte tus conocimientos con tus alumnos a través de
+              videollamadas, chats y materiales de apoyo.
             </p>
           </section>
-          <section className="border-solid border-2 rounded-s-2xl border-indigo-600 bg-indigo-300 px-9 py-4 my-10 col-end-9 col-span-5">
-            <h3 className="text-right font-black text-2xl">
+          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+            <h3 className="text-3xl font-bold text-gray-900">
               Recibe tus ganancias
             </h3>
-            <p className="text-right">
+            <p className="mt-4 text-gray-700">
               Obtén tus pagos de forma segura y rápida a través de nuestro
               sistema de pagos integrado.
             </p>
           </section>
-          <div className="px-8 py-4 my-10 col-span-8 justify-self-center grid grid-cols-2 gap-x-10">
-            {!usuario ? (
-              <>
-                <SELinkButton
-                  label="Regístrate ahora"
-                  link="/registro/usuario"
-                  size="medium"
-                />
-                <SELinkButton
-                  label="Inicia sesión"
-                  link="/login"
-                  size="medium"
-                />
-              </>
-            ) : (
-              <>
-                <SELinkButton
-                  label="Ir a mi perfil"
-                  link="/profile"
-                  size="medium"
-                />
-                <SELinkButton
-                  label="Busca servicios"
-                  link="/servicio"
-                  size="medium"
-                />
-              </>
-            )}
-          </div>
+        </div>
+        <div className="flex justify-center space-x-4 mt-12">
+          {!usuario ? (
+            <>
+              <SELinkButton
+                label="Regístrate ahora"
+                link="/registro/usuario"
+                size="large"
+                className="bg-green-500 hover:bg-green-600 text-white"
+              />
+              <SELinkButton
+                label="Inicia sesión"
+                link="/login"
+                size="large"
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              />
+            </>
+          ) : (
+            <>
+              <SELinkButton
+                label="Ir a mi perfil"
+                link="/profile"
+                size="large"
+                className="bg-green-500 hover:bg-green-600 text-white"
+              />
+              <SELinkButton
+                label="Busca servicios"
+                link="/servicio"
+                size="large"
+                className="bg-blue-500 hover:bg-blue-600 text-white"
+              />
+            </>
+          )}
         </div>
       </section>
     </main>
