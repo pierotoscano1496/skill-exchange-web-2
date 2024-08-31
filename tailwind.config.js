@@ -2,7 +2,7 @@
 
 import { themes } from "./src/enums/Themes";
 
-const safeThemes = themes.flatMap((theme) => [
+/* const safeThemes = themes.flatMap((theme) => [
   `bg-${theme}-100`,
   `bg-${theme}-200`,
   `focus:border-${theme}`,
@@ -17,7 +17,7 @@ const safeThemes = themes.flatMap((theme) => [
   `hover:text-${theme}-600`,
   `active:bg-${theme}-800`,
   `disabled:bg-${theme}-50`,
-]);
+]); */
 
 module.exports = {
   content: [
@@ -28,9 +28,21 @@ module.exports = {
     // Or if using `src` directory:
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  safelist: [...safeThemes],
   theme: {
     extend: {
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      transitionProperty: {
+        width: "width",
+        spacing: "margin, padding",
+      },
+      borderRadius: {
+        lg: "0.5rem",
+        xl: "1rem",
+      },
       colors: {
         "fondo-principal": "#F5F7FA",
 
@@ -119,11 +131,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        montserrat: ["Montserrat", "sans-serif"],
-        openSans: ["Open Sans", "sans-serif"],
-        // Agregado para proporcionar tipografía más moderna
-        poppins: ["Poppins", "sans-serif"],
-        roboto: ["Roboto", "sans-serif"],
+        display: ["Poppins", "sans-serif"],
+        body: ["Open Sans", "sans-serif"],
       },
       fontSize: {
         sm: "0.875rem",
@@ -139,13 +148,13 @@ module.exports = {
       boxShadow: {
         lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        soft: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        deep: "0 10px 15px rgba(0, 0, 0, 0.2)",
       },
       // Agregado para manejar espaciado extra
       spacing: {
-        72: "18rem",
-        84: "21rem",
-        96: "24rem",
-        108: "27rem",
+        128: "32rem",
+        144: "36rem",
       },
     },
   },

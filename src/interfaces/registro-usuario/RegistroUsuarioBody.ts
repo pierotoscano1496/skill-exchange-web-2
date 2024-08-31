@@ -1,5 +1,4 @@
-import { TipoDocumento, TipoRegistroUsuario } from "@/utils/types";
-import SkillUsuario from "../models/SkillUsuario";
+import { TipoDocumento } from "@/utils/types";
 import { RegistroSkill } from "./RegistroSkill";
 
 export interface RegistroUsuarioBodyFirstStep {
@@ -9,8 +8,8 @@ export interface RegistroUsuarioBodyFirstStep {
     tipoDocumento?: TipoDocumento;
     nombres?: string;
     apellidos?: string;
-    tipo?: TipoRegistroUsuario;
     fechaNacimiento?: Date;
+    step: number;
 }
 
 export interface RegistroUsuarioBodyRedes extends RegistroUsuarioBodyFirstStep {

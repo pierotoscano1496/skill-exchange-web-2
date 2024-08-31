@@ -5,7 +5,6 @@ export default interface CreateUsuarioBody {
     correo: string;
     nombres: string;
     apellidos: string;
-    tipo: string;
     fechaNacimiento: Date;
     clave: string;
     perfilLinkedin: string;

@@ -1,6 +1,10 @@
 enum Themes {
     "primary",
+    "neutral",
+    "accent",
     "secondary",
+    "bordes",
+    "hero",
     "error"
 }
 

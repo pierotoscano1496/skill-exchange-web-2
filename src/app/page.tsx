@@ -22,7 +22,7 @@ export default async () => {
           Comparte tus habilidades y conocimientos con otros
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          <section className="bg-blue-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               Conecta, aprende y prospera
             </h3>
@@ -32,7 +32,7 @@ export default async () => {
               en una fuente de ingresos.
             </p>
           </section>
-          <section className="bg-blue-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               ¿Por qué unirte a SkillExchange?
             </h3>
@@ -42,14 +42,14 @@ export default async () => {
               aprender de ti.
             </p>
           </section>
-          <section className="bg-cyan-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-cyan-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">Cómo empezar</h3>
             <p className="mt-4 text-gray-700">
               Regístrate: Crea una cuenta gratuita y completa tu perfil con tus
               habilidades, experiencia y formación.
             </p>
           </section>
-          <section className="bg-cyan-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-cyan-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               Publica tus servicios
             </h3>
@@ -58,7 +58,7 @@ export default async () => {
               imágenes y videos para mostrar tus habilidades.
             </p>
           </section>
-          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               Establece tu disponibilidad
             </h3>
@@ -67,7 +67,7 @@ export default async () => {
               reservar sesiones contigo.
             </p>
           </section>
-          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               Interactúa y enseña
             </h3>
@@ -76,7 +76,7 @@ export default async () => {
               videollamadas, chats y materiales de apoyo.
             </p>
           </section>
-          <section className="bg-indigo-200 shadow-lg rounded-xl p-8">
+          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
             <h3 className="text-3xl font-bold text-gray-900">
               Recibe tus ganancias
             </h3>
@@ -86,21 +86,16 @@ export default async () => {
             </p>
           </section>
         </div>
-        <div className="flex justify-center space-x-4 mt-12">
+        <div className="flex justify-center mt-5 space-x-6">
           {!usuario ? (
             <>
               <SELinkButton
                 label="Regístrate ahora"
                 link="/registro/usuario"
                 size="large"
-                className="bg-green-500 hover:bg-green-600 text-white"
+                variant="accent"
               />
-              <SELinkButton
-                label="Inicia sesión"
-                link="/login"
-                size="large"
-                className="bg-blue-500 hover:bg-blue-600 text-white"
-              />
+              <SELinkButton label="Inicia sesión" link="/login" size="large" />
             </>
           ) : (
             <>
@@ -108,13 +103,12 @@ export default async () => {
                 label="Ir a mi perfil"
                 link="/profile"
                 size="large"
-                className="bg-green-500 hover:bg-green-600 text-white"
+                variant="accent"
               />
               <SELinkButton
                 label="Busca servicios"
                 link="/servicio"
                 size="large"
-                className="bg-blue-500 hover:bg-blue-600 text-white"
               />
             </>
           )}
