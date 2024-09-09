@@ -6,6 +6,7 @@ interface TitleProps {
   label: string;
   variant?: ThemesType;
   className?: string;
+  center?: boolean;
 }
 
 const variantClasses: VariantClasses = {
@@ -33,17 +34,19 @@ const SELargeTitle: React.FC<TitleProps> = ({
   label,
   className,
   variant = "primary",
+  center = true,
 }) => {
   return (
-    <h1
+    <h2
       className={classNames(
-        "text-3xl font-bold",
+        "text-3xl font-bold mb-6",
         variantClasses[variant]?.text,
+        center && "text-center",
         className
       )}
     >
       {label}
-    </h1>
+    </h2>
   );
 };
 

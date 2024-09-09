@@ -1,8 +1,15 @@
 import classNames from "classnames";
 
+interface OptionSelect {
+  value?: string | number;
+  label: string;
+}
+
 interface SelectProps {
-  options: { value?: string | number; label: string }[];
-  value: string | number | undefined;
+  options: OptionSelect[];
+  type?: "text" | "number";
+  initOption?: OptionSelect;
+  value?: string | number;
   label?: string;
   name?: string;
   variant?: "primary" | "secondary";
@@ -12,6 +19,8 @@ interface SelectProps {
 
 const SESelect: React.FC<SelectProps> = ({
   label,
+  initOption,
+  type = "text",
   options,
   value,
   name,
@@ -20,6 +29,25 @@ const SESelect: React.FC<SelectProps> = ({
   onChange,
 }) => {
   const variantStyles = `text-${variant} focus:border-${variant} bg-${variant}-100`;
+
+  if (!initOption) {
+    let defaultValueInitOption: OptionSelect = {
+      label: "--Seleccione--",
+      value: undefined,
+    };
+    switch (type) {
+      case "text":
+        defaultValueInitOption = { ...defaultValueInitOption, value: "" };
+        break;
+      case "number":
+        defaultValueInitOption = { ...defaultValueInitOption, value: 0 };
+        break;
+      default:
+        defaultValueInitOption = { ...defaultValueInitOption, value: "" };
+    }
+
+    initOption = defaultValueInitOption;
+  }
 
   return (
     <div className={classNames("mb-4", className)}>
@@ -40,7 +68,7 @@ const SESelect: React.FC<SelectProps> = ({
           variantStyles
         )}
       >
-        {options.map((option) => (
+        {[initOption, ...options].map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

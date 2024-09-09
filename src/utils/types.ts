@@ -1,35 +1,73 @@
+import { ShapeType } from "@/enums/Shapes";
 import { ThemesType } from "@/enums/Themes";
 
 export type TipoDocumento = "dni" | "carnet_extranjeria";
 
 export type TipoRegistroUsuario = "cliente" | "proveedor";
 
-export type MedioRecursoMultimedia = "video" | "imagen" | "web-externa" | "facebook" | "instagram" | "tiktok" | "youtube" | "twitter" | "linkedin";
+export type MedioRecursoMultimedia =
+  | "video"
+  | "imagen"
+  | "web-externa"
+  | "facebook"
+  | "instagram"
+  | "tiktok"
+  | "youtube"
+  | "twitter"
+  | "linkedin";
 
 export type TipoModalidadPago = "yape" | "tarjeta";
 
 export type TipoModalidadPagoOption = {
-    nombre: string;
-    valor: TipoModalidadPago;
+  nombre: string;
+  valor: TipoModalidadPago;
 };
 
 export type SelectOptions = {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 };
 
-export type TipoMatchServicioEstado = "solicitado" | "pendiente-pago" | "rechazado" | "ejecucion" | "finalizado";
+export type TipoMatchServicioEstado =
+  | "solicitado"
+  | "pendiente-pago"
+  | "rechazado"
+  | "ejecucion"
+  | "finalizado";
 
-export type FileExtension = "jpg" | "jpeg" | "png" | "doc" | "docx" | "pdf" | "doc" | "docx" | "ppt" | "pptx" | "xls" | "xlsx";
+export type FileExtension =
+  | "jpg"
+  | "jpeg"
+  | "png"
+  | "doc"
+  | "docx"
+  | "pdf"
+  | "doc"
+  | "docx"
+  | "ppt"
+  | "pptx"
+  | "xls"
+  | "xlsx";
 
 export type Variant = {
-    background?: string;
-    hoverBackground?: string;
-    text?: string;
-    focus?: string;
-    disable?: string;
-}
+  background?: string;
+  hoverBackground?: string;
+  text?: string;
+  focus?: string;
+  disable?: string;
+};
 
 export type VariantClasses = {
-    [key in ThemesType]?: Variant
+  [key in ThemesType]?: Variant;
+};
+
+export type ShapeStyles = {
+  padding?: string;
+  margin?: string;
+  dimensions?: string;
+  text?: string;
+};
+
+export type ShapeClasses = {
+  [key in ShapeType]?: ShapeStyles;
 };

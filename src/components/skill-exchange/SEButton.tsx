@@ -1,17 +1,20 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { ThemesType } from "@/enums/Themes";
-import { VariantClasses } from "@/utils/types";
+import { ShapeClasses, ShapeStyles, VariantClasses } from "@/utils/types";
+import { ShapeType } from "@/enums/Shapes";
+import { SizeType } from "@/enums/Sizes";
 
 interface ButtonProps {
   label?: string;
   marginBottom?: number;
+  shape?: ShapeType;
   icon?: ReactNode;
   onClick: () => void;
   className?: string;
   disabled?: boolean;
   variant?: ThemesType;
-  size?: "small" | "medium" | "large";
+  size?: SizeType;
 }
 
 const variantClasses: VariantClasses = {
@@ -36,6 +39,7 @@ const variantClasses: VariantClasses = {
 const SEButton: React.FC<ButtonProps> = ({
   label,
   icon,
+  shape = "rectangle",
   onClick,
   className,
   disabled = false,
@@ -43,32 +47,62 @@ const SEButton: React.FC<ButtonProps> = ({
   variant = "primary",
   size = "medium",
 }) => {
-  const baseStyles = "rounded-md font-montserrat transition-colors text-center";
+  const baseStyles = "font-montserrat transition-colors text-center";
   const hoverStyles = "hover:text-white";
   const transitionStyles = `transition ease-out duration-500`;
-  const sizeStyles =
-    size === "small"
-      ? "py-1 px-2"
-      : size === "large"
-        ? "py-3 px-6"
-        : "py-2 px-4";
-  //const margin = `mb-${marginBottom}`;
+
+  const sizeClassesDefintion: {
+    [key in SizeType]: ShapeStyles;
+  } = {
+    small: {
+      padding: "py-1 px-2",
+      text: "text-sm",
+    },
+    large: {
+      padding: "py-3 px-6",
+      text: "text-lg",
+    },
+    medium: {
+      padding: "py-2 px-4",
+      text: "text-base",
+    },
+  };
+
+  let shapeClasses: ShapeClasses = {
+    circle: {
+      padding: "p-0",
+      dimensions: "w-6 h-6",
+      margin: "rounded-full",
+    },
+    rectangle: {
+      padding: sizeClassesDefintion[size].padding,
+      text: sizeClassesDefintion[size].text,
+      margin: "rounded-md",
+    },
+  };
 
   const variantStyles = classNames(
     variantClasses[variant]?.background,
     variantClasses[variant]?.hoverBackground
   );
 
+  const shapeStyles = classNames(
+    shapeClasses[shape]?.padding,
+    shapeClasses[shape]?.dimensions,
+    shapeClasses[shape]?.margin,
+    shapeClasses[shape]?.text
+  );
+
   return (
     <button
       onClick={onClick}
       className={classNames(
+        className,
         baseStyles,
         hoverStyles,
         variantStyles,
-        sizeStyles,
         transitionStyles,
-        className
+        shapeStyles
       )}
       disabled={disabled}
     >

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React from "react";
 
 interface CardProps {
-  title: string;
+  title?: string;
   description: string;
   variant?: "primary" | "secondary" | "error" | "neutral" | "accent";
   children?: React.ReactNode;
@@ -24,14 +24,16 @@ const SECard: React.FC<CardProps> = ({
         backgroundVariant
       )}
     >
-      <h2
-        className={classNames(
-          "font-montserrat font-bold text-xl mb-2",
-          variantStyles
-        )}
-      >
-        {title}
-      </h2>
+      {title && (
+        <h2
+          className={classNames(
+            "font-montserrat font-bold text-xl mb-2",
+            variantStyles
+          )}
+        >
+          {title}
+        </h2>
+      )}
       <p className="text-info font-semibold font-open-sans mb-4">
         {description}
       </p>

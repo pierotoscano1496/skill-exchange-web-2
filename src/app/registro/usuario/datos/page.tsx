@@ -1,11 +1,15 @@
 "use client";
 
 import RegistroUsuarioDatosForm from "@/components/registro-usuario/RegistroUsuarioDatosForm";
+import SEInput from "@/components/skill-exchange/form/SEInput";
+import SESelect from "@/components/skill-exchange/form/SESelect";
 import SEButton from "@/components/skill-exchange/SEButton";
+import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { RegistroUsuarioProvider } from "@/contexts/RegistroUsuarioProvider";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import { RegistroUsuarioBodyFirstStep } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
-import { getMaxDateToISOString } from "@/utils/auxiliares";
+import { getMaxDate, getMaxDateToISOString } from "@/utils/auxiliares";
 import { TipoDocumento, TipoRegistroUsuario } from "@/utils/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -64,127 +68,101 @@ export default () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-xl rounded-xl">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
-        Registro de usuario
-      </h2>
+      <SELargeTitle label="Registro de usuario" className="mb-8 text-center" />
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700 mb-3">
-          Nombres:
-        </label>
-        <input
-          type="text"
+        <SEInput
+          name="nombres"
           value={usuarioDatos.nombres}
           onChange={(e) => setNombres(e.target.value)}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
         />
         {attempSubmit && !usuarioDatos.nombres && (
-          <p className="text-sm text-red-500 mt-1">Escriba sus nombres</p>
+          <SEParragraph variant="error" label="Escriba sus nombres" />
         )}
       </div>
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700 mb-3">
-          Apellidos:
-        </label>
-        <input
-          type="text"
+        <SEInput
+          name="apellidos"
+          label="Apellidos"
           value={usuarioDatos.apellidos}
           onChange={(e) => setApellidos(e.target.value)}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
         />
         {attempSubmit && !usuarioDatos.apellidos && (
-          <p className="text-sm text-red-500 mt-1">Escriba sus apellidos</p>
+          <SEParragraph variant="error" label="Escriba sus apellidos" />
         )}
       </div>
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700 mb-3">
-          Tipo de documento:
-        </label>
-        <select
+        <SESelect
+          name="tipoDocumento"
           onChange={(e) => setTipoDocumento(e.target.value)}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
-        >
-          <option value={""}>--Seleccione--</option>
-          {tipoDocummentoOptions.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.name}
-            </option>
-          ))}
-        </select>
+          options={tipoDocummentoOptions.map((t) => ({
+            label: t.name,
+            value: t.value,
+          }))}
+        />
         {attempSubmit && !usuarioDatos.tipoDocumento && (
-          <p className="text-sm text-red-500 mt-1">
-            Indique el tipo de documento
-          </p>
+          <SEParragraph variant="error" label="Indique el tipo de documento" />
         )}
       </div>
 
       {usuarioDatos.tipoDocumento === "dni" && (
         <div className="mb-6">
-          <label
-            htmlFor="dni"
-            className="block text-lg font-medium text-gray-700 mb-3"
-          >
-            DNI
-          </label>
-          <input
+          <SEInput
+            label="DNI"
             name="dni"
-            type="text"
+            formatTextProps={{
+              pattern: "[0-9]{8}",
+              maxLength: 8,
+              inputMode: "numeric",
+            }}
             value={usuarioDatos.dni}
-            pattern="[0-9]{8}"
-            inputMode="numeric"
             onChange={(e) => setDocumento(e.target.value)}
-            maxLength={8}
-            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
           />
           {attempSubmit && !usuarioDatos.dni && (
-            <p className="text-sm text-red-500 mt-1">Escriba su DNI</p>
+            <SEParragraph variant="error" label="Escriba su DNI" />
           )}
         </div>
       )}
 
       {usuarioDatos.tipoDocumento === "carnet_extranjeria" && (
         <div className="mb-6">
-          <label
-            htmlFor="carnet_extranjeria"
-            className="block text-lg font-medium text-gray-700 mb-3"
-          >
-            Carnet de extranjería
-          </label>
-          <input
+          <SEInput
+            label="Carnet de extranjería"
             name="carnet_extranjeria"
-            type="text"
+            formatTextProps={{
+              pattern: "[0-9]{20}",
+              maxLength: 20,
+              inputMode: "numeric",
+            }}
             value={usuarioDatos.carnetExtranjeria}
-            pattern="[0-9]{20}"
-            inputMode="numeric"
             onChange={(e) => setDocumento(e.target.value)}
-            maxLength={20}
-            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
           />
           {attempSubmit && !usuarioDatos.carnetExtranjeria && (
-            <p className="text-sm text-red-500 mt-1">
-              Escriba su carnet de extranjería
-            </p>
+            <SEParragraph
+              variant="error"
+              label="Escriba su carnet de extranjería"
+            />
           )}
         </div>
       )}
 
       <div className="mb-6">
-        <label className="block text-lg font-medium text-gray-700 mb-3">
-          Fecha de nacimiento:
-        </label>
-        <input
-          type="date"
+        <SEInput
           defaultValue={maxFechaNacimiento}
+          dateInputProps={{
+            max: getMaxDate(),
+          }}
+          label="Fecha de nacimiento"
+          type="date"
           onChange={(e) => setFechaNacimiento(e.target.value)}
-          max={maxFechaNacimiento}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
         />
         {attempSubmit && !usuarioDatos.fechaNacimiento && (
-          <p className="text-sm text-red-500 mt-1">
-            Indique su fecha de nacimiento
-          </p>
+          <SEParragraph
+            variant="error"
+            label="Indique su fecha de nacimiento"
+          />
         )}
       </div>
 

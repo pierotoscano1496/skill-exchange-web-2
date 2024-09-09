@@ -8,6 +8,7 @@ import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import {
   RegistroUsuarioBodyFirstStep,
+  RegistroUsuarioBodyRedes,
   RegistroUsuarioBodySkills,
 } from "@/interfaces/registro-usuario/RegistroUsuarioBody";
 import { useRouter } from "next/navigation";
@@ -53,6 +54,10 @@ export default () => {
 
   const nextStepRegistration = () => {
     if (validateRegistroDatosContacto()) {
+      localStorage.setItem(
+        "usuarioDatos",
+        JSON.stringify({ ...usuarioDatos, step: 2 } as RegistroUsuarioBodyRedes)
+      );
       router.push("/registro/usuario/skills");
     } else {
       setAttempSubmit(true);
@@ -78,7 +83,7 @@ export default () => {
             label="Contraseña"
             onChange={(e) => setClave(e.target.value)}
             value={usuarioDatos.clave}
-            type="email"
+            type="password"
           />
           {attempSubmit && !usuarioDatos.clave && (
             <SEParragraph variant="error" label="Escriba una contraseña" />

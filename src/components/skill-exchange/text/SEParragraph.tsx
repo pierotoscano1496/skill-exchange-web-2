@@ -35,7 +35,7 @@ const SEParragraph: React.FC<TextProps> = ({
   variant = "primary",
 }) => {
   return (
-    <h1
+    <p
       className={classNames(
         "text-base",
         variantClasses[variant]?.text,
@@ -43,7 +43,7 @@ const SEParragraph: React.FC<TextProps> = ({
       )}
     >
       {label}
-    </h1>
+    </p>
   );
 };
 

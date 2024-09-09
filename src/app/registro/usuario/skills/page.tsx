@@ -6,188 +6,241 @@ import Skill from "@/interfaces/models/Skill";
 import SubCategoria from "@/interfaces/models/SubCategoria";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import skillItemStyles from "@/app/styles/skillItem.module.scss";
 import { obtenerCategorias } from "@/actions/categoria.actions";
 import { obtenerSubCategoriasByCategoria } from "@/actions/subcategoria.actions";
 import { obtenerSkillsBySubCategoria } from "@/actions/skill.action";
-import Image from "next/image";
-import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import ModalAlert from "@/components/ModalAlert";
+import SESelect from "@/components/skill-exchange/form/SESelect";
+import SEInput from "@/components/skill-exchange/form/SEInput";
+import SETextarea from "@/components/skill-exchange/form/SETextarea";
+import SEButton from "@/components/skill-exchange/SEButton";
+import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
+import SECard from "@/components/skill-exchange/SECard";
+import SEMediumTitle from "@/components/skill-exchange/text/SEMediumTitle";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
+import SESpanCard from "@/components/skill-exchange/SESpanCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 const RegistroUsuarioSkills = () => {
-    const {
-        usuarioDatos,
-        addSkill,
-        removeSkill,
-        registrarUsuarioAndSkills,
-        validateRegistroDatosContacto
-    } = useRegistroUsuarioContext();
+  const {
+    usuarioDatos,
+    addSkill,
+    removeSkill,
+    registrarUsuarioAndSkills,
+    validateRegistroDatosContacto,
+  } = useRegistroUsuarioContext();
 
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [subCategorias, setSubCategorias] = useState<SubCategoria[]>([]);
-    const [skills, setSkills] = useState<Skill[]>([]);
-    const [comentarioDesempeno, setComentarioDesempeno] = useState<string>("");
-    const [skillSelected, setSkillSelected] = useState<Skill>();
-    const [nivelConocimiento, setNivelConocimiento] = useState<number>(1);
-    const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
-    const [registrationSuccessfully, setRegistrationSuccessfully] = useState<boolean>(false);
-    const router = useRouter();
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [subCategorias, setSubCategorias] = useState<SubCategoria[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [comentarioDesempeno, setComentarioDesempeno] = useState<string>("");
+  const [skillSelected, setSkillSelected] = useState<Skill>();
+  const [nivelConocimiento, setNivelConocimiento] = useState<number>(1);
+  const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
+  const [registrationSuccessfully, setRegistrationSuccessfully] =
+    useState<boolean>(false);
+  const router = useRouter();
 
-    useEffect(() => {
-        const setup = async () => {
-            setCategorias(await obtenerCategorias());
-        }
+  useEffect(() => {
+    const setup = async () => {
+      setCategorias(await obtenerCategorias());
+    };
 
-        if (!validateRegistroDatosContacto()) {
-            router.push("/registro/usuario/redes");
-        } else {
-            setup();
-        }
-
-        return (() => {
-            setCategorias([]);
-            setSubCategorias([]);
-            setSkills([]);
-            setComentarioDesempeno("");
-            setSkillSelected(undefined);
-            setNivelConocimiento(1);
-            setAttempSubmit(false);
-            setRegistrationSuccessfully(false);
-        })
-    }, []);
-
-    const obtenerSubcategorias = async (idCategoria: string) => {
-        setSubCategorias([]);
-        setSkills([]);
-        if (idCategoria) {
-            setSubCategorias(await obtenerSubCategoriasByCategoria(idCategoria));
-        }
+    if (!validateRegistroDatosContacto()) {
+      router.push("/registro/usuario/redes");
+    } else {
+      setup();
     }
 
-    const obtenerSkills = async (idSubCategoria: string) => {
-        setSkills([]);
-        if (idSubCategoria) {
-            setSkills(await obtenerSkillsBySubCategoria(idSubCategoria));
-        }
+    return () => {
+      setCategorias([]);
+      setSubCategorias([]);
+      setSkills([]);
+      setComentarioDesempeno("");
+      setSkillSelected(undefined);
+      setNivelConocimiento(1);
+      setAttempSubmit(false);
+      setRegistrationSuccessfully(false);
+    };
+  }, []);
+
+  const obtenerSubcategorias = async (idCategoria: string) => {
+    setSubCategorias([]);
+    setSkills([]);
+    if (idCategoria) {
+      setSubCategorias(await obtenerSubCategoriasByCategoria(idCategoria));
     }
+  };
 
-    const addSkillToUsuario = () => {
-        if (skillSelected
-            && (nivelConocimiento >= 1 && nivelConocimiento <= 10)
-            && !usuarioDatos.skills.find(s => s.id === skillSelected.id)) {
-            addSkill({
-                id: skillSelected!.id,
-                descripcion: skillSelected!.descripcion,
-                desempeno: comentarioDesempeno,
-                nivelConocimiento
-            });
-
-            setAttempSubmit(false);
-
-            // Limpiar entradas
-            setSubCategorias([]);
-            setSkills([]);
-            setSkillSelected(undefined);
-            setNivelConocimiento(1);
-            setComentarioDesempeno("");
-        } else {
-            setAttempSubmit(true);
-        }
+  const obtenerSkills = async (idSubCategoria: string) => {
+    setSkills([]);
+    if (idSubCategoria) {
+      setSkills(await obtenerSkillsBySubCategoria(idSubCategoria));
     }
+  };
 
-    const finalizarRegistro = async () => {
-        const data = await registrarUsuarioAndSkills();
-        if (data) {
-            //Abrir Modal alert de éxito
-            setRegistrationSuccessfully(true);
-        }
+  const addSkillToUsuario = () => {
+    if (
+      skillSelected &&
+      nivelConocimiento >= 1 &&
+      nivelConocimiento <= 10 &&
+      !usuarioDatos.skills.find((s) => s.id === skillSelected.id)
+    ) {
+      addSkill({
+        id: skillSelected!.id,
+        descripcion: skillSelected!.descripcion,
+        desempeno: comentarioDesempeno,
+        nivelConocimiento,
+      });
+
+      setAttempSubmit(false);
+
+      // Limpiar entradas
+      setSubCategorias([]);
+      setSkills([]);
+      setSkillSelected(undefined);
+      setNivelConocimiento(1);
+      setComentarioDesempeno("");
+    } else {
+      setAttempSubmit(true);
     }
+  };
 
-    const goBack = () => {
-        router.back();
+  const finalizarRegistro = async () => {
+    const data = await registrarUsuarioAndSkills();
+    if (data) {
+      //Abrir Modal alert de éxito
+      setRegistrationSuccessfully(true);
+      localStorage.removeItem("usuarioDatos");
     }
+  };
 
-    return (
-        <>
-            <h2>Registro de habilidades</h2>
-            <div className="container column center">
-                <div className="form main">
-                    <div className="form-control">
-                        <label htmlFor="categoria">Categoría:</label>
-                        <select name="categoria" onChange={(e) => obtenerSubcategorias(e.target.value)}>
-                            <option value="">--Seleccione--</option>
-                            {categorias.map(c =>
-                                <option key={c.id} value={c.id}>{c.nombre}</option>
-                            )}
-                        </select>
-                    </div>
-                    <div className="form-control">
-                        <label htmlFor="subcategoria">Subcategoría:</label>
-                        <select name="subcategoria" onChange={(e) => obtenerSkills(e.target.value)}>
-                            <option value="">--Seleccione--</option>
-                            {subCategorias.map(s =>
-                                <option key={s.id} value={s.id}>{s.nombre}</option>
-                            )}
-                        </select>
-                    </div>
-                    <div className="form-control">
-                        <label htmlFor="skill">Habilidad:</label>
-                        <select name="skill" onChange={(e) => setSkillSelected(skills.find(s => s.id === e.target.value))}>
-                            <option value="">--Seleccione--</option>
-                            {skills.map(s =>
-                                <option key={s.id} value={s.id}>{s.descripcion}</option>
-                            )}
-                        </select>
-                    </div>
-                    {(attempSubmit && !skillSelected) && <p className="text-danger">Navegue por las categorías y sibcategorías para encontrar la habilidad que busca</p>}
-                    <div className="form-control">
-                        <label htmlFor="nivel-conocimiento">Nivel de conocimiento:</label>
-                        <input name="nivel-conocimiento" type="number" value={nivelConocimiento} onChange={(e) => setNivelConocimiento(parseInt(e.target.value))} min={1} max={10} />
-                    </div>
-                    {(attempSubmit && (nivelConocimiento < 1 || nivelConocimiento > 10))
-                        && <p className="text-danger">Establezca un nivel entre 1 y 10</p>}
-                    <div className="form-control">
-                        <label htmlFor="comment-desempeno">Comenta cómo te desempeñas:</label>
-                        <textarea name="comment-desempeno" value={comentarioDesempeno} onChange={(e) => setComentarioDesempeno(e.target.value)} />
-                        {/* {(attempSubmit && !comentarioDesempeno) && <p className="text-danger">Describanos cómo se desempeña</p>} */}
-                    </div>
-                    {(attempSubmit && usuarioDatos.skills.find(s => s.id === skillSelected?.id)) && <p className="text-danger">No puede agregar la misma habilidad otra vez</p>}
-                </div>
-                <button className="btn-secondary" onClick={addSkillToUsuario} disabled={!skillSelected}>Agregar</button>
+  const goBack = () => {
+    router.push("/registro/usuario/redes");
+  };
 
-                <div className="container column">
-                    <h3>Habilidades</h3>
-                    <div className='cards-content'>
-                        {
-                            usuarioDatos.skills.map(s => (
-                                <div key={s.id} className='item-card'>
-                                    <span>{s.descripcion}</span>
-                                    <button onClick={() => removeSkill(s.id)} className="btn-close">
-                                        <Image src={Close} alt="close" />
-                                    </button>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
-                <div className="btn-group width-50">
-                    <button onClick={finalizarRegistro}
-                        className="btn-primary"
-                        disabled={usuarioDatos.skills.length === 0}>Finalizar</button>
-                    <button onClick={goBack} className="btn-secondary">Atrás</button>
-                    <button className="btn-secondary" onClick={() => console.log(usuarioDatos)}>Comprobar</button>
-                </div>
+  return (
+    <>
+      <div className="flex flex-wrap max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-xl">
+        <SELargeTitle className="w-full" label="Registro de habilidades" />
+        <div className="w-full md:w-1/2 mb-6 px-2">
+          <SESelect
+            label="Categoría"
+            onChange={(e) => obtenerSubcategorias(e.target.value)}
+            name="categoria"
+            options={categorias.map((c) => ({
+              label: c.nombre,
+              value: c.id,
+            }))}
+          />
+        </div>
+        <div className="w-full md:w-1/2 mb-6 px-2">
+          <SESelect
+            label="Subcategoría"
+            onChange={(e) => obtenerSkills(e.target.value)}
+            name="subcategoria"
+            options={subCategorias.map((s) => ({
+              label: s.nombre,
+              value: s.id,
+            }))}
+          />
+        </div>
+        <div className="w-full md:w-1/2 mb-6 px-2">
+          <SESelect
+            label="Habilidad"
+            onChange={(e) =>
+              setSkillSelected(skills.find((s) => s.id === e.target.value))
+            }
+            name="skill"
+            options={skills.map((s) => ({
+              label: s.descripcion,
+              value: s.id,
+            }))}
+          />
+        </div>
+        {attempSubmit && !skillSelected && (
+          <SEParragraph
+            variant="error"
+            label="Navegue por las categorías y sibcategorías para encontrar la
+            habilidad que busca"
+          />
+        )}
+        <div className="w-full md:w-1/2 mb-6 px-2">
+          <SEInput
+            type="number"
+            label="Nivel de conocimiento"
+            name="nivel-conocimiento"
+            value={nivelConocimiento}
+            onChange={(e) => setNivelConocimiento(parseInt(e.target.value))}
+            numericProps={{
+              max: 10,
+              min: 1,
+            }}
+          />
+        </div>
+        {attempSubmit && (nivelConocimiento < 1 || nivelConocimiento > 10) && (
+          <p className="text-sm text-red-500 mt-1">
+            Establezca un nivel entre 1 y 10
+          </p>
+        )}
+        <div className="w-full mb-6 px-2">
+          <SETextarea
+            name="comment-desempeno"
+            placeholder="Comenta cómo te desempeñas"
+            label="Introducción"
+            value={comentarioDesempeno}
+            onChange={(e) => setComentarioDesempeno(e.target.value)}
+          />
+        </div>
+        {attempSubmit &&
+          usuarioDatos.skills.find((s) => s.id === skillSelected?.id) && (
+            <p className="text-sm text-red-500 mt-1">
+              No puede agregar la misma habilidad otra vez
+            </p>
+          )}
+        <div className="w-full mb-6 px-2 flex justify-center">
+          <SEButton
+            label="Agregar"
+            onClick={addSkillToUsuario}
+            disabled={!skillSelected}
+          />
+        </div>
+      </div>
 
-                {registrationSuccessfully &&
-                    <ModalAlert onClose={() => router.push("/login")}>
-                        <p>Gracias por registrarte a Skill Exchange.</p>
-                        <p>Te enviamos un correo para validar tu identificación.</p>
-                    </ModalAlert>
-                }
-            </div>
-        </>
+      <div className="flex flex-wrap max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-xl">
+        <SEMediumTitle label="Habilidades" />
+        <div className="w-full md:w-1/2 mb-6 px-2">
+          {usuarioDatos.skills.map((s) => (
+            <SESpanCard key={s.id} variant="accent">
+              {s.descripcion}&nbsp;
+              <SEButton
+                shape="circle"
+                icon={<FontAwesomeIcon icon={faClose} />}
+                onClick={() => removeSkill(s.id)}
+              />
+            </SESpanCard>
+          ))}
+        </div>
+      </div>
 
-    )
+      <div className="flex justify-center">
+        <SEButton
+          label="Finalizar"
+          onClick={finalizarRegistro}
+          disabled={usuarioDatos.skills.length === 0}
+        />
+        <SEButton label="Atrás" onClick={goBack} variant="secondary" />
+      </div>
+
+      {registrationSuccessfully && (
+        <ModalAlert onClose={() => router.push("/login")}>
+          <p>Gracias por registrarte a Skill Exchange.</p>
+          <p>Te enviamos un correo para validar tu identificación.</p>
+        </ModalAlert>
+      )}
+    </>
+  );
 };
 
 export default RegistroUsuarioSkills;
