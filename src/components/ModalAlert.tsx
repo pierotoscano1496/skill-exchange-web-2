@@ -7,31 +7,40 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 type Params = {
-    title?: string;
-    container?: boolean;
-    children: React.ReactNode;
-    onClose: () => void;
-}
+  title?: string;
+  container?: boolean;
+  children: React.ReactNode;
+  onClose: () => void;
+};
 
-export default ({ title = "Mensaje", container = false, children, onClose }: Params) => {
-    return (
-        <div className={`${modalStyles.modalContainer} ${modalStyles.super}`}>
-            <div className={modalStyles.modal}>
-                <header className={modalStyles.modalHeader}>
-                    <h2>{title}</h2>
-                    <button className={modalStyles.close} onClick={onClose} >
-                        <Image src={Close} alt="close" />
-                    </button>
-                </header>
+export default ({
+  title = "Mensaje",
+  container = false,
+  children,
+  onClose,
+}: Params) => {
+  return (
+    <div className={`${modalStyles.modalContainer} ${modalStyles.super}`}>
+      <div className={modalStyles.modal}>
+        <header className={modalStyles.modalHeader}>
+          <h2>{title}</h2>
+          <button className={modalStyles.close} onClick={onClose}>
+            <Image src={Close} alt="close" />
+          </button>
+        </header>
 
-                <main className={`${modalStyles.modalContent} ${container && "container"}`}>
-                    {children}
-                </main>
+        <main
+          className={`${modalStyles.modalContent} ${container && "container"}`}
+        >
+          {children}
+        </main>
 
-                <footer className={modalStyles.modalFooter}>
-                    <button className="btn-secondary" onClick={onClose}>Cerrar</button>
-                </footer>
-            </div>
-        </div>
-    )
-}
+        <footer className={modalStyles.modalFooter}>
+          <button className="btn-secondary" onClick={onClose}>
+            Cerrar
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+};

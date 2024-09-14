@@ -43,7 +43,8 @@ const SESpanCard: React.FC<SpanCardPropperties> = ({
       className={classNames(
         "py-3 px-6 rounded-full bg-orange-500 text-white",
         "hover:py-4 hover:px-8",
-        "transform duration-500",
+        "transform duration-300",
+        "mx-3 my-6",
         variantStyles,
         className
       )}

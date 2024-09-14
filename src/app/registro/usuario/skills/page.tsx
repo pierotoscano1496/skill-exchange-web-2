@@ -21,6 +21,7 @@ import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import SESpanCard from "@/components/skill-exchange/SESpanCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import SEModalAlert from "@/components/skill-exchange/messaging/SEModalAlert";
 
 const RegistroUsuarioSkills = () => {
   const {
@@ -34,6 +35,7 @@ const RegistroUsuarioSkills = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [subCategorias, setSubCategorias] = useState<SubCategoria[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [categoriaSelected, setCategoriaSelected] = useState<string>("");
   const [comentarioDesempeno, setComentarioDesempeno] = useState<string>("");
   const [skillSelected, setSkillSelected] = useState<Skill>();
   const [nivelConocimiento, setNivelConocimiento] = useState<number>(1);
@@ -66,6 +68,7 @@ const RegistroUsuarioSkills = () => {
   }, []);
 
   const obtenerSubcategorias = async (idCategoria: string) => {
+    setCategoriaSelected(idCategoria);
     setSubCategorias([]);
     setSkills([]);
     if (idCategoria) {
@@ -97,6 +100,7 @@ const RegistroUsuarioSkills = () => {
       setAttempSubmit(false);
 
       // Limpiar entradas
+      setCategoriaSelected("");
       setSubCategorias([]);
       setSkills([]);
       setSkillSelected(undefined);
@@ -127,6 +131,7 @@ const RegistroUsuarioSkills = () => {
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SESelect
             label="Categoría"
+            value={categoriaSelected}
             onChange={(e) => obtenerSubcategorias(e.target.value)}
             name="categoria"
             options={categorias.map((c) => ({
@@ -202,20 +207,23 @@ const RegistroUsuarioSkills = () => {
         <div className="w-full mb-6 px-2 flex justify-center">
           <SEButton
             label="Agregar"
+            variant="accent"
             onClick={addSkillToUsuario}
             disabled={!skillSelected}
           />
         </div>
       </div>
 
-      <div className="flex flex-wrap max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-xl">
+      <div className="flex flex-col max-w-5xl mx-auto p-6 my-12 bg-white shadow-xl rounded-xl">
         <SEMediumTitle label="Habilidades" />
-        <div className="w-full md:w-1/2 mb-6 px-2">
+        <div className="flex flex-wrap w-full mb-6 px-2 justify-center">
           {usuarioDatos.skills.map((s) => (
             <SESpanCard key={s.id} variant="accent">
               {s.descripcion}&nbsp;
               <SEButton
                 shape="circle"
+                variant="error"
+                className="bg-error-700"
                 icon={<FontAwesomeIcon icon={faClose} />}
                 onClick={() => removeSkill(s.id)}
               />
@@ -234,10 +242,14 @@ const RegistroUsuarioSkills = () => {
       </div>
 
       {registrationSuccessfully && (
-        <ModalAlert onClose={() => router.push("/login")}>
-          <p>Gracias por registrarte a Skill Exchange.</p>
-          <p>Te enviamos un correo para validar tu identificación.</p>
-        </ModalAlert>
+        <SEModalAlert onClose={() => router.push("/login")}>
+          <p className="text-center">
+            Gracias por registrarte a Skill Exchange.
+          </p>
+          <p className="text-center">
+            Te enviamos un correo para validar tu identificación.
+          </p>
+        </SEModalAlert>
       )}
     </>
   );
