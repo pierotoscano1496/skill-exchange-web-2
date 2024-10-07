@@ -31,7 +31,8 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
   variant = "primary",
   size = "medium",
 }) => {
-  const baseStyles = "rounded-md font-montserrat transition-colors text-center";
+  const baseStyles =
+    "rounded-md font-montserrat transition-colors text-center mx-auto max-w-fit block";
   const hoverStyles = "hover:text-white";
   const transitionStyles = `transition ease-out duration-500`;
   const sizeStyles =
@@ -57,13 +58,14 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
         className
       )}
       href={link}
+      aria-label={label}
     >
-      {icon ? (
+      {label ? (
         <>
           {label} {icon}
         </>
       ) : (
-        label
+        icon
       )}
     </a>
   );

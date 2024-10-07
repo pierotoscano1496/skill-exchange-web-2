@@ -2,11 +2,14 @@
 
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@/app/styles/login/login.module.scss";
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import { loginUsuario } from "@/actions/auth.actions.client";
 import SEButton from "@/components/skill-exchange/SEButton";
+import SECard from "@/components/skill-exchange/SECard";
+import SEForm from "@/components/skill-exchange/form/SEForm";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 
 export default () => {
   const [correo, setCorreo] = useState<string>("");
@@ -16,23 +19,15 @@ export default () => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  /* useEffect(()=>{
+    if()
+  }) */
+
   const login = async () => {
     try {
       setLoading(true);
       const tokenSaved = await loginUsuario(correo, contrasena);
       if (tokenSaved) {
-        // Guardar en cookie
-        /* let fecha = new Date();
-        const fechaExpiracion = fecha.setTime(
-          fecha.getTime() + parseInt(process.env.BEARER_TOKEN_MAX_AGE!)
-        );
-        setCookie(process.env.BEARER_TOKEN_NAME!, token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          expires: new Date(fechaExpiracion),
-          sameSite: "strict",
-          path: "/",
-        }); */
         router.push("/servicio");
       }
     } catch (error) {
@@ -63,7 +58,7 @@ export default () => {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <section className="w-1/3" id="inicio">
         <div className="w-full">
-          <div className="flex flex-col">
+          <SEForm>
             <SEInput
               label="Correo"
               onChange={(e) => setCorreo(e.target.value)}
@@ -84,8 +79,10 @@ export default () => {
               variant="primary"
             />
             {loading && <img className={styles.waiting} />}
-            {attempSubmit && error && <p className="text-danger">{error}</p>}
-          </div>
+            {attempSubmit && error && (
+              <SEParragraph content={error} variant="error" />
+            )}
+          </SEForm>
         </div>
       </section>
     </main>

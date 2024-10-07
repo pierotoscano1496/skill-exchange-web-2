@@ -4,9 +4,11 @@ import { ThemesType } from "@/enums/Themes";
 import { ShapeClasses, ShapeStyles, VariantClasses } from "@/utils/types";
 import { ShapeType } from "@/enums/Shapes";
 import { SizeType } from "@/enums/Sizes";
+import { ComponentModeType } from "@/enums/ComponentMode";
 
 interface ButtonProps {
   label?: string;
+  mode?: ComponentModeType;
   marginBottom?: number;
   shape?: ShapeType;
   icon?: ReactNode;
@@ -20,35 +22,45 @@ interface ButtonProps {
 const variantClasses: VariantClasses = {
   primary: {
     background: "bg-primary-200",
-    hoverBackground: "hover:bg-primary-600",
+    text: "text-primary-200",
+    hoverBackground600: "hover:bg-primary-600",
+    hoverBackground100: "hover:bg-primary-100",
+    border: "border-primary-200",
   },
   accent: {
     background: "bg-accent-200",
-    hoverBackground: "hover:bg-accent-600",
+    text: "text-accent-200",
+    hoverBackground600: "hover:bg-accent-600",
+    hoverBackground100: "hover:bg-accent-100",
+    border: "border-accent-200",
   },
   neutral: {
     background: "bg-neutral-200",
-    hoverBackground: "hover:bg-neutral-600",
+    text: "text-neutral-200",
+    hoverBackground600: "hover:bg-neutral-600",
+    hoverBackground100: "hover:bg-neutral-100",
+    border: "border-neutral-200",
   },
   hero: {
     background: "bg-hero-light",
-    hoverBackground: "hover:bg-hero",
+    text: "text-hero",
+    hoverBackground600: "hover:bg-hero",
+    border: "border-hero",
   },
 };
 
 const SEButton: React.FC<ButtonProps> = ({
   label,
+  mode = "filled",
   icon,
   shape = "rectangle",
   onClick,
   className,
   disabled = false,
-  //marginBottom = 4,
   variant = "primary",
   size = "medium",
 }) => {
   const baseStyles = "font-montserrat transition-colors text-center";
-  const hoverStyles = "hover:text-white";
   const transitionStyles = `transition ease-out duration-500`;
 
   const sizeClassesDefintion: {
@@ -73,25 +85,94 @@ const SEButton: React.FC<ButtonProps> = ({
       padding: "p-0",
       dimensions: "w-6 h-6",
       margin: "rounded-full",
+      flex: "flex items-center justify-center",
     },
     rectangle: {
       padding: sizeClassesDefintion[size].padding,
       text: sizeClassesDefintion[size].text,
       margin: "rounded-md",
     },
+    noShape: {
+      padding: "p-0",
+      another: "bg-transparent hover:bg-blue-100 focus:outline-none",
+    },
+  };
+
+  const modeClasses = () => {
+    switch (mode) {
+      case "filled":
+        return classNames(
+          variantClasses[variant]?.background,
+          "text-white",
+          variantClasses[variant]?.hoverBackground600
+        );
+      case "outline":
+        return classNames(
+          "bg-transparent",
+          "border",
+          variantClasses[variant]?.border,
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverBackground100
+        );
+      case "ghost":
+        return classNames(
+          "bg-transparent",
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverBackground100
+        );
+      case "flat":
+        return classNames(
+          "bg-transparent",
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverText
+        );
+      case "text":
+        return classNames(
+          "bg-transparent",
+          variantClasses[variant]?.text,
+          "hover:underline"
+        );
+      case "elevated":
+        return classNames(
+          variantClasses[variant]?.background,
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverBackground600,
+          "shadow-lg"
+        );
+      case "floating":
+        return classNames(
+          variantClasses[variant]?.background,
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverBackground600,
+          "rounded-full",
+          "shadow-lg"
+        );
+      default:
+        return classNames(
+          variantClasses[variant]?.background,
+          variantClasses[variant]?.text,
+          variantClasses[variant]?.hoverBackground600
+        );
+    }
   };
 
   const variantStyles = classNames(
     variantClasses[variant]?.background,
-    variantClasses[variant]?.hoverBackground
+    variantClasses[variant]?.hoverBackground600
   );
 
   const shapeStyles = classNames(
     shapeClasses[shape]?.padding,
     shapeClasses[shape]?.dimensions,
     shapeClasses[shape]?.margin,
-    shapeClasses[shape]?.text
+    shapeClasses[shape]?.text,
+    shapeClasses[shape]?.another,
+    shapeClasses[shape]?.flex
   );
+
+  const disabledStyles = disabled
+    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+    : "";
 
   return (
     <button
@@ -99,19 +180,22 @@ const SEButton: React.FC<ButtonProps> = ({
       className={classNames(
         className,
         baseStyles,
-        hoverStyles,
         variantStyles,
         transitionStyles,
-        shapeStyles
+        shapeStyles,
+        modeClasses(),
+        disabledStyles
       )}
       disabled={disabled}
     >
-      {label ? (
-        <>
-          {label} {icon}
-        </>
-      ) : (
+      {icon && !label ? (
+        // Si solo hay ícono y no etiqueta
         icon
+      ) : (
+        <div className="flex items-center justify-center">
+          {icon && <span className="mr-2">{icon}</span>}
+          {label}
+        </div>
       )}
     </button>
   );

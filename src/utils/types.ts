@@ -51,9 +51,14 @@ export type FileExtension =
 
 export type Variant = {
   background?: string;
-  hoverBackground?: string;
+  hoverBackground100?: string;
+  hoverBackground600?: string;
+  hoverBackground400?: string;
   text?: string;
+  text100?: string;
+  border?: string;
   focus?: string;
+  hoverText?: string;
   disable?: string;
 };
 
@@ -66,6 +71,8 @@ export type ShapeStyles = {
   margin?: string;
   dimensions?: string;
   text?: string;
+  another?: string;
+  flex?: string;
 };
 
 export type ShapeClasses = {

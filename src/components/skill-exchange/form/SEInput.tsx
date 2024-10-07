@@ -125,6 +125,7 @@ const SEInput: React.FC<InputProps> = ({
         onKeyDown={onKeyDown}
         className={classNames(
           "w-full p-2 bg-fondo-tarjetas rounded-md border border-bordes focus:outline-none transition duration-200 ease-in-out",
+          "shadow-input",
           variantStyles
         )}
         min={numericProps?.min}

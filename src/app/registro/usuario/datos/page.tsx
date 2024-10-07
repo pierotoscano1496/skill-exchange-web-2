@@ -77,7 +77,7 @@ export default () => {
           onChange={(e) => setNombres(e.target.value)}
         />
         {attempSubmit && !usuarioDatos.nombres && (
-          <SEParragraph variant="error" label="Escriba sus nombres" />
+          <SEParragraph variant="error" content="Escriba sus nombres" />
         )}
       </div>
 
@@ -89,7 +89,7 @@ export default () => {
           onChange={(e) => setApellidos(e.target.value)}
         />
         {attempSubmit && !usuarioDatos.apellidos && (
-          <SEParragraph variant="error" label="Escriba sus apellidos" />
+          <SEParragraph variant="error" content="Escriba sus apellidos" />
         )}
       </div>
 
@@ -103,7 +103,10 @@ export default () => {
           }))}
         />
         {attempSubmit && !usuarioDatos.tipoDocumento && (
-          <SEParragraph variant="error" label="Indique el tipo de documento" />
+          <SEParragraph
+            variant="error"
+            content="Indique el tipo de documento"
+          />
         )}
       </div>
 
@@ -121,7 +124,7 @@ export default () => {
             onChange={(e) => setDocumento(e.target.value)}
           />
           {attempSubmit && !usuarioDatos.dni && (
-            <SEParragraph variant="error" label="Escriba su DNI" />
+            <SEParragraph variant="error" content="Escriba su DNI" />
           )}
         </div>
       )}

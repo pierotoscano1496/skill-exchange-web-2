@@ -35,7 +35,7 @@ const SESpanCard: React.FC<SpanCardPropperties> = ({
     variant &&
     classNames(
       variantClasses[variant]?.background,
-      variantClasses[variant]?.hoverBackground
+      variantClasses[variant]?.hoverBackground400
     );
 
   return (

@@ -3,14 +3,15 @@
 import Usuario from "@/interfaces/Usuario";
 import React, { useState } from "react";
 import { logoutUsuario } from "@/actions/usuario.actions";
-import { useRouter } from "next/navigation";
-import mainMenuUserStyles from "@/app/styles/menu/mainMenu.module.scss";
+import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
+  faBars,
   faBell,
   faComment,
   faDoorOpen,
+  faEllipsisV,
   faEnvelope,
   faFileContract,
   faGear,
@@ -18,12 +19,37 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import SEButton from "./SEButton";
+import { VariantClasses } from "@/utils/types";
+import SELink from "./SELink";
+import SENavbarItem from "./SENavbarItem";
+import { NavbarOptionType } from "@/enums/NavbarOptions";
+import styles from "@/app/styles/tailwind.module.scss";
 
 interface NavbarProps {
   children: React.ReactNode;
   usuario: Usuario | undefined;
   variant?: "primary" | "secondary";
+  selectedKey?: NavbarOptionType;
 }
+
+const variantClasses: VariantClasses = {
+  primary: {
+    background: "bg-primary-dark",
+    hoverBackground600: "hover:bg-primary-600",
+  },
+  accent: {
+    background: "bg-accent-dark",
+    hoverBackground600: "hover:bg-accent-600",
+  },
+  neutral: {
+    background: "bg-neutral-dark",
+    hoverBackground600: "hover:bg-neutral-600",
+  },
+  hero: {
+    background: "bg-hero-light",
+    hoverBackground600: "hover:bg-hero",
+  },
+};
 
 const SENavbar: React.FC<NavbarProps> = ({
   children,
@@ -32,6 +58,7 @@ const SENavbar: React.FC<NavbarProps> = ({
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const router = useRouter();
+  const pathName = usePathname();
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -42,32 +69,85 @@ const SENavbar: React.FC<NavbarProps> = ({
     router.push("/login");
   };
 
-  const variantStyles = `bg-${variant}-dark`;
+  const asideStyles = classNames(
+    "bg-primary-200 p-4",
+    "flex flex-col h-screen fixed top-0 left-0 justify-between",
+    "w-64",
+    "transition-transform duration-300 ease-in-out transform",
+    sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
+  );
+  const iconRotationStyles = classNames(
+    "transition-transform duration-300 ease-in-out",
+    sidebarCollapsed ? "rotate-90" : "rotate-0"
+  );
+
+  const collapsedClassMargin = classNames(
+    "transition-all duration-300",
+    sidebarCollapsed ? "ml-0" : "ml-64"
+  );
+  const collapsedClassPadding = classNames(
+    "transition-all duration-300",
+    sidebarCollapsed ? "p-0" : "p-64"
+  );
+
+  const collapsedClassTransition = classNames(
+    "transition-all duration-300",
+    sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
+  );
+  const collapsedClassWidth = classNames(
+    "transition-all duration-300",
+    sidebarCollapsed ? "w-12" : "w-64"
+  );
+  const variantStyles = classNames(variantClasses[variant]?.background);
+
+  const selectedKey: NavbarOptionType = (() => {
+    if (pathName.startsWith("/acuerdos")) return "acuerdos";
+    if (pathName.startsWith("/contratos")) return "contratos";
+    if (pathName.startsWith("/servicio")) return "servicios";
+    if (pathName.startsWith("/solicitudes")) return "solicitudes";
+    return "none";
+  })();
 
   return (
     <>
-      <header>
-        <nav className={classNames(variantStyles)}>
+      <header className={collapsedClassMargin}>
+        <nav className={classNames(variantStyles, "p-4")}>
           <ul
             className={classNames(
               "flex items-center flex-wrap flex-row justify-end list-none list-image-none text-white [&>li>*]:no-underline [&>li>*]:block [&>li>*]:p-4 [&>li>i]:cursor-pointer"
             )}
           >
+            <li className="mr-auto">
+              <SEButton
+                variant="neutral"
+                shape="noShape"
+                className="text-white p-2 mr-4"
+                onClick={toggleSidebar}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faBars}
+                    className={iconRotationStyles}
+                  />
+                }
+              />
+            </li>
             <li>
               <FontAwesomeIcon icon={faBell} />
             </li>
             <li>
-              <a href="/mensajes">
-                <FontAwesomeIcon icon={faComment} />
-              </a>
+              <SELink
+                variant={variant}
+                link="/mensajes"
+                icon={<FontAwesomeIcon icon={faComment} />}
+              />
             </li>
             <li>
-              <a href="/servicio">Buscar Servicios</a>
+              <SELink link="/servicio" label="Buscar Servicios" />
             </li>
             {usuario ? (
               <>
                 <li>
-                  <a href="/profile">{usuario.nombres}</a>
+                  <SELink link="/profile" label={usuario.nombres} />
                 </li>
                 <li>
                   <SEButton
@@ -80,9 +160,11 @@ const SENavbar: React.FC<NavbarProps> = ({
               </>
             ) : (
               <li>
-                <a className={mainMenuUserStyles.login} href="/login">
-                  Iniciar sesión
-                </a>
+                <SELink
+                  variant={variant}
+                  link="/login"
+                  label="Iniciar sesión"
+                />
               </li>
             )}
           </ul>
@@ -90,46 +172,54 @@ const SENavbar: React.FC<NavbarProps> = ({
       </header>
       {usuario ? (
         <>
-          <aside
-            className={`${mainMenuUserStyles.sidebar} ${sidebarCollapsed ? mainMenuUserStyles.collapsed : ""}`}
-          >
+          <aside className={asideStyles}>
             <nav>
-              <ul>
-                <li>
-                  <a href="/acuerdos">
-                    <FontAwesomeIcon icon={faThumbsUp} />
-                    <span> Acuerdos</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="/contratos">
-                    <FontAwesomeIcon icon={faFileContract} />
-                    <span> Contratos</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="/servicio/own">
-                    <FontAwesomeIcon icon={faGear} />
-                    <span> Servicios</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="/solicitudes">
-                    <FontAwesomeIcon icon={faEnvelope} />
-                    <span> Solicitudes</span>
-                  </a>
-                </li>
+              <ul
+                className={classNames(
+                  "space-y-2 w-48",
+                  sidebarCollapsed ? "p-0" : "p-4"
+                )}
+              >
+                <SENavbarItem
+                  selected={selectedKey === "acuerdos"}
+                  collapsed={sidebarCollapsed}
+                  link="/acuerdos"
+                  label="Acuerdos"
+                  variant={variant}
+                  icon={<FontAwesomeIcon icon={faThumbsUp} />}
+                />
+                <SENavbarItem
+                  selected={selectedKey === "contratos"}
+                  collapsed={sidebarCollapsed}
+                  link="/contratos"
+                  label="Contratos"
+                  variant={variant}
+                  icon={<FontAwesomeIcon icon={faFileContract} />}
+                />
+                <SENavbarItem
+                  selected={selectedKey === "servicios"}
+                  collapsed={sidebarCollapsed}
+                  link="/servicio/own"
+                  label="Servicios"
+                  variant={variant}
+                  icon={<FontAwesomeIcon icon={faGear} />}
+                />
+                <SENavbarItem
+                  selected={selectedKey === "solicitudes"}
+                  collapsed={sidebarCollapsed}
+                  link="/solicitudes"
+                  label="Solicitudes"
+                  variant={variant}
+                  icon={<FontAwesomeIcon icon={faEnvelope} />}
+                />
               </ul>
             </nav>
-            <button
-              className={mainMenuUserStyles.toggleButton}
-              onClick={toggleSidebar}
-            >
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
-            </button>
           </aside>
           <main
-            className={`content ${mainMenuUserStyles.mainContent} ${sidebarCollapsed ? mainMenuUserStyles.leftCollapsed : ""}`}
+            className={classNames(
+              styles.backgroundPrincipal,
+              collapsedClassMargin
+            )}
           >
             {children}
           </main>

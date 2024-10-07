@@ -75,7 +75,7 @@ export default () => {
             type="email"
           />
           {attempSubmit && !usuarioDatos.correo && (
-            <SEParragraph variant="error" label="Indique su correo" />
+            <SEParragraph variant="error" content="Indique su correo" />
           )}
         </div>
         <div className="w-full md:w-1/2 mb-6 px-2">
@@ -86,7 +86,7 @@ export default () => {
             type="password"
           />
           {attempSubmit && !usuarioDatos.clave && (
-            <SEParragraph variant="error" label="Escriba una contraseña" />
+            <SEParragraph variant="error" content="Escriba una contraseña" />
           )}
         </div>
         <div className="w-full mb-6 px-2">

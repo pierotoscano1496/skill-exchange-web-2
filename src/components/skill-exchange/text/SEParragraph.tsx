@@ -3,7 +3,7 @@ import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 
 interface TextProps {
-  label: string;
+  content: string;
   variant?: ThemesType;
   className?: string;
 }
@@ -30,7 +30,7 @@ const variantClasses: VariantClasses = {
 };
 
 const SEParragraph: React.FC<TextProps> = ({
-  label,
+  content,
   className,
   variant = "primary",
 }) => {
@@ -42,7 +42,7 @@ const SEParragraph: React.FC<TextProps> = ({
         className
       )}
     >
-      {label}
+      {content}
     </p>
   );
 };
