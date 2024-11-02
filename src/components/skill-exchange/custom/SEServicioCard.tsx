@@ -2,7 +2,6 @@ import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioRespons
 import SECard from "../SECard";
 import SEButton from "../SEButton";
 import { getFirstWords } from "@/utils/auxiliares";
-import SEParragraph from "../text/SEParragraph";
 
 interface ServiciosProps {
   servicio: ServicioResponse;

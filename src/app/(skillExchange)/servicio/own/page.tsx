@@ -61,7 +61,7 @@ export default () => {
           </SEForm>
         ) : (
           <>
-            <SEParragraph content="Aún no tiene servicios publicados." />
+            <SEParragraph>Aún no tiene servicios publicados.</SEParragraph>
             <SELinkButton label="Empezar" link="/registro/servicio" />
           </>
         )}

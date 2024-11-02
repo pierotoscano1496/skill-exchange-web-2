@@ -77,7 +77,7 @@ export default () => {
           onChange={(e) => setNombres(e.target.value)}
         />
         {attempSubmit && !usuarioDatos.nombres && (
-          <SEParragraph variant="error" content="Escriba sus nombres" />
+          <SEParragraph variant="error">Escriba sus nombres</SEParragraph>
         )}
       </div>
 
@@ -89,7 +89,7 @@ export default () => {
           onChange={(e) => setApellidos(e.target.value)}
         />
         {attempSubmit && !usuarioDatos.apellidos && (
-          <SEParragraph variant="error" content="Escriba sus apellidos" />
+          <SEParragraph variant="error">Escriba sus apellidos</SEParragraph>
         )}
       </div>
 
@@ -103,10 +103,9 @@ export default () => {
           }))}
         />
         {attempSubmit && !usuarioDatos.tipoDocumento && (
-          <SEParragraph
-            variant="error"
-            content="Indique el tipo de documento"
-          />
+          <SEParragraph variant="error">
+            Indique el tipo de documento
+          </SEParragraph>
         )}
       </div>
 
@@ -124,7 +123,7 @@ export default () => {
             onChange={(e) => setDocumento(e.target.value)}
           />
           {attempSubmit && !usuarioDatos.dni && (
-            <SEParragraph variant="error" content="Escriba su DNI" />
+            <SEParragraph variant="error">Escriba su DNI</SEParragraph>
           )}
         </div>
       )}
@@ -143,10 +142,9 @@ export default () => {
             onChange={(e) => setDocumento(e.target.value)}
           />
           {attempSubmit && !usuarioDatos.carnetExtranjeria && (
-            <SEParragraph
-              variant="error"
-              label="Escriba su carnet de extranjería"
-            />
+            <SEParragraph variant="error">
+              Escriba su carnet de extranjería
+            </SEParragraph>
           )}
         </div>
       )}
@@ -162,10 +160,9 @@ export default () => {
           onChange={(e) => setFechaNacimiento(e.target.value)}
         />
         {attempSubmit && !usuarioDatos.fechaNacimiento && (
-          <SEParragraph
-            variant="error"
-            label="Indique su fecha de nacimiento"
-          />
+          <SEParragraph variant="error">
+            Indique su fecha de nacimiento
+          </SEParragraph>
         )}
       </div>
 

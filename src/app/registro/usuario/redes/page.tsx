@@ -75,7 +75,7 @@ export default () => {
             type="email"
           />
           {attempSubmit && !usuarioDatos.correo && (
-            <SEParragraph variant="error" content="Indique su correo" />
+            <SEParragraph variant="error">Indique su correo</SEParragraph>
           )}
         </div>
         <div className="w-full md:w-1/2 mb-6 px-2">
@@ -86,7 +86,7 @@ export default () => {
             type="password"
           />
           {attempSubmit && !usuarioDatos.clave && (
-            <SEParragraph variant="error" content="Escriba una contraseña" />
+            <SEParragraph variant="error">Escriba una contraseña</SEParragraph>
           )}
         </div>
         <div className="w-full mb-6 px-2">
@@ -138,10 +138,9 @@ export default () => {
           !usuarioDatos.perfilInstagram &&
           !usuarioDatos.perfilTiktok && (
             <div className="w-full mb-6 px-2">
-              <SEParragraph
-                variant="error"
-                label="Indique al menos una de sus redes"
-              />
+              <SEParragraph variant="error">
+                Indique al menos una de sus redes
+              </SEParragraph>
             </div>
           )}
 

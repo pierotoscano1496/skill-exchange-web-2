@@ -17,6 +17,7 @@ interface ButtonProps {
   disabled?: boolean;
   variant?: ThemesType;
   size?: SizeType;
+  type?: "submit" | "reset" | "button";
 }
 
 const variantClasses: VariantClasses = {
@@ -26,6 +27,13 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-primary-600",
     hoverBackground100: "hover:bg-primary-100",
     border: "border-primary-200",
+  },
+  secondary: {
+    background: "bg-secondary-200",
+    text: "text-secondary-200",
+    hoverBackground600: "hover:bg-secondary-600",
+    hoverBackground100: "hover:bg-secondary-100",
+    border: "border-secondary-200",
   },
   accent: {
     background: "bg-accent-200",
@@ -47,9 +55,16 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-hero",
     border: "border-hero",
   },
+  basic: {
+    background: "bg-blue-200",
+    text: "text-primary-900",
+    border: "border-primary-900",
+    hoverText: "hover:text-primary-300",
+  },
 };
 
 const SEButton: React.FC<ButtonProps> = ({
+  type = "button",
   label,
   mode = "filled",
   icon,
@@ -112,7 +127,8 @@ const SEButton: React.FC<ButtonProps> = ({
           "border",
           variantClasses[variant]?.border,
           variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground100
+          variantClasses[variant]?.hoverBackground100,
+          variantClasses[variant]?.hoverText
         );
       case "ghost":
         return classNames(
@@ -156,11 +172,6 @@ const SEButton: React.FC<ButtonProps> = ({
     }
   };
 
-  const variantStyles = classNames(
-    variantClasses[variant]?.background,
-    variantClasses[variant]?.hoverBackground600
-  );
-
   const shapeStyles = classNames(
     shapeClasses[shape]?.padding,
     shapeClasses[shape]?.dimensions,
@@ -170,17 +181,16 @@ const SEButton: React.FC<ButtonProps> = ({
     shapeClasses[shape]?.flex
   );
 
-  const disabledStyles = disabled
-    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-    : "";
+  const disabledStyles =
+    disabled && "bg-gray-400 text-gray-700 cursor-not-allowed";
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={classNames(
         className,
         baseStyles,
-        variantStyles,
         transitionStyles,
         shapeStyles,
         modeClasses(),

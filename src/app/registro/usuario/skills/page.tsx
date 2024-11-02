@@ -165,11 +165,10 @@ const RegistroUsuarioSkills = () => {
           />
         </div>
         {attempSubmit && !skillSelected && (
-          <SEParragraph
-            variant="error"
-            label="Navegue por las categorías y sibcategorías para encontrar la
-            habilidad que busca"
-          />
+          <SEParragraph variant="error">
+            Navegue por las categorías y sibcategorías para encontrar la
+            habilidad que busca
+          </SEParragraph>
         )}
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SEInput

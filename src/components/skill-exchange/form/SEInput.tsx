@@ -1,9 +1,13 @@
+import { InputType } from "@/enums/InputTypes";
 import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
+import { title } from "process";
+import { HTMLInputAutoCompleteAttribute } from "react";
 
 type NumericInputProps = {
   min?: number;
   max?: number;
+  step?: string | number;
 };
 
 type DateInputProps = {
@@ -25,8 +29,16 @@ type FormatTextProps = {
     | "search";
 };
 
+interface ExtraInformationProps {
+  title?: string;
+}
+
+interface UXProps {
+  autoComplete?: HTMLInputAutoCompleteAttribute;
+}
+
 interface InputProps {
-  type?: "text" | "password" | "email" | "number" | "date";
+  type?: InputType;
   name?: string;
   placeholder?: string;
   label?: string;
@@ -37,6 +49,8 @@ interface InputProps {
   numericProps?: NumericInputProps;
   formatTextProps?: FormatTextProps;
   dateInputProps?: DateInputProps;
+  extraInformationProps?: ExtraInformationProps;
+  uxProps?: UXProps;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
@@ -76,6 +90,8 @@ const SEInput: React.FC<InputProps> = ({
   numericProps,
   formatTextProps,
   dateInputProps,
+  extraInformationProps,
+  uxProps,
   onChange,
   onKeyDown,
 }) => {
@@ -128,11 +144,14 @@ const SEInput: React.FC<InputProps> = ({
           "shadow-input",
           variantStyles
         )}
+        title={extraInformationProps?.title}
         min={numericProps?.min}
         max={numericProps?.max}
+        step={numericProps?.step}
         pattern={formatTextProps?.pattern}
         maxLength={formatTextProps?.maxLength}
         inputMode={formatTextProps?.inputMode}
+        autoComplete={uxProps?.autoComplete}
       />
     </div>
   );

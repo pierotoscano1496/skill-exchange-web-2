@@ -80,7 +80,7 @@ export default () => {
             />
             {loading && <img className={styles.waiting} />}
             {attempSubmit && error && (
-              <SEParragraph content={error} variant="error" />
+              <SEParragraph variant="error">error</SEParragraph>
             )}
           </SEForm>
         </div>

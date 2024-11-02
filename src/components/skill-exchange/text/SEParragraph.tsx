@@ -1,11 +1,13 @@
 import { ThemesType } from "@/enums/Themes";
+import { WeightFontType } from "@/enums/WeightFont";
 import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 
 interface TextProps {
-  content: string;
+  children: React.ReactNode;
   variant?: ThemesType;
   className?: string;
+  weight?: WeightFontType;
 }
 
 const variantClasses: VariantClasses = {
@@ -30,19 +32,42 @@ const variantClasses: VariantClasses = {
 };
 
 const SEParragraph: React.FC<TextProps> = ({
-  content,
+  children,
   className,
   variant = "primary",
+  weight,
 }) => {
+  let fontWeightClass;
+  switch (weight) {
+    case "normal":
+      fontWeightClass = "font-normal";
+      break;
+    case "thin":
+      fontWeightClass = "font-thin";
+      break;
+    case "light":
+      fontWeightClass = "font-light";
+      break;
+    case "semibold":
+      fontWeightClass = "font-semibold";
+      break;
+    case "bold":
+      fontWeightClass = "font-bold";
+      break;
+    default:
+      fontWeightClass = "font-normal";
+  }
+
   return (
     <p
       className={classNames(
         "text-base",
         variantClasses[variant]?.text,
+        fontWeightClass,
         className
       )}
     >
-      {content}
+      {children}
     </p>
   );
 };

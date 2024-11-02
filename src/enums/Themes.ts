@@ -5,7 +5,8 @@ enum Themes {
     "secondary",
     "bordes",
     "hero",
-    "error"
+    "error",
+    "basic"
 }
 
 export const themes = Object.values(Themes);

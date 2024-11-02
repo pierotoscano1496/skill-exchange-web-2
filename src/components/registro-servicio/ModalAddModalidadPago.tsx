@@ -8,133 +8,145 @@ import DragAndDrop from "../DragAndDrop";
 import Tab from "../tabs/Tab";
 import { FileData } from "@/interfaces/registro-servicio/FileData";
 import YapeData from "@/interfaces/registro-servicio/YapeData";
+import SEModal from "../skill-exchange/messaging/SEModal";
+import classNames from "classnames";
+import SEForm from "../skill-exchange/form/SEForm";
+import SEInput from "../skill-exchange/form/SEInput";
+import SEParragraph from "../skill-exchange/text/SEParragraph";
+import SELabel from "../skill-exchange/text/SELabel";
+import SEDragAndDrop from "../skill-exchange/multimedia/SEDragAndDrop";
+import SEButton from "../skill-exchange/SEButton";
+import { SEFormControl } from "@/components/skill-exchange/form/SEForm";
 
 type Props = {
-    onSendDataFromYape: (yapeData: YapeData) => void;
-    onSendDataFromCCI: (cci: string) => void;
-    onClose: () => void;
-}
+  onSendDataFromYape: (yapeData: YapeData) => void;
+  onSendDataFromCCI: (cci: string) => void;
+  onClose: () => void;
+};
 
-export default ({
-    onSendDataFromYape,
-    onSendDataFromCCI,
-    onClose
-}: Props) => {
-    const [activeTab, setActiveTab] = useState(1);
-    const [numeroCelular, setNumeroCelular] = useState<string>("");
-    const [codCuentaInterbancario, setCodCuentaInterbancario] = useState<string>("");
-    const [attempSubmitYape, setAttempSubmitYape] = useState<boolean>(false);
-    const [attempSubmitCCI, setAttempSubmitCCI] = useState<boolean>(false);
+export default ({ onSendDataFromYape, onSendDataFromCCI, onClose }: Props) => {
+  const [activeTab, setActiveTab] = useState(1);
+  const [numeroCelular, setNumeroCelular] = useState<string>("");
+  const [codCuentaInterbancario, setCodCuentaInterbancario] =
+    useState<string>("");
+  const [attempSubmitYape, setAttempSubmitYape] = useState<boolean>(false);
+  const [attempSubmitCCI, setAttempSubmitCCI] = useState<boolean>(false);
 
-    useEffect(() => {
-        return (() => {
-            setActiveTab(1);
-            setNumeroCelular("");
-            setCodCuentaInterbancario("");
-            setAttempSubmitYape(false);
-            setAttempSubmitCCI(false);
-        })
-    }, []);
-
-    const tabs = [
-        { order: 1, label: "Yape" },
-        { order: 2, label: "Tarjeta" }
-    ];
-
-    const acceptedFilesForQR = {
-        "image/png": [".png"],
-        "image/jpg": [".jpg", ".jpeg"]
+  useEffect(() => {
+    return () => {
+      setActiveTab(0);
+      setNumeroCelular("");
+      setCodCuentaInterbancario("");
+      setAttempSubmitYape(false);
+      setAttempSubmitCCI(false);
     };
+  }, []);
 
-    const sendYapeData = (fileData?: FileData) => {
-        if (numeroCelular) {
-            const data: YapeData = {
-                qrImage: fileData?.file,
-                numCelular: numeroCelular
-            }
-            onSendDataFromYape(data);
-        } else {
-            setAttempSubmitYape(true);
-        }
+  const tabs = [
+    { order: 1, label: "Yape" },
+    { order: 2, label: "Tarjeta" },
+  ];
+
+  const acceptedFilesForQR = {
+    "image/png": [".png"],
+    "image/jpg": [".jpg", ".jpeg"],
+  };
+
+  const sendYapeData = (fileData?: FileData) => {
+    if (numeroCelular) {
+      const data: YapeData = {
+        qrImage: fileData?.file,
+        numCelular: numeroCelular,
+      };
+      onSendDataFromYape(data);
+    } else {
+      setAttempSubmitYape(true);
     }
+  };
 
-    const sendCCI = () => {
-        if (codCuentaInterbancario) {
-            onSendDataFromCCI(codCuentaInterbancario);
-        } else {
-            setAttempSubmitCCI(true);
-        }
+  const sendCCI = () => {
+    if (codCuentaInterbancario) {
+      onSendDataFromCCI(codCuentaInterbancario);
+    } else {
+      setAttempSubmitCCI(true);
     }
+  };
 
-    return (
-        <div className={`${modalStyles.modalContainer} ${modalStyles.fullScreen}`}>
-            <div className={modalStyles.modal}>
-                <header className={modalStyles.modalHeader}>
-                    <h2>Asignar nuevo medio de pago</h2>
-                </header>
-
-                <main className={modalStyles.modalContent}>
-                    <div className="tabs-container container column">
-                        <div className="tabs">
-                            {tabs.map((tab, index) => (
-                                <Tab key={index}
-                                    label={tab.label}
-                                    onClick={() => setActiveTab(index)}
-                                    isActive={index === activeTab}
-                                />
-                            ))}
-                        </div>
-                        <div className="tab-content">
-                            {activeTab === 0 &&
-                                <div className="form">
-                                    <div className="form-control">
-                                        <label htmlFor="yape-phone">Número de celular:</label>
-                                        <input
-                                            name="yape-phone"
-                                            value={numeroCelular}
-                                            onChange={(e) => setNumeroCelular(e.target.value)}
-                                            type="tel"
-                                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                                            maxLength={9} />
-                                    </div>
-                                    {(attempSubmitYape && !numeroCelular) && <p className="text-danger">Especifique un número donde se pueda yapear</p>}
-                                    <div className="form-control">
-                                        <label htmlFor="yape-image">QR (opcional)</label>
-                                        <DragAndDrop
-                                            limit={1}
-                                            required={false}
-                                            acceptSelect={acceptedFilesForQR}
-                                            onSendFilesData={(filesData) => sendYapeData(filesData[0])}
-                                            onError={() => setAttempSubmitYape(true)}
-                                        />
-                                    </div>
-                                </div>}
-                            {activeTab === 1 &&
-                                <div className="form">
-                                    <label htmlFor="num-cci">Cuenta interbancaria:</label>
-                                    <input
-                                        name="num-cci"
-                                        value={codCuentaInterbancario}
-                                        onChange={(e) => setCodCuentaInterbancario(e.target.value)}
-                                        type="text"
-                                        inputMode="numeric"
-                                        pattern="[0-9\s]{20}"
-                                        autoComplete="cc-number"
-                                        maxLength={20}
-                                        placeholder="00000000000000000000"
-                                    />
-                                    {(attempSubmitCCI && !codCuentaInterbancario) && <p className="text-danger">Indique una cuenta bancaria</p>}
-                                    <button className="btn-primary" onClick={sendCCI}>Agregar</button>
-                                </div>}
-                        </div>
-                    </div>
-                </main>
-
-                <footer className={modalStyles.modalFooter}>
-                    <button onClick={onClose}>Cancelar</button>
-                </footer>
+  return (
+    <SEModal title="Método de pago" onClose={onClose}>
+      <div className="mx-5 my-auto">
+        <div className="flex">
+          {tabs.map((tab, index) => (
+            <div
+              key={tab.label}
+              className={classNames(
+                "cursor-pointer w-full border-solid border-4 border-b-0 px-4 py-2",
+                index === activeTab && "bg-primary-300"
+              )}
+              onClick={() => setActiveTab(index)}
+            >
+              {tab.label}
             </div>
-
+          ))}
         </div>
-    )
+        <div className="border-2 border-solid border-white">
+          {activeTab === 0 && (
+            <SEForm>
+              <SEFormControl>
+                <SEInput
+                  name="yape-phone"
+                  label="Número de celular"
+                  value={numeroCelular}
+                  onChange={(e) => setNumeroCelular(e.target.value)}
+                  type="tel"
+                  formatTextProps={{
+                    pattern: "[0-9]{3}-[0-9]{3}-[0-9]{4}",
+                    maxLength: 9,
+                  }}
+                />
+                {attempSubmitYape && !numeroCelular && (
+                  <SEParragraph variant="error">
+                    Especifique un número donde se pueda yapear
+                  </SEParragraph>
+                )}
+              </SEFormControl>
+              <SEFormControl column={true}>
+                <SELabel htmlFor="yape-image" text="Imagen del QR (opcional)" />
+                <SEDragAndDrop
+                  limit={1}
+                  required={false}
+                  acceptSelect={acceptedFilesForQR}
+                  onSendFilesData={(filesData) => sendYapeData(filesData[0])}
+                  onError={() => setAttempSubmitYape(true)}
+                />
+              </SEFormControl>
+            </SEForm>
+          )}
+          {activeTab === 1 && (
+            <SEForm>
+              <SEInput
+                label="Cuenta interbancaria"
+                name="num-cci"
+                value={codCuentaInterbancario}
+                onChange={(e) => setCodCuentaInterbancario(e.target.value)}
+                formatTextProps={{
+                  inputMode: "numeric",
+                  pattern: "[0-9s]{20}",
+                  maxLength: 20,
+                }}
+                uxProps={{ autoComplete: "cc-number" }}
+                placeholder="00000000000000000000"
+              />
+              {attempSubmitCCI && !codCuentaInterbancario && (
+                <SEParragraph variant="error">
+                  Indique una cuenta bancaria
+                </SEParragraph>
+              )}
+              <SEButton label="Agregar" onClick={sendCCI} />
+            </SEForm>
+          )}
+        </div>
+      </div>
+    </SEModal>
+  );
 };
