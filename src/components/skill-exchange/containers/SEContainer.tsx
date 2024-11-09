@@ -14,7 +14,11 @@ const SEContainer: React.FC<ContainerProps> = ({
 }) => {
   return (
     <div
-      className={classNames(className, "container flex", wrap && "flex-wrap")}
+      className={classNames(
+        className,
+        "flex justify-center",
+        wrap && "flex-wrap"
+      )}
     >
       {children}
     </div>

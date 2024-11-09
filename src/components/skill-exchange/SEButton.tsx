@@ -22,32 +22,36 @@ interface ButtonProps {
 
 const variantClasses: VariantClasses = {
   primary: {
-    background: "bg-primary-200",
+    background: "bg-primary-500",
     text: "text-primary-200",
+    text500: "text-primary-500",
     hoverBackground600: "hover:bg-primary-600",
     hoverBackground100: "hover:bg-primary-100",
-    border: "border-primary-200",
+    border: "border-primary-500",
   },
   secondary: {
-    background: "bg-secondary-200",
+    background: "bg-secondary-500",
     text: "text-secondary-200",
+    text500: "text-secondary-500",
     hoverBackground600: "hover:bg-secondary-600",
     hoverBackground100: "hover:bg-secondary-100",
-    border: "border-secondary-200",
+    border: "border-secondary-500",
   },
   accent: {
-    background: "bg-accent-200",
+    background: "bg-accent-500",
     text: "text-accent-200",
+    text500: "text-accent-500",
     hoverBackground600: "hover:bg-accent-600",
     hoverBackground100: "hover:bg-accent-100",
-    border: "border-accent-200",
+    border: "border-accent-500",
   },
   neutral: {
-    background: "bg-neutral-200",
+    background: "bg-neutral-500",
     text: "text-neutral-200",
+    text500: "text-neutral-500",
     hoverBackground600: "hover:bg-neutral-600",
     hoverBackground100: "hover:bg-neutral-100",
-    border: "border-neutral-200",
+    border: "border-neutral-500",
   },
   hero: {
     background: "bg-hero-light",
@@ -56,7 +60,7 @@ const variantClasses: VariantClasses = {
     border: "border-hero",
   },
   basic: {
-    background: "bg-blue-200",
+    background: "bg-blue-500",
     text: "text-primary-900",
     border: "border-primary-900",
     hoverText: "hover:text-primary-300",
@@ -126,7 +130,7 @@ const SEButton: React.FC<ButtonProps> = ({
           "bg-transparent",
           "border",
           variantClasses[variant]?.border,
-          variantClasses[variant]?.text,
+          variantClasses[variant]?.text500,
           variantClasses[variant]?.hoverBackground100,
           variantClasses[variant]?.hoverText
         );

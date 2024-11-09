@@ -90,7 +90,7 @@ export default ({
   };
 
   return (
-    <section className="container flex flex-col items-center">
+    <section className="flex flex-col items-center">
       <div
         {...getRootProps({
           className: classNames(
@@ -109,15 +109,15 @@ export default ({
       {acceptedFiles.length > 0 && (
         <>
           <SEMediumTitle label="Archivo (s):" />
-          <div className={`container flex flex-wrap items-center`}>
+          <div className={`flex flex-wrap items-center`}>
             {acceptedFiles.map((file) => (
-              <div className="container flex-col items-center">
+              <div className="flex flex-col items-center">
                 <SEParragraph>
                   <strong>{file.name}</strong> - {file.size} bytes
                 </SEParragraph>
                 {getMedioFile(file) === "imagen" && (
                   <SEImage
-                    className="w-[30%]"
+                    className="w-[30%] mb-6"
                     src={URL.createObjectURL(file)}
                     alt="Preview"
                   />
@@ -132,8 +132,8 @@ export default ({
                 )}
               </div>
             ))}
-            <SEButton onClick={sendFileData} label="Añadir" />
           </div>
+          <SEButton onClick={sendFileData} label="Añadir" />
         </>
       )}
       {fileRejections.length > 0 &&

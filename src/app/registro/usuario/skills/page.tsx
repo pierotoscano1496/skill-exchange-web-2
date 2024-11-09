@@ -15,13 +15,12 @@ import SEInput from "@/components/skill-exchange/form/SEInput";
 import SETextarea from "@/components/skill-exchange/form/SETextarea";
 import SEButton from "@/components/skill-exchange/SEButton";
 import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
-import SECard from "@/components/skill-exchange/SECard";
 import SEMediumTitle from "@/components/skill-exchange/text/SEMediumTitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
-import SESpanCard from "@/components/skill-exchange/SESpanCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import SEModalAlert from "@/components/skill-exchange/messaging/SEModalAlert";
+import SECard from "@/components/skill-exchange/SECard";
 
 const RegistroUsuarioSkills = () => {
   const {
@@ -217,7 +216,7 @@ const RegistroUsuarioSkills = () => {
         <SEMediumTitle label="Habilidades" />
         <div className="flex flex-wrap w-full mb-6 px-2 justify-center">
           {usuarioDatos.skills.map((s) => (
-            <SESpanCard key={s.id} variant="accent">
+            <SECard key={s.id} variant="accent">
               {s.descripcion}&nbsp;
               <SEButton
                 shape="circle"
@@ -226,7 +225,7 @@ const RegistroUsuarioSkills = () => {
                 icon={<FontAwesomeIcon icon={faClose} />}
                 onClick={() => removeSkill(s.id)}
               />
-            </SESpanCard>
+            </SECard>
           ))}
         </div>
       </div>

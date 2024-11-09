@@ -7,11 +7,8 @@ import {
 import { FileData } from "@/interfaces/registro-servicio/FileData";
 import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicioBody";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import Image from "next/image";
-import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import { useEffect, useState } from "react";
 import ModalAddRecursoMultimedia from "@/components/registro-servicio/ModalAddRecursoMultimedia";
-import ModalAlert from "@/components/ModalAlert";
 import LinkData from "@/interfaces/registro-servicio/LinkData";
 import { MedioRecursoMultimedia } from "@/utils/types";
 import ModalAddModalidadPago from "@/components/registro-servicio/ModalAddModalidadPago";
@@ -33,18 +30,24 @@ import SEMediumTitle from "@/components/skill-exchange/text/SEMediumTitle";
 import SEForm from "@/components/skill-exchange/form/SEForm";
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
-import { title } from "process";
 import SETextarea from "@/components/skill-exchange/form/SETextarea";
 import SESelect from "@/components/skill-exchange/form/SESelect";
 import SEButton from "@/components/skill-exchange/SEButton";
-import SECard from "@/components/skill-exchange/SECard";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
-import SESpanCard from "@/components/skill-exchange/SESpanCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faImage, faLink } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebook,
+  faInstagram,
+  faLinkedin,
+  faTiktok,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
 import SEImage from "@/components/skill-exchange/multimedia/SEImage";
 import SEModal from "@/components/skill-exchange/messaging/SEModal";
 import { SEFormControl } from "@/components/skill-exchange/form/SEForm";
+import SECard from "@/components/skill-exchange/SECard";
+import classNames from "classnames";
 
 type SkillOption = {
   id: string;
@@ -79,29 +82,55 @@ export default () => {
     useState<boolean>(false);
   const router = useRouter();
 
-  const getIconFromMedioPlataforma = (medio: MedioRecursoMultimedia) => {
+  interface IconMedioProps {
+    medio: MedioRecursoMultimedia;
+    className?: string;
+  }
+
+  const IconMedio: React.FC<IconMedioProps> = ({ medio, className }) => {
     let icon;
     switch (medio) {
       case "facebook":
-        icon = <i className="fa-brands fa-facebook"></i>;
+        icon = (
+          <FontAwesomeIcon
+            icon={faFacebook}
+            className={classNames(className)}
+          />
+        );
         break;
       case "instagram":
-        icon = <i className="fa-brands fa-instagram"></i>;
+        icon = (
+          <FontAwesomeIcon
+            icon={faInstagram}
+            className={classNames(className)}
+          />
+        );
         break;
       case "tiktok":
-        icon = <i className="fa-brands fa-tiktok"></i>;
+        icon = (
+          <FontAwesomeIcon icon={faTiktok} className={classNames(className)} />
+        );
         break;
       case "youtube":
-        icon = <i className="fa-brands fa-youtube"></i>;
+        icon = (
+          <FontAwesomeIcon icon={faYoutube} className={classNames(className)} />
+        );
         break;
       case "linkedin":
-        icon = <i className="fa-brands fa-linkedin"></i>;
+        icon = (
+          <FontAwesomeIcon
+            icon={faLinkedin}
+            className={classNames(className)}
+          />
+        );
         break;
       default:
-        icon = <i className="fa-solid fa-link"></i>;
+        icon = (
+          <FontAwesomeIcon icon={faLink} className={classNames(className)} />
+        );
         break;
     }
-    return icon;
+    return <>{icon}</>;
   };
 
   useEffect(() => {
@@ -373,55 +402,74 @@ export default () => {
             <SEButton
               onClick={() => setOpenModalMedioPago(true)}
               label="Añadir método de pago"
-              variant="hero"
+              mode="outline"
+              variant="primary"
             />
             <SEButton
               onClick={() => setOpenModalRecursoMultimedia(true)}
               label="Añadir contenido"
-              variant="hero"
+              mode="outline"
+              variant="primary"
             />
           </SEContainer>
         </SEForm>
 
-        <SEMediumTitle label="Lista de archivos" />
-        <SEContainer>
-          {archivosData.map((a, i) => (
-            <SESpanCard>
-              {a.file.name.substring(0, 15)}...
-              <SEButton
-                shape="circle"
-                variant="error"
-                icon={<FontAwesomeIcon icon={faClose} />}
-                onClick={() => removeArchivoMultimedia(i)}
-              />
-            </SESpanCard>
-          ))}
-        </SEContainer>
-        {archivosData.length === 3 && (
-          <SEParragraph variant="error">
-            Solo se admiten hasta 3 archivos
-          </SEParragraph>
+        {archivosData.length > 0 && (
+          <>
+            <SEMediumTitle className="mt-6" label="Lista de archivos" />
+            <SEContainer>
+              {archivosData.map((a, i) => (
+                <SECard>
+                  <FontAwesomeIcon icon={faImage} className="mr-auto" />
+                  <span className="">
+                    {a.file.name.length <= 10
+                      ? a.file.name
+                      : `${a.file.name.substring(0, 10)}...`}
+                  </span>
+                  <SEButton
+                    shape="circle"
+                    variant="error"
+                    className="ml-auto"
+                    icon={<FontAwesomeIcon icon={faClose} />}
+                    onClick={() => removeArchivoMultimedia(i)}
+                  />
+                </SECard>
+              ))}
+            </SEContainer>
+            {archivosData.length === 3 && (
+              <SEParragraph variant="error">
+                Solo se admiten hasta 3 archivos
+              </SEParragraph>
+            )}
+          </>
         )}
 
-        <SEMediumTitle label="Enlaces a otras plataformas" />
-        <SEContainer>
-          {linksData.map((linkData, index) => (
-            <SESpanCard>
-              {linkData.link} {getIconFromMedioPlataforma(linkData.medio)}
-              <SEButton
-                shape="circle"
-                variant="error"
-                className="bg-error-700"
-                icon={<FontAwesomeIcon icon={faClose} />}
-                onClick={() => removeLinkData(index)}
-              />
-            </SESpanCard>
-          ))}
-        </SEContainer>
-        {linksData.length === 5 && (
-          <SEParragraph variant="error">
-            Solo se admiten hasta 5 enlaces
-          </SEParragraph>
+        {linksData.length > 0 && (
+          <>
+            <SEMediumTitle label="Enlaces a otras plataformas" />
+            <SEContainer>
+              {linksData.map((linkData, index) => (
+                <SECard>
+                  <IconMedio medio={linkData.medio} className="mr-auto" />
+                  {linkData.link.length <= 10
+                    ? linkData.link
+                    : `${linkData.link.substring(0, 10)}...`}
+                  <SEButton
+                    shape="circle"
+                    variant="error"
+                    className="ml-auto"
+                    icon={<FontAwesomeIcon icon={faClose} />}
+                    onClick={() => removeLinkData(index)}
+                  />
+                </SECard>
+              ))}
+            </SEContainer>
+            {linksData.length === 5 && (
+              <SEParragraph variant="error">
+                Solo se admiten hasta 5 enlaces
+              </SEParragraph>
+            )}
+          </>
         )}
 
         <SEMediumTitle label="Medios de pago" />

@@ -7,6 +7,7 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 interface ModalProps {
   title?: string;
   children: React.ReactNode;
+  footerContent?: React.ReactNode;
   className?: string;
   onClose: () => void;
 }
@@ -15,17 +16,19 @@ interface ModalFooterProps {
   onClose: () => void;
   textCancel?: string;
   onlyCancelButton?: boolean;
+  className?: string;
   children?: React.ReactNode;
 }
 
 const SEModalFooter: React.FC<ModalFooterProps> = ({
   onClose,
+  className,
   textCancel = "Cancelar",
   onlyCancelButton = false,
   children,
 }) => {
   return (
-    <footer className="pb-0">
+    <footer className={classNames("pb-0", className)}>
       {onlyCancelButton ? (
         <SEButton
           mode="text"
@@ -34,14 +37,7 @@ const SEModalFooter: React.FC<ModalFooterProps> = ({
           onClick={onClose}
         />
       ) : (
-        children || (
-          <SEButton
-            mode="text"
-            variant="hero"
-            label={textCancel}
-            onClick={onClose}
-          />
-        )
+        children
       )}
     </footer>
   );
@@ -51,6 +47,7 @@ const SEModal: React.FC<ModalProps> = ({
   title = "Mensaje",
   children,
   className,
+  footerContent = null,
   onClose,
 }) => {
   return (
@@ -60,8 +57,8 @@ const SEModal: React.FC<ModalProps> = ({
         className
       )}
     >
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl mx-4 p-6 flex flex-col max-h-screen overflow-hidden">
-        <header className="flex justify-between border-b border-gray-300 pb-2">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl mx-4 flex flex-col max-h-screen overflow-hidden">
+        <header className="flex justify-between px-6 pt-6">
           <SEMediumTitle className="flex-grow" label={title} center={true} />
           <SEButton
             onClick={onClose}
@@ -70,7 +67,6 @@ const SEModal: React.FC<ModalProps> = ({
             icon={<FontAwesomeIcon icon={faClose} />}
           />
         </header>
-
         <main
           className={classNames(
             "py-4 flex-grow overflow-auto",
@@ -79,8 +75,7 @@ const SEModal: React.FC<ModalProps> = ({
         >
           {children}
         </main>
-
-        <SEModalFooter onClose={onClose} />
+        <SEModalFooter onClose={onClose}>{footerContent}</SEModalFooter>
       </div>
     </div>
   );
