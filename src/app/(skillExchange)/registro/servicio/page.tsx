@@ -7,7 +7,7 @@ import {
 import { FileData } from "@/interfaces/registro-servicio/FileData";
 import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicioBody";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalAddRecursoMultimedia from "@/components/registro-servicio/ModalAddRecursoMultimedia";
 import LinkData from "@/interfaces/registro-servicio/LinkData";
 import { MedioRecursoMultimedia } from "@/utils/types";
@@ -35,12 +35,18 @@ import SESelect from "@/components/skill-exchange/form/SESelect";
 import SEButton from "@/components/skill-exchange/SEButton";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faImage, faLink } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClose,
+  faImage,
+  faLink,
+  faVideo,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faFacebook,
   faInstagram,
   faLinkedin,
   faTiktok,
+  faTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import SEImage from "@/components/skill-exchange/multimedia/SEImage";
@@ -124,6 +130,26 @@ export default () => {
           />
         );
         break;
+      case "video":
+        icon = (
+          <FontAwesomeIcon icon={faVideo} className={classNames(className)} />
+        );
+        break;
+      case "imagen":
+        icon = (
+          <FontAwesomeIcon icon={faImage} className={classNames(className)} />
+        );
+        break;
+      case "web-externa":
+        icon = (
+          <FontAwesomeIcon icon={faLink} className={classNames(className)} />
+        );
+        break;
+      case "twitter":
+        icon = (
+          <FontAwesomeIcon icon={faTwitter} className={classNames(className)} />
+        );
+        break;
       default:
         icon = (
           <FontAwesomeIcon icon={faLink} className={classNames(className)} />
@@ -181,6 +207,16 @@ export default () => {
       setOpenModalErrorSubmit(false);
     };
   }, []);
+
+  const getFilesSizeMb = (filesData: FileData[]) => {
+    return (
+      filesData.reduce(
+        (prevSize, fileData) => prevSize + fileData.file.size,
+        0
+      ) /
+      (1024 * 1024)
+    );
+  };
 
   const removeArchivoMultimedia = (index: number) => {
     if (archivosData.length > 0) {
@@ -420,7 +456,7 @@ export default () => {
             <SEContainer>
               {archivosData.map((a, i) => (
                 <SECard>
-                  <FontAwesomeIcon icon={faImage} className="mr-auto" />
+                  <IconMedio medio={a.medio} className="mr-auto" />
                   <span className="">
                     {a.file.name.length <= 10
                       ? a.file.name
@@ -436,9 +472,9 @@ export default () => {
                 </SECard>
               ))}
             </SEContainer>
-            {archivosData.length === 3 && (
+            {getFilesSizeMb(archivosData) > 10 && (
               <SEParragraph variant="error">
-                Solo se admiten hasta 3 archivos
+                Los archivos no pueden superar los 10 MB
               </SEParragraph>
             )}
           </>
@@ -526,7 +562,9 @@ export default () => {
       {openModalRecursoMultimedia && (
         <ModalAddRecursoMultimedia
           onSendFilesDataFromDragAndDrop={(filesData) => {
-            setArchivosData(filesData);
+            if (getFilesSizeMb(filesData) <= 10) {
+              setArchivosData(filesData);
+            }
             setOpenModalRecursoMultimedia(false);
           }}
           onErrorFromDragAndDrop={() => setErrorDragAndDrop(true)}

@@ -109,7 +109,7 @@ export default ({
       {acceptedFiles.length > 0 && (
         <>
           <SEMediumTitle label="Archivo (s):" />
-          <div className={`flex flex-wrap items-center`}>
+          <div className={`flex flex-wrap justify-center mb-6`}>
             {acceptedFiles.map((file) => (
               <div className="flex flex-col items-center">
                 <SEParragraph>
@@ -123,7 +123,11 @@ export default ({
                   />
                 )}
                 {getMedioFile(file) === "video" && (
-                  <FontAwesomeIcon icon={faVideo} />
+                  <div className="flex items-center justify-center">
+                    <span className="mr-2 text-primary-600">
+                      <FontAwesomeIcon icon={faVideo} />
+                    </span>
+                  </div>
                 )}
                 {file.size > maxSizeFiles && (
                   <SEParragraph variant="error">
