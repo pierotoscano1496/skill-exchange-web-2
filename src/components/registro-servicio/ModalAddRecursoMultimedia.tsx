@@ -2,20 +2,16 @@
 
 import { useEffect, useState } from "react";
 import SocialMediaRender from "../SocialMediaRender";
-import AsignacionRecursoMultimedia from "@/interfaces/registro-servicio/AsignacionRecursoMultimedia";
 import { MedioRecursoMultimedia } from "@/utils/types";
-import DragAndDrop from "../DragAndDrop";
-import modalStyles from "@/app/styles/modal.module.scss";
-import Tab from "../tabs/Tab";
 import { FileData } from "@/interfaces/registro-servicio/FileData";
 import LinkData from "@/interfaces/registro-servicio/LinkData";
-import SEModal, { SEModalFooter } from "../skill-exchange/messaging/SEModal";
+import SEModal from "../skill-exchange/messaging/SEModal";
 import classNames from "classnames";
 import SEForm, { SEFormFooter } from "../skill-exchange/form/SEForm";
 import { SEFormControl } from "@/components/skill-exchange/form/SEForm";
 import SEInput from "../skill-exchange/form/SEInput";
-import SEContainer from "../skill-exchange/containers/SEContainer";
 import SEButton from "../skill-exchange/SEButton";
+import SEDragAndDrop from "../skill-exchange/multimedia/SEDragAndDrop";
 
 type Props = {
   onSendFilesDataFromDragAndDrop: (filesData: FileData[]) => void;
@@ -114,7 +110,7 @@ export default ({
             </SEForm>
           )}
           {activeTab === 1 && (
-            <DragAndDrop
+            <SEDragAndDrop
               onSendFilesData={(filesData) =>
                 onSendFilesDataFromDragAndDrop(filesData)
               }

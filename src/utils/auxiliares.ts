@@ -1,3 +1,4 @@
+import { FileData } from "@/interfaces/registro-servicio/FileData";
 import { FileExtension } from "./types";
 
 export const convertDateToISOString = (date: Date) => {
@@ -64,4 +65,15 @@ export const getFirstWords = (
   }
 
   return `${palabras.slice(0, numWords).join(" ")}...`;
+};
+
+export const getFilesSizeMb = (filesData: FileData[]) => {
+  return (
+    filesData.reduce((prevSize, fileData) => prevSize + fileData.file.size, 0) /
+    (1024 * 1024)
+  );
+};
+
+export const fileSizeToMb = (size: number) => {
+  return size / (1024 * 1024);
 };

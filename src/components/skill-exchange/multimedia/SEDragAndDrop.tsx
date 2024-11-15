@@ -1,22 +1,20 @@
-import { FileData } from "@/interfaces/registro-servicio/FileData";
 import { MedioRecursoMultimedia } from "@/utils/types";
-import { faFileExport, faVideo } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import classNames from "classnames";
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { FileData } from "@/interfaces/registro-servicio/FileData";
+import classNames from "classnames";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExport, faVideo } from "@fortawesome/free-solid-svg-icons";
 import SEParragraph from "../text/SEParragraph";
-import SEContainer from "../containers/SEContainer";
 import SEMediumTitle from "../text/SEMediumTitle";
-import SELabel from "../text/SELabel";
 import SEImage from "./SEImage";
 import SEButton from "../SEButton";
+import { fileSizeToMb } from "@/utils/auxiliares";
 
 const acceptedVideosExtension = ["mp4", "mov", "wmv", "avi"];
 const acceptedImagesExtension = ["jpg", "jpeg", "png", "bmp", "gif"];
 
-interface DragAndDropProps {
-  label?: string;
+type DragAndDropProps = {
   onSendFilesData: (filesData: FileData[]) => void;
   onError: () => void;
   required?: boolean;
@@ -24,16 +22,15 @@ interface DragAndDropProps {
   acceptSelect: {
     [key: string]: string[];
   };
-}
+};
 
-const SEDragAndDrop: React.FC<DragAndDropProps> = ({
-  label,
+export default ({
   onSendFilesData,
   onError,
   limit,
   acceptSelect,
   required = true,
-}) => {
+}: DragAndDropProps) => {
   const [newFilesData, setNewFilesData] = useState<FileData[]>([]);
   const maxSizeFiles = 15 * 1024 * 1024;
 
@@ -93,67 +90,69 @@ const SEDragAndDrop: React.FC<DragAndDropProps> = ({
   };
 
   return (
-    <section className="flex flex-col content-center">
+    <section className="flex flex-col items-center">
       <div
         {...getRootProps({
           className: classNames(
-            "px-8 py-16 rounded-lg border-dashed border-primary-500"
+            "px-8 py-16 rounded-lg border-dashed bg-hero-light bg-opacity-50 flex items-center mx-5 my-10 cursor-pointer"
           ),
         })}
       >
         <input {...getInputProps()} />
-        <FontAwesomeIcon icon={faFileExport} />
+        <span className="mr-2 text-primary-600">
+          <FontAwesomeIcon icon={faFileExport} />
+        </span>
         <SEParragraph>
           Arrastre un archivo o haga click para elegir uno
         </SEParragraph>
       </div>
-      <SEContainer className={classNames("flex flex-col")}>
-        {acceptedFiles.length > 0 && <SEMediumTitle label="Archivo (s):" />}
-        {acceptedFiles.map((file) => (
-          <>
-            <SEParragraph>
-              <strong>{file.name}</strong> - {file.size} bytes
-            </SEParragraph>
-            {getMedioFile(file) === "imagen" && (
-              <SEImage
-                src={URL.createObjectURL(file)}
-                className="w-2/6"
-                alt="Preview"
-              />
-            )}
-            {getMedioFile(file) === "video" && (
-              <FontAwesomeIcon icon={faVideo} />
-            )}
-            {file.size > maxSizeFiles && (
-              <SEParragraph variant="error">
-                El archivo no debe pesar más de 15 MB
-              </SEParragraph>
-            )}
-          </>
-        ))}
-      </SEContainer>
-      <SEContainer className={"container flex flex-col items-center"}>
-        {acceptedFiles.length > 0 && <SEMediumTitle label="Archivo (s):" />}
-        {fileRejections.length > 0 &&
-          fileRejections.length <= limit &&
-          fileRejections.map((f) => (
-            <SEParragraph variant="error">
-              Archivo {f.file.name} no admitido
-            </SEParragraph>
-          ))}
-        {fileRejections.length > limit && (
+      {acceptedFiles.length > 0 && (
+        <>
+          <SEMediumTitle label="Archivo (s):" />
+          <div className={`flex flex-wrap justify-center mb-6`}>
+            {acceptedFiles.map((file) => (
+              <div className="flex flex-col items-center">
+                <SEParragraph>
+                  <strong>{file.name}</strong> -{" "}
+                  {Math.round(fileSizeToMb(file.size) * 100) / 100} MB
+                </SEParragraph>
+                {getMedioFile(file) === "imagen" && (
+                  <SEImage
+                    className="w-[30%] mb-6"
+                    src={URL.createObjectURL(file)}
+                    alt="Preview"
+                  />
+                )}
+                {getMedioFile(file) === "video" && (
+                  <div className="flex items-center justify-center">
+                    <span className="mr-2 text-primary-600">
+                      <FontAwesomeIcon icon={faVideo} />
+                    </span>
+                  </div>
+                )}
+                {file.size > maxSizeFiles && (
+                  <SEParragraph variant="error">
+                    El archivo no debe pesar más de 15 MB
+                  </SEParragraph>
+                )}
+              </div>
+            ))}
+          </div>
+          <SEButton onClick={sendFileData} label="Añadir" />
+        </>
+      )}
+      {fileRejections.length > 0 &&
+        fileRejections.length <= limit &&
+        fileRejections.map((f) => (
           <SEParragraph variant="error">
-            No puede subir más de {limit} archivo{limit > 1 && "s"}
+            Archivo {f.file.name} no admitido
           </SEParragraph>
-        )}
-        <SEButton
-          onClick={sendFileData}
-          disabled={acceptedFiles.length === 0}
-          label="Añadir"
-        />
-      </SEContainer>
+        ))}
+      {fileRejections.length > limit && (
+        <SEParragraph variant="error">
+          Debe escoger {limit} archivo (s) máximo
+        </SEParragraph>
+      )}
     </section>
   );
 };
-
-export default SEDragAndDrop;

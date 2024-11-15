@@ -1,7 +1,6 @@
 import { MedioRecursoMultimedia } from "@/utils/types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import dragAndDropStyles from "@/app/styles/multimedia/dragAndDrop.module.scss";
 import { FileData } from "@/interfaces/registro-servicio/FileData";
 import classNames from "classnames";
 import SEButton from "./skill-exchange/SEButton";
@@ -14,7 +13,7 @@ import SEMediumTitle from "./skill-exchange/text/SEMediumTitle";
 const acceptedVideosExtension = ["mp4", "mov", "wmv", "avi"];
 const acceptedImagesExtension = ["jpg", "jpeg", "png", "bmp", "gif"];
 
-type Props = {
+type DragAndDropProps = {
   onSendFilesData: (filesData: FileData[]) => void;
   onError: () => void;
   required?: boolean;
@@ -30,7 +29,7 @@ export default ({
   limit,
   acceptSelect,
   required = true,
-}: Props) => {
+}: DragAndDropProps) => {
   const [newFilesData, setNewFilesData] = useState<FileData[]>([]);
   const maxSizeFiles = 15 * 1024 * 1024;
 

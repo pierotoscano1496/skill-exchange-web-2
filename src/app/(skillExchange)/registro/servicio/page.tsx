@@ -54,6 +54,7 @@ import SEModal from "@/components/skill-exchange/messaging/SEModal";
 import { SEFormControl } from "@/components/skill-exchange/form/SEForm";
 import SECard from "@/components/skill-exchange/SECard";
 import classNames from "classnames";
+import { getFilesSizeMb } from "@/utils/auxiliares";
 
 type SkillOption = {
   id: string;
@@ -207,16 +208,6 @@ export default () => {
       setOpenModalErrorSubmit(false);
     };
   }, []);
-
-  const getFilesSizeMb = (filesData: FileData[]) => {
-    return (
-      filesData.reduce(
-        (prevSize, fileData) => prevSize + fileData.file.size,
-        0
-      ) /
-      (1024 * 1024)
-    );
-  };
 
   const removeArchivoMultimedia = (index: number) => {
     if (archivosData.length > 0) {
