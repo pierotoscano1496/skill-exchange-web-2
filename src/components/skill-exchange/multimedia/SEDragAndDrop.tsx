@@ -9,7 +9,7 @@ import SEParragraph from "../text/SEParragraph";
 import SEMediumTitle from "../text/SEMediumTitle";
 import SEImage from "./SEImage";
 import SEButton from "../SEButton";
-import { fileSizeToMb } from "@/utils/auxiliares";
+import { fileSizeToMb, getFilesSizeMb } from "@/utils/auxiliares";
 
 const acceptedVideosExtension = ["mp4", "mov", "wmv", "avi"];
 const acceptedImagesExtension = ["jpg", "jpeg", "png", "bmp", "gif"];
@@ -18,10 +18,11 @@ type DragAndDropProps = {
   onSendFilesData: (filesData: FileData[]) => void;
   onError: () => void;
   required?: boolean;
-  limit: number;
+  limit?: number;
   acceptSelect: {
     [key: string]: string[];
   };
+  sizeLimit?: number;
 };
 
 export default ({
@@ -30,21 +31,24 @@ export default ({
   limit,
   acceptSelect,
   required = true,
+  sizeLimit = 5,
 }: DragAndDropProps) => {
   const [newFilesData, setNewFilesData] = useState<FileData[]>([]);
-  const maxSizeFiles = 15 * 1024 * 1024;
+  const maxSizeFiles = sizeLimit;
 
   const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
     useDropzone({
       onDrop: (acceptedFiles) => {
-        if (acceptedFiles.length > 0 && acceptedFiles.length <= maxSizeFiles) {
+        const acceptedFilesData = acceptedFiles.map((f) => f as File);
+        if (
+          acceptedFiles.length > 0 &&
+          getFilesSizeMb(acceptedFilesData) <= maxSizeFiles &&
+          limit &&
+          acceptedFiles.length <= limit
+        ) {
           setNewFilesData(
             acceptedFiles.map(
-              (f) =>
-                ({
-                  file: f,
-                  medio: getMedioFile(f),
-                }) as FileData
+              (f) => ({ file: f, medio: getMedioFile(f) }) as FileData
             )
           );
         }
@@ -130,29 +134,37 @@ export default ({
                     </span>
                   </div>
                 )}
-                {file.size > maxSizeFiles && (
-                  <SEParragraph variant="error">
-                    El archivo no debe pesar más de 15 MB
-                  </SEParragraph>
-                )}
               </div>
             ))}
           </div>
-          <SEButton onClick={sendFileData} label="Añadir" />
+          <SEButton
+            onClick={sendFileData}
+            label="Añadir"
+            disabled={
+              getFilesSizeMb(acceptedFiles) > maxSizeFiles ||
+              fileRejections.length > 0 ||
+              acceptedFiles.length > limit!
+            }
+          />
         </>
       )}
+      {getFilesSizeMb(acceptedFiles) > maxSizeFiles && (
+        <SEParragraph variant="error">
+          Los archivos no deben superar los {sizeLimit} MB
+        </SEParragraph>
+      )}
       {fileRejections.length > 0 &&
-        fileRejections.length <= limit &&
         fileRejections.map((f) => (
           <SEParragraph variant="error">
             Archivo {f.file.name} no admitido
           </SEParragraph>
         ))}
-      {fileRejections.length > limit && (
-        <SEParragraph variant="error">
-          Debe escoger {limit} archivo (s) máximo
-        </SEParragraph>
-      )}
+      {limit &&
+        (fileRejections.length > limit || acceptedFiles.length > limit) && (
+          <SEParragraph variant="error">
+            Debe escoger {limit} archivo (s) máximo
+          </SEParragraph>
+        )}
     </section>
   );
 };

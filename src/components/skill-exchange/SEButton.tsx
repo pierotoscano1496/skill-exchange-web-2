@@ -28,6 +28,7 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-primary-600",
     hoverBackground100: "hover:bg-primary-100",
     border: "border-primary-500",
+    disable: "bg-primary-200",
   },
   secondary: {
     background: "bg-secondary-500",
@@ -36,6 +37,7 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-secondary-600",
     hoverBackground100: "hover:bg-secondary-100",
     border: "border-secondary-500",
+    disable: "bg-secondary-200",
   },
   accent: {
     background: "bg-accent-500",
@@ -44,6 +46,7 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-accent-600",
     hoverBackground100: "hover:bg-accent-100",
     border: "border-accent-500",
+    disable: "bg-accent-200",
   },
   neutral: {
     background: "bg-neutral-500",
@@ -52,6 +55,7 @@ const variantClasses: VariantClasses = {
     hoverBackground600: "hover:bg-neutral-600",
     hoverBackground100: "hover:bg-neutral-100",
     border: "border-neutral-500",
+    disable: "bg-neutral-200",
   },
   hero: {
     background: "bg-hero-light",
@@ -64,6 +68,7 @@ const variantClasses: VariantClasses = {
     text: "text-primary-900",
     border: "border-primary-900",
     hoverText: "hover:text-primary-300",
+    disable: "bg-blue-200",
   },
 };
 
@@ -117,41 +122,59 @@ const SEButton: React.FC<ButtonProps> = ({
     },
   };
 
+  const disabledStylesOption = classNames("bg-gray-500 cursor-not-allowed");
+  const textDisabledStylesOption = classNames(
+    "text-gray-700 cursor-not-allowed"
+  );
+
   const modeClasses = () => {
     switch (mode) {
       case "filled":
-        return classNames(
-          variantClasses[variant]?.background,
-          "text-white",
-          variantClasses[variant]?.hoverBackground600
-        );
+        return disabled
+          ? classNames(
+              variantClasses[variant]?.disable,
+              textDisabledStylesOption
+            )
+          : classNames(
+              variantClasses[variant]?.background,
+              "text-white",
+              variantClasses[variant]?.hoverBackground600
+            );
       case "outline":
-        return classNames(
-          "bg-transparent",
-          "border",
-          variantClasses[variant]?.border,
-          variantClasses[variant]?.text500,
-          variantClasses[variant]?.hoverBackground100,
-          variantClasses[variant]?.hoverText
-        );
+        return disabled
+          ? disabledStylesOption
+          : classNames(
+              "bg-transparent",
+              "border",
+              variantClasses[variant]?.border,
+              variantClasses[variant]?.text500,
+              variantClasses[variant]?.hoverBackground100,
+              variantClasses[variant]?.hoverText
+            );
       case "ghost":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground100
-        );
+        return disabled
+          ? disabledStylesOption
+          : classNames(
+              "bg-transparent",
+              variantClasses[variant]?.text,
+              variantClasses[variant]?.hoverBackground100
+            );
       case "flat":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverText
-        );
+        return disabled
+          ? disabledStylesOption
+          : classNames(
+              "bg-transparent",
+              variantClasses[variant]?.text,
+              variantClasses[variant]?.hoverText
+            );
       case "text":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          "hover:underline"
-        );
+        return disabled
+          ? textDisabledStylesOption
+          : classNames(
+              "bg-transparent",
+              variantClasses[variant]?.text,
+              "hover:underline"
+            );
       case "elevated":
         return classNames(
           variantClasses[variant]?.background,
@@ -185,8 +208,8 @@ const SEButton: React.FC<ButtonProps> = ({
     shapeClasses[shape]?.flex
   );
 
-  const disabledStyles =
-    disabled && "bg-gray-400 text-gray-700 cursor-not-allowed";
+  /* const disabledStyles =
+    disabled && "bg-gray-400 text-gray-700 cursor-not-allowed"; */
 
   return (
     <button
@@ -197,8 +220,8 @@ const SEButton: React.FC<ButtonProps> = ({
         baseStyles,
         transitionStyles,
         shapeStyles,
-        modeClasses(),
-        disabledStyles
+        modeClasses()
+        /* disabledStyles */
       )}
       disabled={disabled}
     >

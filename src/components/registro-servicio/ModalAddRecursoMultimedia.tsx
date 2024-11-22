@@ -115,7 +115,6 @@ export default ({
                 onSendFilesDataFromDragAndDrop(filesData)
               }
               acceptSelect={acceptedFilesForMultimedia}
-              limit={3}
               onError={onErrorFromDragAndDrop}
             />
           )}

@@ -430,13 +430,11 @@ export default () => {
               onClick={() => setOpenModalMedioPago(true)}
               label="Añadir método de pago"
               mode="outline"
-              variant="primary"
             />
             <SEButton
               onClick={() => setOpenModalRecursoMultimedia(true)}
               label="Añadir contenido"
               mode="outline"
-              variant="primary"
             />
           </SEContainer>
         </SEForm>
@@ -463,11 +461,6 @@ export default () => {
                 </SECard>
               ))}
             </SEContainer>
-            {getFilesSizeMb(archivosData) > 10 && (
-              <SEParragraph variant="error">
-                Los archivos no pueden superar los 10 MB
-              </SEParragraph>
-            )}
           </>
         )}
 
@@ -553,9 +546,6 @@ export default () => {
       {openModalRecursoMultimedia && (
         <ModalAddRecursoMultimedia
           onSendFilesDataFromDragAndDrop={(filesData) => {
-            if (getFilesSizeMb(filesData) <= 10) {
-              setArchivosData(filesData);
-            }
             setOpenModalRecursoMultimedia(false);
           }}
           onErrorFromDragAndDrop={() => setErrorDragAndDrop(true)}

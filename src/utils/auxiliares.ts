@@ -67,9 +67,9 @@ export const getFirstWords = (
   return `${palabras.slice(0, numWords).join(" ")}...`;
 };
 
-export const getFilesSizeMb = (filesData: FileData[]) => {
+export const getFilesSizeMb = (files: File[]) => {
   return (
-    filesData.reduce((prevSize, fileData) => prevSize + fileData.file.size, 0) /
+    files.reduce((prevSize, file) => prevSize + file.size, 0) /
     (1024 * 1024)
   );
 };
