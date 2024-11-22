@@ -546,6 +546,9 @@ export default () => {
       {openModalRecursoMultimedia && (
         <ModalAddRecursoMultimedia
           onSendFilesDataFromDragAndDrop={(filesData) => {
+            if (filesData.length > 0) {
+              setArchivosData(filesData);
+            }
             setOpenModalRecursoMultimedia(false);
           }}
           onErrorFromDragAndDrop={() => setErrorDragAndDrop(true)}

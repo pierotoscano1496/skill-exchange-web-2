@@ -43,8 +43,7 @@ export default ({
         if (
           acceptedFiles.length > 0 &&
           getFilesSizeMb(acceptedFilesData) <= maxSizeFiles &&
-          limit &&
-          acceptedFiles.length <= limit
+          (!limit || acceptedFiles.length <= limit)
         ) {
           setNewFilesData(
             acceptedFiles.map(
@@ -82,7 +81,7 @@ export default ({
     ) {
       // Validar que todos pesen menos que el tamaño máximo permitido
       const sizeAreOK = newFilesData
-        .map((fileData) => fileData.file.size <= maxSizeFiles)
+        .map((fileData) => fileSizeToMb(fileData.file.size) <= maxSizeFiles)
         .reduce((prevComparison, comparison) => prevComparison && comparison);
 
       if (sizeAreOK) {
