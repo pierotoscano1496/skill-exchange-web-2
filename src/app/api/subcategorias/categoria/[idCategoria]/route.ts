@@ -19,14 +19,6 @@ export async function GET(req: NextRequest, { params }: { params: RequestParams 
     const { idCategoria } = params;
 
     try {
-        const cookiesStore = cookies();
-        const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
-
-        /* const response = await axiosInstance.get(`/sub-categoria/categoria/${idCategoria}`, {
-            headers: {
-                "Authorization": `Bearer ${bearerToken}`
-            }
-        }); */
         const response = await axiosInstance.get(`/sub-categoria/categoria/${idCategoria}`);
 
         const subCategorias = response.data;

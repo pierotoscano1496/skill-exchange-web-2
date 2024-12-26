@@ -5,11 +5,11 @@ import SubCategoriaResponse from "@/interfaces/responsebody/subCategoria/SubCate
 import { getBackendInstance } from "@/utils/constants.backend";
 
 export const obtenerSubCategorias = async () => {
-    const resp = await getBackendInstance().get("sub-categoria");
+    const resp = await (await getBackendInstance()).get("sub-categoria");
     return resp.data as SubCategoriaResponse[];
 }
 
 export const obtenerSubCategoriasByCategoria = async (idCategoria: string) => {
-    const resp = await getBackendInstance().get(`sub-categoria/categoria/${idCategoria}`);
+    const resp = await (await getBackendInstance()).get(`sub-categoria/categoria/${idCategoria}`);
     return resp.data as SubCategoria[];
 }

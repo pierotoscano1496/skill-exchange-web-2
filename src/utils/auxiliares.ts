@@ -69,8 +69,7 @@ export const getFirstWords = (
 
 export const getFilesSizeMb = (files: File[]) => {
   return (
-    files.reduce((prevSize, file) => prevSize + file.size, 0) /
-    (1024 * 1024)
+    files.reduce((prevSize, file) => prevSize + file.size, 0) / (1024 * 1024)
   );
 };
 

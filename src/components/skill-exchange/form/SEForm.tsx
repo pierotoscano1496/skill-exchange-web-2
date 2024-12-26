@@ -7,6 +7,8 @@ interface FormProps {
   onSubmit?: () => void;
   children: React.ReactNode;
   size?: SizeType;
+  formContent?: "form" | "block";
+  inline?: boolean;
 }
 
 interface FormControlProps {
@@ -27,6 +29,8 @@ const SEForm: React.FC<FormProps> = ({
   children,
   onSubmit,
   size = "medium",
+  formContent = "form",
+  inline = false,
 }) => {
   return (
     <div
@@ -35,7 +39,8 @@ const SEForm: React.FC<FormProps> = ({
         "mx-auto p-6 bg-white shadow-xl rounded-xl"
       )}
     >
-      <form onSubmit={onSubmit}>{children}</form>
+      {formContent === "form" && <form onSubmit={onSubmit}>{children}</form>}
+      {formContent === "block" && <div>{children}</div>}
     </div>
   );
 };

@@ -19,10 +19,10 @@ export const getBackendInstance = () => {
 
 /**
  * Usar para llamadas a Endpoints restringidos
- * @returns AxiosInstance
+ * @returns Promise<AxiosInstance>
  */
-export const getBackendInstanceAuth = () => {
-    const bearerToken = process.env.BEARER_TOKEN_NAME ? cookies().get(process.env.BEARER_TOKEN_NAME)?.value : "";
+export const getBackendInstanceAuth = async () => {
+    const bearerToken = process.env.BEARER_TOKEN_NAME ? (await cookies()).get(process.env.BEARER_TOKEN_NAME)?.value : "";
     const backendInstanceAuth = axios.create({
         baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
         withCredentials: true,
@@ -39,8 +39,8 @@ export const getBackendInstanceAuth = () => {
  * Usar para llamadas a Endpoints restringidos (formularios)
  * @returns AxiosInstance
  */
-export const getBackendInstanceAuthForms = () => {
-    const bearerToken = cookies().get(process.env.BEARER_TOKEN_NAME!)!.value;
+export const getBackendInstanceAuthForms = async () => {
+    const bearerToken = (await cookies()).get(process.env.BEARER_TOKEN_NAME!)!.value;
 
     const backendInstanceAuth = axios.create({
         baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND!,

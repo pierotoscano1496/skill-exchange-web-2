@@ -43,8 +43,7 @@ export default ({
         if (
           acceptedFiles.length > 0 &&
           getFilesSizeMb(acceptedFilesData) <= maxSizeFiles &&
-          limit &&
-          acceptedFiles.length <= limit
+          (!limit || acceptedFiles.length <= limit)
         ) {
           setNewFilesData(
             acceptedFiles.map(
@@ -81,9 +80,9 @@ export default ({
       fileRejections.length === 0
     ) {
       // Validar que todos pesen menos que el tamaño máximo permitido
-      const sizeAreOK = newFilesData
-        .map((fileData) => fileData.file.size <= maxSizeFiles)
-        .reduce((prevComparison, comparison) => prevComparison && comparison);
+      const sizeAreOK = getFilesSizeMb(
+        newFilesData.map((fileData) => fileData.file)
+      );
 
       if (sizeAreOK) {
         onSendFilesData(newFilesData);
@@ -114,8 +113,8 @@ export default ({
         <>
           <SEMediumTitle label="Archivo (s):" />
           <div className={`flex flex-wrap justify-center mb-6`}>
-            {acceptedFiles.map((file) => (
-              <div className="flex flex-col items-center">
+            {acceptedFiles.map((file, index) => (
+              <div key={index} className="flex flex-col items-center">
                 <SEParragraph>
                   <strong>{file.name}</strong> -{" "}
                   {Math.round(fileSizeToMb(file.size) * 100) / 100} MB

@@ -362,7 +362,7 @@ export default () => {
     <>
       <div className="container column center">
         <SEMediumTitle label="Publica tu servicio" />
-        <SEForm>
+        <SEForm formContent="block">
           <SEFormControl>
             <SEInput
               label="Título"
@@ -492,9 +492,9 @@ export default () => {
           </>
         )}
 
-        <SEMediumTitle label="Medios de pago" />
-        <SEContainer>
-          {medioPagoYape && (
+        {medioPagoYape && (
+          <>
+            <SEMediumTitle label="Medios de pago" />
             <SEContainer>
               <SEMediumTitle label="Yape" />
               <SEParragraph>{`Número: ${medioPagoYape.numCelular}`}</SEParragraph>
@@ -508,19 +508,19 @@ export default () => {
                 </>
               )}
             </SEContainer>
-          )}
-          {medioPagoCCI && (
-            <SEContainer>
-              <SEMediumTitle label="Código de cuenta interbancaria" />
-              <SEParragraph>{`CCI: ${medioPagoCCI}`}</SEParragraph>
-            </SEContainer>
-          )}
-          {attempSubmit && !medioPagoYape && !medioPagoCCI && (
-            <SEParragraph variant="error">
-              Debe especificar al menos 1 medio de pago
-            </SEParragraph>
-          )}
-        </SEContainer>
+          </>
+        )}
+        {medioPagoCCI && (
+          <SEContainer>
+            <SEMediumTitle label="Código de cuenta interbancaria" />
+            <SEParragraph>{`CCI: ${medioPagoCCI}`}</SEParragraph>
+          </SEContainer>
+        )}
+        {attempSubmit && !medioPagoYape && !medioPagoCCI && (
+          <SEParragraph variant="error">
+            Debe especificar al menos 1 medio de pago
+          </SEParragraph>
+        )}
       </div>
       <div>
         <SEButton
@@ -546,6 +546,7 @@ export default () => {
       {openModalRecursoMultimedia && (
         <ModalAddRecursoMultimedia
           onSendFilesDataFromDragAndDrop={(filesData) => {
+            setArchivosData(filesData);
             setOpenModalRecursoMultimedia(false);
           }}
           onErrorFromDragAndDrop={() => setErrorDragAndDrop(true)}

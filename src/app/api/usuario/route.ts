@@ -15,8 +15,7 @@ const axiosInstance: AxiosInstance = axios.create({
 
 export async function GET(req: NextRequest) {
     try {
-        const cookiesStore = cookies();
-        const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
+        const bearerToken = (await cookies()).get(JWT_COOKIE_TOKEN_NAME)?.value;
 
         const response = await axiosInstance.get("/usuario", {
             headers: {

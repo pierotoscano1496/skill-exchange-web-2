@@ -6,43 +6,58 @@ import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import Image from "next/image";
 import { useState } from "react";
+import SEModal, { SEModalFooter } from "../skill-exchange/messaging/SEModal";
+import SEContainer from "../skill-exchange/containers/SEContainer";
+import SEParragraph from "../skill-exchange/text/SEParragraph";
+import SELabel from "../skill-exchange/text/SELabel";
+import { SEFormControl } from "../skill-exchange/form/SEForm";
+import SESpan from "../skill-exchange/text/SESpan";
+import SESocialMedia from "../skill-exchange/custom/SESocialMedia";
+import SEButton from "../skill-exchange/SEButton";
 
 type Params = {
-    cliente: UsuarioResponse;
-    onClose: () => void;
-}
+  cliente: UsuarioResponse;
+  onClose: () => void;
+};
 
 export default ({ cliente, onClose }: Params) => {
-    return (
-        <div className={modalStyles.modalContainer}>
-            <div className={modalStyles.modal}>
-                <header className={modalStyles.modalHeader}>
-                    <h2>Datos del solicitante</h2>
-                    <button className={modalStyles.close} onClick={onClose} >
-                        <Image src={Close} alt="close" />
-                    </button>
-                </header>
-
-                <main className={modalStyles.modalContent}>
-                    <p><strong>Nombres:</strong> {cliente.nombres}</p>
-                    <p><strong>Apellidos:</strong> {cliente.apellidos}</p>
-                    <p><strong>Redes:</strong></p>
-                    <div className={`container ${profileStyles.socialMedia}`}>
-                        {cliente.perfilFacebook &&
-                            <a href={cliente.perfilFacebook} target="_blank"><i className={`fa-brands fa-facebook ${profileStyles["icon-fa-color-primary"]}`}></i></a>}
-                        {cliente.perfilInstagram &&
-                            <a href={cliente.perfilInstagram} target="_blank"><i className={`fa-brands fa-instagram ${profileStyles["icon-fa-color-info"]}`}></i></a>}
-                        {cliente.perfilLinkedin &&
-                            <a href={cliente.perfilLinkedin} target="_blank"><i className={`fa-brands fa-linkedin ${profileStyles["icon-fa-color-primary"]}`}></i></a>}
-                        {cliente.perfilTiktok &&
-                            <a href={cliente.perfilTiktok} target="_blank"><i className={`fa-brands fa-tiktok ${profileStyles["icon-fa-color-black"]}`}></i></a>}
-                    </div>
-                </main>
-
-                <footer className={modalStyles.modalFooter}>
-                    <button className="btn-secondary" onClick={onClose}>Cerrar</button>
-                </footer>
-            </div>
-        </div>
-    )
-}
+  return (
+    <SEModal title="Datos del solicitante" onClose={onClose}>
+      <SEFormControl>
+        <SELabel text="Nombres:" />
+        <SESpan>{cliente.nombres}</SESpan>
+      </SEFormControl>
+      <SEFormControl>
+        <SELabel text="Apellidos:" />
+        <SESpan>{cliente.apellidos}</SESpan>
+      </SEFormControl>
+      <SEFormControl>
+        <SELabel text="Redes" />
+      </SEFormControl>
+      <SEContainer>
+        <SEParragraph>
+          <strong>Nombre: </strong>
+          {cliente.nombres}
+        </SEParragraph>
+        <SEParragraph>
+          <strong>Apellidos: </strong>
+          {cliente.apellidos}
+        </SEParragraph>
+        <SEContainer>
+          {cliente.perfilFacebook && (
+            <SESocialMedia socialMedia="facebook" type="link" />
+          )}
+          {cliente.perfilInstagram && (
+            <SESocialMedia socialMedia="instagram" type="link" />
+          )}
+          {cliente.perfilLinkedin && (
+            <SESocialMedia socialMedia="linkedin" type="link" />
+          )}
+          {cliente.perfilTiktok && (
+            <SESocialMedia socialMedia="tiktok" type="link" />
+          )}
+        </SEContainer>
+      </SEContainer>
+    </SEModal>
+  );
+};

@@ -18,13 +18,12 @@ const axiosInstance: AxiosInstance = axios.create({
     }
 });
 
-export default async function PATCH(req: NextRequest, { params }: AsignarSkillsParams) {
+export async function PATCH(req: NextRequest, { params }: AsignarSkillsParams) {
     try {
         const { idUsuario } = params;
         const requestBody = await req.json() as AsignacionSkillToUsuarioRequest[];
 
-        const cookiesStore = cookies();
-        const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
+        const bearerToken = (await cookies()).get(JWT_COOKIE_TOKEN_NAME)?.value;
 
         const response = await axiosInstance.patch(`/usuario/skills/${idUsuario}`, requestBody, {
             headers: {

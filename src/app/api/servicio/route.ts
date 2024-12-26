@@ -17,8 +17,7 @@ const axiosInstance: AxiosInstance = axios.create({
 export async function POST(req: NextRequest, res: NextApiResponse) {
     try {
         const body: CreateServicioBody = await req.json();
-        const cookiesStore = cookies();
-        const bearerToken = cookiesStore.get(JWT_COOKIE_TOKEN_NAME)?.value;
+        const bearerToken = (await cookies()).get(JWT_COOKIE_TOKEN_NAME)?.value;
 
         const response = await axiosInstance.post("/servicio", body, {
             headers: {
