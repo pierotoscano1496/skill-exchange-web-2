@@ -444,7 +444,7 @@ export default () => {
             <SEMediumTitle className="mt-6" label="Lista de archivos" />
             <SEContainer>
               {archivosData.map((a, i) => (
-                <SECard>
+                <SECard key={i}>
                   <IconMedio medio={a.medio} className="mr-auto" />
                   <span className="">
                     {a.file.name.length <= 10
