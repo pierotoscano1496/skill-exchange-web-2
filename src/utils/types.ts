@@ -5,7 +5,8 @@ export type TipoDocumento = "dni" | "carnet_extranjeria";
 
 export type TipoRegistroUsuario = "cliente" | "proveedor";
 
-export type SocialMedia = "facebook"
+export type SocialMedia =
+  | "facebook"
   | "instagram"
   | "tiktok"
   | "youtube"
@@ -15,7 +16,8 @@ export type SocialMedia = "facebook"
 export type MedioRecursoMultimedia =
   | "video"
   | "imagen"
-  | "web-externa" | SocialMedia
+  | "web-externa"
+  | SocialMedia;
 
 export type TipoModalidadPago = "yape" | "tarjeta";
 

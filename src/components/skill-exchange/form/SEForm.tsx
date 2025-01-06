@@ -36,7 +36,7 @@ const SEForm: React.FC<FormProps> = ({
     <div
       className={classNames(
         sizeClasses[size],
-        "mx-auto p-6 bg-white shadow-xl rounded-xl"
+        "mx-auto p-6 bg-white shadow-xl rounded-xl mb-6"
       )}
     >
       {formContent === "form" && <form onSubmit={onSubmit}>{children}</form>}
@@ -55,7 +55,10 @@ const SEFormControl: React.FC<FormControlProps> = ({
 }) => {
   return (
     <div
-      className={`mb-4 ${column ? "flex flex-col" : "flex flex-row items-center space-x-4"}`}
+      className={classNames(
+        "mb-4",
+        column ? "flex flex-col" : "flex flex-row items-center space-x-4"
+      )}
     >
       {children}
     </div>

@@ -12,52 +12,91 @@ import ServicioModalidadesPagoAsignadosResponse from "@/interfaces/responsebody/
 import ServicioRecursosMultimediaAsignadosResponse from "@/interfaces/responsebody/servicio/ServicioRecursosMultimediaAsignadosResponse";
 import ServicioRegisteredResponse from "@/interfaces/responsebody/servicio/ServicioRegisteredResponse";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
-import { getBackendInstance, getBackendInstanceAuth, getBackendInstanceAuthForms } from "@/utils/constants.backend";
+import {
+  getBackendInstance,
+  getBackendInstanceAuth,
+  getBackendInstanceAuthForms,
+} from "@/utils/constants.backend";
 
 /* Gestión de servicios */
 export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
-    const resp = await (await getBackendInstanceAuth()).get(`servicio/usuario/${idPrestamista}`);
-    return resp.data as ServicioResponse[];
-}
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).get(`servicio/usuario/${idPrestamista}`);
+  return resp.data as ServicioResponse[];
+};
 
 export const registrarServicio = async (servicio: CreateServicioBody) => {
-    const resp = await (await getBackendInstanceAuth()).post("servicio", servicio);
-    return resp.data as ServicioRegisteredResponse;
-}
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).post("servicio", servicio);
+  return resp.data as ServicioRegisteredResponse;
+};
 
-export const asignarRecursosMultimediaToServicio = async (idServicio: string, recursosMultimedia: AsignacionRecursoMultimediaToServicioRequest[]) => {
-    const resp = await (await getBackendInstanceAuth()).patch(`servicio/recursos-multimedia/${idServicio}`, recursosMultimedia);
-    return resp.data as ServicioRecursosMultimediaAsignadosResponse;
-}
+export const asignarRecursosMultimediaToServicio = async (
+  idServicio: string,
+  recursosMultimedia: AsignacionRecursoMultimediaToServicioRequest[]
+) => {
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).patch(`servicio/recursos-multimedia/${idServicio}`, recursosMultimedia);
+  return resp.data as ServicioRecursosMultimediaAsignadosResponse;
+};
 
-export const uploadMultimediaFilesToServicio = async (idServicio: string, formDataFile: FormData) => {
-    const resp = await (await getBackendInstanceAuthForms()).patch(`servicio/upload-multimedia/${idServicio}`, formDataFile);
-    return resp.data as MultimediaResourceUploadedResponse[];
-}
+export const uploadMultimediaFilesToServicio = async (
+  idServicio: string,
+  formDataFile: FormData
+) => {
+  const resp = await (
+    await getBackendInstanceAuthForms()
+  ).patch(`servicio/upload-multimedia/${idServicio}`, formDataFile);
+  return resp.data as MultimediaResourceUploadedResponse[];
+};
 
-export const uploadMetadataModalidadPagoToService = async (idServicio: string, formDataFile: FormData) => {
-    const resp = await (await getBackendInstanceAuthForms()).patch(`servicio/upload-metadata-modalidad-pago/${idServicio}`, formDataFile);
-    return resp.data as string;
-}
+export const uploadMetadataModalidadPagoToService = async (
+  idServicio: string,
+  formDataFile: FormData
+) => {
+  const resp = await (
+    await getBackendInstanceAuthForms()
+  ).patch(
+    `servicio/upload-metadata-modalidad-pago/${idServicio}`,
+    formDataFile
+  );
+  return resp.data as string;
+};
 
-export const asignarModalidadesPagoToServicio = async (idServicio: string, modalidadesPago: AsignacionModalidadPagoToServicioRequest[]) => {
-    const resp = await (await getBackendInstanceAuth()).patch(`servicio/modalidad-pago/${idServicio}`, modalidadesPago);
-    return resp.data as ServicioModalidadesPagoAsignadosResponse;
-}
+export const asignarModalidadesPagoToServicio = async (
+  idServicio: string,
+  modalidadesPago: AsignacionModalidadPagoToServicioRequest[]
+) => {
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).patch(`servicio/modalidad-pago/${idServicio}`, modalidadesPago);
+  return resp.data as ServicioModalidadesPagoAsignadosResponse;
+};
 
 /* Búsqueda de servicios (público) */
 
-export const searchServicioWithParams = async (params: SearchServiciosParametersBody) => {
-    const resp = await (await getBackendInstance()).post("servicio/busqueda", params);
-    return resp.data as ServicioBusquedaResponse[];
-}
+export const searchServicioWithParams = async (
+  params: SearchServiciosParametersBody
+) => {
+  const resp = await (
+    await getBackendInstance()
+  ).post("servicio/busqueda", params);
+  return resp.data as ServicioBusquedaResponse[];
+};
 
 export const getServicioDetails = async (id: string) => {
-    const response = await (await getBackendInstance()).get(`servicio/details/preview/${id}`);
-    return response.data as ServicioDetailsResponse;
-}
+  const response = await (
+    await getBackendInstance()
+  ).get(`servicio/details/preview/${id}`);
+  return response.data as ServicioDetailsResponse;
+};
 
 export const getServicioReview = async (id: string) => {
-    const response = await (await getBackendInstance()).get(`servicios/review/${id}`);
-    return response.data as ServicioReviewResponse;
-}
+  const response = await (
+    await getBackendInstance()
+  ).get(`servicios/review/${id}`);
+  return response.data as ServicioReviewResponse;
+};

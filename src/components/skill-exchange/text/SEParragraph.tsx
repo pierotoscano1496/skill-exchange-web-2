@@ -4,7 +4,7 @@ import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 
 interface TextProps {
-  children: React.ReactNode;
+  children: React.ReactNode | string;
   variant?: ThemesType;
   className?: string;
   weight?: WeightFontType;

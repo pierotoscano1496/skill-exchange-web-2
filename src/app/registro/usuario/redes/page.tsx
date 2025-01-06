@@ -3,7 +3,7 @@
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import SETextarea from "@/components/skill-exchange/form/SETextarea";
 import SEButton from "@/components/skill-exchange/SEButton";
-import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
+import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
 import {
@@ -98,7 +98,7 @@ export default () => {
           />
         </div>
         <div className="w-full border-t-primary-900 border-t-2 pt-4">
-          <SELargeTitle label="Tus redes" />
+          <SETitle size="extraLarge" label="Tus redes" />
         </div>
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SEInput

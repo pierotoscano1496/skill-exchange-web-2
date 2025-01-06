@@ -6,10 +6,11 @@ import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExport, faVideo } from "@fortawesome/free-solid-svg-icons";
 import SEParragraph from "../text/SEParragraph";
-import SEMediumTitle from "../text/SEMediumTitle";
+import SETitle from "../text/SETitle";
 import SEImage from "./SEImage";
 import SEButton from "../SEButton";
 import { fileSizeToMb, getFilesSizeMb } from "@/utils/auxiliares";
+import SEContainer from "../containers/SEContainer";
 
 const acceptedVideosExtension = ["mp4", "mov", "wmv", "avi"];
 const acceptedImagesExtension = ["jpg", "jpeg", "png", "bmp", "gif"];
@@ -23,6 +24,7 @@ type DragAndDropProps = {
     [key: string]: string[];
   };
   sizeLimit?: number;
+  showSize?: boolean;
 };
 
 export default ({
@@ -32,6 +34,7 @@ export default ({
   acceptSelect,
   required = true,
   sizeLimit = 5,
+  showSize = false,
 }: DragAndDropProps) => {
   const [newFilesData, setNewFilesData] = useState<FileData[]>([]);
   const maxSizeFiles = sizeLimit;
@@ -111,10 +114,10 @@ export default ({
       </div>
       {acceptedFiles.length > 0 && (
         <>
-          <SEMediumTitle label="Archivo (s):" />
+          <SETitle size="large" label="Archivo (s)" />
           <div className={`flex flex-wrap justify-center mb-6`}>
             {acceptedFiles.map((file, index) => (
-              <div key={index} className="flex flex-col items-center">
+              <SEContainer key={index} direction="column">
                 <SEParragraph>
                   <strong>{file.name}</strong> -{" "}
                   {Math.round(fileSizeToMb(file.size) * 100) / 100} MB
@@ -133,9 +136,17 @@ export default ({
                     </span>
                   </div>
                 )}
-              </div>
+              </SEContainer>
             ))}
           </div>
+          {showSize && (
+            <SEContainer>
+              <SEParragraph>
+                <strong>Tamaño total: </strong>:{" "}
+                {Math.round(getFilesSizeMb(acceptedFiles) * 100) / 100} MB
+              </SEParragraph>
+            </SEContainer>
+          )}
           <SEButton
             onClick={sendFileData}
             label="Añadir"

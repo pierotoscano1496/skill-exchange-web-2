@@ -4,7 +4,7 @@ import RegistroUsuarioDatosForm from "@/components/registro-usuario/RegistroUsua
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import SESelect from "@/components/skill-exchange/form/SESelect";
 import SEButton from "@/components/skill-exchange/SEButton";
-import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
+import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { RegistroUsuarioProvider } from "@/contexts/RegistroUsuarioProvider";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
@@ -68,7 +68,11 @@ export default () => {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-xl rounded-xl">
-      <SELargeTitle label="Registro de usuario" className="mb-8 text-center" />
+      <SETitle
+        size="extraLarge"
+        label="Registro de usuario"
+        className="mb-8 text-center"
+      />
 
       <div className="mb-6">
         <SEInput

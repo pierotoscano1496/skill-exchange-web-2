@@ -8,7 +8,7 @@ import SEParragraph from "./skill-exchange/text/SEParragraph";
 import SEImage from "./skill-exchange/multimedia/SEImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExport, faVideo } from "@fortawesome/free-solid-svg-icons";
-import SEMediumTitle from "./skill-exchange/text/SEMediumTitle";
+import SETitle from "./skill-exchange/text/SETitle";
 
 const acceptedVideosExtension = ["mp4", "mov", "wmv", "avi"];
 const acceptedImagesExtension = ["jpg", "jpeg", "png", "bmp", "gif"];
@@ -107,7 +107,7 @@ export default ({
       </div>
       {acceptedFiles.length > 0 && (
         <>
-          <SEMediumTitle label="Archivo (s):" />
+          <SETitle size="large" label="Archivo (s):" />
           <div className={`flex flex-wrap justify-center mb-6`}>
             {acceptedFiles.map((file) => (
               <div className="flex flex-col items-center">

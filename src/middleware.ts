@@ -4,28 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 const protectedRoute = ["/middlewareside", "/chats", "/clientsidehoc"];
 
 export async function middleware(req: NextRequest) {
-    const bearerTokenFromCookies = (await cookies()).get("bearertoken")?.value;
+  const bearerTokenFromCookies = (await cookies()).get("bearertoken")?.value;
 
-    if (!bearerTokenFromCookies && protectedRoute.includes(req.nextUrl.pathname)) {
-        return NextResponse.redirect(new URL("/login", req.url));
-    }
+  if (
+    !bearerTokenFromCookies &&
+    protectedRoute.includes(req.nextUrl.pathname)
+  ) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-    /* if (req.nextUrl.pathname === "/login" && token) {
-        return NextResponse.redirect(new URL("middlewareside", req.url));
-    } */
-
-    return NextResponse.next();
+  return NextResponse.next();
 }
-
-/* export function middleware(request:NextRequest){
-    const currentUser=request.cookies.get('currentUser')?.value;
-
-    if(currentUser){
-        return NextResponse.redirect(new URL("/chats",request.url))
-    }
-    return NextResponse.redirect(new URL("/login",request.url))
-}
-
-export const config={
-    matcher
-} */

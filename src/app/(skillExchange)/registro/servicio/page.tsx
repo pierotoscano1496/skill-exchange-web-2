@@ -26,7 +26,7 @@ import ServicioRecursosMultimediaAsignadosResponse from "@/interfaces/responsebo
 import ServicioModalidadesPagoAsignadosResponse from "@/interfaces/responsebody/servicio/ServicioModalidadesPagoAsignadosResponse";
 import ServicioRegisteredResponse from "@/interfaces/responsebody/servicio/ServicioRegisteredResponse";
 import { useRouter } from "next/navigation";
-import SEMediumTitle from "@/components/skill-exchange/text/SEMediumTitle";
+import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEForm from "@/components/skill-exchange/form/SEForm";
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
@@ -55,6 +55,7 @@ import { SEFormControl } from "@/components/skill-exchange/form/SEForm";
 import SECard from "@/components/skill-exchange/SECard";
 import classNames from "classnames";
 import { getFilesSizeMb } from "@/utils/auxiliares";
+import SELabel from "@/components/skill-exchange/text/SELabel";
 
 type SkillOption = {
   id: string;
@@ -64,7 +65,7 @@ type SkillOption = {
 export default () => {
   const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
   const [titulo, setTitulo] = useState<string>("");
-  const [precio, setPrecio] = useState<number>(0);
+  const [precio, setPrecio] = useState<number | "">("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [skillsUsuario, setSkillsUsuario] = useState<SkillOption[]>([]);
   const [skill, setSkill] = useState<SkillOption>();
@@ -361,7 +362,7 @@ export default () => {
   return (
     <>
       <div className="container column center">
-        <SEMediumTitle label="Publica tu servicio" />
+        <SETitle size="extraLarge" label="Publica tu servicio" />
         <SEForm formContent="block">
           <SEFormControl>
             <SEInput
@@ -382,7 +383,10 @@ export default () => {
               placeholder="100.00"
               type="number"
               value={precio}
-              onChange={(e) => setPrecio(parseFloat(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPrecio(value === "" ? "" : parseFloat(value));
+              }}
               numericProps={{
                 min: 0,
                 step: 0.01,
@@ -440,8 +444,8 @@ export default () => {
         </SEForm>
 
         {archivosData.length > 0 && (
-          <>
-            <SEMediumTitle className="mt-6" label="Lista de archivos" />
+          <SEContainer style="container" size="medium" direction="column">
+            <SETitle size="large" className="mt-6" label="Lista de archivos" />
             <SEContainer>
               {archivosData.map((a, i) => (
                 <SECard key={i}>
@@ -461,13 +465,13 @@ export default () => {
                 </SECard>
               ))}
             </SEContainer>
-          </>
+          </SEContainer>
         )}
 
         {linksData.length > 0 && (
           <>
-            <SEMediumTitle label="Enlaces a otras plataformas" />
-            <SEContainer>
+            <SEContainer style="container" size="medium">
+              <SETitle size="large" label="Enlaces a otras plataformas" />
               {linksData.map((linkData, index) => (
                 <SECard>
                   <IconMedio medio={linkData.medio} className="mr-auto" />
@@ -493,26 +497,34 @@ export default () => {
         )}
 
         {medioPagoYape && (
-          <>
-            <SEMediumTitle label="Medios de pago" />
-            <SEContainer>
-              <SEMediumTitle label="Yape" />
-              <SEParragraph>{`Número: ${medioPagoYape.numCelular}`}</SEParragraph>
-              {medioPagoYape.qrImage && (
-                <>
-                  <SEParragraph>QR:</SEParragraph>
-                  <SEImage
-                    src={URL.createObjectURL(medioPagoYape.qrImage)}
-                    alt="Preview"
-                  />
-                </>
-              )}
-            </SEContainer>
-          </>
+          <SEContainer
+            wrap={false}
+            style="container"
+            direction="column"
+            size="medium"
+          >
+            <SETitle size="large" label="Medios de pago" />
+            <SETitle size="large" label="Yape" />
+            <SEFormControl>
+              <SEParragraph>
+                <strong>Número: </strong> {medioPagoYape.numCelular}
+              </SEParragraph>
+            </SEFormControl>
+            {medioPagoYape.qrImage && (
+              <>
+                <SETitle size="medium" label="QR:" />
+                <SEImage
+                  size="minus"
+                  src={URL.createObjectURL(medioPagoYape.qrImage)}
+                  alt="Preview"
+                />
+              </>
+            )}
+          </SEContainer>
         )}
         {medioPagoCCI && (
           <SEContainer>
-            <SEMediumTitle label="Código de cuenta interbancaria" />
+            <SETitle size="large" label="Código de cuenta interbancaria" />
             <SEParragraph>{`CCI: ${medioPagoCCI}`}</SEParragraph>
           </SEContainer>
         )}

@@ -116,6 +116,7 @@ export default ({
               }
               acceptSelect={acceptedFilesForMultimedia}
               onError={onErrorFromDragAndDrop}
+              showSize={true}
             />
           )}
         </div>

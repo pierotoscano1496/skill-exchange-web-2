@@ -1,3 +1,4 @@
+import { WeightType } from "@/enums/Text";
 import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 import React, { ReactNode } from "react";
@@ -8,6 +9,7 @@ interface LinkProps {
   label?: string;
   icon?: ReactNode;
   variant?: "primary" | "secondary";
+  weight?: WeightType;
 }
 
 const variantClasses: VariantClasses = {
@@ -35,15 +37,26 @@ const SELink: React.FC<LinkProps> = ({
   label,
   icon,
   variant = "primary",
+  weight = "normal",
 }) => {
   const baseStyles = "rounded-md font-montserrat transition-colors text-center";
-  const variantStyles = classNames(
-    //variantClasses[variant]?.background,
-    variantClasses[variant]?.text
-  );
+  const variantStyles = classNames(variantClasses[variant]?.text);
+  const weightClasses = classNames({
+    "font-normal": weight === "normal",
+    "font-bold": weight === "bold",
+    "font-extrabold": weight === "extraBold",
+  });
 
   return (
-    <a className={classNames(baseStyles, className, variantStyles)} href={link}>
+    <a
+      className={classNames(
+        baseStyles,
+        className,
+        variantStyles,
+        weightClasses
+      )}
+      href={link}
+    >
       {label && <span>{label}</span>}
       {label && icon && <>&nbsp;</>}
       {icon && <span>{icon}</span>}

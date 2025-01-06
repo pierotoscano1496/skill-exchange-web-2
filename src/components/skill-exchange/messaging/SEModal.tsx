@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import SEButton from "../SEButton";
-import SEMediumTitle from "../text/SEMediumTitle";
+import SETitle from "../text/SETitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 
@@ -59,7 +59,12 @@ const SEModal: React.FC<ModalProps> = ({
     >
       <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl mx-4 flex flex-col max-h-screen overflow-hidden">
         <header className="flex justify-between px-6 pt-6">
-          <SEMediumTitle className="flex-grow" label={title} center={true} />
+          <SETitle
+            size="large"
+            className="flex-grow"
+            label={title}
+            center={true}
+          />
           <SEButton
             onClick={onClose}
             shape="circle"

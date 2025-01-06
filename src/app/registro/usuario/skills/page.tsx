@@ -14,8 +14,8 @@ import SESelect from "@/components/skill-exchange/form/SESelect";
 import SEInput from "@/components/skill-exchange/form/SEInput";
 import SETextarea from "@/components/skill-exchange/form/SETextarea";
 import SEButton from "@/components/skill-exchange/SEButton";
-import SELargeTitle from "@/components/skill-exchange/text/SELargeTitle";
-import SEMediumTitle from "@/components/skill-exchange/text/SEMediumTitle";
+import SETitle from "@/components/skill-exchange/text/SETitle";
+import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
@@ -126,7 +126,11 @@ const RegistroUsuarioSkills = () => {
   return (
     <>
       <div className="flex flex-wrap max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-xl">
-        <SELargeTitle className="w-full" label="Registro de habilidades" />
+        <SETitle
+          size="extraLarge"
+          className="w-full"
+          label="Registro de habilidades"
+        />
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SESelect
             label="Categoría"
@@ -213,7 +217,7 @@ const RegistroUsuarioSkills = () => {
       </div>
 
       <div className="flex flex-col max-w-5xl mx-auto p-6 my-12 bg-white shadow-xl rounded-xl">
-        <SEMediumTitle label="Habilidades" />
+        <SETitle size="large" label="Habilidades" />
         <div className="flex flex-wrap w-full mb-6 px-2 justify-center">
           {usuarioDatos.skills.map((s) => (
             <SECard key={s.id} variant="accent">
