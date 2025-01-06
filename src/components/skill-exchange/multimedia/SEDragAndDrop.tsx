@@ -46,7 +46,9 @@ export default ({
         if (
           acceptedFiles.length > 0 &&
           getFilesSizeMb(acceptedFilesData) <= maxSizeFiles &&
-          (!limit || acceptedFiles.length <= limit)
+          (!limit || acceptedFiles.length <= limit)(
+            !limit || acceptedFiles.length <= limit
+          )
         ) {
           setNewFilesData(
             acceptedFiles.map(
