@@ -2,19 +2,14 @@
 
 import { obtenerServiciosByPrestamista } from "@/actions/servicio.actions";
 import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
-import ServicioItemOwn from "@/components/busqueda-servicio/ServicioItemOwn";
 import SEForm from "@/components/skill-exchange/form/SEForm";
-import SEInput from "@/components/skill-exchange/form/SEInput";
 import SESelect from "@/components/skill-exchange/form/SESelect";
 import SELinkButton from "@/components/skill-exchange/SELinkButton";
 import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import classNames from "classnames";
 import { useEffect, useState } from "react";
-import SEContainer from "@/components/skill-exchange/containers/SEContainer";
-import SECard from "@/components/skill-exchange/SECard";
 import SEServicio from "@/components/servicios/SEServicio";
 import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
 
@@ -44,13 +39,14 @@ export default () => {
   }, []);
 
   return (
-    <div className={classNames("")}>
+    <div>
       <SETitle size="extraLarge" label="Mis servicios" />
-      <SELinkButton label="Nuevo servicio" link="/registro/servicio" />
       {servicios.length > 0 ? (
         <>
-          <SEForm>
+          <SELinkButton label="Nuevo servicio" link="/registro/servicio" />
+          <SEForm size="medium">
             <SESelect
+              includeInitOption={false}
               onChange={(e) => setServicioSelected(e.target.value)}
               options={servicios.map((s) => ({
                 label: s.titulo,

@@ -6,7 +6,7 @@ import { SizeType } from "@/enums/Sizes";
 interface FormProps {
   onSubmit?: () => void;
   children: React.ReactNode;
-  size?: SizeType;
+  size?: ExtendedSizeType;
   formContent?: "form" | "block";
   inline?: boolean;
 }
@@ -19,10 +19,10 @@ interface FormControlProps {
 type ExtendedSizeType = SizeType | "full";
 
 const sizeClasses: { [key in ExtendedSizeType]: string } = {
-  large: classNames("max-w-7xl"),
-  medium: classNames("max-w-5xl"),
-  small: classNames("max-w-lg"),
-  full: classNames("max-w-[100%]"),
+  large: classNames("max-w-7xl", "w-7xl"),
+  medium: classNames("max-w-5xl", "w-5xl"),
+  small: classNames("max-w-lg", "w-lg"),
+  full: classNames("max-w-[100%]", "w-[100%]"),
 };
 
 const SEForm: React.FC<FormProps> = ({

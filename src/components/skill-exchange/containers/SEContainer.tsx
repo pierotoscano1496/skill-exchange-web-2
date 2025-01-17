@@ -2,13 +2,13 @@ import { ExtendedSizeType } from "@/enums/Sizes";
 import classNames from "classnames";
 import React from "react";
 
-type Style = "container" | "text" | "none";
+type Style = "container" | "text" | "block" | "none";
 type Direction = "row" | "column";
 type Justify = "start" | "end" | "center" | "evenly";
 type Align = "start" | "end" | "center" | "stretch";
 
 interface ContainerProps {
-  children: React.ReactNode;
+  children: React.ReactNode | React.ReactNode[];
   className?: string;
   wrap?: boolean;
   style?: Style;
@@ -16,17 +16,19 @@ interface ContainerProps {
   size?: ExtendedSizeType;
   justify?: Justify;
   align?: Align;
+  columns?: number;
 }
 
 const SEContainer: React.FC<ContainerProps> = ({
   children,
   className,
   wrap = true,
-  style = "none",
+  style = "block",
   direction = "row",
   size = "full",
   justify = "center",
   align = "center",
+  columns = 1,
 }) => {
   const justifyClasses = classNames({
     "justify-center": justify === "center",
@@ -53,27 +55,37 @@ const SEContainer: React.FC<ContainerProps> = ({
   });
 
   const sizeClasses = classNames({
-    "max-w-lg": size === "small",
-    "max-w-5xl": size === "medium",
-    "max-w-7xl": size === "large",
-    "max-w-[100%]": size === "full",
+    "max-w-lg w-lg": size === "small",
+    "max-w-5xl w-5xl": size === "medium",
+    "max-w-7xl w-7xl": size === "large",
+    "max-w-[100%] w-full": size === "full",
+    "w-fit": size === "content",
   });
 
   return (
     <div
       className={classNames(
-        "flex mx-auto",
+        "flex",
+        size !== "content" && "mx-auto",
         styleClasses,
         itemClasses,
         justifyClasses,
         wrap && "flex-wrap",
         directionClasses,
-        sizeClasses,
-        "mb-6",
+        columns > 1 && sizeClasses,
+        { "mb-6": style !== "none" },
         className
       )}
     >
-      {children}
+      {columns > 1
+        ? React.Children.map(children, (child, index) => (
+            <SEContainer
+              className={classNames(`w-1/${columns}`, "flex-grow mb-0")}
+            >
+              {child}
+            </SEContainer>
+          ))
+        : children}
     </div>
   );
 };

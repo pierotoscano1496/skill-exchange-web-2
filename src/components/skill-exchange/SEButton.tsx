@@ -93,14 +93,17 @@ const SEButton: React.FC<ButtonProps> = ({
     small: {
       padding: "py-1 px-2",
       text: "text-sm",
+      margin: "mb-4",
     },
     large: {
       padding: "py-3 px-6",
       text: "text-lg",
+      margin: "mb-8",
     },
     medium: {
       padding: "py-2 px-4",
       text: "text-base",
+      margin: "mb-6",
     },
   };
 

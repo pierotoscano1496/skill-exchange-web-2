@@ -15,11 +15,11 @@ interface LinkButtonProps {
 const variantClasses: VariantClasses = {
   primary: {
     background: "bg-primary-200",
-    hoverBackground: "hover:bg-primary-600",
+    hoverBackground600: "hover:bg-primary-600",
   },
   accent: {
     background: "bg-accent-200",
-    hoverBackground: "hover:bg-accent-600",
+    hoverBackground600: "hover:bg-accent-600",
   },
 };
 
@@ -44,12 +44,13 @@ const SELinkButton: React.FC<LinkButtonProps> = ({
 
   const variantStyles = classNames(
     variantClasses[variant]?.background,
-    variantClasses[variant]?.hoverBackground
+    variantClasses[variant]?.hoverBackground600
   );
 
   return (
     <a
       className={classNames(
+        "mb-6",
         baseStyles,
         hoverStyles,
         variantStyles,

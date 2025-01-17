@@ -2,19 +2,27 @@
 
 import { useEffect, useState } from "react";
 import ModalImagePreview from "../ModalImagePreview";
+import SEImage from "../skill-exchange/multimedia/SEImage";
+import SEParragraph from "../skill-exchange/text/SEParragraph";
 
 type Props = {
-    source: string;
-    numCelular: string;
-}
+  source: string;
+  numCelular: string;
+};
 
 export default ({ source, numCelular }: Props) => {
-    const [openYapeQR, setOpenYapeQR] = useState<boolean>(false);
+  const [openYapeQR, setOpenYapeQR] = useState<boolean>(false);
 
-    return (<>
-        <img className="brand yape option" onClick={() => setOpenYapeQR(true)} />
-        {openYapeQR &&
-            <ModalImagePreview source={source} decripcion={`Número de celular: ${numCelular}`} onClose={() => setOpenYapeQR(false)} />
-        }
-    </>)
-}
+  return (
+    <>
+      <SEParragraph onClick={() => setOpenYapeQR(true)}>Ver QR</SEParragraph>
+      {openYapeQR && (
+        <ModalImagePreview
+          source={source}
+          descripcion={`Número de celular: ${numCelular}`}
+          onClose={() => setOpenYapeQR(false)}
+        />
+      )}
+    </>
+  );
+};

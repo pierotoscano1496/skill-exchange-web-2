@@ -5,6 +5,8 @@ import ComentarioServicioResponse from "@/interfaces/responsebody/review/Comenta
 import { getBackendInstanceAuth } from "@/utils/constants.backend";
 
 export const comentarServicio = async (comentario: ComentarioServicioBody) => {
-    const resp = await (await getBackendInstanceAuth()).post("servicios/comments/publish", comentario);
-    return resp.data as ComentarioServicioResponse;
-}
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).post("servicios/comments/publish", comentario);
+  return resp.data as ComentarioServicioResponse;
+};

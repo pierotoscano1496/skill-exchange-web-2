@@ -1,3 +1,4 @@
+import { TextAlignType } from "@/enums/Text";
 import { ThemesType } from "@/enums/Themes";
 import { WeightFontType } from "@/enums/WeightFont";
 import { VariantClasses } from "@/utils/types";
@@ -8,6 +9,8 @@ interface TextProps {
   variant?: ThemesType;
   className?: string;
   weight?: WeightFontType;
+  onClick?: () => void;
+  align?: TextAlignType;
 }
 
 const variantClasses: VariantClasses = {
@@ -36,6 +39,8 @@ const SEParragraph: React.FC<TextProps> = ({
   className,
   variant = "primary",
   weight,
+  onClick,
+  align = "start",
 }) => {
   let fontWeightClass;
   switch (weight) {
@@ -64,8 +69,16 @@ const SEParragraph: React.FC<TextProps> = ({
         "text-base",
         variantClasses[variant]?.text,
         fontWeightClass,
-        className
+        "w-full",
+        className,
+        {
+          "text-start": align === "start",
+          "text-center": align === "center",
+          "text-end": align === "end",
+          "text-justify": align === "justify",
+        }
       )}
+      onClick={onClick}
     >
       {children}
     </p>

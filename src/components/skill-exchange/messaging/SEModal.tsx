@@ -7,48 +7,23 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 interface ModalProps {
   title?: string;
   children: React.ReactNode;
-  footerContent?: React.ReactNode;
-  className?: string;
-  onClose: () => void;
-}
-
-interface ModalFooterProps {
-  onClose: () => void;
   textCancel?: string;
-  onlyCancelButton?: boolean;
+  textAccept?: string;
   className?: string;
-  children?: React.ReactNode;
+  onAccept?: () => void;
+  onClose: () => void;
+  showFootOptions?: boolean;
 }
-
-const SEModalFooter: React.FC<ModalFooterProps> = ({
-  onClose,
-  className,
-  textCancel = "Cancelar",
-  onlyCancelButton = false,
-  children,
-}) => {
-  return (
-    <footer className={classNames("pb-0", className)}>
-      {onlyCancelButton ? (
-        <SEButton
-          mode="text"
-          variant="hero"
-          label={textCancel}
-          onClick={onClose}
-        />
-      ) : (
-        children
-      )}
-    </footer>
-  );
-};
 
 const SEModal: React.FC<ModalProps> = ({
   title = "Mensaje",
   children,
   className,
-  footerContent = null,
+  textAccept = "Aceptar",
+  textCancel = "Cancelar",
+  onAccept,
   onClose,
+  showFootOptions = true,
 }) => {
   return (
     <div
@@ -59,12 +34,7 @@ const SEModal: React.FC<ModalProps> = ({
     >
       <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl mx-4 flex flex-col max-h-screen overflow-hidden">
         <header className="flex justify-between px-6 pt-6">
-          <SETitle
-            size="large"
-            className="flex-grow"
-            label={title}
-            center={true}
-          />
+          <SETitle size="large" className="flex-grow" label={title} />
           <SEButton
             onClick={onClose}
             shape="circle"
@@ -74,17 +44,30 @@ const SEModal: React.FC<ModalProps> = ({
         </header>
         <main
           className={classNames(
-            "py-4 flex-grow overflow-auto",
+            "px-6 py-6 flex-grow overflow-auto",
             "container mx-auto"
           )}
         >
           {children}
         </main>
-        <SEModalFooter onClose={onClose}>{footerContent}</SEModalFooter>
+        {showFootOptions && (
+          <footer className={classNames("pb-0", className)}>
+            {onClose && (
+              <SEButton
+                mode="text"
+                variant="hero"
+                label={textCancel}
+                onClick={onClose}
+              />
+            )}
+            {onAccept && (
+              <SEButton mode="text" label={textAccept} onClick={onAccept} />
+            )}
+          </footer>
+        )}
       </div>
     </div>
   );
 };
 
-export { SEModalFooter };
 export default SEModal;

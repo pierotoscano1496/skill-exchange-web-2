@@ -29,6 +29,9 @@ const variantClasses: VariantClasses = {
   error: {
     text: "text-error-600",
   },
+  "yape-purple": {
+    text: "text-violet-600",
+  },
 };
 
 const SESpan: React.FC<TextProps> = ({
@@ -64,6 +67,8 @@ const SESpan: React.FC<TextProps> = ({
         "text-base",
         variantClasses[variant]?.text,
         fontWeightClass,
+        "inline-flex",
+        "items-center",
         className
       )}
     >

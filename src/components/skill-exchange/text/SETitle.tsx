@@ -1,4 +1,9 @@
-import { LevelType, TextSizeType, WeightType } from "@/enums/Text";
+import {
+  LevelType,
+  TextAlignType,
+  TextSizeType,
+  WeightType,
+} from "@/enums/Text";
 import { ThemesType } from "@/enums/Themes";
 import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
@@ -7,7 +12,7 @@ interface TitleProps {
   label: string;
   variant?: ThemesType;
   className?: string;
-  center?: boolean;
+  align?: TextAlignType;
   weight?: WeightType;
   size?: TextSizeType;
 }
@@ -16,7 +21,7 @@ const SETitle: React.FC<TitleProps> = ({
   label,
   className,
   variant = "primary",
-  center = true,
+  align = "center",
   weight = "bold",
   size = "medium",
 }) => {
@@ -42,6 +47,7 @@ const SETitle: React.FC<TitleProps> = ({
 
   let classNameComponent = classNames(
     "font-bold mb-6",
+    "w-full",
     {
       "text-xs": size === "extraSmall",
       "text-sm": size === "small",
@@ -55,7 +61,10 @@ const SETitle: React.FC<TitleProps> = ({
       "font-extrabold": weight === "extraBold",
     },
     {
-      "text-center": center,
+      "text-start": align === "start",
+      "text-center": align === "center",
+      "text-end": align === "end",
+      "text-justify": align === "justify",
     },
     {
       "text-primary-900": variant === "primary",

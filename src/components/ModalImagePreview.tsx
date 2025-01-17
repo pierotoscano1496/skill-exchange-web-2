@@ -1,26 +1,21 @@
 "use client";
 
 import modalStyles from "@/app/styles/modal.module.scss";
+import SEModal from "./skill-exchange/messaging/SEModal";
+import SEImage from "./skill-exchange/multimedia/SEImage";
+import SEParragraph from "./skill-exchange/text/SEParragraph";
 
 type Props = {
-    onClose: () => void;
-    source: string;
-    decripcion?: string;
-}
+  onClose: () => void;
+  source: string;
+  descripcion?: string;
+};
 
-export default ({ source, onClose, decripcion }: Props) => {
-    return (
-        <div className={`${modalStyles.modalContainer} ${modalStyles.super}`}>
-            <div className={modalStyles.modal}>
-                <main className={modalStyles.modalContent}>
-                    <img src={source} alt="" className={modalStyles.imagePreview} />
-                    {decripcion && <p>{decripcion}</p>}
-                </main>
-
-                <footer className={modalStyles.modalFooter}>
-                    <button className="btn-secondary" onClick={onClose}>Cerrar</button>
-                </footer>
-            </div>
-        </div>
-    )
-}
+export default ({ source, onClose, descripcion }: Props) => {
+  return (
+    <SEModal onClose={onClose} showFootOptions={false}>
+      <SEImage src={source} size="medium" />
+      <SEParragraph>{descripcion}</SEParragraph>
+    </SEModal>
+  );
+};
