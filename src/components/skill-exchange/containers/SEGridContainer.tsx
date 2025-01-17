@@ -20,13 +20,14 @@ const SEGridContainer: React.FC<GridProps> = ({
     "max-w-lg": size === "small",
     "max-w-5xl": size === "medium",
     "max-w-7xl": size === "large",
-    "max-w-[100%]": size === "full",
+    "max-w-[100%] w-full": size === "full",
   });
 
   return (
     <div
       className={classNames(
-        `grid grid-cols-${columns} mx-auto`,
+        `grid md:grid-cols-${columns} mx-auto`,
+        "grid-cols-1",
         `gap-${gap}`,
         "mb-6",
         sizeClasses,

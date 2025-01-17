@@ -9,11 +9,12 @@ type Props = {
   onClose: () => void;
   source: string;
   descripcion?: string;
+  title?: string;
 };
 
-export default ({ source, onClose, descripcion }: Props) => {
+export default ({ source, onClose, descripcion, title }: Props) => {
   return (
-    <SEModal onClose={onClose} showFootOptions={false}>
+    <SEModal onClose={onClose} showFootOptions={false} title={title}>
       <SEImage src={source} size="medium" />
       <SEParragraph>{descripcion}</SEParragraph>
     </SEModal>

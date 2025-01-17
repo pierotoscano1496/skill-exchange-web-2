@@ -19,6 +19,7 @@ export default ({ source, numCelular }: Props) => {
       {openYapeQR && (
         <ModalImagePreview
           source={source}
+          title="Yape"
           descripcion={`Número de celular: ${numCelular}`}
           onClose={() => setOpenYapeQR(false)}
         />

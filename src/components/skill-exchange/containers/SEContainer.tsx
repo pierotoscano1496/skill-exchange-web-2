@@ -16,7 +16,6 @@ interface ContainerProps {
   size?: ExtendedSizeType;
   justify?: Justify;
   align?: Align;
-  columns?: number;
 }
 
 const SEContainer: React.FC<ContainerProps> = ({
@@ -28,7 +27,6 @@ const SEContainer: React.FC<ContainerProps> = ({
   size = "full",
   justify = "center",
   align = "center",
-  columns = 1,
 }) => {
   const justifyClasses = classNames({
     "justify-center": justify === "center",
@@ -72,20 +70,12 @@ const SEContainer: React.FC<ContainerProps> = ({
         justifyClasses,
         wrap && "flex-wrap",
         directionClasses,
-        columns > 1 && sizeClasses,
+        sizeClasses,
         { "mb-6": style !== "none" },
         className
       )}
     >
-      {columns > 1
-        ? React.Children.map(children, (child, index) => (
-            <SEContainer
-              className={classNames(`w-1/${columns}`, "flex-grow mb-0")}
-            >
-              {child}
-            </SEContainer>
-          ))
-        : children}
+      {children}
     </div>
   );
 };

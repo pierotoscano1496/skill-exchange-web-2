@@ -24,6 +24,7 @@ import ComentarioServicioBody from "@/interfaces/requestbody/review/ComentarioSe
 import ComentarioServicio from "@/components/review-servicio/ComentarioServicio";
 import MedioPagoResponse from "@/interfaces/busqueda-servicio/MedioPagoResponse";
 import React from "react";
+import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
 
 let servicioReview: ServicioReviewResponse;
 
@@ -90,9 +91,9 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
       {servicioDetails.modalidadesPago.length > 0 && (
         <>
           <SETitle align="start" label="Pagar con:" />
-          <SEContainer columns={2}>
+          <SEGridContainer columns={2} gap={8}>
             {yapeMethod && (
-              <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8 w">
+              <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
                 <SESpan variant="yape-purple">Yape</SESpan>
                 <YapeModule
                   numCelular={yapeMethod.numeroCelular}
@@ -106,7 +107,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
                 <CreditCardModule number={tarjetaMethod.cuentaBancaria} />
               </SEContainer>
             )}
-          </SEContainer>
+          </SEGridContainer>
         </>
       )}
       <SEContainer direction="column">
