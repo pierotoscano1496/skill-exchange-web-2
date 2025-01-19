@@ -12,21 +12,29 @@ import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/Usuario
 import { useEffect, useState } from "react";
 import SEServicio from "@/components/servicios/SEServicio";
 import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
+import SEContainer from "@/components/skill-exchange/containers/SEContainer";
+import loading from "../loading";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import SESkeletonContainer from "@/components/loading/SESkeletonContainer";
 
 export default () => {
   const [servicios, setServicios] = useState<ServicioResponse[]>([]);
   const [usuarioLogged, setUsuarioLogged] =
     useState<UsuarioRegisteredResponse>();
   const [servicioSelected, setServicioSelected] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const setup = async () => {
-      const userLogged = await obtenerUsuarioLogged();
-      setUsuarioLogged(userLogged);
       try {
+        const userLogged = await obtenerUsuarioLogged();
+        setUsuarioLogged(userLogged);
         setServicios(await obtenerServiciosByPrestamista(userLogged.id));
       } catch {
         setServicios([]);
+      } finally {
+        //setIsLoading(false);
       }
     };
 
@@ -38,13 +46,35 @@ export default () => {
     };
   }, []);
 
+  if (isLoading) {
+    return (
+      <SEGridContainer columns={2} size="medium" gap={8}>
+        <SESkeletonContainer style="container" align="stretch" />
+        {/* <SEContainer style="none">
+          <Skeleton height={"100%"} width={"100%"} />
+        </SEContainer> */}
+        <div className="container baseline wrap">
+          <div className="flex-grow-1">
+            <Skeleton />
+          </div>
+          <div className="flex-grow-1">
+            <Skeleton />
+          </div>
+          <div className="flex-grow-1">
+            <Skeleton />
+          </div>
+        </div>
+      </SEGridContainer>
+    );
+  }
+
   return (
-    <div>
+    <SEContainer direction="column" size="medium">
       <SETitle size="extraLarge" label="Mis servicios" />
       {servicios.length > 0 ? (
         <>
           <SELinkButton label="Nuevo servicio" link="/registro/servicio" />
-          <SEForm size="medium">
+          <SEForm size="full">
             <SESelect
               includeInitOption={false}
               onChange={(e) => setServicioSelected(e.target.value)}
@@ -66,6 +96,6 @@ export default () => {
           <SELinkButton label="Empezar" link="/registro/servicio" />
         </>
       )}
-    </div>
+    </SEContainer>
   );
 };
