@@ -59,6 +59,7 @@ export type Variant = {
   hoverBackground400?: string;
   text?: string;
   textOutile?: string;
+  text100?: string;
   text500?: string;
   border?: string;
   focus?: string;
