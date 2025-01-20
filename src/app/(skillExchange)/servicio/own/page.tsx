@@ -34,7 +34,7 @@ export default () => {
       } catch {
         setServicios([]);
       } finally {
-        //setIsLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -48,23 +48,15 @@ export default () => {
 
   if (isLoading) {
     return (
-      <SEGridContainer columns={2} size="medium" gap={8}>
-        <SESkeletonContainer style="container" align="stretch" />
-        {/* <SEContainer style="none">
-          <Skeleton height={"100%"} width={"100%"} />
-        </SEContainer> */}
-        <div className="container baseline wrap">
-          <div className="flex-grow-1">
-            <Skeleton />
-          </div>
-          <div className="flex-grow-1">
-            <Skeleton />
-          </div>
-          <div className="flex-grow-1">
-            <Skeleton />
-          </div>
-        </div>
-      </SEGridContainer>
+      <SEContainer direction="column" size="medium">
+        <h1 className="text-center text-4xl w-full">
+          <Skeleton />
+        </h1>
+        <SEGridContainer columns={2} size="full">
+          <Skeleton height={200} borderRadius={"0.75rem"} />
+          <Skeleton height={200} borderRadius={"0.75rem"} />
+        </SEGridContainer>
+      </SEContainer>
     );
   }
 

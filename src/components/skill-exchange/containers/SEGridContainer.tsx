@@ -17,9 +17,9 @@ const SEGridContainer: React.FC<GridProps> = ({
   className,
 }) => {
   const sizeClasses = classNames({
-    "max-w-lg": size === "small",
-    "max-w-5xl": size === "medium",
-    "max-w-7xl": size === "large",
+    "max-w-lg w-lg": size === "small",
+    "max-w-5xl w-5xl": size === "medium",
+    "max-w-7xl w-7xl": size === "large",
     "max-w-[100%] w-full": size === "full",
   });
 

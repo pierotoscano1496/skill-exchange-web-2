@@ -18,6 +18,8 @@ interface ContainerProps {
   align?: Align;
   justify?: Justify;
   numSkeletons?: number;
+  height?: number | string;
+  width?: number | string;
 }
 
 const SESkeletonContainer: React.FC<ContainerProps> = ({
@@ -29,6 +31,8 @@ const SESkeletonContainer: React.FC<ContainerProps> = ({
   direction = "row",
   justify = "center",
   align = "center",
+  width,
+  height,
 }) => {
   const justifyClasses = classNames({
     "justify-center": justify === "center",
@@ -44,10 +48,6 @@ const SESkeletonContainer: React.FC<ContainerProps> = ({
     "items-stretch": align === "stretch",
   });
 
-  const styleClasses = classNames({
-    "rounded-xl": style === "container",
-  });
-
   const sizeClasses = classNames({
     "w-lg": size === "small",
     "w-5xl": size === "medium",
@@ -61,20 +61,19 @@ const SESkeletonContainer: React.FC<ContainerProps> = ({
   });
 
   return (
-    <div
+    <Skeleton
       className={classNames(
-        "flex",
-        className,
-        styleClasses,
         sizeClasses,
         justifyClasses,
         wrap && "flex-wrap",
         itemClasses,
         directionClasses
       )}
-    >
-      <Skeleton count={numSkeletons} height={20} width={100} />
-    </div>
+      count={numSkeletons}
+      height={height}
+      width={width}
+      borderRadius={style === "container" ? "0.75rem" : undefined}
+    />
   );
 };
 
