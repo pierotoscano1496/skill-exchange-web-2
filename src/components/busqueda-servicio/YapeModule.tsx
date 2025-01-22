@@ -16,19 +16,22 @@ export default ({ idServicio, source, numCelular }: Props) => {
   const [openYapeQR, setOpenYapeQR] = useState<boolean>(false);
   const [urlYapeQr, setUrlYapeQr] = useState<string>("");
 
-  const onOpenModal = async () => {
-    setUrlYapeQr(await obtenerImagenMetodoPago(idServicio, "yape"));
+  const openModal = async () => {
+    const qr = await obtenerImagenMetodoPago(idServicio, "YAPE");
+    if (qr) {
+      setUrlYapeQr(qr);
+      setOpenYapeQR(true);
+    }
   };
 
   return (
     <>
-      <SEParragraph onClick={() => setOpenYapeQR(true)}>Ver QR</SEParragraph>
+      <SEParragraph onClick={openModal}>Ver QR</SEParragraph>
       {openYapeQR && (
         <ModalImagePreview
-          onOpen={onOpenModal}
           source={urlYapeQr}
           title="Yape"
-          descripcion={`Número de celular: ${numCelular}`}
+          descripcion={`N°: ${numCelular}`}
           onClose={() => setOpenYapeQR(false)}
         />
       )}

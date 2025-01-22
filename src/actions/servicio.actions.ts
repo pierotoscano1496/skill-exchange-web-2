@@ -17,7 +17,7 @@ import {
   getBackendInstanceAuth,
   getBackendInstanceAuthForms,
 } from "@/utils/constants.backend";
-import { TipoModalidadPago } from "@/utils/types";
+import { TipoModalidadPago, TipoModalidadPagoName } from "@/utils/types";
 
 /* Gestión de servicios */
 export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
@@ -29,7 +29,7 @@ export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
 
 export const obtenerImagenMetodoPago = async (
   idServicio: string,
-  modalidadPago: TipoModalidadPago
+  modalidadPago: TipoModalidadPagoName
 ) => {
   const resp = await (
     await getBackendInstanceAuth()

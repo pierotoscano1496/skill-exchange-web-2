@@ -21,6 +21,7 @@ export type MedioRecursoMultimedia =
   | SocialMedia;
 
 export type TipoModalidadPago = "yape" | "tarjeta";
+export type TipoModalidadPagoName = "YAPE" | "CASH" | "CREDIT_CARD";
 
 export type TipoModalidadPagoOption = {
   nombre: string;
