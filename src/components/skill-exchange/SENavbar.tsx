@@ -176,8 +176,8 @@ const SENavbar: React.FC<NavbarProps> = ({
             <nav>
               <ul
                 className={classNames(
-                  "space-y-2 w-48",
-                  sidebarCollapsed ? "p-0" : "p-4"
+                  "space-y-2 w-48"
+                  //sidebarCollapsed ? "p-0" : "p-4"
                 )}
               >
                 <SENavbarItem

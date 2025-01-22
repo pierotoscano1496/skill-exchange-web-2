@@ -1,3 +1,4 @@
+import { ModeViewsType } from "@/enums/ModeViews";
 import { ShapeType } from "@/enums/Shapes";
 import { ThemesType } from "@/enums/Themes";
 
@@ -82,4 +83,19 @@ export type ShapeStyles = {
 
 export type ShapeClasses = {
   [key in ShapeType]?: ShapeStyles;
+};
+
+export type VariantMode = {
+  background?: string;
+  hoverBackground?: string;
+  text?: string;
+  hoverText?: string;
+  textOutile?: string;
+  border?: string;
+  focus?: string;
+  disable?: string;
+};
+
+export type ModeClasses = {
+  [key in ModeViewsType]?: VariantMode;
 };
