@@ -17,6 +17,7 @@ import {
   getBackendInstanceAuth,
   getBackendInstanceAuthForms,
 } from "@/utils/constants.backend";
+import { TipoModalidadPago } from "@/utils/types";
 
 /* Gestión de servicios */
 export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
@@ -24,6 +25,16 @@ export const obtenerServiciosByPrestamista = async (idPrestamista: string) => {
     await getBackendInstanceAuth()
   ).get(`servicio/usuario/${idPrestamista}`);
   return resp.data as ServicioResponse[];
+};
+
+export const obtenerImagenMetodoPago = async (
+  idServicio: string,
+  modalidadPago: TipoModalidadPago
+) => {
+  const resp = await (
+    await getBackendInstanceAuth()
+  ).get(`servicio/payment-method/image/${idServicio}/${modalidadPago}`);
+  return resp.data as string;
 };
 
 export const registrarServicio = async (servicio: CreateServicioBody) => {

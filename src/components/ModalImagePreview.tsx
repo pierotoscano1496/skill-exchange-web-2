@@ -6,15 +6,21 @@ import SEImage from "./skill-exchange/multimedia/SEImage";
 import SEParragraph from "./skill-exchange/text/SEParragraph";
 
 type Props = {
+  onOpen?: () => void;
   onClose: () => void;
   source: string;
   descripcion?: string;
   title?: string;
 };
 
-export default ({ source, onClose, descripcion, title }: Props) => {
+export default ({ source, onOpen, onClose, descripcion, title }: Props) => {
   return (
-    <SEModal onClose={onClose} showFootOptions={false} title={title}>
+    <SEModal
+      onOpen={onOpen}
+      onClose={onClose}
+      showFootOptions={false}
+      title={title}
+    >
       <SEImage src={source} size="medium" />
       <SEParragraph>{descripcion}</SEParragraph>
     </SEModal>

@@ -3,6 +3,7 @@ import SEButton from "../SEButton";
 import SETitle from "../text/SETitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 
 interface ModalProps {
   title?: string;
@@ -12,6 +13,7 @@ interface ModalProps {
   className?: string;
   onAccept?: () => void;
   onClose: () => void;
+  onOpen?: () => void;
   showFootOptions?: boolean;
 }
 
@@ -23,8 +25,15 @@ const SEModal: React.FC<ModalProps> = ({
   textCancel = "Cancelar",
   onAccept,
   onClose,
+  onOpen,
   showFootOptions = true,
 }) => {
+  useEffect(() => {
+    if (onOpen) {
+      onOpen();
+    }
+  }, [onOpen]);
+
   return (
     <div
       className={classNames(

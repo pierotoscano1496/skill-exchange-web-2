@@ -96,6 +96,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
               <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
                 <SESpan variant="yape-purple">Yape</SESpan>
                 <YapeModule
+                  idServicio={servicioDetails.id}
                   numCelular={yapeMethod.numeroCelular}
                   source={yapeMethod.url}
                 />
