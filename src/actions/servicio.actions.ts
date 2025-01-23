@@ -66,12 +66,13 @@ export const uploadMultimediaFilesToServicio = async (
 
 export const uploadMetadataModalidadPagoToService = async (
   idServicio: string,
-  formDataFile: FormData
+  formDataFile: FormData,
+  metodoPago: TipoModalidadPagoName
 ) => {
   const resp = await (
     await getBackendInstanceAuthForms()
   ).patch(
-    `servicio/upload-metadata-modalidad-pago/${idServicio}`,
+    `servicio/upload-metadata-modalidad-pago/${idServicio}/${metodoPago}`,
     formDataFile
   );
   return resp.data as string;

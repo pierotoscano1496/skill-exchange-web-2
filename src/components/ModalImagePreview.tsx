@@ -1,12 +1,9 @@
 "use client";
 
-import modalStyles from "@/app/styles/modal.module.scss";
 import SEModal from "./skill-exchange/messaging/SEModal";
 import SEImage from "./skill-exchange/multimedia/SEImage";
 import SEParragraph from "./skill-exchange/text/SEParragraph";
 import { ExtendedSizeType } from "@/enums/Sizes";
-
-type Align = "start" | "end" | "center" | "stretch";
 
 type Props = {
   onOpen?: () => void;

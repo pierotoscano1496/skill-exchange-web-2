@@ -315,7 +315,8 @@ export default () => {
             formQRYape.append("file", medioPagoYape.qrImage);
             const urlQRUploaded = await uploadMetadataModalidadPagoToService(
               servicioRegistered.id,
-              formQRYape
+              formQRYape,
+              "YAPE"
             );
             modalidadYape.url = urlQRUploaded;
           }
