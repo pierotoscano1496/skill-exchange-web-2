@@ -5,10 +5,8 @@ import SEForm, { SEFormControl } from "../skill-exchange/form/SEForm";
 import SELabel from "../skill-exchange/text/SELabel";
 import SETextarea from "../skill-exchange/form/SETextarea";
 import SEButton from "../skill-exchange/SEButton";
-import SEContainer from "../skill-exchange/containers/SEContainer";
 import StarRating from "../skill-exchange/business/StarRating";
 import { comentarServicio } from "@/actions/servicioreviews.actions";
-import ComentarioServicioResponse from "@/interfaces/responsebody/review/ComentarioServicioResponse";
 import SEParragraph from "../skill-exchange/text/SEParragraph";
 
 interface Props {
@@ -18,10 +16,11 @@ interface Props {
     apellidos: string;
   };
   idServicio: string;
+  className?: string;
   onSubmit: (success: boolean) => void;
 }
 
-export default ({ idServicio, comentarista, onSubmit }: Props) => {
+export default ({ idServicio, comentarista, className, onSubmit }: Props) => {
   const [comentario, setComentario] = useState("");
   const [puntaje, setPuntaje] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +56,7 @@ export default ({ idServicio, comentarista, onSubmit }: Props) => {
   };
 
   return (
-    <SEForm size="full">
+    <SEForm size="full" className={className}>
       <SEFormControl>
         <SELabel text="Comentario:" htmlFor="comentario" />
         <SETextarea

@@ -65,97 +65,90 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <SEContainer direction="column" size="medium">
       <SETitle size="extraLarge" label={servicioDetails.titulo} />
-      <SEParragraph>{servicioDetails.descripcion}</SEParragraph>
+      <SEParragraph className="!mb-12">
+        {servicioDetails.descripcion}
+      </SEParragraph>
+
       <SETitle align="start" label="Detalles del servicio" />
-      <SEContainer direction="column">
-        <SEParragraph variant="hero">
-          <SESpan weight="bold" className="mr-4">
-            Precio:
-          </SESpan>
+      <SEGridContainer columns={2} className="!mb-12">
+        <SESpan weight="bold">Precio (S/.):</SESpan>
+        <SEParragraph variant="hero" breakSpace={false}>
           {servicioDetails.precio}
         </SEParragraph>
-        <SEParragraph variant="accent">
-          <SESpan weight="bold" className="mr-4">
-            Categoría:
-          </SESpan>
+        <SESpan weight="bold">Categoría:</SESpan>
+        <SEParragraph variant="accent" breakSpace={false}>
           {servicioDetails.categoria.nombre}
         </SEParragraph>
-        <SEParragraph variant="secondary">
-          <SESpan weight="bold" className="mr-4">
-            Subcategoría:
-          </SESpan>
+        <SESpan weight="bold">Subcategoría:</SESpan>
+        <SEParragraph variant="secondary" breakSpace={false}>
           {servicioDetails.subCategoria.nombre}
         </SEParragraph>
-        <SEParragraph>{servicioDetails.skill.descripcion}</SEParragraph>
-      </SEContainer>
+        <SESpan weight="bold">Habilidades:</SESpan>
+        <SEParragraph breakSpace={false}>
+          {servicioDetails.skill.descripcion}
+        </SEParragraph>
+      </SEGridContainer>
+
       {servicioDetails.modalidadesPago.length > 0 && (
         <>
           <SETitle align="start" label="Pagar con:" />
-          <SEGridContainer columns={2} gap={8}>
+          <SEGridContainer columns={2} gap={8} className="!mb-12">
             {yapeMethod && (
-              <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
-                <SESpan variant="yape-purple">Yape</SESpan>
-                <YapeModule
-                  idServicio={servicioDetails.id}
-                  numCelular={yapeMethod.numeroCelular}
-                  source={yapeMethod.url}
-                />
-              </SEContainer>
+              <YapeModule
+                idServicio={servicioDetails.id}
+                numCelular={yapeMethod.numeroCelular}
+                source={yapeMethod.url}
+              />
             )}
             {tarjetaMethod && (
-              <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
-                <SESpan>Tarjeta de débito/crédito</SESpan>
-                <CreditCardModule number={tarjetaMethod.cuentaBancaria} />
-              </SEContainer>
+              <CreditCardModule number={tarjetaMethod.cuentaBancaria} />
             )}
           </SEGridContainer>
         </>
       )}
-      <SEContainer direction="column">
-        {usuarioLogged &&
-          servicioDetails.prestamista.id !== usuarioLogged.id && (
-            <ContactForm cliente={usuarioLogged} servicio={servicioDetails}>
-              Enviar mensaje
-            </ContactForm>
-          )}
-        {!usuarioLogged && (
-          <SEParragraph>
-            <SELink link="/login" label="Inicia sesión" />
-            <SELink link="/registro/usuario" label="Regístrate" />
-          </SEParragraph>
-        )}
-      </SEContainer>
-      <SEContainer direction="column">
-        {usuarioLogged ? (
-          <>
-            <SETitle align="start" label="Emite tu opinión" />
-            <FormReviewServicio
-              comentarista={{
-                id: usuarioLogged.id,
-                apellidos: usuarioLogged.apellidos,
-                nombres: usuarioLogged.nombres,
-              }}
-              idServicio={servicioDetails.id}
-              onSubmit={addComment}
-            />
-          </>
-        ) : (
-          <SEParragraph>
-            Inicia sesión para que puedas emitir tu opinión
-          </SEParragraph>
-        )}
-        <SETitle align="start" label="Comentarios" size="large" />
-        {servicioReview.comentarios.length > 0 ? (
-          <>
-            <hr />
-            {servicioReview.comentarios.map((c) => (
-              <ComentarioServicio key={c.id} comentario={c} />
-            ))}
-          </>
-        ) : (
-          <SEParragraph>Sin reseñas</SEParragraph>
-        )}
-      </SEContainer>
+      {usuarioLogged && servicioDetails.prestamista.id !== usuarioLogged.id && (
+        <SEContainer direction="column" className="!mb-12">
+          <ContactForm cliente={usuarioLogged} servicio={servicioDetails}>
+            Enviar mensaje
+          </ContactForm>
+        </SEContainer>
+      )}
+      {!usuarioLogged && (
+        <SEParragraph className="!mb-12">
+          <SELink link="/login" label="Inicia sesión" />
+          <SELink link="/registro/usuario" label="Regístrate" />
+        </SEParragraph>
+      )}
+      {usuarioLogged ? (
+        <>
+          <SETitle align="start" label="Emite tu opinión" />
+          <FormReviewServicio
+            className="!mb-12"
+            comentarista={{
+              id: usuarioLogged.id,
+              apellidos: usuarioLogged.apellidos,
+              nombres: usuarioLogged.nombres,
+            }}
+            idServicio={servicioDetails.id}
+            onSubmit={addComment}
+          />
+        </>
+      ) : (
+        <SEParragraph className="!mb-12">
+          Inicia sesión para que puedas emitir tu opinión
+        </SEParragraph>
+      )}
+      <SETitle align="start" label="Comentarios" size="large" />
+      {servicioReview.comentarios.length > 0 ? (
+        <>
+          <hr />
+          {servicioReview.comentarios.map((c) => (
+            <ComentarioServicio key={c.id} comentario={c} />
+          ))}
+        </>
+      ) : (
+        <SEParragraph>Sin reseñas</SEParragraph>
+      )}
     </SEContainer>
   );
 };

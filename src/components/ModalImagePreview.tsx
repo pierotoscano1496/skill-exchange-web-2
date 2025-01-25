@@ -1,5 +1,6 @@
 "use client";
 
+import classNames from "classnames";
 import SEModal from "./skill-exchange/messaging/SEModal";
 import SEImage from "./skill-exchange/multimedia/SEImage";
 import SEParragraph from "./skill-exchange/text/SEParragraph";
@@ -12,9 +13,19 @@ type Props = {
   descripcion?: string;
   title?: string;
   width?: ExtendedSizeType;
+  className?: string;
+  fullModalClassName?: string;
 };
 
-export default ({ source, onOpen, onClose, descripcion, title }: Props) => {
+export default ({
+  source,
+  onOpen,
+  onClose,
+  descripcion,
+  title,
+  className,
+  fullModalClassName,
+}: Props) => {
   return (
     <SEModal
       onOpen={onOpen}
@@ -22,7 +33,8 @@ export default ({ source, onOpen, onClose, descripcion, title }: Props) => {
       showFootOptions={false}
       title={title}
       size="small"
-      className="flex flex-col items-center"
+      fullModalClassName={fullModalClassName}
+      className={classNames("flex flex-col items-center", className)}
     >
       <SEImage src={source} size="small" />
       <SEParragraph align="center">{descripcion}</SEParragraph>

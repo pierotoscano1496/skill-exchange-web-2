@@ -11,6 +11,7 @@ interface TextProps {
   weight?: WeightFontType;
   onClick?: () => void;
   align?: TextAlignType;
+  breakSpace?: boolean;
 }
 
 const variantClasses: VariantClasses = {
@@ -41,6 +42,7 @@ const SEParragraph: React.FC<TextProps> = ({
   weight,
   onClick,
   align = "start",
+  breakSpace = true,
 }) => {
   let fontWeightClass;
   switch (weight) {
@@ -70,13 +72,16 @@ const SEParragraph: React.FC<TextProps> = ({
         variantClasses[variant]?.text,
         fontWeightClass,
         "w-full",
-        className,
         {
           "text-start": align === "start",
           "text-center": align === "center",
           "text-end": align === "end",
           "text-justify": align === "justify",
-        }
+        },
+        {
+          "mb-6": breakSpace,
+        },
+        className
       )}
       onClick={onClick}
     >

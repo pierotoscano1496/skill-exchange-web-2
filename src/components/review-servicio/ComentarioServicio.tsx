@@ -12,7 +12,7 @@ export default ({ comentario }: ComentarioProps) => (
   <SEContainer
     key={comentario.id}
     direction="column"
-    style="none"
+    style="container"
     align="center"
   >
     <SEContainer justify="start">
@@ -23,7 +23,9 @@ export default ({ comentario }: ComentarioProps) => (
       <StarRating rating={comentario.puntaje} size="small" className="h-8" />
     </SEContainer>
     <SEContainer>
-      <SEParragraph align="start">{comentario.comentario}</SEParragraph>
+      <SEParragraph align="start" breakSpace={false}>
+        {comentario.comentario}
+      </SEParragraph>
     </SEContainer>
   </SEContainer>
 );

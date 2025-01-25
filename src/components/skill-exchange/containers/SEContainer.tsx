@@ -16,6 +16,7 @@ interface ContainerProps {
   size?: ExtendedSizeType;
   justify?: Justify;
   align?: Align;
+  onClick?: () => void;
 }
 
 const SEContainer: React.FC<ContainerProps> = ({
@@ -27,6 +28,7 @@ const SEContainer: React.FC<ContainerProps> = ({
   size = "full",
   justify = "center",
   align = "center",
+  onClick,
 }) => {
   const justifyClasses = classNames({
     "justify-center": justify === "center",
@@ -45,6 +47,7 @@ const SEContainer: React.FC<ContainerProps> = ({
   const styleClasses = classNames({
     "p-6 bg-white shadow-xl rounded-xl": style === "container",
     "flex-col justify-center items-center": style === "text",
+    "mb-6": style !== "none",
   });
 
   let directionClasses = classNames({
@@ -71,9 +74,9 @@ const SEContainer: React.FC<ContainerProps> = ({
         wrap && "flex-wrap",
         directionClasses,
         sizeClasses,
-        { "mb-6": style !== "none" },
         className
       )}
+      onClick={onClick}
     >
       {children}
     </div>

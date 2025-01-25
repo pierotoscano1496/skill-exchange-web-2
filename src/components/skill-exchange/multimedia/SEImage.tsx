@@ -8,9 +8,16 @@ interface ImageProps {
   alt?: string;
   className?: string;
   size?: Size;
+  onClick?: () => void;
 }
 
-const SEImage: React.FC<ImageProps> = ({ src, alt, className, size }) => {
+const SEImage: React.FC<ImageProps> = ({
+  src,
+  alt,
+  className,
+  size,
+  onClick,
+}) => {
   let sizeClassNames = "";
 
   if (size) {
@@ -38,6 +45,7 @@ const SEImage: React.FC<ImageProps> = ({ src, alt, className, size }) => {
       className={classNames(className, sizeClassNames)}
       src={src}
       alt={alt}
+      onClick={onClick}
     />
   );
 };

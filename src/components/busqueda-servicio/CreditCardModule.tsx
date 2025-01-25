@@ -5,6 +5,9 @@ import ModalImagePreview from "../ModalImagePreview";
 import ModalAlert from "../ModalAlert";
 import styles from "@/app/styles/servicios/creditcard.module.scss";
 import ModalInfo from "../ModalInfo";
+import SEImage from "../skill-exchange/multimedia/SEImage";
+import creditCard from "@/assets/images/credit-card.png";
+import SEContainer from "../skill-exchange/containers/SEContainer";
 
 type Props = {
   number: string;
@@ -14,9 +17,9 @@ export default ({ number }: Props) => {
   const [openCreditCardInfo, setOpenCreditCardInfo] = useState<boolean>(false);
 
   return (
-    <>
-      <img
-        className="brand credit-card option"
+    <SEContainer className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8 cursor-pointer h-full">
+      <SEImage
+        src={creditCard.src}
         onClick={() => setOpenCreditCardInfo(true)}
       />
       {openCreditCardInfo && (
@@ -33,6 +36,6 @@ export default ({ number }: Props) => {
           </p>
         </ModalInfo>
       )}
-    </>
+    </SEContainer>
   );
 };

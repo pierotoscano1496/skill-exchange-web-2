@@ -12,6 +12,7 @@ interface ModalProps {
   textCancel?: string;
   textAccept?: string;
   className?: string;
+  fullModalClassName?: string;
   onAccept?: () => void;
   onClose: () => void;
   onOpen?: () => void;
@@ -22,6 +23,7 @@ interface ModalProps {
 const SEModal: React.FC<ModalProps> = ({
   title = "Mensaje",
   children,
+  fullModalClassName,
   className,
   textAccept = "Aceptar",
   textCancel = "Cancelar",
@@ -51,7 +53,9 @@ const SEModal: React.FC<ModalProps> = ({
             "max-w-5xl": size === "large",
             "max-w-7xl": size === "full",
           },
-          "bg-white rounded-lg shadow-lg w-full mx-4 flex flex-col max-h-screen overflow-hidden"
+          { "bg-white": !fullModalClassName },
+          "rounded-lg shadow-lg w-full mx-4 flex flex-col max-h-screen overflow-hidden",
+          fullModalClassName
         )}
       >
         <header className="flex justify-between px-6 pt-6">

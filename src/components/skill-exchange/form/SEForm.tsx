@@ -9,6 +9,7 @@ interface FormProps {
   size?: ExtendedSizeType;
   formContent?: "form" | "block";
   inline?: boolean;
+  className?: string;
 }
 
 interface FormControlProps {
@@ -31,12 +32,14 @@ const SEForm: React.FC<FormProps> = ({
   size = "medium",
   formContent = "form",
   inline = false,
+  className,
 }) => {
   return (
     <div
       className={classNames(
         sizeClasses[size],
-        "mx-auto p-6 bg-white shadow-xl rounded-xl mb-6"
+        "mx-auto p-6 bg-white shadow-xl rounded-xl mb-6",
+        className
       )}
     >
       {formContent === "form" && <form onSubmit={onSubmit}>{children}</form>}
