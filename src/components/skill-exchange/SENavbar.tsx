@@ -24,6 +24,7 @@ import SELink from "./SELink";
 import SENavbarItem from "./SENavbarItem";
 import { NavbarOptionType } from "@/enums/NavbarOptions";
 import styles from "@/app/styles/tailwind.module.scss";
+import SESpan from "./text/SESpan";
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -121,7 +122,7 @@ const SENavbar: React.FC<NavbarProps> = ({
               <SEButton
                 variant="neutral"
                 shape="noShape"
-                className="text-white p-2 mr-4"
+                className="!text-primary-100 p-2 mr-4"
                 onClick={toggleSidebar}
                 icon={
                   <FontAwesomeIcon
@@ -132,27 +133,38 @@ const SENavbar: React.FC<NavbarProps> = ({
               />
             </li>
             <li>
-              <FontAwesomeIcon icon={faBell} />
+              <SESpan className="!text-primary-100">
+                <FontAwesomeIcon icon={faBell} />
+              </SESpan>
             </li>
             <li>
               <SELink
                 variant={variant}
                 link="/mensajes"
+                className="!text-primary-100"
                 icon={<FontAwesomeIcon icon={faComment} />}
               />
             </li>
             <li>
-              <SELink link="/servicio" label="Buscar Servicios" />
+              <SELink
+                className="!text-primary-100"
+                link="/servicio"
+                label="Buscar Servicios"
+              />
             </li>
             {usuario ? (
               <>
                 <li>
-                  <SELink link="/profile" label={usuario.nombres} />
+                  <SELink
+                    className="!text-primary-100"
+                    link="/profile"
+                    label={usuario.nombres}
+                  />
                 </li>
                 <li>
                   <SEButton
                     onClick={logout}
-                    className="bg-inherit"
+                    shape="noShape"
                     marginBottom={0}
                     icon={<FontAwesomeIcon icon={faDoorOpen} />}
                   />
@@ -161,7 +173,7 @@ const SENavbar: React.FC<NavbarProps> = ({
             ) : (
               <li>
                 <SELink
-                  variant={variant}
+                  className="!text-primary-100"
                   link="/login"
                   label="Iniciar sesión"
                 />

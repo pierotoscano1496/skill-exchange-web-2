@@ -27,13 +27,13 @@ const SENavbarItem = ({
   const variantClasses = classNames({
     "hover:bg-primary-600 hover:text-primary-100 text-primary-600":
       mode === "light",
-    "hover:bg-primary-100 hover:text-primary-600 text-primary-600":
+    "hover:bg-primary-100 hover:text-primary-600 text-primary-100":
       mode === "dark",
   });
 
   const selectedClasses = classNames({
-    "bg-primary-600 text-primary-100": selected && mode === "light",
-    "bg-primary-100 text-primary-600": selected && mode === "dark",
+    "bg-primary-600 !text-primary-100": selected && mode === "light",
+    "bg-primary-100 !text-primary-600": selected && mode === "dark",
   });
 
   return (
