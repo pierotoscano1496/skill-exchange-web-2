@@ -1,32 +1,32 @@
 import { searchServicioWithParams } from "@/actions/servicio.actions";
 import SearchServicioForm from "@/components/busqueda-servicio/SearchServicioForm";
-import ServicioItem from "@/components/busqueda-servicio/ServicioItem";
-import ServiciosFallBack from "@/components/busqueda-servicio/ServiciosFallBack";
-import Categoria from "@/interfaces/models/Categoria";
+import SEServicio from "@/components/servicios/SEServicio";
+import SEContainer from "@/components/skill-exchange/containers/SEContainer";
+import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
-import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
-import { Suspense } from "react";
-import Skeleton from "react-loading-skeleton";
 
 type Props = {
   searchParams: SearchServiciosParametersBody;
 };
 
 export default async ({ searchParams }: Props) => {
-  const servicios: ServicioBusquedaResponse[] = await searchServicioWithParams(
+  const servicios = await searchServicioWithParams(
     searchParams as SearchServiciosParametersBody
   );
 
   return (
-    <div>
+    <SEContainer direction="column" size="medium">
       <SearchServicioForm />
-      <div className="bg-fondo-tarjetas p-6 rounded-lg shadow-sm border border-bordes grid">
-        {servicios ? (
-          servicios.map((s) => <ServicioItem key={s.id} servicio={s} />)
+      <SEGridContainer columns={2}>
+        {servicios.length > 0 ? (
+          servicios.map((s) => (
+            <SEServicio key={s.id} servicio={s} forPublic={true} />
+          ))
         ) : (
-          <p className="text-no-avalable">Sin resultados</p>
+          <SEParragraph variant="secondary">Sin resultados</SEParragraph>
         )}
-      </div>
-    </div>
+      </SEGridContainer>
+    </SEContainer>
   );
 };

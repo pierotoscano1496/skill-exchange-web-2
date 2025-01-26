@@ -96,7 +96,7 @@ export const searchServicioWithParams = async (
   const resp = await (
     await getBackendInstance()
   ).post("servicio/busqueda", params);
-  return resp.data as ServicioBusquedaResponse[];
+  return resp.data as ServicioResponse[];
 };
 
 export const getServicioDetails = async (id: string) => {

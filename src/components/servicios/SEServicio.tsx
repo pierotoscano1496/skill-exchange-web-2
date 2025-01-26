@@ -5,18 +5,20 @@ import SEParragraph from "../skill-exchange/text/SEParragraph";
 import SEImage from "../skill-exchange/multimedia/SEImage";
 import SELink from "../skill-exchange/SELink";
 import SEContainer from "../skill-exchange/containers/SEContainer";
+import ServicioBusquedaResponse from "@/interfaces/responsebody/servicio/ServicioBusquedaResponse";
 
 interface ServicioProps {
   servicio: ServicioResponse;
+  forPublic?: boolean;
 }
 
-const SEServicio = ({ servicio }: ServicioProps) => {
+const SEServicio = ({ servicio, forPublic = false }: ServicioProps) => {
   return (
     <SEContainer
       style="container"
       wrap={true}
       direction="row"
-      size="small"
+      size="full"
       justify="evenly"
       align="start"
     >
@@ -29,6 +31,12 @@ const SEServicio = ({ servicio }: ServicioProps) => {
         <SETitle label={servicio.titulo} />
         <SEParragraph>{servicio.descripcion.substring(0, 100)}...</SEParragraph>
         <SEParragraph weight="semibold">S/. {servicio.precio}</SEParragraph>
+        {forPublic && (
+          <SEParragraph variant="secondary">
+            Creado por:{" "}
+            {`${servicio.usuario.nombres} ${servicio.usuario.apellidos}`}
+          </SEParragraph>
+        )}
         <SELink
           link={`/servicio/details/${servicio.id}`}
           label="Ver más"

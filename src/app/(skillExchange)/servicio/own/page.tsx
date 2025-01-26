@@ -76,7 +76,7 @@ export default () => {
               }))}
             />
           </SEForm>
-          <SEGridContainer columns={2} size="medium">
+          <SEGridContainer columns={2}>
             {servicios.map((s) => (
               <SEServicio key={s.id} servicio={s} />
             ))}

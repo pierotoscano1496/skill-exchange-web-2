@@ -2,6 +2,7 @@ import React from "react";
 import SEContainer from "../containers/SEContainer";
 import classNames from "classnames";
 import { SizeType } from "@/enums/Sizes";
+import { FormType } from "@/enums/Form";
 
 interface FormProps {
   onSubmit?: () => void;
@@ -19,13 +20,6 @@ interface FormControlProps {
 
 type ExtendedSizeType = SizeType | "full";
 
-const sizeClasses: { [key in ExtendedSizeType]: string } = {
-  large: classNames("max-w-7xl", "w-7xl"),
-  medium: classNames("max-w-5xl", "w-5xl"),
-  small: classNames("max-w-lg", "w-lg"),
-  full: classNames("max-w-[100%]", "w-[100%]"),
-};
-
 const SEForm: React.FC<FormProps> = ({
   children,
   onSubmit,
@@ -34,17 +28,37 @@ const SEForm: React.FC<FormProps> = ({
   inline = false,
   className,
 }) => {
+  let FormComp: FormType;
+
+  let formProps;
+
+  switch (formContent) {
+    case "block":
+      FormComp = "div";
+      formProps = {};
+      break;
+    case "form":
+      FormComp = "form";
+      formProps = { onSubmit };
+      break;
+  }
+
   return (
-    <div
+    <FormComp
       className={classNames(
-        sizeClasses[size],
+        {
+          "max-w-7xl w-7xl": size === "large",
+          "max-w-5xl w-5xl": size === "medium",
+          "max-w-lg w-lg": size === "small",
+          "max-w-[100%] w-full": size === "full",
+        },
         "mx-auto p-6 bg-white shadow-xl rounded-xl mb-6",
         className
       )}
+      {...formProps}
     >
-      {formContent === "form" && <form onSubmit={onSubmit}>{children}</form>}
-      {formContent === "block" && <div>{children}</div>}
-    </div>
+      {children}
+    </FormComp>
   );
 };
 
