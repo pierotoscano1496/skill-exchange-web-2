@@ -8,6 +8,11 @@ interface LinkProps {
   className?: string;
   label?: string;
   icon?: ReactNode;
+  image?: {
+    src: string;
+    alt: string;
+    className?: string;
+  };
   variant?: "primary" | "secondary";
   weight?: WeightType;
 }
@@ -36,6 +41,7 @@ const SELink: React.FC<LinkProps> = ({
   className,
   label,
   icon,
+  image,
   variant = "primary",
   weight = "normal",
 }) => {
@@ -57,6 +63,14 @@ const SELink: React.FC<LinkProps> = ({
       )}
       href={link}
     >
+      {image && (
+        <img
+          src={image.src}
+          alt={image.alt}
+          className={classNames("inline-block", image.className)}
+        />
+      )}
+      {image && (label || icon) && <>&nbsp;</>}
       {label && <span>{label}</span>}
       {label && icon && <>&nbsp;</>}
       {icon && <span>{icon}</span>}
