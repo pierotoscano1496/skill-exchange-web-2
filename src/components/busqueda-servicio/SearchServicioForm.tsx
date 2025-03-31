@@ -163,7 +163,7 @@ export default () => {
         />
         <SEButton
           icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-          variant="hero"
+          variant="primary"
           onClick={buscarServicios}
         />
       </SEForm>

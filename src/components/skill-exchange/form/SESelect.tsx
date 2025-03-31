@@ -33,6 +33,9 @@ const SESelect: React.FC<SelectProps> = ({
 }) => {
   const variantStyles = `text-${variant} focus:border-${variant} bg-${variant}-100`;
 
+  // 👇 crea una copia segura del array
+  let finalOptions = [...options];
+
   if (!initOption && includeInitOption) {
     let defaultValueInitOption: OptionSelect = {
       label: "--Seleccione--",
@@ -40,20 +43,20 @@ const SESelect: React.FC<SelectProps> = ({
     };
     switch (type) {
       case "text":
-        defaultValueInitOption = { ...defaultValueInitOption, value: "" };
+        defaultValueInitOption.value = "";
         break;
       case "number":
-        defaultValueInitOption = { ...defaultValueInitOption, value: 0 };
+        defaultValueInitOption.value = 0;
         break;
       default:
-        defaultValueInitOption = { ...defaultValueInitOption, value: "" };
+        defaultValueInitOption.value = "";
     }
 
-    options.unshift(defaultValueInitOption);
+    finalOptions.unshift(defaultValueInitOption);
   }
 
   if (initOption) {
-    options.unshift(initOption);
+    finalOptions.unshift(initOption);
   }
 
   return (
@@ -75,7 +78,7 @@ const SESelect: React.FC<SelectProps> = ({
           variantStyles
         )}
       >
-        {options.map((option) => (
+        {finalOptions.map((option) => (
           <option key={option.key || option.value} value={option.value}>
             {option.label}
           </option>

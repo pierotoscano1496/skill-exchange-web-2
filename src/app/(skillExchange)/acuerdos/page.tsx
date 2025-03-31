@@ -6,6 +6,7 @@ import ModalAlert from "@/components/ModalAlert";
 import ModalEnviarConstancia from "@/components/acuerdos/ModalEnviarConstancia";
 import SolicitudAcuerdoItem from "@/components/acuerdos/SolicitudAcuerdoItem";
 import SELink from "@/components/skill-exchange/SELink";
+import SELinkButton from "@/components/skill-exchange/SELinkButton";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
 import SEForm, { SEFormControl } from "@/components/skill-exchange/form/SEForm";
 import SESelect from "@/components/skill-exchange/form/SESelect";
@@ -102,6 +103,7 @@ export default ({}) => {
         <SEFormControl>
           <SELabel text="Servicio:" />
           <SESelect
+            includeInitOption={false}
             options={serviciosClienteOptions.map((s) => ({
               label: s.titulo,
               value: s.id,
@@ -116,6 +118,7 @@ export default ({}) => {
         <SEFormControl>
           <SELabel text="Estado:" />
           <SESelect
+            includeInitOption={false}
             options={estadoOptions.map((e, i) => ({
               label: e.nombre,
               value: e.estado,
@@ -143,7 +146,7 @@ export default ({}) => {
         ) : (
           <>
             <SEParragraph>No hay acuerdos por ahora</SEParragraph>
-            <SELink link="/servicio" label="Buscar servicios" />
+            <SELinkButton link="/servicio" label="Buscar servicios" />
           </>
         )}
       </SEContainer>
@@ -175,7 +178,7 @@ export default ({}) => {
             setMensajeEnviado(undefined);
           }}
         >
-          <p>Constancia enviada con éxito</p>
+          <SEParragraph>Constancia enviada con éxito</SEParragraph>
         </ModalAlert>
       )}
     </>

@@ -16,6 +16,11 @@ import ModalConfirm from "@/components/ModalConfirm";
 import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 import LoadingSolicitudes from "@/components/loading/LoadingSolicitudes";
 import wrapPromise from "@/utils/wrapPromise";
+import SEContainer from "@/components/skill-exchange/containers/SEContainer";
+import SELabel from "@/components/skill-exchange/text/SELabel";
+import SESelect from "@/components/skill-exchange/form/SESelect";
+import SELinkButton from "@/components/skill-exchange/SELinkButton";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 
 /* interface ServicioOption {
     id: string;
@@ -51,18 +56,6 @@ function loadInformation() {
 } */
 
 export default () => {
-  //const [matchsServicioSelected, setMatchsServicioSelected] = useState<MatchServicioDetailsResponse[]>([]);
-  //const [matchsServicioDetails, setMatchsServicioDetails] = useState<MatchServicioDetailsResponse[]>();
-  //const [servicios, setServicios] = useState<ServicioResponse[]>([]);
-  const getMatchServicioDetails = () => {
-    return obtenerUsuarioLogged().then((userLogged) => {
-      return obtenerDetailsMatchsPrestamistaAndOptionalEstado(
-        userLogged.id,
-        "solicitado"
-      );
-    });
-  };
-
   const [servicio, setServicio] = useState<ServicioResponse>();
   const [clienteModalData, setClienteModalData] = useState<UsuarioResponse>();
   const [openModalCliente, setOpenModalCliente] = useState<boolean>(false);
@@ -77,41 +70,44 @@ export default () => {
     openModalConfirmSolicitudRechazo,
     setOpenModalConfirmSolicitudRechazo,
   ] = useState<boolean>(false);
-  const matchsResource = wrapPromise(getMatchServicioDetails());
-  let matchsServicioDetails = matchsResource.read();
-  let matchsServicioSelected: MatchServicioDetailsResponse[] = (
-    matchsServicioDetails as MatchServicioDetailsResponse[]
-  ).filter((match) => match.servicio.id === servicio?.id);
-  let servicios: ServicioResponse[];
-  let status = "pending";
+  const [matchsServicioDetails, setMatchsServicioDetails] = useState<
+    MatchServicioDetailsResponse[]
+  >([]);
+  const [servicios, setServicios] = useState<ServicioResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  /* const matchsServicioDetails = matchsData(); */
-  /* if (matchsServicioDetails) {
-        setServicios(matchsServicioDetails.map(m => m.servicio)
-            .filter((servicioItem, index, arrayServicios) => index === arrayServicios.findIndex(s => s.id === servicioItem.id)));
-    } */
-
-  //let matchsServicioDetails: MatchServicioDetailsResponse[] = [];
-
-  /* useEffect(() => {
-        loadInformation();
-    }, []); */
-
-  /* const loadInformation = async () => {
-        await new Promise(resolver => setTimeout(resolver, 6000));
+  useEffect(() => {
+    const loadInformation = async () => {
+      try {
         const userLogged = await obtenerUsuarioLogged();
-        try {
-            matchsServicioDetails = await obtenerDetailsMatchsPrestamistaAndOptionalEstado(userLogged.id, "solicitado");
-            matchsServicioSelected = matchsServicioDetails?.filter(match => match.servicio.id === servicio?.id);
-            servicios = matchsServicioDetails.map(m => m.servicio)
-                .filter((servicioItem, index, arrayServicios) => (
-                    index === arrayServicios.findIndex(s => s.id === servicioItem.id)
-                ));
-            status = "OK"
-        } catch {
-            status = "error";
-        }
-    } */
+        const matchs = await obtenerDetailsMatchsPrestamistaAndOptionalEstado(
+          userLogged.id,
+          "solicitado"
+        );
+        setMatchsServicioDetails(matchs);
+
+        // Extraer servicios únicos
+        const serviciosUnicos = matchs
+          .map((m) => m.servicio)
+          .filter(
+            (servicioItem, index, arrayServicios) =>
+              index ===
+              arrayServicios.findIndex((s) => s.id === servicioItem.id)
+          );
+        setServicios(serviciosUnicos);
+      } catch (error) {
+        console.error("Error loading information:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadInformation();
+  }, []);
+
+  const matchsServicioSelected = matchsServicioDetails.filter(
+    (match) => match.servicio.id === servicio?.id
+  );
 
   const openModalViewProfile = (cliente: UsuarioResponse) => {
     setClienteModalData(cliente);
@@ -163,51 +159,40 @@ export default () => {
     setOpenModalSolicitudRechazada(false);
   };
 
-  //const matchsServicioSelected = matchsServicioDetails?.filter(match => match.servicio.id === servicio?.id);
-
   return (
     <>
-      <div className="principal">
-        <div className="form-row">
-          <div className="form-control">
-            <label htmlFor="servicio">Servicio:</label>
-            <select
-              name="servicio"
-              value={servicio?.id}
-              onChange={(e) =>
-                setServicio(servicios.find((s) => s.id === e.target.value))
-              }
-            >
-              <option>--Seleccione--</option>
-              {servicios!.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.titulo}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div>
-          {matchsServicioSelected!.length > 0 ? (
-            matchsServicioSelected!.map((m) => (
-              <SolicitudItem
-                key={m.id}
-                match={m}
-                sendModalState={openModalViewProfile}
-                sendSolicitudAprobada={handleSolicitudAprobada}
-                sendSolicitudForRechazo={handleConfirmSolicitudForRechazo}
-              />
-            ))
-          ) : (
-            <>
-              <p>No hay solicitudes por ahora</p>
-              <a className="link-button btn-primary" href="/contratos">
-                Ver mis contratos
-              </a>
-            </>
-          )}
-        </div>
-      </div>
+      <SEContainer size="medium">
+        <SESelect
+          label="Servicio"
+          options={servicios.map((s, i) => ({
+            label: s.titulo,
+            value: s.id,
+          }))}
+          onChange={(e) =>
+            setServicio(servicios.find((s) => s.id === e.target.value))
+          }
+        />
+      </SEContainer>
+      {isLoading ? (
+        <LoadingSolicitudes />
+      ) : matchsServicioSelected.length > 0 ? (
+        matchsServicioSelected.map((m) => (
+          <SolicitudItem
+            key={m.id}
+            match={m}
+            sendModalState={openModalViewProfile}
+            sendSolicitudAprobada={handleSolicitudAprobada}
+            sendSolicitudForRechazo={handleConfirmSolicitudForRechazo}
+          />
+        ))
+      ) : (
+        <>
+          <SEParragraph variant="error">
+            No hay solicitudes por ahora
+          </SEParragraph>
+          <SELinkButton label="Ver mis contratos" link="/contratos" />
+        </>
+      )}
 
       {openModalCliente && !!clienteModalData && (
         <ModalVerPerfilUsuario
