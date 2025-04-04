@@ -11,7 +11,7 @@ const PanelNavigation: React.FC<PanelProps> = ({ children }) => {
 
     const logout = async () => {
         const tokenValue = getCookieParam("token");
-        const response = await fetch(`http://localhost:9081/api/usuario/logout`, {
+        const response = await fetch(`http://backend:9081/api/usuario/logout`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + tokenValue,
@@ -32,7 +32,7 @@ const PanelNavigation: React.FC<PanelProps> = ({ children }) => {
 
     const obtenerUsuario = async () => {
         const token = `Bearer ${getCookieParam("token")}`;
-        const response = await fetch(`http://localhost:9081/api/usuario`, {
+        const response = await fetch(`http://backend:9081/api/usuario`, {
             headers: {
                 Authorization: token
             }

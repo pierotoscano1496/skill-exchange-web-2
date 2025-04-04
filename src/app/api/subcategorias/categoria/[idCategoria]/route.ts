@@ -8,7 +8,7 @@ type RequestParams = {
 }
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: `http://localhost:9081/api`,
+    baseURL: `http://backend:9081/api`,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"

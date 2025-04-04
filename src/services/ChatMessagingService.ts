@@ -8,7 +8,7 @@ class ChatMessagingService {
 
     constructor() {
         this.client = new Client({
-            webSocketFactory: () => new SockJS("http://localhost:9081/api/messaging-socket"),
+            webSocketFactory: () => new SockJS("http://backend:9081/api/messaging-socket"),
             debug: (str) => console.log(str),
             onWebSocketError: (error) => {
                 console.error("Error con websocket", error);

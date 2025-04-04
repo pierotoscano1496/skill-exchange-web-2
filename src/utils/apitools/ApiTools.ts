@@ -19,7 +19,7 @@ export default class ApiTools {
 
     constructor(mainPath: string) {
         this._axiosInstance = axios.create({
-            baseURL: `http://localhost:9081/api/${mainPath}`,
+            baseURL: `http://backend:9081/api/${mainPath}`,
             withCredentials: true,
             headers: {
                 "Content-Type": "application/json"
