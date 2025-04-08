@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { NextRequest } from "next/server";
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: `http://backend:9081/api`,
+    baseURL: `https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api`,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"

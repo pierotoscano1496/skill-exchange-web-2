@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: `http://backend:9081/api`,
+    baseURL: `https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api`,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     const token = data.token;
 
     if (token) {
-        const response = await fetch("http://backend:9081/api/usuario", {
+        const response = await fetch("https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api/usuario", {
             headers: {
                 "Authorization": "Bearer " + token
             }
