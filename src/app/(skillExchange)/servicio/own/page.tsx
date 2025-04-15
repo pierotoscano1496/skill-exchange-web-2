@@ -9,7 +9,7 @@ import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SEServicio from "@/components/servicios/SEServicio";
 import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
@@ -18,7 +18,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import SESkeletonContainer from "@/components/loading/SESkeletonContainer";
 
-export default () => {
+const ServicioOwnPage: React.FC = () => {
   const [servicios, setServicios] = useState<ServicioResponse[]>([]);
   const [usuarioLogged, setUsuarioLogged] =
     useState<UsuarioRegisteredResponse>();
@@ -91,3 +91,7 @@ export default () => {
     </SEContainer>
   );
 };
+
+ServicioOwnPage.displayName = "ServicioOwnPage";
+
+export default ServicioOwnPage;

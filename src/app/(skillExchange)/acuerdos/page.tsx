@@ -31,7 +31,7 @@ interface MensajeSentStatus {
   sent: boolean;
 }
 
-export default ({}) => {
+const AcuerdosPage: React.FC = () => {
   const [servicioClienteOptionSelected, setServicioClienteOptionSelected] =
     useState<ServicioOption>();
   const [proveedorPerfil, setProveedorPerfil] = useState<UsuarioResponse>();
@@ -184,3 +184,7 @@ export default ({}) => {
     </>
   );
 };
+
+AcuerdosPage.displayName = "AcuerdosPage";
+
+export default AcuerdosPage;

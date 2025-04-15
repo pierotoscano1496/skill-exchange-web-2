@@ -32,6 +32,10 @@ interface MedioPagoProps {
   medioPago: MedioPagoResponse;
 }
 
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
 export async function addComment(success: boolean) {
   "use server";
 
@@ -40,7 +44,7 @@ export async function addComment(success: boolean) {
   }
 }
 
-export default async ({ params }: { params: Promise<{ id: string }> }) => {
+const ServicioDetailsPage = async ({ params }: Props) => {
   const { id } = await params;
   const servicioDetails: ServicioDetailsResponse = await getServicioDetails(id);
 
@@ -152,3 +156,7 @@ export default async ({ params }: { params: Promise<{ id: string }> }) => {
     </SEContainer>
   );
 };
+
+ServicioDetailsPage.displayName = "ServicioDetailsPage";
+
+export default ServicioDetailsPage;

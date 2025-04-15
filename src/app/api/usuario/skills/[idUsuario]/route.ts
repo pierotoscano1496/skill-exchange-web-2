@@ -11,7 +11,7 @@ type AsignarSkillsParams = {
 }
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: `https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api`,
+    baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json"

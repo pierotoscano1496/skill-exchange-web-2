@@ -4,43 +4,50 @@ import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 import ChatModule from "@/components/chats/ChatModule";
 import ChatPanel from "@/components/chats/ChatPanel";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default () => {
-    const [usuarioLogged, setUsuarioLogged] = useState<UsuarioRegisteredResponse>();
-    const [idConversacionSelected, setIdConversacionSelected] = useState<string>();
+const MensajesPage: React.FC = () => {
+  const [usuarioLogged, setUsuarioLogged] =
+    useState<UsuarioRegisteredResponse>();
+  const [idConversacionSelected, setIdConversacionSelected] =
+    useState<string>();
 
-    useEffect(() => {
-        const setup = async () => {
-            const usuario = await obtenerUsuarioLogged();
-            setUsuarioLogged(usuario);
-        }
+  useEffect(() => {
+    const setup = async () => {
+      const usuario = await obtenerUsuarioLogged();
+      setUsuarioLogged(usuario);
+    };
 
-        setup();
-    }, [])
+    setup();
+  }, []);
 
-    const openChatModule = (idConversacion: string) => {
-        setIdConversacionSelected(idConversacion);
-    }
+  const openChatModule = (idConversacion: string) => {
+    setIdConversacionSelected(idConversacion);
+  };
 
-    return (
-        <main>
-            <div className="container row">
-                {usuarioLogged &&
-                    <>
-                        <ChatPanel idUserLogged={usuarioLogged.id}
-                            onOpenChatModule={openChatModule}
-                        />
-                        {idConversacionSelected &&
-                            <ChatModule key={idConversacionSelected} idConversacion={idConversacionSelected}
-                                idUsuarioLogged={usuarioLogged.id}
-                            />
-                        }
+  return (
+    <main>
+      <div className="container row">
+        {usuarioLogged && (
+          <>
+            <ChatPanel
+              idUserLogged={usuarioLogged.id}
+              onOpenChatModule={openChatModule}
+            />
+            {idConversacionSelected && (
+              <ChatModule
+                key={idConversacionSelected}
+                idConversacion={idConversacionSelected}
+                idUsuarioLogged={usuarioLogged.id}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  );
+};
 
-                    </>
-                }
-            </div>
+MensajesPage.displayName = "MensajesPage";
 
-        </main>
-    )
-}
+export default MensajesPage;

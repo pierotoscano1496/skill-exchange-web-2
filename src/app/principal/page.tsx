@@ -1,44 +1,38 @@
-"use client";
-
+import { searchServicioWithParams } from "@/actions/servicio.actions";
+import SearchServicioForm from "@/components/busqueda-servicio/SearchServicioForm";
+import SEServicio from "@/components/servicios/SEServicio";
+import SEContainer from "@/components/skill-exchange/containers/SEContainer";
+import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
+import SEForm from "@/components/skill-exchange/form/SEForm";
+import SEInput from "@/components/skill-exchange/form/SEInput";
+import SESelect from "@/components/skill-exchange/form/SESelect";
+import SELabel from "@/components/skill-exchange/text/SELabel";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
+import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
+import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioResponse";
 import { useEffect, useState } from "react";
 
-const BuscarServicio = () => {
-    const [texto, setTexto] = useState<string>("");
-    const [categoria,setCategoria]=useState<string>();
-    const [subCategoria,setSubCategoria]=useState<string>();
-    /* const [categoriasOptions,setCategoriasOptions]=useState<>([]);
-    const [subCategoriaOptions,setSubCategoriaOptions]=useState<>([]); */
+type Props = {
+  searchParams: SearchServiciosParametersBody;
+};
 
-    useEffect(()=>{
-        
-    },[]);
+export default async ({ searchParams }: Props) => {
+  const servicios = await searchServicioWithParams(
+    searchParams as SearchServiciosParametersBody
+  );
 
-    return (
-        <div>
-            <div className="search-options">
-                <div>
-                <input type="text"
-                    value={texto}
-                    onChange={(e) => setTexto(e.target.value)}
-                    placeholder="Busca por palabra clave o skill" />
-                    <label htmlFor=""></label>
-                </div>
-                <div>
-                    <label>Categoría:
-                        <select value={categoria}>
-                            <option>--Seleccione--</option>
-                        </select>
-                    </label>
-                </div>
-                <div>
-                    <label>Subcategoría:
-                        <select value={subCategoria}>
-                            <option>--Seleccione--</option>
-
-                        </select>
-                    </label>
-                </div>
-            </div>
-        </div>
-    );
-}
+  return (
+    <SEContainer direction="column" size="medium">
+      <SearchServicioForm redirect="principal" />
+      <SEGridContainer columns={2}>
+        {servicios.length > 0 ? (
+          servicios.map((s) => (
+            <SEServicio key={s.id} servicio={s} forPublic={true} />
+          ))
+        ) : (
+          <SEParragraph variant="secondary">Sin resultados</SEParragraph>
+        )}
+      </SEGridContainer>
+    </SEContainer>
+  );
+};

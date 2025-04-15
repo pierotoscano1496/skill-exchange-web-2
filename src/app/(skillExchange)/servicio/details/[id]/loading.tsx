@@ -1,9 +1,8 @@
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
 
-export default () => {
+const ServicioDetailsLoading: React.FC = () => {
   return (
     <SEContainer direction="column" size="medium">
       <h1 className="text-center text-4xl w-full">
@@ -16,3 +15,7 @@ export default () => {
     </SEContainer>
   );
 };
+
+ServicioDetailsLoading.displayName = "ServicioDetailsLoading";
+
+export default ServicioDetailsLoading;

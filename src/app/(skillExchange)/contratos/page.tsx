@@ -19,14 +19,14 @@ import EstadoMatchOption from "@/interfaces/busqueda-servicio/EstadoMatchOption"
 import MatchServicioDetailsResponse from "@/interfaces/responsebody/matching/MatchServicioDetailsResponse";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ServicioOption {
   id: string;
   titulo: string;
 }
 
-export default ({}) => {
+const ContratosPage: React.FC = () => {
   const [matchsServicios, setMatchsServicios] = useState<
     MatchServicioDetailsResponse[]
   >([]);
@@ -273,3 +273,7 @@ export default ({}) => {
     </>
   );
 };
+
+ContratosPage.displayName = "ContratosPage";
+
+export default ContratosPage;

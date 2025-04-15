@@ -31,15 +31,10 @@ export default () => {
         router.push("/servicio");
       }
     } catch (error) {
-      let mensaje: string;
-      if (error instanceof AxiosError) {
-        const err = error as AxiosError;
-        mensaje = err.response?.data as string;
-      } else {
-        mensaje = "Error occurred";
+      if (error instanceof Error) {
+        setError(error.message);
       }
       setAttempSubmit(true);
-      setError(mensaje);
     } finally {
       setLoading(false);
     }
@@ -80,7 +75,7 @@ export default () => {
             />
             {loading && <img className={styles.waiting} />}
             {attempSubmit && error && (
-              <SEParragraph variant="error">error</SEParragraph>
+              <SEParragraph variant="error">{error}</SEParragraph>
             )}
           </SEForm>
         </div>

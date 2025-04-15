@@ -29,7 +29,11 @@ import SEForm from "../skill-exchange/form/SEForm";
 import SEContainer from "../skill-exchange/containers/SEContainer";
 import SEGridContainer from "../skill-exchange/containers/SEGridContainer";
 
-export default () => {
+type Props = {
+  redirect?: string;
+};
+
+export default ({ redirect = "servicio" }: Props) => {
   const [keyWord, setKeyWord] = useState("");
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [subCategorias, setSubCategorias] = useState<SubCategoriaResponse[]>(
@@ -72,7 +76,7 @@ export default () => {
         ? "?" + parameters.reduce((prevParam, param) => `${param}&${prevParam}`)
         : "";
 
-    router.push(`/servicio${searchParams}`);
+    router.push(`/${redirect}${searchParams}`);
   };
 
   const subCategoriasFiltered = subCategorias.filter(

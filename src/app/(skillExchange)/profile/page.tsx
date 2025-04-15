@@ -10,9 +10,9 @@ import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import SESpan from "@/components/skill-exchange/text/SESpan";
 import SETitle from "@/components/skill-exchange/text/SETitle";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default () => {
+const ProfilePage: React.FC = () => {
   const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
 
   useEffect(() => {
@@ -113,3 +113,7 @@ export default () => {
     </SEContainer>
   );
 };
+
+ProfilePage.displayName = "ProfilePage";
+
+export default ProfilePage;

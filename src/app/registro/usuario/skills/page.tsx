@@ -15,7 +15,6 @@ import SEInput from "@/components/skill-exchange/form/SEInput";
 import SETextarea from "@/components/skill-exchange/form/SETextarea";
 import SEButton from "@/components/skill-exchange/SEButton";
 import SETitle from "@/components/skill-exchange/text/SETitle";
-import SETitle from "@/components/skill-exchange/text/SETitle";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";

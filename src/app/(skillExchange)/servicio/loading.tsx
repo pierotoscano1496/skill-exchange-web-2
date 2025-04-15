@@ -4,7 +4,7 @@ import cardStyles from "@/app/styles/cards/cardservicio.module.scss";
 import SEContainer from "@/components/skill-exchange/containers/SEContainer";
 import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
 
-export default () => {
+const ServidioLoading = () => {
   return (
     <SEContainer direction="column" size="medium">
       <h1 className="text-center text-4xl w-full">
@@ -17,3 +17,7 @@ export default () => {
     </SEContainer>
   );
 };
+
+ServidioLoading.displayName = "ServidioLoading";
+
+export default ServidioLoading;

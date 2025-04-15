@@ -62,7 +62,7 @@ type SkillOption = {
   descripcion: string;
 };
 
-export default () => {
+const RegistroServicioPage: React.FC = () => {
   const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
   const [titulo, setTitulo] = useState<string>("");
   const [precio, setPrecio] = useState<number | "">("");
@@ -474,7 +474,7 @@ export default () => {
             <SEContainer style="container" size="medium">
               <SETitle size="large" label="Enlaces a otras plataformas" />
               {linksData.map((linkData, index) => (
-                <SECard>
+                <SECard key={index}>
                   <IconMedio medio={linkData.medio} className="mr-auto" />
                   {linkData.link.length <= 10
                     ? linkData.link
@@ -608,3 +608,7 @@ export default () => {
     </>
   );
 };
+
+RegistroServicioPage.displayName = "RegistroServicioPage";
+
+export default RegistroServicioPage;

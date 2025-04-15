@@ -8,7 +8,7 @@ class ChatMessagingService {
 
     constructor() {
         this.client = new Client({
-            webSocketFactory: () => new SockJS("https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api/messaging-socket"),
+            webSocketFactory: () => new SockJS(`${process.env.NEXT_PUBLIC_MAIN_URL_BACKEND}messaging-socket`),
             debug: (str) => console.log(str),
             onWebSocketError: (error) => {
                 console.error("Error con websocket", error);

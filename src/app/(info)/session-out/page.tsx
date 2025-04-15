@@ -1,13 +1,15 @@
 import SELinkButton from "@/components/skill-exchange/SELinkButton";
+import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
+import SETitle from "@/components/skill-exchange/text/SETitle";
 
-export default () => {
+const SessionOutPage = () => {
   return (
     <section className="text-center">
-      <h1 className="text-4xl font-bold text-gray-800">Sesión cerrada</h1>
-      <p className="text-xl text-gray-700">
+      <SETitle label="Sesión cerrada" size="large" />
+      <SEParragraph>
         Tu sesión ha expirado o ha sido cerrada. Para continuar, inicia sesión
         de nuevo.
-      </p>
+      </SEParragraph>
       <SELinkButton
         label="Inicia sesión"
         link="/login"
@@ -17,3 +19,7 @@ export default () => {
     </section>
   );
 };
+
+SessionOutPage.displayName = "SessionOutPage";
+
+export default SessionOutPage;

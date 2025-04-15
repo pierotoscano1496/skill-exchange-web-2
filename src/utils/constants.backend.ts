@@ -6,8 +6,9 @@ import { cookies } from "next/headers";
  * @returns AxiosInstance
  */
 export const getBackendInstance = () => {
+  console.log(process.env.NEXT_PUBLIC_MAIN_URL_BACKEND);
   const backendInstanceAuth = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND,
+    baseURL: process.env.NEXT_PUBLIC_MAIN_URL_BACKEND || "https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api/",
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",

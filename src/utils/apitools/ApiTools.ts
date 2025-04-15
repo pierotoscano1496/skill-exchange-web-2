@@ -19,7 +19,7 @@ export default class ApiTools {
 
     constructor(mainPath: string) {
         this._axiosInstance = axios.create({
-            baseURL: `https://skill-exchange-backend-b36ba056d3f1.herokuapp.com/api/${mainPath}`,
+            baseURL: `${process.env.NEXT_PUBLIC_MAIN_URL_BACKEND}${mainPath}`,
             withCredentials: true,
             headers: {
                 "Content-Type": "application/json"

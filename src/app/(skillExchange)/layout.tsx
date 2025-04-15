@@ -2,9 +2,9 @@ import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 import SENavbar from "@/components/skill-exchange/SENavbar";
 import { redirect } from "next/navigation";
 
-export default async ({
+const SkillExchangeLayout=async ({
   children,
-}: Readonly<{ children: React.ReactNode }>) => {
+}: { children: React.ReactNode }) => {
   let usuario = undefined;
   try {
     usuario = await obtenerUsuarioLogged();
@@ -15,3 +15,7 @@ export default async ({
 
   return <SENavbar usuario={usuario}>{children}</SENavbar>;
 };
+
+SkillExchangeLayout.displayName="SkillExchangeLayout"
+
+export default SkillExchangeLayout;
