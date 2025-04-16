@@ -13,13 +13,11 @@ import ServicioResponse from "@/interfaces/responsebody/servicio/ServicioRespons
 import { useEffect, useState } from "react";
 
 type Props = {
-  searchParams: SearchServiciosParametersBody;
+  searchParams: Promise<SearchServiciosParametersBody>;
 };
 
 const PrincipalPage = async ({ searchParams }: Props) => {
-  const servicios = await searchServicioWithParams(
-    searchParams as SearchServiciosParametersBody
-  );
+  const servicios = await searchServicioWithParams(await searchParams);
 
   return (
     <SEContainer direction="column" size="medium">

@@ -7,11 +7,11 @@ import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
 
 type Props = {
-  searchParams: SearchServiciosParametersBody;
+  searchParams: Promise<SearchServiciosParametersBody>;
 };
 
 const ServicioPage = async ({ searchParams }: Props) => {
-  const servicios = await searchServicioWithParams(searchParams);
+  const servicios = await searchServicioWithParams(await searchParams);
 
   return (
     <SEContainer direction="column" size="medium">
