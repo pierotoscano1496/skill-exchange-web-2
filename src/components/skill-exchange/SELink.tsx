@@ -78,4 +78,6 @@ const SELink: React.FC<LinkProps> = ({
   );
 };
 
+SELink.displayName = "SELink";
+
 export default SELink;

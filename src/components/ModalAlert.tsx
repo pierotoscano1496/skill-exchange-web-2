@@ -13,7 +13,7 @@ type Params = {
   onClose: () => void;
 };
 
-export default ({
+const ModalAlert = ({
   title = "Mensaje",
   container = false,
   children,
@@ -44,3 +44,7 @@ export default ({
     </div>
   );
 };
+
+ModalAlert.displayName = "ModalAlert";
+
+export default ModalAlert;

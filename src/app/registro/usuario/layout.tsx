@@ -1,6 +1,6 @@
 import { RegistroUsuarioProvider } from "@/contexts/RegistroUsuarioProvider";
 
-export default ({
+const RegistroUsuarioLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -11,3 +11,7 @@ export default ({
     </main>
   );
 };
+
+RegistroUsuarioLayout.displayName = "RegistroUsuarioLayout";
+
+export default RegistroUsuarioLayout;

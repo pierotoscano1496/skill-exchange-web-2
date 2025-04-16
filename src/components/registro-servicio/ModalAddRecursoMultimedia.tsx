@@ -21,7 +21,7 @@ type Props = {
   onClose: () => void;
 };
 
-export default ({
+const ModalAddRecursoMultimedia = ({
   onSendLinkDataFromPlataformas,
   onClose,
   onSendFilesDataFromDragAndDrop,
@@ -124,3 +124,7 @@ export default ({
     </SEModal>
   );
 };
+
+ModalAddRecursoMultimedia.displayName = "ModalAddRecursoMultimedia";
+
+export default ModalAddRecursoMultimedia;

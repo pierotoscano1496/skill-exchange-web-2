@@ -3,7 +3,7 @@ import SELinkButton from "@/components/skill-exchange/SELinkButton";
 import classNames from "classnames";
 import styles from "@/app/styles/tailwind.module.scss";
 
-export default async () => {
+const MainPage = async () => {
   let usuario = null;
   try {
     usuario = await obtenerUsuarioLogged();
@@ -120,3 +120,7 @@ export default async () => {
     </main>
   );
 };
+
+MainPage.displayName = "MainPage";
+
+export default MainPage;

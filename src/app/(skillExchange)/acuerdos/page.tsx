@@ -162,6 +162,7 @@ const AcuerdosPage: React.FC = () => {
        * Enviar constancia
        */}
       {matchForEnviarConstancia && (
+        
         <ModalEnviarConstancia
           key={matchForEnviarConstancia.id}
           onClose={() => setMatchForEnviarConstancia(undefined)}

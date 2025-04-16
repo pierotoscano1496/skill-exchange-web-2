@@ -15,7 +15,7 @@ type Params = {
   ) => void;
 };
 
-export default ({
+const SolicitudAcuerdoItem = ({
   match,
   onOpenViewProfile,
   onOpenModalEnviarConstancia,
@@ -89,3 +89,7 @@ export default ({
     </div>
   );
 };
+
+SolicitudAcuerdoItem.displayName = "SolicitudAcuerdoItem";
+
+export default SolicitudAcuerdoItem;

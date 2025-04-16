@@ -16,7 +16,7 @@ type Props = {
   searchParams: SearchServiciosParametersBody;
 };
 
-export default async ({ searchParams }: Props) => {
+const PrincipalPage = async ({ searchParams }: Props) => {
   const servicios = await searchServicioWithParams(
     searchParams as SearchServiciosParametersBody
   );
@@ -36,3 +36,7 @@ export default async ({ searchParams }: Props) => {
     </SEContainer>
   );
 };
+
+PrincipalPage.displayName = "PrincipalPage";
+
+export default PrincipalPage;

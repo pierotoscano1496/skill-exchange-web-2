@@ -27,7 +27,7 @@ type DragAndDropProps = {
   showSize?: boolean;
 };
 
-export default ({
+const SEDragAndDrop = ({
   onSendFilesData,
   onError,
   limit,
@@ -46,9 +46,7 @@ export default ({
         if (
           acceptedFiles.length > 0 &&
           getFilesSizeMb(acceptedFilesData) <= maxSizeFiles &&
-          (!limit || acceptedFiles.length <= limit)(
-            !limit || acceptedFiles.length <= limit
-          )
+          (!limit || acceptedFiles.length <= limit)
         ) {
           setNewFilesData(
             acceptedFiles.map(
@@ -166,8 +164,8 @@ export default ({
         </SEParragraph>
       )}
       {fileRejections.length > 0 &&
-        fileRejections.map((f) => (
-          <SEParragraph variant="error">
+        fileRejections.map((f, index) => (
+          <SEParragraph key={index} variant="error">
             Archivo {f.file.name} no admitido
           </SEParragraph>
         ))}
@@ -180,3 +178,7 @@ export default ({
     </section>
   );
 };
+
+SEDragAndDrop.displayName = "SEDragAndDrop";
+
+export default SEDragAndDrop;

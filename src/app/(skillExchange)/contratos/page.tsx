@@ -62,36 +62,36 @@ const ContratosPage: React.FC = () => {
   let prestamista: UsuarioRegisteredResponse | null = null;
 
   useEffect(() => {
+    const loadInformation = async () => {
+      prestamista = await obtenerUsuarioLogged();
+
+      try {
+        matchsServicioDetails = await obtenerDetailsMatchsPrestamistaEnServicio(
+          prestamista.id
+        );
+
+        //const servicios = await obtenerServiciosByPrestamista(cliente.id);
+        setMatchsServicios(matchsServicioDetails);
+
+        // Mapear los servicios de los matchs del proveedor
+        setServiciosClienteOptionsForSearch(
+          matchsServicioDetails
+            .map((m) => ({
+              id: m.servicio.id,
+              titulo: m.servicio.titulo,
+            }))
+            .filter(
+              (option, index, options) =>
+                index === options.findIndex((o) => o.id === option.id)
+            )
+        );
+      } catch (error) {
+        console.log("No se cargaron los matchs");
+      }
+    };
+
     loadInformation();
   }, []);
-
-  const loadInformation = async () => {
-    prestamista = await obtenerUsuarioLogged();
-
-    try {
-      matchsServicioDetails = await obtenerDetailsMatchsPrestamistaEnServicio(
-        prestamista.id
-      );
-
-      //const servicios = await obtenerServiciosByPrestamista(cliente.id);
-      setMatchsServicios(matchsServicioDetails);
-
-      // Mapear los servicios de los matchs del proveedor
-      setServiciosClienteOptionsForSearch(
-        matchsServicioDetails
-          .map((m) => ({
-            id: m.servicio.id,
-            titulo: m.servicio.titulo,
-          }))
-          .filter(
-            (option, index, options) =>
-              index === options.findIndex((o) => o.id === option.id)
-          )
-      );
-    } catch (error) {
-      console.log("No se cargaron los matchs");
-    }
-  };
 
   const openModalConfirmarConstancia = (
     match: MatchServicioDetailsResponse
@@ -218,7 +218,7 @@ const ContratosPage: React.FC = () => {
             cliente para comenzar a brindar el servicio.
           </SEParragraph>
           <SEParragraph>
-            Una vez comprobado, haga click en "Aceptar".
+            Una vez comprobado, haga click en &quot;Aceptar&quot;.
           </SEParragraph>
         </ModalConfirm>
       )}

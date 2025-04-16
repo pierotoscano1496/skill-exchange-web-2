@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default () => {
+const RegistroUsuarioRedesPage = () => {
   const {
     usuarioDatos,
     setUsuarioDatos,
@@ -156,3 +156,7 @@ export default () => {
     </>
   );
 };
+
+RegistroUsuarioRedesPage.displayName = "RegistroUsuarioRedesPage";
+
+export default RegistroUsuarioRedesPage;

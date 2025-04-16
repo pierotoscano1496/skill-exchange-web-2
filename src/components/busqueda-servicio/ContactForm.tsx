@@ -20,7 +20,7 @@ type Props = {
   servicio: ServicioDetailsResponse;
 };
 
-export default ({ children, servicio, cliente }: Props) => {
+const ContactForm = ({ children, servicio, cliente }: Props) => {
   const [newMessage, setNewMessage] = useState<string>("");
   const [openContactForm, setOpenContactForm] = useState(false);
   const router = useRouter();
@@ -76,3 +76,7 @@ export default ({ children, servicio, cliente }: Props) => {
     </>
   );
 };
+
+ContactForm.displayName = "ContactForm";
+
+export default ContactForm;

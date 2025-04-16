@@ -22,40 +22,7 @@ import SESelect from "@/components/skill-exchange/form/SESelect";
 import SELinkButton from "@/components/skill-exchange/SELinkButton";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 
-/* interface ServicioOption {
-    id: string;
-    titulo: string;
-}
-
-let status = "pending";
-let result: MatchServicioDetailsResponse[] | unknown;
-const matchsData = loadInformation();
-
-function loadInformation() {
-    let loadingMatchs = async () => {
-        await new Promise(resolver => setTimeout(resolver, 60000));
-        try {
-            const userLogged = await obtenerUsuarioLogged();
-            result = await obtenerDetailsMatchsPrestamistaAndOptionalEstado(userLogged.id, "solicitado");
-            status = "OK";
-        } catch (error) {
-            result = error;
-            status = "failed";
-        }
-    }
-
-    return () => {
-        if (status === "pending") {
-            throw loadingMatchs();
-        } else if (status === "failed") {
-            throw result;
-        } else if (status === "OK") {
-            return result as MatchServicioDetailsResponse[];
-        }
-    }
-} */
-
-export default () => {
+const SolcitudesPage = () => {
   const [servicio, setServicio] = useState<ServicioResponse>();
   const [clienteModalData, setClienteModalData] = useState<UsuarioResponse>();
   const [openModalCliente, setOpenModalCliente] = useState<boolean>(false);
@@ -223,3 +190,7 @@ export default () => {
     </>
   );
 };
+
+SolcitudesPage.displayName = "SolcitudesPage";
+
+export default SolcitudesPage;

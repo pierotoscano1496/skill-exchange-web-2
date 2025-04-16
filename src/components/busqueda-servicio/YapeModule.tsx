@@ -14,8 +14,7 @@ type Props = {
   source: string;
   numCelular: string;
 };
-
-export default ({ idServicio, source, numCelular }: Props) => {
+const YapeModule = ({ idServicio, source, numCelular }: Props) => {
   const [openYapeQR, setOpenYapeQR] = useState<boolean>(false);
   const [urlYapeQr, setUrlYapeQr] = useState<string>("");
 
@@ -51,3 +50,7 @@ export default ({ idServicio, source, numCelular }: Props) => {
     </SEContainer>
   );
 };
+
+YapeModule.displayName = "YapeModule";
+
+export default YapeModule;

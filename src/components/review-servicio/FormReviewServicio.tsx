@@ -20,7 +20,12 @@ interface Props {
   onSubmit: (success: boolean) => void;
 }
 
-export default ({ idServicio, comentarista, className, onSubmit }: Props) => {
+const FormReviewServicio = ({
+  idServicio,
+  comentarista,
+  className,
+  onSubmit,
+}: Props) => {
   const [comentario, setComentario] = useState("");
   const [puntaje, setPuntaje] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -87,3 +92,7 @@ export default ({ idServicio, comentarista, className, onSubmit }: Props) => {
     </SEForm>
   );
 };
+
+FormReviewServicio.displayName = "FormReviewServicio";
+
+export default FormReviewServicio;

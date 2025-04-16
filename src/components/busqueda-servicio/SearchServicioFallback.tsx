@@ -1,7 +1,9 @@
-import Skeleton from "react-loading-skeleton"
+import Skeleton from "react-loading-skeleton";
 
-export default () => {
-    return (
-        <Skeleton width={"100%"} height={30} />
-    )
-}
+const SearchServicioFallback = () => {
+  return <Skeleton width={"100%"} height={30} />;
+};
+
+SearchServicioFallback.displayName = "SearchServicioFallback";
+
+export default SearchServicioFallback;

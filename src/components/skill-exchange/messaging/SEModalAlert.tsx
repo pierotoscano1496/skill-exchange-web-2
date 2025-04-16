@@ -11,7 +11,7 @@ type Params = {
   onClose: () => void;
 };
 
-export default ({
+const SEModalAlert = ({
   title = "Mensaje",
   container = false,
   children,
@@ -23,12 +23,7 @@ export default ({
     >
       <div className="bg-white rounded-xl shadow-lg w-full max-w-3xl mx-4 p-6 flex flex-col">
         <header className="flex justify-between border-b border-gray-300 pb-2">
-          <SETitle
-            size="large"
-            className="flex-grow"
-            label={title}
-            center={true}
-          />
+          <SETitle size="large" className="flex-grow" label={title} />
           <SEButton
             onClick={onClose}
             shape="circle"
@@ -48,3 +43,7 @@ export default ({
     </div>
   );
 };
+
+SEModalAlert.displayName = "SEModalAlert";
+
+export default SEModalAlert;

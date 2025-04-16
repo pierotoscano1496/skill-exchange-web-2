@@ -24,7 +24,11 @@ type Props = {
   onClose: () => void;
 };
 
-export default ({ onSendDataFromYape, onSendDataFromCCI, onClose }: Props) => {
+const ModalAddModalidadPago = ({
+  onSendDataFromYape,
+  onSendDataFromCCI,
+  onClose,
+}: Props) => {
   const [activeTab, setActiveTab] = useState(1);
   const [numeroCelular, setNumeroCelular] = useState<string>("");
   const [codCuentaInterbancario, setCodCuentaInterbancario] =
@@ -150,3 +154,7 @@ export default ({ onSendDataFromYape, onSendDataFromCCI, onClose }: Props) => {
     </SEModal>
   );
 };
+
+ModalAddModalidadPago.displayName = "ModalAddModalidadPago";
+
+export default ModalAddModalidadPago;

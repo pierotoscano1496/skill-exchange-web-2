@@ -96,4 +96,6 @@ const SEModal: React.FC<ModalProps> = ({
   );
 };
 
+SEModal.displayName = "SEModal";
+
 export default SEModal;

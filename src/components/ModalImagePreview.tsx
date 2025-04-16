@@ -17,7 +17,7 @@ type Props = {
   fullModalClassName?: string;
 };
 
-export default ({
+const ModalImagePreview = ({
   source,
   onOpen,
   onClose,
@@ -41,3 +41,7 @@ export default ({
     </SEModal>
   );
 };
+
+ModalImagePreview.displayName = "ModalImagePreview";
+
+export default ModalImagePreview;

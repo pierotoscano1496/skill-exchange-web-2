@@ -19,7 +19,7 @@ type TipoDocumentoOptions = {
   name: string;
 };
 
-export default () => {
+const RegistroUsuarioDatosPage = () => {
   const {
     usuarioDatos,
     setNombres,
@@ -180,3 +180,7 @@ export default () => {
     </div>
   );
 };
+
+RegistroUsuarioDatosPage.displayName = "RegistroUsuarioDatosPage";
+
+export default RegistroUsuarioDatosPage;

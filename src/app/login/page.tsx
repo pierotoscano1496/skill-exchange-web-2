@@ -11,7 +11,7 @@ import SECard from "@/components/skill-exchange/SECard";
 import SEForm from "@/components/skill-exchange/form/SEForm";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 
-export default () => {
+const LoginPage = () => {
   const [correo, setCorreo] = useState<string>("");
   const [contrasena, setContrasena] = useState<string>("");
   const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
@@ -83,3 +83,7 @@ export default () => {
     </main>
   );
 };
+
+LoginPage.displayName = "LoginPage";
+
+export default LoginPage;

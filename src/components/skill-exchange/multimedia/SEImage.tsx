@@ -49,4 +49,7 @@ const SEImage: React.FC<ImageProps> = ({
     />
   );
 };
+
+SEImage.displayName = "SEImage";
+
 export default SEImage;

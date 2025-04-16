@@ -21,7 +21,7 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 import SEModalAlert from "@/components/skill-exchange/messaging/SEModalAlert";
 import SECard from "@/components/skill-exchange/SECard";
 
-const RegistroUsuarioSkills = () => {
+const RegistroUsuarioSkillsPage = () => {
   const {
     usuarioDatos,
     addSkill,
@@ -256,4 +256,6 @@ const RegistroUsuarioSkills = () => {
   );
 };
 
-export default RegistroUsuarioSkills;
+RegistroUsuarioSkillsPage.displayName = "RegistroUsuarioSkillsPage";
+
+export default RegistroUsuarioSkillsPage;

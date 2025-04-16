@@ -6,7 +6,7 @@ import Close from "@/app/vectors/times-solid-svgrepo-com.svg";
 import UsuarioResponse from "@/interfaces/responsebody/usuario/UsuarioResponse";
 import Image from "next/image";
 import { useState } from "react";
-import SEModal, { SEModalFooter } from "../skill-exchange/messaging/SEModal";
+import SEModal from "../skill-exchange/messaging/SEModal";
 import SEContainer from "../skill-exchange/containers/SEContainer";
 import SEParragraph from "../skill-exchange/text/SEParragraph";
 import SELabel from "../skill-exchange/text/SELabel";
@@ -20,7 +20,7 @@ type Params = {
   onClose: () => void;
 };
 
-export default ({ cliente, onClose }: Params) => {
+const ModalVerPerfilUsuario = ({ cliente, onClose }: Params) => {
   return (
     <SEModal title="Datos del solicitante" onClose={onClose}>
       <SEFormControl>
@@ -61,3 +61,7 @@ export default ({ cliente, onClose }: Params) => {
     </SEModal>
   );
 };
+
+ModalVerPerfilUsuario.displayName = "ModalVerPerfilUsuario";
+
+export default ModalVerPerfilUsuario;

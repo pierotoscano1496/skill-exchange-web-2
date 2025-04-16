@@ -33,7 +33,7 @@ type Props = {
   redirect?: string;
 };
 
-export default ({ redirect = "servicio" }: Props) => {
+const SearchServicioForm = ({ redirect = "servicio" }: Props) => {
   const [keyWord, setKeyWord] = useState("");
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [subCategorias, setSubCategorias] = useState<SubCategoriaResponse[]>(
@@ -174,3 +174,7 @@ export default ({ redirect = "servicio" }: Props) => {
     </SEContainer>
   );
 };
+
+SearchServicioForm.displayName = "SearchServicioForm";
+
+export default SearchServicioForm;

@@ -8,7 +8,7 @@ interface ComentarioProps {
   comentario: ComentarioServicioResponse;
 }
 
-export default ({ comentario }: ComentarioProps) => (
+const ComentarioServicio = ({ comentario }: ComentarioProps) => (
   <SEContainer
     key={comentario.id}
     direction="column"
@@ -29,3 +29,7 @@ export default ({ comentario }: ComentarioProps) => (
     </SEContainer>
   </SEContainer>
 );
+
+ComentarioServicio.displayName = "ComentarioServicio";
+
+export default ComentarioServicio;

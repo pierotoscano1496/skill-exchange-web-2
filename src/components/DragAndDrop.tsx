@@ -23,7 +23,7 @@ type DragAndDropProps = {
   };
 };
 
-export default ({
+const DragAndDrop = ({
   onSendFilesData,
   onError,
   limit,
@@ -109,8 +109,8 @@ export default ({
         <>
           <SETitle size="large" label="Archivo (s):" />
           <div className={`flex flex-wrap justify-center mb-6`}>
-            {acceptedFiles.map((file) => (
-              <div className="flex flex-col items-center">
+            {acceptedFiles.map((file, index) => (
+              <div key={index} className="flex flex-col items-center">
                 <SEParragraph>
                   <strong>{file.name}</strong> - {file.size} bytes
                 </SEParragraph>
@@ -141,8 +141,8 @@ export default ({
       )}
       {fileRejections.length > 0 &&
         fileRejections.length <= limit &&
-        fileRejections.map((f) => (
-          <SEParragraph variant="error">
+        fileRejections.map((f, index) => (
+          <SEParragraph key={index} variant="error">
             Archivo {f.file.name} no admitido
           </SEParragraph>
         ))}
@@ -154,3 +154,7 @@ export default ({
     </section>
   );
 };
+
+DragAndDrop.displayName = "DragAndDrop";
+
+export default DragAndDrop;

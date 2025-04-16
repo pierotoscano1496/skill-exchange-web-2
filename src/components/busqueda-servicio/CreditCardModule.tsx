@@ -13,7 +13,7 @@ type Props = {
   number: string;
 };
 
-export default ({ number }: Props) => {
+const CreditCardModule = ({ number }: Props) => {
   const [openCreditCardInfo, setOpenCreditCardInfo] = useState<boolean>(false);
 
   return (
@@ -39,3 +39,7 @@ export default ({ number }: Props) => {
     </SEContainer>
   );
 };
+
+CreditCardModule.displayName = "CreditCardModule";
+
+export default CreditCardModule;
