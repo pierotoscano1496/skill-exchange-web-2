@@ -11,9 +11,7 @@ type Props = {
 };
 
 const ServicioPage = async ({ searchParams }: Props) => {
-  const servicios = await searchServicioWithParams(
-    searchParams as SearchServiciosParametersBody
-  );
+  const servicios = await searchServicioWithParams(searchParams);
 
   return (
     <SEContainer direction="column" size="medium">

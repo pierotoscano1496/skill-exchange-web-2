@@ -25,6 +25,7 @@ import ComentarioServicio from "@/components/review-servicio/ComentarioServicio"
 import MedioPagoResponse from "@/interfaces/busqueda-servicio/MedioPagoResponse";
 import React from "react";
 import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
+import { addComment } from "@/actions/comments.actions";
 
 let servicioReview: ServicioReviewResponse;
 
@@ -35,14 +36,6 @@ interface MedioPagoProps {
 type Props = {
   params: Promise<{ id: string }>;
 };
-
-export async function addComment(success: boolean) {
-  "use server";
-
-  if (success) {
-    revalidatePath("/");
-  }
-}
 
 const ServicioDetailsPage = async ({ params }: Props) => {
   const { id } = await params;
