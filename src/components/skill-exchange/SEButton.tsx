@@ -12,7 +12,7 @@ interface ButtonProps {
   marginBottom?: number;
   shape?: ShapeType;
   icon?: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   disabled?: boolean;
   variant?: ThemesType;

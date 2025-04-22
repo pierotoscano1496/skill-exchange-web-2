@@ -10,6 +10,7 @@ import SEButton from "@/components/skill-exchange/SEButton";
 import SECard from "@/components/skill-exchange/SECard";
 import SEForm from "@/components/skill-exchange/form/SEForm";
 import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
+import SEContainer from "@/components/skill-exchange/containers/SEContainer";
 
 const LoginPage = () => {
   const [correo, setCorreo] = useState<string>("");
@@ -51,8 +52,8 @@ const LoginPage = () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <section className="w-1/3" id="inicio">
-        <div className="w-full">
+      <section id="inicio" className="w-5/12">
+        <SEContainer size="full">
           <SEForm>
             <SEInput
               label="Correo"
@@ -69,6 +70,7 @@ const LoginPage = () => {
             <SEButton
               className="self-center"
               label="Ingresar"
+              type="submit"
               disabled={loading}
               onClick={login}
               variant="primary"
@@ -78,7 +80,7 @@ const LoginPage = () => {
               <SEParragraph variant="error">{error}</SEParragraph>
             )}
           </SEForm>
-        </div>
+        </SEContainer>
       </section>
     </main>
   );

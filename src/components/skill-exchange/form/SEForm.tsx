@@ -47,8 +47,8 @@ const SEForm: React.FC<FormProps> = ({
     <FormComp
       className={classNames(
         {
-          "max-w-7xl w-7xl": size === "large",
-          "max-w-5xl w-5xl": size === "medium",
+          "max-w-7xl w-7/12": size === "large",
+          "max-w-5xl w-5/12": size === "medium",
           "max-w-lg w-lg": size === "small",
           "max-w-[100%] w-full": size === "full",
         },
