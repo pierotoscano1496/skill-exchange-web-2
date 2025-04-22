@@ -2,20 +2,23 @@ import { obtenerUsuarioLogged } from "@/actions/usuario.actions";
 import SENavbar from "@/components/skill-exchange/SENavbar";
 import { redirect } from "next/navigation";
 
-const SkillExchangeLayout=async ({
+export const dynamic = "force-dynamic";
+
+const SkillExchangeLayout = async ({
   children,
-}: { children: React.ReactNode }) => {
-  let usuario = undefined;
+}: {
+  children: React.ReactNode;
+}) => {
+  console.log("Rending usuario");
   try {
-    usuario = await obtenerUsuarioLogged();
+    let usuario = await obtenerUsuarioLogged();
+    return <SENavbar usuario={usuario}>{children}</SENavbar>;
   } catch {
-    usuario = undefined;
+    console.error("Error al traer usuario");
     redirect("/session-out");
   }
-
-  return <SENavbar usuario={usuario}>{children}</SENavbar>;
 };
 
-SkillExchangeLayout.displayName="SkillExchangeLayout"
+SkillExchangeLayout.displayName = "SkillExchangeLayout";
 
 export default SkillExchangeLayout;
