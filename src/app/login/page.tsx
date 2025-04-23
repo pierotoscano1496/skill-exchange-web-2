@@ -51,10 +51,10 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <section id="inicio" className="w-5/12">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 max-md:p-12">
+      <section id="inicio" className="w-5/12 max-md:w-full">
         <SEContainer size="full">
-          <SEForm>
+          <SEForm size="full">
             <SEInput
               label="Correo"
               onChange={(e) => setCorreo(e.target.value)}

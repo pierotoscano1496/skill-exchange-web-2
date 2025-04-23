@@ -57,8 +57,8 @@ const SEContainer: React.FC<ContainerProps> = ({
 
   const sizeClasses = classNames({
     "max-w-lg w-lg": size === "small",
-    "max-w-5xl w-5/12": size === "medium",
-    "max-w-7xl w-7/12": size === "large",
+    "max-w-5xl w-5/12 max-md:w-full": size === "medium",
+    "max-w-7xl w-7/12 max-md:w-full": size === "large",
     "max-w-[100%] w-full": size === "full",
     "w-fit": size === "content",
   });

@@ -15,6 +15,7 @@ import {
   faEnvelope,
   faFileContract,
   faGear,
+  faMagnifyingGlass,
   faThumbsUp,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
@@ -150,6 +151,7 @@ const SENavbar: React.FC<NavbarProps> = ({
                 className="!text-primary-100"
                 link="/servicio"
                 label="Buscar Servicios"
+                icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
               />
             </li>
             {usuario ? (
