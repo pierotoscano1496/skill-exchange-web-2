@@ -87,7 +87,7 @@ const SearchServicioForm = ({ redirect = "servicio" }: Props) => {
   );
 
   return (
-    <SEContainer size="medium">
+    <SEContainer size="full">
       <SEForm
         size="full"
         className="p-6 rounded-lg shadow-sm border grid items-baseline justify-items-start lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2"
