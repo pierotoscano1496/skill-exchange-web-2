@@ -71,9 +71,8 @@ const SELink: React.FC<LinkProps> = ({
         />
       )}
       {image && (label || icon) && <>&nbsp;</>}
-      {label && <span>{label}</span>}
-      {label && icon && <>&nbsp;</>}
-      {icon && <span>{icon}</span>}
+      {label && <span className="max-md:hidden">{label}</span>}
+      {icon && <span className={classNames({ "md:ml-1": label })}>{icon}</span>}
     </a>
   );
 };

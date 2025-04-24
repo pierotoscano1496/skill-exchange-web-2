@@ -9,7 +9,6 @@ const SkillExchangeLayout = async ({
 }: {
   children: React.ReactNode;
 }) => {
-  console.log("Rending usuario");
   try {
     let usuario = await obtenerUsuarioLogged();
     return <SENavbar usuario={usuario}>{children}</SENavbar>;

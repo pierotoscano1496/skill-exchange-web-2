@@ -1,7 +1,7 @@
 "use client";
 
 import Usuario from "@/interfaces/Usuario";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { logoutUsuario } from "@/actions/usuario.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,7 @@ import {
   faArrowRightFromBracket,
   faBars,
   faBell,
+  faBriefcase,
   faComment,
   faDoorOpen,
   faEllipsisV,
@@ -62,6 +63,17 @@ const SENavbar: React.FC<NavbarProps> = ({
   const router = useRouter();
   const pathName = usePathname();
 
+  useEffect(() => {
+    const saveCollapsed = localStorage.getItem("sidebarCollapsed");
+    if (saveCollapsed === "true") {
+      setSidebarCollapsed(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("sidebarCollapsed", sidebarCollapsed.toString());
+  }, [sidebarCollapsed]);
+
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
@@ -71,13 +83,6 @@ const SENavbar: React.FC<NavbarProps> = ({
     router.push("/login");
   };
 
-  const asideStyles = classNames(
-    "bg-primary-200 p-4",
-    "flex flex-col h-screen fixed top-0 left-0 justify-between",
-    "w-64",
-    "transition-transform duration-300 ease-in-out transform",
-    sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
-  );
   const iconRotationStyles = classNames(
     "transition-transform duration-300 ease-in-out",
     sidebarCollapsed ? "rotate-90" : "rotate-0"
@@ -151,7 +156,7 @@ const SENavbar: React.FC<NavbarProps> = ({
                 className="!text-primary-100"
                 link="/servicio"
                 label="Buscar Servicios"
-                icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                icon={<FontAwesomeIcon icon={faBriefcase} />}
               />
             </li>
             {usuario ? (
@@ -186,7 +191,15 @@ const SENavbar: React.FC<NavbarProps> = ({
       </header>
       {usuario ? (
         <>
-          <aside className={asideStyles}>
+          <aside
+            className={classNames(
+              "bg-primary-200 p-4",
+              "flex flex-col h-screen fixed top-0 left-0 justify-between",
+              "w-64",
+              "transition-transform duration-300 ease-in-out transform",
+              sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
+            )}
+          >
             <nav>
               <ul
                 className={classNames(

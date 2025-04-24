@@ -12,7 +12,6 @@ import {
 
 export const obtenerUsuarioLogged = async () => {
   const resp = await (await getBackendInstanceAuth()).get("usuario");
-  console.log(resp.data);
   return resp.data as UsuarioRegisteredResponse;
 };
 
