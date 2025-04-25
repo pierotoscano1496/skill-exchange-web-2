@@ -363,7 +363,7 @@ const RegistroServicioPage: React.FC = () => {
   return (
     <>
       <div className="container column center">
-        <SETitle size="extraLarge" label="Publica tu servicio" />
+        <SETitle size="extraLarge">Publica tu servicio</SETitle>
         <SEForm formContent="block">
           <SEFormControl>
             <SEInput
@@ -446,7 +446,9 @@ const RegistroServicioPage: React.FC = () => {
 
         {archivosData.length > 0 && (
           <SEContainer style="container" size="medium" direction="column">
-            <SETitle size="large" className="mt-6" label="Lista de archivos" />
+            <SETitle size="large" className="mt-6">
+              Lista de archivos
+            </SETitle>
             <SEContainer>
               {archivosData.map((a, i) => (
                 <SECard key={i}>
@@ -472,7 +474,7 @@ const RegistroServicioPage: React.FC = () => {
         {linksData.length > 0 && (
           <>
             <SEContainer style="container" size="medium">
-              <SETitle size="large" label="Enlaces a otras plataformas" />
+              <SETitle size="large">Enlaces a otras plataformas</SETitle>
               {linksData.map((linkData, index) => (
                 <SECard key={index}>
                   <IconMedio medio={linkData.medio} className="mr-auto" />
@@ -504,8 +506,8 @@ const RegistroServicioPage: React.FC = () => {
             direction="column"
             size="medium"
           >
-            <SETitle size="large" label="Medios de pago" />
-            <SETitle size="large" label="Yape" />
+            <SETitle size="large">Medios de pago</SETitle>
+            <SETitle size="large">Yape</SETitle>
             <SEFormControl>
               <SEParragraph>
                 <strong>Número: </strong> {medioPagoYape.numCelular}
@@ -513,7 +515,7 @@ const RegistroServicioPage: React.FC = () => {
             </SEFormControl>
             {medioPagoYape.qrImage && (
               <>
-                <SETitle size="medium" label="QR:" />
+                <SETitle size="medium">QR:</SETitle>
                 <SEImage
                   size="minus"
                   src={URL.createObjectURL(medioPagoYape.qrImage)}
@@ -525,7 +527,7 @@ const RegistroServicioPage: React.FC = () => {
         )}
         {medioPagoCCI && (
           <SEContainer>
-            <SETitle size="large" label="Código de cuenta interbancaria" />
+            <SETitle size="large">Código de cuenta interbancaria</SETitle>
             <SEParragraph>{`CCI: ${medioPagoCCI}`}</SEParragraph>
           </SEContainer>
         )}

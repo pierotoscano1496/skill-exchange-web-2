@@ -13,7 +13,7 @@ const CheckPage: React.FC = () => {
 
   return (
     <SEContainer>
-      <SETitle label="Click aquí" />
+      <SETitle>Click aquí</SETitle>
       <SEButton
         label="Click aquí"
         onClick={async () => {

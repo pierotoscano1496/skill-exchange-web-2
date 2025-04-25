@@ -107,7 +107,7 @@ const DragAndDrop = ({
       </div>
       {acceptedFiles.length > 0 && (
         <>
-          <SETitle size="large" label="Archivo (s):" />
+          <SETitle size="large">Archivo (s):</SETitle>
           <div className={`flex flex-wrap justify-center mb-6`}>
             {acceptedFiles.map((file, index) => (
               <div key={index} className="flex flex-col items-center">

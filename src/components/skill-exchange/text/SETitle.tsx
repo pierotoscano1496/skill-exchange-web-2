@@ -9,7 +9,7 @@ import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 
 interface TitleProps {
-  label: string;
+  children: React.ReactNode | React.ReactNode[];
   variant?: ThemesType;
   className?: string;
   align?: TextAlignType;
@@ -18,7 +18,7 @@ interface TitleProps {
 }
 
 const SETitle: React.FC<TitleProps> = ({
-  label,
+  children,
   className,
   variant = "primary",
   align = "center",
@@ -78,7 +78,7 @@ const SETitle: React.FC<TitleProps> = ({
 
   return (
     <TitleComp className={classNames(classNameComponent, className)}>
-      {label}
+      {children}
     </TitleComp>
   );
 };

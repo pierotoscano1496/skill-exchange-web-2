@@ -114,7 +114,7 @@ const SEDragAndDrop = ({
       </div>
       {acceptedFiles.length > 0 && (
         <>
-          <SETitle size="large" label="Archivo (s)" />
+          <SETitle size="large">Archivo (s)</SETitle>
           <div className={`flex flex-wrap justify-center mb-6`}>
             {acceptedFiles.map((file, index) => (
               <SEContainer key={index} direction="column">

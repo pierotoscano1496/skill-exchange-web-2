@@ -151,7 +151,7 @@ const ContratosPage: React.FC = () => {
       <SEContainer size="medium">
         <SEForm>
           <SEFormControl>
-            <SELabel text="Servicio:" />
+            <SELabel>Servicio:</SELabel>
             <SESelect
               includeInitOption={false}
               options={serviciosClienteOptionsForSearch.map((s) => ({
@@ -168,7 +168,7 @@ const ContratosPage: React.FC = () => {
             />
           </SEFormControl>
           <SEFormControl>
-            <SELabel text="Estado:" />
+            <SELabel>Estado:</SELabel>
             <SESelect
               includeInitOption={false}
               options={estadosForSearch.map((e) => ({

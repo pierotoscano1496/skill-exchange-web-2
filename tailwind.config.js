@@ -46,7 +46,14 @@ module.exports = {
       colors: {
         "fondo-principal": "#F5F7FA",
 
-        primary: {
+        primary: "#f59e0b", // Naranja cálido (principal)
+        secondary: "#2563eb", // Azul vibrante (contraste)
+        accent: "#10b981", // Verde para detalles
+        background: "#fffaf0", // Fondo cálido
+        surface: "#ffffff", // Tarjetas o contenedores
+        text: "#1f2937", // Gris oscuro
+        muted: "#6b7280", // Texto secundario
+        /* primary: {
           50: "#EBF2FA",
           100: "#D7E6F4",
           200: "#AFCDE9",
@@ -120,7 +127,7 @@ module.exports = {
           light: "#FEE2E2",
           DEFAULT: "#EF4444",
           dark: "#991B1B",
-        },
+        }, */
         "fondo-tarjetas": "#FFFFFF",
         bordes: "#E0E0E0",
         // Agregado para fondo en secciones hero y gradientes

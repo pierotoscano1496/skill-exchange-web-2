@@ -101,7 +101,7 @@ const AcuerdosPage: React.FC = () => {
     <>
       <SEForm inline={true}>
         <SEFormControl>
-          <SELabel text="Servicio:" />
+          <SELabel>Servicio:</SELabel>
           <SESelect
             includeInitOption={false}
             options={serviciosClienteOptions.map((s) => ({
@@ -116,7 +116,7 @@ const AcuerdosPage: React.FC = () => {
           />
         </SEFormControl>
         <SEFormControl>
-          <SELabel text="Estado:" />
+          <SELabel>Estado:</SELabel>
           <SESelect
             includeInitOption={false}
             options={estadoOptions.map((e, i) => ({
@@ -162,7 +162,6 @@ const AcuerdosPage: React.FC = () => {
        * Enviar constancia
        */}
       {matchForEnviarConstancia && (
-        
         <ModalEnviarConstancia
           key={matchForEnviarConstancia.id}
           onClose={() => setMatchForEnviarConstancia(undefined)}

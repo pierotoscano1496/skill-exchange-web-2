@@ -5,7 +5,7 @@ import SETitle from "@/components/skill-exchange/text/SETitle";
 const SessionOutPage = () => {
   return (
     <section className="text-center">
-      <SETitle label="Sesión cerrada" size="large" />
+      <SETitle size="large">Sesión cerrada</SETitle>
       <SEParragraph>
         Tu sesión ha expirado o ha sido cerrada. Para continuar, inicia sesión
         de nuevo.

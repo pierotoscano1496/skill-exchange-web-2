@@ -61,12 +61,12 @@ const ServicioDetailsPage = async ({ params }: Props) => {
 
   return (
     <SEContainer direction="column" size="medium">
-      <SETitle size="extraLarge" label={servicioDetails.titulo} />
+      <SETitle size="extraLarge">servicioDetails.titulo</SETitle>
       <SEParragraph className="!mb-12">
         {servicioDetails.descripcion}
       </SEParragraph>
 
-      <SETitle align="start" label="Detalles del servicio" />
+      <SETitle align="start">Detalles del servicio</SETitle>
       <SEGridContainer columns={2} className="!mb-12">
         <SESpan weight="bold">Precio (S/.):</SESpan>
         <SEParragraph variant="hero" breakSpace={false}>
@@ -88,7 +88,7 @@ const ServicioDetailsPage = async ({ params }: Props) => {
 
       {servicioDetails.modalidadesPago.length > 0 && (
         <>
-          <SETitle align="start" label="Pagar con:" />
+          <SETitle align="start">Pagar con:</SETitle>
           <SEGridContainer columns={2} gap={8} className="!mb-12">
             {yapeMethod && (
               <YapeModule
@@ -118,7 +118,7 @@ const ServicioDetailsPage = async ({ params }: Props) => {
       )}
       {usuarioLogged ? (
         <>
-          <SETitle align="start" label="Emite tu opinión" />
+          <SETitle align="start">Emite tu opinión</SETitle>
           <FormReviewServicio
             className="!mb-12"
             comentarista={{
@@ -135,7 +135,9 @@ const ServicioDetailsPage = async ({ params }: Props) => {
           Inicia sesión para que puedas emitir tu opinión
         </SEParragraph>
       )}
-      <SETitle align="start" label="Comentarios" size="large" />
+      <SETitle align="start" size="large">
+        Comentarios
+      </SETitle>
       {servicioReview.comentarios.length > 0 ? (
         <>
           <hr />

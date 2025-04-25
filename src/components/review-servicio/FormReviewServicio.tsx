@@ -63,7 +63,7 @@ const FormReviewServicio = ({
   return (
     <SEForm size="full" className={className}>
       <SEFormControl>
-        <SELabel text="Comentario:" htmlFor="comentario" />
+        <SELabel htmlFor="comentario">Comentario</SELabel>
         <SETextarea
           name="comentario"
           value={comentario}
@@ -76,7 +76,7 @@ const FormReviewServicio = ({
         />
       </SEFormControl>
       <SEFormControl>
-        <SELabel htmlFor="puntaje" text="Puntaje:" />
+        <SELabel htmlFor="puntaje">Puntaje:</SELabel>
         <StarRating
           rating={puntaje}
           onRate={(rating) => setPuntaje(rating)}

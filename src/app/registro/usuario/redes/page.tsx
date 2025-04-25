@@ -98,7 +98,7 @@ const RegistroUsuarioRedesPage = () => {
           />
         </div>
         <div className="w-full border-t-primary-900 border-t-2 pt-4">
-          <SETitle size="extraLarge" label="Tus redes" />
+          <SETitle size="extraLarge">Tus redes</SETitle>
         </div>
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SEInput

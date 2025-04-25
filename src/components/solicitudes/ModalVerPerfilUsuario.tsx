@@ -24,15 +24,15 @@ const ModalVerPerfilUsuario = ({ cliente, onClose }: Params) => {
   return (
     <SEModal title="Datos del solicitante" onClose={onClose}>
       <SEFormControl>
-        <SELabel text="Nombres:" />
+        <SELabel>Nombres:</SELabel>
         <SESpan>{cliente.nombres}</SESpan>
       </SEFormControl>
       <SEFormControl>
-        <SELabel text="Apellidos:" />
+        <SELabel>Apellidos:</SELabel>
         <SESpan>{cliente.apellidos}</SESpan>
       </SEFormControl>
       <SEFormControl>
-        <SELabel text="Redes" />
+        <SELabel>Redes</SELabel>
       </SEFormControl>
       <SEContainer>
         <SEParragraph>

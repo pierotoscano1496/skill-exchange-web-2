@@ -62,7 +62,7 @@ const ServicioOwnPage: React.FC = () => {
 
   return (
     <SEContainer direction="column" size="medium">
-      <SETitle size="extraLarge" label="Mis servicios" />
+      <SETitle size="extraLarge">Mis servicios</SETitle>
       {servicios.length > 0 ? (
         <>
           <SELinkButton label="Nuevo servicio" link="/registro/servicio" />

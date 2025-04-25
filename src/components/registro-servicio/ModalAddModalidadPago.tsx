@@ -115,7 +115,7 @@ const ModalAddModalidadPago = ({
                 )}
               </SEFormControl>
               <SEFormControl column={true}>
-                <SELabel htmlFor="yape-image" text="Imagen del QR (opcional)" />
+                <SELabel htmlFor="yape-image">Imagen del QR (opcional)</SELabel>
                 <SEDragAndDrop
                   limit={1}
                   required={false}

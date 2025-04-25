@@ -125,11 +125,9 @@ const RegistroUsuarioSkillsPage = () => {
   return (
     <>
       <div className="flex flex-wrap max-w-5xl mx-auto p-6 bg-white shadow-xl rounded-xl">
-        <SETitle
-          size="extraLarge"
-          className="w-full"
-          label="Registro de habilidades"
-        />
+        <SETitle size="extraLarge" className="w-full">
+          Registro de habilidades
+        </SETitle>
         <div className="w-full md:w-1/2 mb-6 px-2">
           <SESelect
             label="Categoría"
@@ -216,7 +214,7 @@ const RegistroUsuarioSkillsPage = () => {
       </div>
 
       <div className="flex flex-col max-w-5xl mx-auto p-6 my-12 bg-white shadow-xl rounded-xl">
-        <SETitle size="large" label="Habilidades" />
+        <SETitle size="large">Habilidades</SETitle>
         <div className="flex flex-wrap w-full mb-6 px-2 justify-center">
           {usuarioDatos.skills.map((s) => (
             <SECard key={s.id} variant="accent">
