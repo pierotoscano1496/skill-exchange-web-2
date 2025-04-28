@@ -13,39 +13,29 @@ interface ImageProps {
 
 const SEImage: React.FC<ImageProps> = ({
   src,
-  alt,
+  alt = "Imagen",
   className,
-  size,
+  size = "medium",
   onClick,
 }) => {
-  let sizeClassNames = "";
-
-  if (size) {
-    switch (size) {
-      case "presentation":
-        sizeClassNames = "w-[90%]";
-        break;
-      case "big":
-        sizeClassNames = "w-[70%]";
-        break;
-      case "medium":
-        sizeClassNames = "w-[50%]";
-        break;
-      case "small":
-        sizeClassNames = "w-[30%]";
-        break;
-      case "minus":
-        sizeClassNames = "w-[10%]";
-        break;
-    }
-  }
+  const sizeClasses = {
+    presentation: "w-[90%]",
+    big: "w-[70%]",
+    medium: "w-[50%]",
+    small: "w-[30%]",
+    minus: "w-[10%]",
+  } as Record<Size, string>;
 
   return (
     <img
-      className={classNames(className, sizeClassNames)}
       src={src}
       alt={alt}
       onClick={onClick}
+      className={classNames(
+        "rounded-md object-cover", // agregado para mejor calidad de imagen
+        sizeClasses[size],
+        className
+      )}
     />
   );
 };

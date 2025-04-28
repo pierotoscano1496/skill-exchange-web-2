@@ -1,75 +1,92 @@
-import { ThemesType } from "@/enums/Themes";
-import { VariantClasses } from "@/utils/types";
+import React, { ReactNode } from "react";
+import Link from "next/link";
 import classNames from "classnames";
-import { ReactNode } from "react";
+import { ThemesType } from "@/enums/Themes";
+import { ShapeType } from "@/enums/Shapes";
+import { SizeType } from "@/enums/Sizes";
+import { ComponentModeType } from "@/enums/ComponentMode";
 
 interface LinkButtonProps {
   link: string;
-  className?: string;
-  label: string;
-  icon?: ReactNode;
-  variant?: ThemesType;
-  size?: "small" | "medium" | "large";
+  children: ReactNode;
+  mode?: ComponentModeType; // Modalidad del botón (filled, outline, ghost, text)
+  shape?: ShapeType; // Forma del botón (circle, rectangle, noShape)
+  icon?: ReactNode; // Ícono opcional
+  className?: string; // Clases adicionales
+  disabled?: boolean; // Estado deshabilitado
+  variant?: ThemesType; // Tema del botón (primary, secondary, etc.)
+  size?: SizeType; // Tamaño del botón (small, medium, large)
 }
-
-const variantClasses: VariantClasses = {
-  primary: {
-    background: "bg-primary-200",
-    hoverBackground600: "hover:bg-primary-600",
-  },
-  accent: {
-    background: "bg-accent-200",
-    hoverBackground600: "hover:bg-accent-600",
-  },
-};
 
 const SELinkButton: React.FC<LinkButtonProps> = ({
   link,
-  label,
+  children,
+  mode = "filled",
+  shape = "rectangle",
   icon,
   className,
+  disabled = false,
   variant = "primary",
   size = "medium",
 }) => {
   const baseStyles =
-    "rounded-md font-montserrat transition-colors text-center mx-auto max-w-fit block";
-  const hoverStyles = "hover:text-white";
-  const transitionStyles = `transition ease-out duration-500`;
-  const sizeStyles =
-    size === "small"
-      ? "py-2 px-2"
-      : size === "large"
-        ? "py-4 px-6"
-        : "py-3 px-4";
+    "font-montserrat transition-colors text-center focus:outline-none";
+  const transitionStyles = "transition ease-out duration-300";
 
-  const variantStyles = classNames(
-    variantClasses[variant]?.background,
-    variantClasses[variant]?.hoverBackground600
-  );
+  const sizeClasses = {
+    small: "py-1 px-2 text-sm",
+    medium: "py-2 px-4 text-base",
+    large: "py-3 px-6 text-lg",
+  }[size];
+
+  const shapeClasses = {
+    circle: "p-0 w-8 h-8 rounded-full flex items-center justify-center",
+    rectangle: "rounded-md",
+    noShape: "p-0 bg-transparent hover:bg-gray-100 focus:outline-none",
+  }[shape];
+
+  const variantClasses = {
+    primary: "bg-primary text-primary-content hover:bg-primary-hover",
+    secondary: "bg-secondary text-secondary-content hover:bg-secondary-hover",
+    accent: "bg-accent text-accent-content hover:bg-accent-hover",
+    neutral: "bg-neutral text-neutral-content hover:bg-neutral-hover",
+    error: "bg-error text-error-content hover:bg-error-hover",
+  }[variant];
+
+  const modeClasses = {
+    filled: variantClasses,
+    outline: `bg-transparent border border-${variant} text-${variant}`,
+    ghost: `bg-transparent text-${variant} hover:bg-${variant}-hover`,
+    text: `bg-transparent text-${variant} hover:underline`,
+  }[mode];
+
+  const disabledClasses = disabled
+    ? "pointer-events-none bg-gray-400 text-gray-700"
+    : "";
 
   return (
-    <a
+    <Link
+      href={link}
       className={classNames(
-        "mb-6",
         baseStyles,
-        hoverStyles,
-        variantStyles,
-        sizeStyles,
         transitionStyles,
+        sizeClasses,
+        shapeClasses,
+        modeClasses,
+        disabledClasses,
         className
       )}
-      href={link}
-      aria-label={label}
     >
-      {label ? (
-        <>
-          {label} {icon}
-        </>
-      ) : (
-        icon
-      )}
-    </a>
+      <span className="flex items-center justify-center">
+        {icon && (
+          <span className={classNames(children ? "mr-2" : "")}>{icon}</span>
+        )}
+        <span>{children}</span>
+      </span>
+    </Link>
   );
 };
+
+SELinkButton.displayName = "SELinkButton";
 
 export default SELinkButton;

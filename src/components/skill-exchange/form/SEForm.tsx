@@ -5,7 +5,7 @@ import { SizeType } from "@/enums/Sizes";
 import { FormType } from "@/enums/Form";
 
 interface FormProps {
-  onSubmit?: () => void;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   children: React.ReactNode;
   size?: ExtendedSizeType;
   formContent?: "form" | "block";
@@ -28,43 +28,33 @@ const SEForm: React.FC<FormProps> = ({
   inline = false,
   className,
 }) => {
-  let FormComp: FormType;
+  const sizeClasses = {
+    small: "max-w-md w-full",
+    medium: "max-w-3xl w-full",
+    large: "max-w-6xl w-full",
+    full: "max-w-full w-full",
+  }[size];
 
-  let formProps;
+  const FormComponent = formContent === "form" ? "form" : "div";
 
-  switch (formContent) {
-    case "block":
-      FormComp = "div";
-      formProps = {};
-      break;
-    case "form":
-      FormComp = "form";
-      formProps = { onSubmit };
-      break;
-  }
-
-  return (
-    <FormComp
-      className={classNames(
-        {
-          "max-w-7xl w-7/12": size === "large",
-          "max-w-5xl w-5/12": size === "medium",
-          "max-w-lg w-lg": size === "small",
-          "max-w-[100%] w-full": size === "full",
-        },
+  return React.createElement(
+    FormComponent,
+    {
+      className: classNames(
+        sizeClasses,
         "mx-auto p-6 bg-white shadow-xl rounded-xl mb-6",
+        inline ? "flex flex-row flex-wrap items-center" : "flex flex-col",
         className
-      )}
-      {...formProps}
-    >
-      {children}
-    </FormComp>
+      ),
+      ...(formContent === "form" ? { onSubmit } : {}),
+    },
+    children
   );
 };
 
-const SEFormFooter: React.FC<FormProps> = ({ children }) => {
-  return <SEContainer className="my-6 justify-evenly">{children}</SEContainer>;
-};
+const SEFormFooter: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <SEContainer className="my-6 justify-evenly">{children}</SEContainer>;
 
 const SEFormControl: React.FC<FormControlProps> = ({
   children,
@@ -83,5 +73,4 @@ const SEFormControl: React.FC<FormControlProps> = ({
 };
 
 export { SEFormFooter, SEFormControl };
-
 export default SEForm;

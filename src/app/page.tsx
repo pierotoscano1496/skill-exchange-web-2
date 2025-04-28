@@ -14,105 +14,90 @@ const MainPage = async () => {
   return (
     <main
       className={classNames(
-        "flex flex-col items-center justify-between min-h-screen",
+        "flex flex-col items-center justify-between min-h-screen bg-fondo-principal",
         styles.backgroundPrincipal
       )}
     >
-      <section className="text-center" id="inicio">
-        <h1 className="text-3xl font-extrabold text-gray-800">
-          Skill Exchange
+      <section className="text-center py-12 px-6" id="inicio">
+        <h1 className="text-4xl font-extrabold text-primary">
+          Chambita: Encuentra y ofrece trabajos informales
         </h1>
-        <h2 className="text-xl font-medium text-gray-700">
-          Comparte tus habilidades y conocimientos con otros
+        <h2 className="text-lg font-medium text-gray-700 mt-4">
+          Conecta con personas que necesitan tus habilidades, ya sea por hobby o
+          experiencia.
         </h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          <section className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Conecta, aprende y prospera
-            </h3>
-            <p className="mt-4 text-gray-700">
-              ¿Eres un experto en alguna habilidad o posees conocimientos
-              valiosos? Únete a nuestra comunidad y transforma tus habilidades
-              en una fuente de ingresos.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-blue-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              ¿Por qué unirte a SkillExchange?
-            </h3>
-            <p className="mt-4 text-gray-700">
-              Monetiza tus habilidades: Ofrece tutorías, cursos, talleres y
-              asesorías en línea a personas de todo el mundo interesadas en
-              aprender de ti.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-cyan-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">Cómo empezar</h3>
-            <p className="mt-4 text-gray-700">
-              Regístrate: Crea una cuenta gratuita y completa tu perfil con tus
-              habilidades, experiencia y formación.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-cyan-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Publica tus servicios
-            </h3>
-            <p className="mt-4 text-gray-700">
-              Describe los servicios que ofreces, establece tus tarifas y añade
-              imágenes y videos para mostrar tus habilidades.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Establece tu disponibilidad
-            </h3>
-            <p className="mt-4 text-gray-700">
-              Configura tu calendario y horarios para que los interesados puedan
-              reservar sesiones contigo.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Interactúa y enseña
-            </h3>
-            <p className="mt-4 text-gray-700">
-              Comparte tus conocimientos con tus alumnos a través de
-              videollamadas, chats y materiales de apoyo.
-            </p>
-          </section>
-          <section className="shadow-soft hover:shadow-deep bg-indigo-200 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Recibe tus ganancias
-            </h3>
-            <p className="mt-4 text-gray-700">
-              Obtén tus pagos de forma segura y rápida a través de nuestro
-              sistema de pagos integrado.
-            </p>
-          </section>
+          {[
+            {
+              title: "Publica tus habilidades",
+              description:
+                "¿Sabes hacer algo bien? Publica tus servicios y encuentra personas interesadas en contratarte.",
+              bg: "bg-orange-100",
+            },
+            {
+              title: "Encuentra ayuda fácilmente",
+              description:
+                "Busca personas cerca de ti que puedan ayudarte con tareas del día a día o proyectos específicos.",
+              bg: "bg-yellow-100",
+            },
+            {
+              title: "Regístrate gratis",
+              description:
+                "Crea tu cuenta en minutos y empieza a conectar con otros usuarios.",
+              bg: "bg-green-100",
+            },
+            {
+              title: "Fácil y seguro",
+              description:
+                "Nuestra plataforma te permite comunicarte y coordinar de manera sencilla y confiable.",
+              bg: "bg-blue-100",
+            },
+          ].map((card, index) => (
+            <section
+              key={index}
+              className={`shadow-soft hover:shadow-deep ${card.bg} rounded-xl p-8`}
+            >
+              <h3 className="text-2xl font-bold text-gray-800">{card.title}</h3>
+              <p className="mt-4 text-gray-700">{card.description}</p>
+            </section>
+          ))}
         </div>
-        <div className="flex justify-center mt-16">
+
+        <div className="flex flex-wrap justify-center gap-6 mt-16">
           {!usuario ? (
             <>
               <SELinkButton
-                label="Regístrate ahora"
                 link="/registro/usuario"
                 size="large"
-              />
-              <SELinkButton label="Inicia sesión" link="/login" size="large" />
+                className="bg-primary text-white"
+              >
+                Regístrate ahora
+              </SELinkButton>
+              <SELinkButton
+                link="/login"
+                size="large"
+                className="bg-secondary text-white"
+              >
+                Inicia sesión
+              </SELinkButton>
             </>
           ) : (
             <>
               <SELinkButton
-                label="Ir a mi perfil"
                 link="/profile"
                 size="large"
-                variant="accent"
-              />
+                className="bg-primary text-white"
+              >
+                Ir a mi perfil
+              </SELinkButton>
               <SELinkButton
-                label="Busca servicios"
                 link="/servicio"
                 size="large"
-              />
+                className="bg-secondary text-white"
+              >
+                Busca servicios
+              </SELinkButton>
             </>
           )}
         </div>

@@ -1,10 +1,11 @@
 import { ExtendedSizeType } from "@/enums/Sizes";
 import classNames from "classnames";
+import React from "react";
 
 interface GridProps {
   children: React.ReactNode;
-  columns?: number;
-  gap?: number;
+  columns?: number; // Columns en breakpoint md
+  gap?: number; // Gap entre elementos
   className?: string;
   size?: ExtendedSizeType;
 }
@@ -16,20 +17,23 @@ const SEGridContainer: React.FC<GridProps> = ({
   size = "full",
   className,
 }) => {
-  const sizeClasses = classNames({
-    "max-w-lg w-lg": size === "small",
-    "max-w-5xl w-5xl": size === "medium",
-    "max-w-7xl w-7xl": size === "large",
-    "max-w-[100%] w-full": size === "full",
-  });
+  const sizeClasses = {
+    small: "max-w-md w-full",
+    medium: "max-w-3xl w-full",
+    large: "max-w-6xl w-full",
+    full: "max-w-full w-full",
+    content: "w-fit",
+    custom: "",
+  }[size];
 
   return (
     <div
       className={classNames(
-        `grid md:grid-cols-${columns} mx-auto`,
-        "grid-cols-1",
-        `gap-${gap}`,
-        "mb-6",
+        "grid",
+        `gap-${gap}`, // puedes cambiar esto por `gap-[${gap}]` si pasas valores no válidos de Tailwind
+        "grid-cols-1", // default para móviles
+        `md:grid-cols-${columns}`, // breakpoint para tablets y más
+        "mx-auto mb-6",
         sizeClasses,
         className
       )}

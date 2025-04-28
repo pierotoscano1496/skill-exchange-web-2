@@ -39,34 +39,33 @@ const SEModal: React.FC<ModalProps> = ({
     }
   }, [onOpen]);
 
+  const sizeClasses = {
+    small: "max-w-2xl",
+    medium: "max-w-3xl",
+    large: "max-w-5xl",
+    full: "max-w-7xl",
+  }[size];
+
   return (
-    <div
-      className={classNames(
-        "fixed inset-0 bg-black bg-opacity-35 flex justify-center items-center z-50"
-      )}
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-35 flex justify-center items-center z-50">
       <div
         className={classNames(
-          {
-            "max-w-2xl": size === "small",
-            "max-w-3xl": size === "medium",
-            "max-w-5xl": size === "large",
-            "max-w-7xl": size === "full",
-          },
-          { "bg-white": !fullModalClassName },
+          sizeClasses,
           "rounded-lg shadow-lg w-full mx-4 flex flex-col max-h-screen overflow-hidden",
-          fullModalClassName
+          fullModalClassName ? fullModalClassName : "bg-white"
         )}
       >
-        <header className="flex justify-between px-6 pt-6">
-          <SETitle size="large" className="flex-grow" label={title} />
+        <header className="flex justify-between items-center px-6 pt-6">
+          <SETitle size="large" className="flex-grow">
+            {title}
+          </SETitle>
           <SEButton
             onClick={onClose}
             shape="circle"
-            variant="neutral"
             icon={<FontAwesomeIcon icon={faClose} />}
           />
         </header>
+
         <main
           className={classNames(
             "px-6 py-6 flex-grow overflow-auto",
@@ -76,18 +75,18 @@ const SEModal: React.FC<ModalProps> = ({
         >
           {children}
         </main>
+
         {showFootOptions && (
-          <footer className={classNames("pb-0")}>
+          <footer className="flex justify-end gap-4 px-6 py-4">
             {onClose && (
-              <SEButton
-                mode="text"
-                variant="hero"
-                label={textCancel}
-                onClick={onClose}
-              />
+              <SEButton mode="text" onClick={onClose}>
+                {textCancel}
+              </SEButton>
             )}
             {onAccept && (
-              <SEButton mode="text" label={textAccept} onClick={onAccept} />
+              <SEButton mode="text" onClick={onAccept}>
+                {textAccept}
+              </SEButton>
             )}
           </footer>
         )}

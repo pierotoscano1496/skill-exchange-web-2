@@ -10,14 +10,17 @@ interface ServiciosProps {
   sendSelectedServicio: (idServicio: string) => void;
 }
 
-const SEServicioCard = ({ servicio, sendSelectedServicio }: ServiciosProps) => {
+const SEServicioCard: React.FC<ServiciosProps> = ({
+  servicio,
+  sendSelectedServicio,
+}) => {
   const shortDescription = `${getFirstWords(servicio.descripcion, 10)}...`;
 
   return (
     <SECard>
-      <SETitle label={servicio.titulo} />
+      <SETitle>{servicio.titulo}</SETitle>
       <SEParragraph>{shortDescription}</SEParragraph>
-      <SEButton onClick={() => sendSelectedServicio(servicio.id)} label="Ver" />
+      <SEButton onClick={() => sendSelectedServicio(servicio.id)}>Ver</SEButton>
     </SECard>
   );
 };

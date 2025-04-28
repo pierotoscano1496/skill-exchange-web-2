@@ -1,153 +1,61 @@
 import { ComponentModeType } from "@/enums/ComponentMode";
+import { SizeType } from "@/enums/Sizes";
 import { ThemesType } from "@/enums/Themes";
-import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
 import React, { ReactNode } from "react";
 
-interface SpanCardProps {
+interface SECardProps {
   children?: ReactNode;
   className?: string;
-  mode?: ComponentModeType;
-  variant?: ThemesType;
-  size?: "small" | "medium" | "large";
+  mode?: ComponentModeType; // Modalidad del card (filled, outline, ghost, text)
+  variant?: ThemesType; // Tema del card (primary, secondary, etc.)
+  size?: SizeType; // Tamaño del card (small, medium, large)
 }
 
-const variantClasses: VariantClasses = {
-  primary: {
-    background: "bg-primary-500",
-    text: "text-primary-200",
-    text500: "text-primary-500",
-    hoverBackground600: "hover:bg-primary-600",
-    hoverBackground100: "hover:bg-primary-100",
-    border: "border-primary-500",
-  },
-  secondary: {
-    background: "bg-secondary-500",
-    text: "text-secondary-200",
-    text500: "text-secondary-500",
-    hoverBackground600: "hover:bg-secondary-600",
-    hoverBackground100: "hover:bg-secondary-100",
-    border: "border-secondary-500",
-  },
-  accent: {
-    background: "bg-accent-500",
-    text: "text-accent-200",
-    text500: "text-accent-500",
-    hoverBackground600: "hover:bg-accent-600",
-    hoverBackground100: "hover:bg-accent-100",
-    border: "border-accent-500",
-  },
-  neutral: {
-    background: "bg-neutral-500",
-    text: "text-neutral-200",
-    text500: "text-neutral-500",
-    hoverBackground600: "hover:bg-neutral-600",
-    hoverBackground100: "hover:bg-neutral-100",
-    border: "border-neutral-500",
-  },
-  hero: {
-    background: "bg-hero-light",
-    text: "text-hero",
-    hoverBackground600: "hover:bg-hero",
-    border: "border-hero",
-  },
-  basic: {
-    background: "bg-blue-500",
-    text: "text-primary-900",
-    border: "border-primary-900",
-    hoverText: "hover:text-primary-300",
-  },
-};
-
-const SECard: React.FC<SpanCardProps> = ({
+const SECard: React.FC<SECardProps> = ({
   children,
   className,
   variant = "primary",
   size = "medium",
   mode = "filled",
 }) => {
-  const variantStyles =
-    variant &&
-    classNames(
-      variantClasses[variant]?.background,
-      variantClasses[variant]?.hoverBackground400,
-      variantClasses[variant]?.text
-    );
+  const baseStyles =
+    "flex justify-center items-center text-center rounded-md transform duration-300";
+  const hoverStyles = "hover:scale-105";
 
-  const modeClasses = () => {
-    switch (mode) {
-      case "filled":
-        return classNames(
-          variantClasses[variant]?.background,
-          "text-white",
-          variantClasses[variant]?.hoverBackground600
-        );
-      case "outline":
-        return classNames(
-          "bg-transparent",
-          "border",
-          variantClasses[variant]?.border,
-          variantClasses[variant]?.text500,
-          variantClasses[variant]?.hoverBackground100,
-          variantClasses[variant]?.hoverText
-        );
-      case "ghost":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground100
-        );
-      case "flat":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverText
-        );
-      case "text":
-        return classNames(
-          "bg-transparent",
-          variantClasses[variant]?.text,
-          "hover:underline"
-        );
-      case "elevated":
-        return classNames(
-          variantClasses[variant]?.background,
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground600,
-          "shadow-lg"
-        );
-      case "floating":
-        return classNames(
-          variantClasses[variant]?.background,
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground600,
-          "rounded-full",
-          "shadow-lg"
-        );
-      default:
-        return classNames(
-          variantClasses[variant]?.background,
-          variantClasses[variant]?.text,
-          variantClasses[variant]?.hoverBackground600
-        );
-    }
-  };
+  const sizeClasses = {
+    small: "w-[10rem] py-2 px-4 text-sm",
+    medium: "w-[15rem] py-3 px-6 text-base",
+    large: "w-[20rem] py-4 px-8 text-lg",
+  }[size];
+
+  const variantClasses = {
+    primary: "bg-primary text-primary-content border-primary",
+    secondary: "bg-secondary text-secondary-content border-secondary",
+    accent: "bg-accent text-accent-content border-accent",
+    neutral: "bg-neutral text-neutral-content border-neutral",
+    error: "bg-error text-error-content border-error",
+  }[variant];
+
+  const modeClasses = {
+    filled: variantClasses,
+    outline: `bg-transparent border ${variantClasses}`,
+    ghost: `bg-transparent text-${variant} hover:bg-${variant}-hover`,
+    text: `bg-transparent text-${variant} hover:underline`,
+  }[mode];
 
   return (
-    <span
+    <div
       className={classNames(
-        "flex justify-between pb-2 flex-grow-0 w-[15rem]",
-        "py-3 px-6 rounded-full",
-        "hover:py-4 hover:px-8",
-        "transform duration-300",
-        "mx-3 my-6",
-        variantStyles,
-        modeClasses(),
+        baseStyles,
+        hoverStyles,
+        sizeClasses,
+        modeClasses,
         className
       )}
     >
       {children}
-    </span>
+    </div>
   );
 };
 

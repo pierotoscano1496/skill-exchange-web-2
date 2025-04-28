@@ -1,7 +1,6 @@
 import { InputType } from "@/enums/InputTypes";
-import { VariantClasses } from "@/utils/types";
+import { InputThemesType } from "@/enums/Themes";
 import classNames from "classnames";
-import { title } from "process";
 import { HTMLInputAutoCompleteAttribute } from "react";
 
 type NumericInputProps = {
@@ -44,7 +43,7 @@ interface InputProps {
   label?: string;
   value?: string | readonly string[] | number;
   defaultValue?: string | number | readonly string[];
-  variant?: "primary" | "secondary";
+  variant?: InputThemesType;
   className?: string;
   numericProps?: NumericInputProps;
   formatTextProps?: FormatTextProps;
@@ -54,29 +53,6 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
-
-const variantClasses: VariantClasses = {
-  primary: {
-    text: "text-primary-600",
-    focus: "focus:border-primary",
-    background: "bg-primary-50",
-  },
-  accent: {
-    text: "text-accent-600",
-    focus: "focus:border-accent",
-    background: "bg-accent-50",
-  },
-  neutral: {
-    text: "text-neutral-600",
-    focus: "focus:border-neutral",
-    background: "bg-neutral-50",
-  },
-  error: {
-    text: "text-error-600",
-    focus: "focus:border-error",
-    background: "bg-error-50",
-  },
-};
 
 const SEInput: React.FC<InputProps> = ({
   label,
@@ -95,28 +71,48 @@ const SEInput: React.FC<InputProps> = ({
   onChange,
   onKeyDown,
 }) => {
-  const labelVariantStyles = classNames(variantClasses[variant]?.text);
-  const variantStyles = classNames(
-    variantClasses[variant]?.text,
-    variantClasses[variant]?.focus,
-    variantClasses[variant]?.background
-  );
+  const variantClasses = (
+    {
+      primary: classNames(
+        "text-primary-600",
+        "focus:border-primary",
+        "bg-primary-50"
+      ),
+      accent: classNames(
+        "text-accent-600",
+        "focus:border-accent",
+        "bg-accent-50"
+      ),
+      neutral: classNames(
+        "text-neutral-600",
+        "focus:border-neutral",
+        "bg-neutral-50"
+      ),
+      error: classNames("text-error-600", "focus:border-error", "bg-error-50"),
+    } as Record<InputThemesType, string>
+  )[variant];
 
-  let max, min;
+  const labelVariantStyles = {
+    primary: "text-primary-600",
+    accent: "text-accent-600",
+    neutral: "text-neutral-600",
+    error: "text-error-600",
+  }[variant];
 
-  switch (type) {
-    case "number":
-      min = numericProps?.min;
-      max = numericProps?.max;
-      break;
-    case "date":
-      min = dateInputProps?.min?.toISOString().split("T")[0];
-      max = dateInputProps?.max?.toISOString().split("T")[0];
-      break;
-    default:
-      min = undefined;
-      max = undefined;
-  }
+  // Preparar min y max según tipo de input
+  const min =
+    type === "number"
+      ? numericProps?.min
+      : type === "date"
+        ? dateInputProps?.min?.toISOString().split("T")[0]
+        : undefined;
+
+  const max =
+    type === "number"
+      ? numericProps?.max
+      : type === "date"
+        ? dateInputProps?.max?.toISOString().split("T")[0]
+        : undefined;
 
   return (
     <div className={classNames("mb-4", className)}>
@@ -132,6 +128,7 @@ const SEInput: React.FC<InputProps> = ({
         </label>
       )}
       <input
+        id={name}
         name={name}
         type={type}
         value={value}
@@ -140,13 +137,12 @@ const SEInput: React.FC<InputProps> = ({
         onChange={onChange}
         onKeyDown={onKeyDown}
         className={classNames(
-          "w-full p-2 bg-fondo-tarjetas rounded-md border border-bordes focus:outline-none transition duration-200 ease-in-out",
-          "shadow-input",
-          variantStyles
+          "w-full p-2 rounded-md border border-bordes focus:outline-none transition duration-200 ease-in-out shadow-input",
+          variantClasses
         )}
         title={extraInformationProps?.title}
-        min={numericProps?.min}
-        max={numericProps?.max}
+        min={min}
+        max={max}
         step={numericProps?.step}
         pattern={formatTextProps?.pattern}
         maxLength={formatTextProps?.maxLength}

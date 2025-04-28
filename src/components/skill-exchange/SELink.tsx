@@ -1,65 +1,54 @@
 import { WeightType } from "@/enums/Text";
-import { VariantClasses } from "@/utils/types";
+import { ThemesType } from "@/enums/Themes";
 import classNames from "classnames";
 import React, { ReactNode } from "react";
 
 interface LinkProps {
   link: string;
   className?: string;
-  label?: string;
   icon?: ReactNode;
   image?: {
     src: string;
     alt: string;
     className?: string;
   };
-  variant?: "primary" | "secondary";
-  weight?: WeightType;
+  children?: ReactNode;
+  variant?: ThemesType; // Tema del enlace (primary, secondary, etc.)
+  weight?: WeightType; // Grosor del texto (normal, bold)
 }
-
-const variantClasses: VariantClasses = {
-  primary: {
-    background: "bg-primary-dark",
-    text: "text-primary-600",
-  },
-  accent: {
-    background: "bg-accent-dark",
-    text: "text-accent-600",
-  },
-  neutral: {
-    background: "bg-neutral-dark",
-    text: "text-neutral-600",
-  },
-  hero: {
-    background: "bg-hero-dark",
-    text: "text-hero",
-  },
-};
 
 const SELink: React.FC<LinkProps> = ({
   link,
   className,
-  label,
   icon,
   image,
+  children,
   variant = "primary",
   weight = "normal",
 }) => {
-  const baseStyles = "rounded-md font-montserrat transition-colors text-center";
-  const variantStyles = classNames(variantClasses[variant]?.text);
-  const weightClasses = classNames({
-    "font-normal": weight === "normal",
-    "font-bold": weight === "bold",
-    "font-extrabold": weight === "extraBold",
-  });
+  const variantClasses = {
+    primary: "text-primary hover:text-primary-hover",
+    secondary: "text-secondary hover:text-secondary-hover",
+    accent: "text-accent hover:text-accent-hover",
+    neutral: "text-neutral hover:text-neutral-hover",
+    error: "text-error hover:text-error-hover",
+  } as Record<ThemesType, string>;
+
+  const baseStyles =
+    "rounded-md font-montserrat transition-colors inline-flex items-center";
+
+  const weightClasses = {
+    normal: "font-normal",
+    bold: "font-bold",
+  }[weight];
 
   return (
     <a
       className={classNames(
         baseStyles,
-        className,
-        variantStyles,
-        weightClasses
+        variantClasses[variant],
+        weightClasses,
+        className
       )}
       href={link}
     >
@@ -67,12 +56,11 @@ const SELink: React.FC<LinkProps> = ({
         <img
           src={image.src}
           alt={image.alt}
-          className={classNames("inline-block", image.className)}
+          className={classNames("inline-block mr-2", image.className)}
         />
       )}
-      {image && (label || icon) && <>&nbsp;</>}
-      {label && <span className="max-md:hidden">{label}</span>}
-      {icon && <span className={classNames({ "md:ml-1": label })}>{icon}</span>}
+      {children && <span>{children}</span>}
+      {icon && <span className={classNames({ "ml-2": children })}>{icon}</span>}
     </a>
   );
 };

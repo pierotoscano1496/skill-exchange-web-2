@@ -5,4 +5,4 @@ enum Size {
 }
 
 export type SizeType = keyof typeof Size;
-export type ExtendedSizeType = SizeType | "full" | "content" | "custom";
+export type ExtendedSizeType = SizeType | "full";

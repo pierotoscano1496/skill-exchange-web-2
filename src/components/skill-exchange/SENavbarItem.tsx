@@ -1,10 +1,10 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { ThemesType } from "@/enums/Themes";
 import { ModeViewsType } from "@/enums/ModeViews";
 
 interface ItemProps {
-  label: string;
+  children: ReactNode;
   collapsed?: boolean;
   selected?: boolean;
   className?: string;
@@ -14,49 +14,43 @@ interface ItemProps {
   mode?: ModeViewsType;
 }
 
-const SENavbarItem = ({
+const SENavbarItem: React.FC<ItemProps> = ({
+  children,
+  collapsed = false,
   selected = false,
   className,
-  collapsed,
-  variant,
   link,
-  label,
   icon,
+  variant,
   mode = "light",
-}: ItemProps) => {
-  const variantClasses = classNames({
-    "hover:bg-primary-600 hover:text-primary-100 text-primary-600":
-      mode === "light",
-    "hover:bg-primary-100 hover:text-primary-600 text-primary-100":
-      mode === "dark",
-  });
+}) => {
+  const modeClasses = {
+    light: "hover:bg-primary-600 hover:text-primary-100 text-primary-600",
+    dark: "hover:bg-primary-100 hover:text-primary-600 text-primary-100",
+  }[mode];
 
-  const selectedClasses = classNames({
-    "bg-primary-600 !text-primary-100": selected && mode === "light",
-    "bg-primary-100 !text-primary-600": selected && mode === "dark",
-  });
+  const selectedClasses = {
+    light: selected ? "bg-primary-600 text-primary-100" : "",
+    dark: selected ? "bg-primary-100 text-primary-600" : "",
+  }[mode];
 
   return (
     <li>
-      <div
+      <a
+        href={link}
         className={classNames(
-          className,
-          variantClasses,
+          "rounded-md font-montserrat transition-colors flex items-center p-4",
+          modeClasses,
           selectedClasses,
-          "p-4"
+          className
         )}
+        aria-current={selected ? "page" : undefined}
       >
-        <a
-          className={classNames(
-            "rounded-md font-montserrat transition-colors text-center flex",
-            className
-          )}
-          href={link}
-        >
-          {!collapsed && <span className="flex-1 text-left">{label}</span>}
-          <span className={classNames("ml-2")}>{icon}</span>
-        </a>
-      </div>
+        <span className="ml-2">{icon}</span>
+        {!collapsed && (
+          <span className="flex-1 text-left ml-2">{children}</span>
+        )}
+      </a>
     </li>
   );
 };

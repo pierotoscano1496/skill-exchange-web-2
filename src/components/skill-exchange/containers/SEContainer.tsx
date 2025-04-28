@@ -4,7 +4,7 @@ import React from "react";
 
 type Style = "container" | "text" | "block" | "none";
 type Direction = "row" | "column";
-type Justify = "start" | "end" | "center" | "evenly";
+type Justify = "start" | "end" | "center" | "evenly" | "between" | "around";
 type Align = "start" | "end" | "center" | "stretch";
 
 interface ContainerProps {
@@ -30,50 +30,55 @@ const SEContainer: React.FC<ContainerProps> = ({
   align = "center",
   onClick,
 }) => {
-  const justifyClasses = classNames({
-    "justify-center": justify === "center",
-    "justify-start": justify === "start",
-    "justify-end": justify === "end",
-    "justify-evenly": justify === "evenly",
-  });
+  const justifyClasses = {
+    center: "justify-center",
+    start: "justify-start",
+    end: "justify-end",
+    evenly: "justify-evenly",
+    between: "justify-between",
+    around: "justify-around",
+  }[justify];
 
-  const itemClasses = classNames({
-    "items-start": align === "start",
-    "items-end": align === "end",
-    "items-center": align === "center",
-    "items-stretch": align === "stretch",
-  });
+  const alignClasses = {
+    start: "items-start",
+    end: "items-end",
+    center: "items-center",
+    stretch: "items-stretch",
+  }[align];
 
-  const styleClasses = classNames({
-    "p-6 bg-white shadow-xl rounded-xl": style === "container",
-    "flex-col justify-center items-center": style === "text",
-    "mb-6": style !== "none",
-  });
+  const styleClasses = {
+    container: "p-6 bg-primary-50 shadow-md rounded-2xl", // Aplicando tu color primario más suave
+    text: "flex-col justify-center items-center text-primary-800",
+    block: "",
+    none: "",
+  }[style];
 
-  let directionClasses = classNames({
-    "flex-col": direction === "column",
-    "flex-row": direction === "row",
-  });
+  const directionClasses = {
+    column: "flex-col",
+    row: "flex-row",
+  }[direction];
 
-  const sizeClasses = classNames({
-    "max-w-lg w-lg": size === "small",
-    "max-w-5xl w-5/12 max-md:w-full": size === "medium",
-    "max-w-7xl w-7/12 max-md:w-full": size === "large",
-    "max-w-[100%] w-full": size === "full",
-    "w-fit": size === "content",
-  });
+  const sizeClasses = {
+    small: "max-w-md w-full",
+    medium: "max-w-3xl w-full",
+    large: "max-w-6xl w-full",
+    full: "max-w-full w-full",
+    content: "w-fit",
+    custom: "",
+  }[size];
 
   return (
     <div
       className={classNames(
         "flex",
         size !== "content" && "mx-auto",
-        styleClasses,
-        itemClasses,
-        justifyClasses,
         wrap && "flex-wrap",
+        justifyClasses,
+        alignClasses,
         directionClasses,
+        styleClasses,
         sizeClasses,
+        onClick && "cursor-pointer",
         className
       )}
       onClick={onClick}

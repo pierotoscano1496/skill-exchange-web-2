@@ -6,53 +6,30 @@ import { logoutUsuario } from "@/actions/usuario.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowRightFromBracket,
   faBars,
   faBell,
   faBriefcase,
   faComment,
   faDoorOpen,
-  faEllipsisV,
   faEnvelope,
   faFileContract,
   faGear,
-  faMagnifyingGlass,
   faThumbsUp,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import SEButton from "./SEButton";
-import { VariantClasses } from "@/utils/types";
 import SELink from "./SELink";
 import SENavbarItem from "./SENavbarItem";
 import { NavbarOptionType } from "@/enums/NavbarOptions";
-import styles from "@/app/styles/tailwind.module.scss";
+import { ThemesType } from "@/enums/Themes";
 import SESpan from "./text/SESpan";
 
 interface NavbarProps {
   children: React.ReactNode;
   usuario: Usuario | undefined;
-  variant?: "primary" | "secondary";
+  variant?: ThemesType;
   selectedKey?: NavbarOptionType;
 }
-
-const variantClasses: VariantClasses = {
-  primary: {
-    background: "bg-primary-dark",
-    hoverBackground600: "hover:bg-primary-600",
-  },
-  accent: {
-    background: "bg-accent-dark",
-    hoverBackground600: "hover:bg-accent-600",
-  },
-  neutral: {
-    background: "bg-neutral-dark",
-    hoverBackground600: "hover:bg-neutral-600",
-  },
-  hero: {
-    background: "bg-hero-light",
-    hoverBackground600: "hover:bg-hero",
-  },
-};
 
 const SENavbar: React.FC<NavbarProps> = ({
   children,
@@ -62,6 +39,14 @@ const SENavbar: React.FC<NavbarProps> = ({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
+
+  const variantClasses = {
+    primary: "bg-primary-dark",
+    secondary: "bg-secondary-dark",
+    accent: "bg-accent-dark",
+    neutral: "bg-neutral-dark",
+    error: "bg-error-dark",
+  } as Record<ThemesType, string>;
 
   useEffect(() => {
     const saveCollapsed = localStorage.getItem("sidebarCollapsed");
@@ -79,33 +64,14 @@ const SENavbar: React.FC<NavbarProps> = ({
   };
 
   const logout = async () => {
-    const mensaje = await logoutUsuario();
+    await logoutUsuario();
     router.push("/login");
   };
-
-  const iconRotationStyles = classNames(
-    "transition-transform duration-300 ease-in-out",
-    sidebarCollapsed ? "rotate-90" : "rotate-0"
-  );
 
   const collapsedClassMargin = classNames(
     "transition-all duration-300",
     sidebarCollapsed ? "ml-0" : "ml-64"
   );
-  const collapsedClassPadding = classNames(
-    "transition-all duration-300",
-    sidebarCollapsed ? "p-0" : "p-64"
-  );
-
-  const collapsedClassTransition = classNames(
-    "transition-all duration-300",
-    sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
-  );
-  const collapsedClassWidth = classNames(
-    "transition-all duration-300",
-    sidebarCollapsed ? "w-12" : "w-64"
-  );
-  const variantStyles = classNames(variantClasses[variant]?.background);
 
   const selectedKey: NavbarOptionType = (() => {
     if (pathName.startsWith("/acuerdos")) return "acuerdos";
@@ -118,24 +84,15 @@ const SENavbar: React.FC<NavbarProps> = ({
   return (
     <>
       <header className={collapsedClassMargin}>
-        <nav className={classNames(variantStyles, "p-4")}>
-          <ul
-            className={classNames(
-              "flex items-center flex-wrap flex-row justify-end list-none list-image-none text-white [&>li>*]:no-underline [&>li>*]:block [&>li>*]:p-4 [&>li>i]:cursor-pointer"
-            )}
-          >
+        <nav className={classNames(variantClasses[variant], "p-4")}>
+          <ul className="flex items-center justify-end list-none text-white">
             <li className="mr-auto">
               <SEButton
-                variant="neutral"
                 shape="noShape"
                 className="!text-primary-100 p-2 mr-4"
                 onClick={toggleSidebar}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faBars}
-                    className={iconRotationStyles}
-                  />
-                }
+                icon={<FontAwesomeIcon icon={faBars} />}
+                aria-label="Toggle Sidebar"
               />
             </li>
             <li>
@@ -148,106 +105,95 @@ const SENavbar: React.FC<NavbarProps> = ({
                 variant={variant}
                 link="/mensajes"
                 className="!text-primary-100"
-                icon={<FontAwesomeIcon icon={faComment} />}
-              />
+              >
+                <FontAwesomeIcon icon={faComment} />
+              </SELink>
             </li>
             <li>
-              <SELink
-                className="!text-primary-100"
-                link="/servicio"
-                label="Buscar Servicios"
-                icon={<FontAwesomeIcon icon={faBriefcase} />}
-              />
+              <SELink className="!text-primary-100" link="/servicio">
+                <span className="hidden md:inline">Buscar Servicios</span>
+                <FontAwesomeIcon icon={faBriefcase} className="md:ml-1" />
+              </SELink>
             </li>
             {usuario ? (
               <>
                 <li>
-                  <SELink
-                    className="!text-primary-100"
-                    link="/profile"
-                    label={usuario.nombres}
-                  />
+                  <SELink className="!text-primary-100" link="/profile">
+                    {usuario.nombres}
+                  </SELink>
                 </li>
                 <li>
                   <SEButton
                     onClick={logout}
                     shape="noShape"
-                    marginBottom={0}
                     icon={<FontAwesomeIcon icon={faDoorOpen} />}
+                    aria-label="Cerrar sesión"
                   />
                 </li>
               </>
             ) : (
               <li>
-                <SELink
-                  className="!text-primary-100"
-                  link="/login"
-                  label="Iniciar sesión"
-                />
+                <SELink className="!text-primary-100" link="/login">
+                  Iniciar sesión
+                </SELink>
               </li>
             )}
           </ul>
         </nav>
       </header>
+
       {usuario ? (
         <>
           <aside
             className={classNames(
               "bg-primary-200 p-4",
-              "flex flex-col h-screen fixed top-0 left-0 justify-between",
-              "w-64",
+              "flex flex-col h-screen fixed top-0 left-0 justify-between w-64",
               "transition-transform duration-300 ease-in-out transform",
               sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
             )}
           >
             <nav>
-              <ul
-                className={classNames(
-                  "space-y-2 w-48"
-                  //sidebarCollapsed ? "p-0" : "p-4"
-                )}
-              >
+              <ul className="space-y-2 w-48">
                 <SENavbarItem
                   selected={selectedKey === "acuerdos"}
                   collapsed={sidebarCollapsed}
                   link="/acuerdos"
-                  label="Acuerdos"
                   variant={variant}
                   icon={<FontAwesomeIcon icon={faThumbsUp} />}
-                />
+                >
+                  Acuerdos
+                </SENavbarItem>
                 <SENavbarItem
                   selected={selectedKey === "contratos"}
                   collapsed={sidebarCollapsed}
                   link="/contratos"
-                  label="Contratos"
                   variant={variant}
                   icon={<FontAwesomeIcon icon={faFileContract} />}
-                />
+                >
+                  Contratos
+                </SENavbarItem>
                 <SENavbarItem
                   selected={selectedKey === "servicios"}
                   collapsed={sidebarCollapsed}
                   link="/servicio/own"
-                  label="Servicios"
                   variant={variant}
                   icon={<FontAwesomeIcon icon={faGear} />}
-                />
+                >
+                  Servicios
+                </SENavbarItem>
                 <SENavbarItem
                   selected={selectedKey === "solicitudes"}
                   collapsed={sidebarCollapsed}
                   link="/solicitudes"
-                  label="Solicitudes"
                   variant={variant}
                   icon={<FontAwesomeIcon icon={faEnvelope} />}
-                />
+                >
+                  Solicitudes
+                </SENavbarItem>
               </ul>
             </nav>
           </aside>
-          <main
-            className={classNames(
-              styles.backgroundPrincipal,
-              collapsedClassMargin
-            )}
-          >
+          <main className={classNames("bg-gray-100", collapsedClassMargin)}>
             {children}
           </main>
         </>

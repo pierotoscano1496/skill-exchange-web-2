@@ -1,86 +1,37 @@
-import {
-  LevelType,
-  TextAlignType,
-  TextSizeType,
-  WeightType,
-} from "@/enums/Text";
-import { ThemesType } from "@/enums/Themes";
-import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
+import React from "react";
+import { ThemesType } from "@/enums/Themes";
+import { TextSizeType, LevelType } from "@/enums/Text";
 
-interface TitleProps {
-  children: React.ReactNode | React.ReactNode[];
-  variant?: ThemesType;
+interface SETitleProps {
+  children: React.ReactNode;
   className?: string;
-  align?: TextAlignType;
-  weight?: WeightType;
-  size?: TextSizeType;
+  variant?: ThemesType; // Tema del color (primary, secondary, etc.)
+  size?: TextSizeType; // Tamaño del texto basado en TextSize
+  as?: LevelType; // Etiqueta HTML dinámica basada en Level
 }
 
-const SETitle: React.FC<TitleProps> = ({
+const SETitle: React.FC<SETitleProps> = ({
   children,
   className,
-  variant = "primary",
-  align = "center",
-  weight = "bold",
-  size = "medium",
+  variant = "primary", // Valor por defecto
+  size = "medium", // Tamaño por defecto
+  as: Component = "h2", // Etiqueta por defecto
 }) => {
-  let TitleComp: LevelType;
-
-  switch (size) {
-    case "extraSmall":
-      TitleComp = "h5";
-      break;
-    case "small":
-      TitleComp = "h4";
-      break;
-    case "medium":
-      TitleComp = "h3";
-      break;
-    case "large":
-      TitleComp = "h2";
-      break;
-    case "extraLarge":
-      TitleComp = "h1";
-      break;
-  }
-
-  let classNameComponent = classNames(
-    "font-bold mb-6",
-    "w-full",
-    {
-      "text-xs": size === "extraSmall",
-      "text-sm": size === "small",
-      "text-base": size === "medium",
-      "text-2xl": size === "large",
-      "text-4xl": size === "extraLarge",
-    },
-    {
-      "font-normal": weight === "normal",
-      "font-bold": weight === "bold",
-      "font-extrabold": weight === "extraBold",
-    },
-    {
-      "text-start": align === "start",
-      "text-center": align === "center",
-      "text-end": align === "end",
-      "text-justify": align === "justify",
-    },
-    {
-      "text-primary-900": variant === "primary",
-      "text-secondary-900": variant === "secondary",
-      "text-accent-900": variant === "accent",
-      "text-neutral-900": variant === "neutral",
-      "text-hero-900": variant === "hero",
-      "text-error-900": variant === "error",
-    }
-  );
-
   return (
-    <TitleComp className={classNames(classNameComponent, className)}>
+    <Component
+      className={classNames(
+        "font-montserrat font-bold leading-tight", // Clases base
+        size, // Aplica el tamaño directamente desde TextSize
+        `text-${variant}`, // Aplica el color según el tema
+        className // Permite sobrescribir o agregar nuevas clases
+      )}
+    >
       {children}
-    </TitleComp>
+    </Component>
   );
 };
+
+SETitle.displayName = "SETitle";
 
 export default SETitle;

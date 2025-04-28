@@ -1,80 +1,31 @@
-import { ThemesType } from "@/enums/Themes";
-import { WeightFontType } from "@/enums/WeightFont";
-import { VariantClasses } from "@/utils/types";
 import classNames from "classnames";
+import React from "react";
+import { ThemesType } from "@/enums/Themes";
 
-interface TextProps {
-  children: React.ReactNode;
-  variant?: ThemesType;
+interface SESpanProps {
   className?: string;
-  weight?: WeightFontType;
+  children: React.ReactNode;
+  variant?: ThemesType; // Tema del color (primary, secondary, etc.)
 }
 
-const variantClasses: VariantClasses = {
-  primary: {
-    text: "text-primary-600",
-  },
-  secondary: {
-    text: "text-secondary-600",
-  },
-  accent: {
-    text: "text-accent-600",
-  },
-  neutral: {
-    text: "text-neutral-600",
-  },
-  hero: {
-    text: "text-hero-600",
-  },
-  error: {
-    text: "text-error-600",
-  },
-  "yape-purple": {
-    text: "text-violet-600",
-  },
-};
-
-const SESpan: React.FC<TextProps> = ({
-  children,
+const SESpan: React.FC<SESpanProps> = ({
   className,
-  variant = "primary",
-  weight,
+  children,
+  variant = "primary", // Valor por defecto
 }) => {
-  let fontWeightClass;
-  switch (weight) {
-    case "normal":
-      fontWeightClass = "font-normal";
-      break;
-    case "thin":
-      fontWeightClass = "font-thin";
-      break;
-    case "light":
-      fontWeightClass = "font-light";
-      break;
-    case "semibold":
-      fontWeightClass = "font-semibold";
-      break;
-    case "bold":
-      fontWeightClass = "font-bold";
-      break;
-    default:
-      fontWeightClass = "font-normal";
-  }
-
   return (
     <span
       className={classNames(
-        "text-base",
-        variantClasses[variant]?.text,
-        fontWeightClass,
-        "inline-flex",
-        "items-center",
-        className
+        "font-montserrat text-base", // Clases base
+        `text-${variant}`, // Aplica directamente la clase basada en el tema
+        className // Permite sobrescribir o agregar nuevas clases
       )}
     >
       {children}
     </span>
   );
 };
+
+SESpan.displayName = "SESpan";
 
 export default SESpan;

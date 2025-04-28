@@ -27,7 +27,7 @@ type DragAndDropProps = {
   showSize?: boolean;
 };
 
-const SEDragAndDrop = ({
+const SEDragAndDrop: React.FC<DragAndDropProps> = ({
   onSendFilesData,
   onError,
   limit,
@@ -35,7 +35,7 @@ const SEDragAndDrop = ({
   required = true,
   sizeLimit = 5,
   showSize = false,
-}: DragAndDropProps) => {
+}) => {
   const [newFilesData, setNewFilesData] = useState<FileData[]>([]);
   const maxSizeFiles = sizeLimit;
 
@@ -68,10 +68,10 @@ const SEDragAndDrop = ({
   }, []);
 
   const getMedioFile = (file: File): MedioRecursoMultimedia | undefined => {
-    const tipoArchivo = file.name.split(".").slice(-1)[0];
-    if (acceptedVideosExtension.includes(tipoArchivo.toLowerCase())) {
+    const tipoArchivo = file.name.split(".").pop()?.toLowerCase();
+    if (tipoArchivo && acceptedVideosExtension.includes(tipoArchivo)) {
       return "video";
-    } else if (acceptedImagesExtension.includes(tipoArchivo.toLowerCase())) {
+    } else if (tipoArchivo && acceptedImagesExtension.includes(tipoArchivo)) {
       return "imagen";
     }
   };
@@ -82,11 +82,9 @@ const SEDragAndDrop = ({
         (!required && newFilesData.length >= 0)) &&
       fileRejections.length === 0
     ) {
-      // Validar que todos pesen menos que el tamaño máximo permitido
-      const sizeAreOK = getFilesSizeMb(
-        newFilesData.map((fileData) => fileData.file)
-      );
-
+      const sizeAreOK =
+        getFilesSizeMb(newFilesData.map((fileData) => fileData.file)) <=
+        maxSizeFiles;
       if (sizeAreOK) {
         onSendFilesData(newFilesData);
       }
@@ -112,10 +110,11 @@ const SEDragAndDrop = ({
           Arrastre un archivo o haga click para elegir uno
         </SEParragraph>
       </div>
+
       {acceptedFiles.length > 0 && (
         <>
-          <SETitle size="large">Archivo (s)</SETitle>
-          <div className={`flex flex-wrap justify-center mb-6`}>
+          <SETitle size="large">Archivo(s)</SETitle>
+          <div className="flex flex-wrap justify-center mb-6">
             {acceptedFiles.map((file, index) => (
               <SEContainer key={index} direction="column">
                 <SEParragraph>
@@ -139,40 +138,46 @@ const SEDragAndDrop = ({
               </SEContainer>
             ))}
           </div>
+
           {showSize && (
             <SEContainer>
               <SEParragraph>
-                <strong>Tamaño total: </strong>:{" "}
+                <strong>Tamaño total: </strong>
                 {Math.round(getFilesSizeMb(acceptedFiles) * 100) / 100} MB
               </SEParragraph>
             </SEContainer>
           )}
+
           <SEButton
             onClick={sendFileData}
-            label="Añadir"
             disabled={
               getFilesSizeMb(acceptedFiles) > maxSizeFiles ||
               fileRejections.length > 0 ||
-              acceptedFiles.length > limit!
+              (limit !== undefined && acceptedFiles.length > limit)
             }
-          />
+          >
+            Añadir
+          </SEButton>
         </>
       )}
+
       {getFilesSizeMb(acceptedFiles) > maxSizeFiles && (
         <SEParragraph variant="error">
           Los archivos no deben superar los {sizeLimit} MB
         </SEParragraph>
       )}
+
       {fileRejections.length > 0 &&
         fileRejections.map((f, index) => (
           <SEParragraph key={index} variant="error">
             Archivo {f.file.name} no admitido
           </SEParragraph>
         ))}
+
       {limit &&
         (fileRejections.length > limit || acceptedFiles.length > limit) && (
           <SEParragraph variant="error">
-            Debe escoger {limit} archivo (s) máximo
+            Debe escoger {limit} archivo(s) máximo
           </SEParragraph>
         )}
     </section>

@@ -36,46 +36,49 @@ const SESocialMedia: React.FC<SocialMediaProps> = ({
   containerClassName,
   linkClassName,
   textClassName,
-}: SocialMediaProps) => {
+}) => {
   const socialMediaText: string = capitalizeFirstLetter(socialMedia);
+
+  const iconMap = {
+    facebook: faFacebook,
+    twitter: faTwitter,
+    instagram: faInstagram,
+    linkedin: faLinkedin,
+    tiktok: faTiktok,
+    youtube: faYoutube,
+  } as Record<SocialMedia, any>;
+
+  const selectedIcon = icon || (
+    <FontAwesomeIcon icon={iconMap[socialMedia]} className="mr-2" />
+  );
 
   switch (type) {
     case "link":
       return (
-        <SELink
-          link={link!}
-          icon={icon}
-          label={socialMediaText}
-          className={linkClassName}
-        />
+        <SELink link={link!} className={linkClassName}>
+          {selectedIcon}
+          {socialMediaText}
+        </SELink>
       );
     case "container":
       return (
         <SEContainer className={containerClassName}>
-          <FontAwesomeIcon
-            icon={
-              (socialMedia === "facebook" && faFacebook) ||
-              (socialMedia === "twitter" && faTwitter) ||
-              (socialMedia === "instagram" && faInstagram) ||
-              (socialMedia === "linkedin" && faLinkedin) ||
-              (socialMedia === "tiktok" && faTiktok) ||
-              faYoutube
-            }
-            className={classNames("mr-auto")}
-          />
+          {selectedIcon}
           {socialMediaText}
         </SEContainer>
       );
     case "text":
       return (
-        <SEParragraph className={textClassName}>socialMediaText</SEParragraph>
+        <SEParragraph className={textClassName}>{socialMediaText}</SEParragraph>
       );
+    default:
+      return null;
   }
 };
 
-const capitalizeFirstLetter = (socialMedia: SocialMedia): string => {
-  if (!socialMedia) return socialMedia;
-  return socialMedia.charAt(0).toUpperCase() + socialMedia.slice(1);
+const capitalizeFirstLetter = (text: string): string => {
+  if (!text) return text;
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
 export default SESocialMedia;
