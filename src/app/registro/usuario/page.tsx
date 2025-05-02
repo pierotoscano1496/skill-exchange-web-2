@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 
 const RegistroUsuario = () => {
   const router = useRouter();
+
   return (
-    <div className="bg-gray-50 h-screen flex items-center justify-center">
-      <div className="text-center space-y-4">
+    <div className="bg-gray-50 h-screen flex items-center justify-center p-6">
+      <div className="text-center space-y-6">
         <h1 className="text-4xl font-semibold text-gray-800">
           Conéctate con Profesionales
         </h1>
@@ -15,11 +16,13 @@ const RegistroUsuario = () => {
           Explora y ofrece servicios con los mejores estándares de calidad.
         </p>
         <SEButton
-          label="Comienza Ahora"
-          onClick={() => router.push("/registro/usuario/datos")}
+          variant="primary"
           size="large"
-          className="hover:bg-blue-700"
-        />
+          onClick={() => router.push("/registro/usuario/datos")}
+          className="w-full"
+        >
+          Comienza Ahora
+        </SEButton>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ interface SECardProps {
   mode?: ComponentModeType; // Modalidad del card (filled, outline, ghost, text)
   variant?: ThemesType; // Tema del card (primary, secondary, etc.)
   size?: SizeType; // Tamaño del card (small, medium, large)
+  orientation?: "vertical" | "horizontal"; // Orientación del contenido
 }
 
 const SECard: React.FC<SECardProps> = ({
@@ -18,6 +19,7 @@ const SECard: React.FC<SECardProps> = ({
   variant = "primary",
   size = "medium",
   mode = "filled",
+  orientation = "vertical", // Por defecto, orientación vertical
 }) => {
   const baseStyles =
     "flex justify-center items-center text-center rounded-md transform duration-300";
@@ -44,6 +46,9 @@ const SECard: React.FC<SECardProps> = ({
     text: `bg-transparent text-${variant} hover:underline`,
   }[mode];
 
+  const orientationClasses =
+    orientation === "vertical" ? "flex-col" : "flex-row";
+
   return (
     <div
       className={classNames(
@@ -51,6 +56,7 @@ const SECard: React.FC<SECardProps> = ({
         hoverStyles,
         sizeClasses,
         modeClasses,
+        orientationClasses,
         className
       )}
     >

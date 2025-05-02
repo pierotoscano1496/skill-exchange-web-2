@@ -27,7 +27,7 @@ module.exports = {
         xl: "1rem",
       },
       colors: {
-        "fondo-principal": "#F5F7FA",
+        "fondo-principal": "#FFFFFF", // Cambiado a blanco puro para mayor armonía
 
         primary: {
           DEFAULT: "#F97316", // Naranja principal del logo
@@ -66,11 +66,11 @@ module.exports = {
         sm: "0.875rem",
         base: "1rem",
         xl: "1.25rem",
-        "2xl": "1.5rem", // Ajuste para tamaño de texto más coherente
+        "2xl": "1.5rem",
         "3xl": "2rem",
         "4xl": "2.5rem",
-        "5xl": "3.5rem", // Incrementado para resaltar títulos importantes
-        "6xl": "4rem", // Añadido para hero titles o encabezados principales
+        "5xl": "3.5rem",
+        "6xl": "4rem",
       },
       // Agregado para sombras más sofisticadas
       boxShadow: {

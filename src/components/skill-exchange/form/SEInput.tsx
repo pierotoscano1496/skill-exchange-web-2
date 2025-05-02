@@ -41,8 +41,8 @@ interface InputProps {
   name?: string;
   placeholder?: string;
   label?: string;
-  value?: string | readonly string[] | number;
-  defaultValue?: string | number | readonly string[];
+  value?: string | Date | readonly string[] | number;
+  defaultValue?: string | Date | number | readonly string[];
   variant?: InputThemesType;
   className?: string;
   numericProps?: NumericInputProps;
@@ -114,6 +114,17 @@ const SEInput: React.FC<InputProps> = ({
         ? dateInputProps?.max?.toISOString().split("T")[0]
         : undefined;
 
+  // Convertir valores de tipo Date a formato ISO para inputs de tipo date
+  const formattedValue =
+    type === "date" && value instanceof Date
+      ? value.toISOString().split("T")[0]
+      : value?.toString();
+
+  const formattedDefaultValue =
+    type === "date" && defaultValue instanceof Date
+      ? defaultValue.toISOString().split("T")[0]
+      : defaultValue?.toString();
+
   return (
     <div className={classNames("mb-4", className)}>
       {label && (
@@ -131,8 +142,8 @@ const SEInput: React.FC<InputProps> = ({
         id={name}
         name={name}
         type={type}
-        value={value}
-        defaultValue={defaultValue}
+        value={formattedValue}
+        defaultValue={formattedDefaultValue}
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={onKeyDown}
