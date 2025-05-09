@@ -22,7 +22,7 @@ const ServicioPage = async ({ searchParams }: Props) => {
             <SEServicio key={s.id} servicio={s} forPublic={true} />
           ))
         ) : (
-          <SEParragraph variant="secondary">Sin resultados</SEParragraph>
+          <SEParragraph theme="secondary">Sin resultados</SEParragraph>
         )}
       </SEGridContainer>
     </SEContainer>

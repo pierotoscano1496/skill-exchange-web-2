@@ -13,7 +13,7 @@ interface LinkProps {
     className?: string;
   };
   children?: ReactNode;
-  variant?: ThemesType; // Tema del enlace (primary, secondary, etc.)
+  theme?: ThemesType; // Tema del enlace (primary, secondary, etc.)
   weight?: WeightType; // Grosor del texto (normal, bold)
 }
 
@@ -23,10 +23,10 @@ const SELink: React.FC<LinkProps> = ({
   icon,
   image,
   children,
-  variant = "primary",
+  theme = "primary",
   weight = "normal",
 }) => {
-  const variantClasses = {
+  const themeClasses = {
     primary: "text-primary hover:text-primary-hover",
     secondary: "text-secondary hover:text-secondary-hover",
     accent: "text-accent hover:text-accent-hover",
@@ -46,7 +46,7 @@ const SELink: React.FC<LinkProps> = ({
     <a
       className={classNames(
         baseStyles,
-        variantClasses[variant],
+        themeClasses[theme],
         weightClasses,
         className
       )}

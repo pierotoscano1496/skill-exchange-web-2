@@ -1,8 +1,6 @@
 "use client";
 
-import Usuario from "@/interfaces/Usuario";
 import React, { useEffect, useState } from "react";
-import { logoutUsuario } from "@/actions/usuario.actions";
 import { usePathname, useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,9 +18,11 @@ import classNames from "classnames";
 import SEButton from "./SEButton";
 import SELink from "./SELink";
 import SENavbarItem from "./SENavbarItem";
+import SESpan from "./text/SESpan";
+import { logoutUsuario } from "@/actions/usuario.actions";
+import Usuario from "@/interfaces/Usuario";
 import { NavbarOptionType } from "@/enums/NavbarOptions";
 import { ThemesType } from "@/enums/Themes";
-import SESpan from "./text/SESpan";
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -41,11 +41,13 @@ const SENavbar: React.FC<NavbarProps> = ({
   const pathName = usePathname();
 
   const variantClasses = {
-    primary: "bg-primary-dark",
-    secondary: "bg-secondary-dark",
-    accent: "bg-accent-dark",
-    neutral: "bg-neutral-dark",
-    error: "bg-error-dark",
+    primary:
+      "bg-gradient-to-r from-primary to-primary-hover text-primary-content",
+    secondary:
+      "bg-gradient-to-r from-secondary to-secondary-hover text-secondary-content",
+    accent: "bg-gradient-to-r from-accent to-accent-hover text-accent-content",
+    neutral: "bg-neutral text-neutral-content",
+    error: "bg-error text-error-content",
   } as Record<ThemesType, string>;
 
   useEffect(() => {
@@ -83,34 +85,49 @@ const SENavbar: React.FC<NavbarProps> = ({
 
   return (
     <>
+      {/* Navbar */}
       <header className={collapsedClassMargin}>
-        <nav className={classNames(variantClasses[variant], "p-4")}>
-          <ul className="flex items-center justify-end list-none text-white">
-            <li className="mr-auto">
-              <SEButton
-                shape="noShape"
-                className="!text-primary-100 p-2 mr-4"
-                onClick={toggleSidebar}
-                icon={<FontAwesomeIcon icon={faBars} />}
-                aria-label="Toggle Sidebar"
-              />
-            </li>
+        <nav
+          className={classNames(
+            variantClasses[variant],
+            "p-4 shadow-md flex items-center justify-between border-b border-gray-200"
+          )}
+        >
+          {/* Logo y botón de menú */}
+          <div className="flex items-center space-x-4">
+            <SEButton
+              shape="noShape"
+              className="!text-primary-content p-2"
+              onClick={toggleSidebar}
+              icon={<FontAwesomeIcon icon={faBars} />}
+              aria-label="Toggle Sidebar"
+            />
+            <h1 className="text-lg font-bold hidden md:block">
+              Skill Exchange
+            </h1>
+          </div>
+
+          {/* Íconos y enlaces */}
+          <ul className="flex items-center space-x-6">
             <li>
-              <SESpan className="!text-primary-100">
+              <SESpan className="!text-primary-content hover:text-accent transition-colors">
                 <FontAwesomeIcon icon={faBell} />
               </SESpan>
             </li>
             <li>
               <SELink
-                variant={variant}
+                theme={variant}
                 link="/mensajes"
-                className="!text-primary-100"
+                className="!text-primary-content hover:text-accent transition-colors"
               >
                 <FontAwesomeIcon icon={faComment} />
               </SELink>
             </li>
             <li>
-              <SELink className="!text-primary-100" link="/servicio">
+              <SELink
+                className="!text-primary-content hover:text-accent transition-colors"
+                link="/servicio"
+              >
                 <span className="hidden md:inline">Buscar Servicios</span>
                 <FontAwesomeIcon icon={faBriefcase} className="md:ml-1" />
               </SELink>
@@ -118,7 +135,10 @@ const SENavbar: React.FC<NavbarProps> = ({
             {usuario ? (
               <>
                 <li>
-                  <SELink className="!text-primary-100" link="/profile">
+                  <SELink
+                    className="!text-primary-content hover:text-accent transition-colors"
+                    link="/profile"
+                  >
                     {usuario.nombres}
                   </SELink>
                 </li>
@@ -133,7 +153,10 @@ const SENavbar: React.FC<NavbarProps> = ({
               </>
             ) : (
               <li>
-                <SELink className="!text-primary-100" link="/login">
+                <SELink
+                  className="!text-primary-content hover:text-accent transition-colors"
+                  link="/login"
+                >
                   Iniciar sesión
                 </SELink>
               </li>
@@ -142,16 +165,22 @@ const SENavbar: React.FC<NavbarProps> = ({
         </nav>
       </header>
 
+      {/* Sidebar */}
       {usuario ? (
         <>
           <aside
             className={classNames(
-              "bg-primary-200 p-4",
+              "bg-gradient-to-b from-gray-800 to-gray-900 text-primary-content p-4",
               "flex flex-col h-screen fixed top-0 left-0 justify-between w-64",
               "transition-transform duration-300 ease-in-out transform",
               sidebarCollapsed ? "-translate-x-full" : "translate-x-0"
             )}
           >
+            <div className="mb-6">
+              <h2 className="text-primary-content text-lg font-bold">
+                Skill Exchange
+              </h2>
+            </div>
             <nav>
               <ul className="space-y-2 w-48">
                 <SENavbarItem
@@ -193,7 +222,12 @@ const SENavbar: React.FC<NavbarProps> = ({
               </ul>
             </nav>
           </aside>
-          <main className={classNames("bg-gray-100", collapsedClassMargin)}>
+          <main
+            className={classNames(
+              "bg-gray-100 min-h-screen p-6",
+              collapsedClassMargin
+            )}
+          >
             {children}
           </main>
         </>
