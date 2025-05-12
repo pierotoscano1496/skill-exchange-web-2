@@ -9,7 +9,6 @@ export interface RegistroUsuarioBodyFirstStep {
   nombres?: string;
   apellidos?: string;
   fechaNacimiento?: Date;
-  step: number;
 }
 
 export interface RegistroUsuarioBodyRedes extends RegistroUsuarioBodyFirstStep {
