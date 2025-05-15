@@ -131,12 +131,7 @@ export default function RegisterStep3Page() {
     }
 
     // Verificar si la habilidad ya existe
-    const skillExists = skills.some(
-      (s) =>
-        s.category === selectedCategory &&
-        s.subcategory === selectedSubcategory &&
-        s.name === selectedSkill
-    );
+    const skillExists = skills.some((s) => s.id === selectedSkill);
 
     if (skillExists) {
       newErrors.skill = "Esta habilidad ya ha sido agregada";
@@ -155,10 +150,11 @@ export default function RegisterStep3Page() {
       );
 
       const newSkill: Skill = {
-        id: `${selectedCategory}-${selectedSubcategory}-${selectedSkill}`,
+        id: selectedSkill,
         category: category?.name || "",
         subcategory: subcategory?.name || "",
-        name: selectedSkill,
+        name:
+          subcategory?.skills.find((s) => s.id === selectedSkill)?.name || "",
         level: skillLevel[0],
         comment,
       };
@@ -217,6 +213,7 @@ export default function RegisterStep3Page() {
           tipoDocumento: tipoDocumento,
           correo: data.email,
           clave: data.password,
+          tipo: "cliente",
           perfilLinkedin: data.linkedin,
           perfilFacebook: data.facebook,
           perfilInstagram: data.instagram,

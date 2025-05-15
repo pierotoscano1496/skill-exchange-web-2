@@ -1,3 +1,4 @@
+import { TipoRegistroUsuario } from "@/utils/types";
 import AsignacionSkillToUsuarioRequest from "./AsignacionSkillToUsuarioRequest";
 
 export default interface CreateUsuarioBody {
@@ -8,6 +9,7 @@ export default interface CreateUsuarioBody {
   nombres: string;
   apellidos: string;
   fechaNacimiento: Date;
+  tipo: TipoRegistroUsuario;
   clave: string;
   perfilLinkedin: string;
   perfilFacebook: string;
