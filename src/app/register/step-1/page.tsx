@@ -25,7 +25,10 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useRegistroUsuarioContext } from "@/hooks/useRegistroUsuarioContext";
-import { getMaxDateToISOString } from "@/utils/auxiliares";
+import {
+  convertDateToISOString,
+  getMaxDateToISOString,
+} from "@/utils/auxiliares";
 import {
   RegistroUsuarioBodyFirstStep,
   RegistroUsuarioBodySkills,
@@ -41,7 +44,7 @@ export default function RegisterStep1Page() {
   const [documentNumber, setDocumentNumber] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [date, setDate] = useState<string | null>();
+  const [date, setDate] = useState<Date | null>();
   const [description, setDescription] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -104,7 +107,7 @@ export default function RegisterStep1Page() {
           documentNumber,
           firstName,
           lastName,
-          birthDate: new Date(date!),
+          birthDate: date!,
           description,
         })
       );
@@ -238,7 +241,14 @@ export default function RegisterStep1Page() {
                   }}
                   initialFocus
                 /> */}
-                <DateInput onChange={(e) => setDate(e)} />
+                <DateInput
+                  onChange={(e) => {
+                    if (e) {
+                      const fecha = new Date(e);
+                      setDate(fecha);
+                    }
+                  }}
+                />
               </PopoverContent>
             </Popover>
             {errors.date && (
