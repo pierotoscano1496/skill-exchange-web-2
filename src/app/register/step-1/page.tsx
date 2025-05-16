@@ -221,7 +221,11 @@ export default function RegisterStep1Page() {
                   )}
                 >
                   {date
-                    ? format(date, "PPP", { locale: es })
+                    ? new Intl.DateTimeFormat("es-ES", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }).format(date) //format(date.toLocaleDateString("es-PE"), "PPP", { locale: es })
                     : "Selecciona tu fecha de nacimiento"}
                 </Button>
               </PopoverTrigger>
@@ -244,7 +248,7 @@ export default function RegisterStep1Page() {
                 <DateInput
                   onChange={(e) => {
                     if (e) {
-                      const fecha = new Date(e);
+                      const fecha = new Date(`${e}T00:00:00`);
                       setDate(fecha);
                     }
                   }}
