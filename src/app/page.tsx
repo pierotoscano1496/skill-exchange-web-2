@@ -46,50 +46,52 @@ export default function LandingPage() {
       </Container>
 
       {/* Features */}
-      <section id="como-funciona" className="container py-24">
-        <h2 className="text-3xl font-bold tracking-tight text-center mb-12">
-          ¿Cómo funciona Chambita?
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card>
-            <CardContent className="flex flex-col items-center text-center p-6">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Users className="text-primary h-6 w-6" />
-              </div>
-              <CardTitle className="text-xl mb-2">Crea tu perfil</CardTitle>
-              <p className="text-muted-foreground">
-                Regístrate y cuéntanos qué sabes hacer. ¿Cocinas rico? ¿Arreglas
-                computadoras? ¡Lo que sea vale!
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex flex-col items-center text-center p-6">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Pencil className="text-primary h-6 w-6" />
-              </div>
-              <CardTitle className="text-xl mb-2">
-                Publica tus chambitas
-              </CardTitle>
-              <p className="text-muted-foreground">
-                Ofrece tus servicios o busca los que necesitas. Tú decides
-                cuándo, dónde y cuánto cobras.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex flex-col items-center text-center p-6">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <DollarSign className="text-primary h-6 w-6" />
-              </div>
-              <CardTitle className="text-xl mb-2">Gana dinero</CardTitle>
-              <p className="text-muted-foreground">
-                Recibe pagos seguros por tus servicios y construye tu reputación
-                con buenas reseñas.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+      <section id="como-funciona" className="py-24">
+        <Container>
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-12">
+            ¿Cómo funciona Chambita?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card>
+              <CardContent className="flex flex-col items-center text-center p-6">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Users className="text-primary h-6 w-6" />
+                </div>
+                <CardTitle className="text-xl mb-2">Crea tu perfil</CardTitle>
+                <p className="text-muted-foreground">
+                  Regístrate y cuéntanos qué sabes hacer. ¿Cocinas rico?
+                  ¿Arreglas computadoras? ¡Lo que sea vale!
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col items-center text-center p-6">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <Pencil className="text-primary h-6 w-6" />
+                </div>
+                <CardTitle className="text-xl mb-2">
+                  Publica tus chambitas
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  Ofrece tus servicios o busca los que necesitas. Tú decides
+                  cuándo, dónde y cuánto cobras.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="flex flex-col items-center text-center p-6">
+                <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <DollarSign className="text-primary h-6 w-6" />
+                </div>
+                <CardTitle className="text-xl mb-2">Gana dinero</CardTitle>
+                <p className="text-muted-foreground">
+                  Recibe pagos seguros por tus servicios y construye tu
+                  reputación con buenas reseñas.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
       </section>
 
       {/* Popular Services */}

@@ -228,26 +228,15 @@ export default function RegisterStep3Page() {
         const usuarioRegistered = await registrarUsuarioDatos(usuarioDatos);
 
         if (usuarioRegistered) {
-          const skillsAsignados = await asignarSkillsToUsuario(
-            usuarioRegistered.id,
-            skills.map((skill) => ({
-              idSkill: skill.id,
-              descripcion: skill.comment,
-              nivelConocimiento: skill.level,
-            }))
-          );
+          setSuccess(true);
 
-          if (skillsAsignados) {
-            setSuccess(true);
+          // Limpiar datos de registro
+          localStorage.removeItem("registrationData");
 
-            // Limpiar datos de registro
-            localStorage.removeItem("registrationData");
-
-            // Redirigir después de 2 segundos
-            setTimeout(() => {
-              router.push("/(skillExchange)");
-            }, 2000);
-          }
+          // Redirigir después de 2 segundos
+          setTimeout(() => {
+            router.push("/");
+          }, 2000);
         }
       }
     }

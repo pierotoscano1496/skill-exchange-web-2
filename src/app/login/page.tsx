@@ -2,26 +2,37 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import SEInput from "@/components/skill-exchange/form/SEInput";
-import SEButton from "@/components/skill-exchange/SEButton";
-import SECard from "@/components/skill-exchange/SECard";
-import SEForm from "@/components/skill-exchange/form/SEForm";
-import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { loginUsuario } from "@/actions/auth.actions.client";
-import SELinkButton from "@/components/skill-exchange/SELinkButton";
 
-const LoginPage = () => {
-  const [correo, setCorreo] = useState<string>("");
-  const [contrasena, setContrasena] = useState<string>("");
+export default function LoginPage() {
   const [attempSubmit, setAttempSubmit] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const login = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // En un caso real, aquí iría la lógica de autenticación
+    //router.push("/(skillExchange)")
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
     try {
       setLoading(true);
-      const tokenSaved = await loginUsuario(correo, contrasena);
+      const tokenSaved = await loginUsuario(email, password);
       if (tokenSaved) {
         router.push("/servicio");
       }
@@ -40,61 +51,62 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-fondo-principal p-6">
-      <SECard className="w-full max-w-md p-8 shadow-lg rounded-lg">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Iniciar Sesión
-        </h1>
-        <SEForm size="full">
-          <SEInput
-            label="Correo"
-            onChange={(e) => setCorreo(e.target.value)}
-            type="email"
-            value={correo}
-            placeholder="Ingresa tu correo"
-          />
-          <SEInput
-            label="Contraseña"
-            onChange={(e) => setContrasena(e.target.value)}
-            type="password"
-            value={contrasena}
-            placeholder="Ingresa tu contraseña"
-            className="mt-4"
-          />
-          <SEButton
-            className="w-full mt-6"
-            type="submit"
-            disabled={loading}
-            onClick={login}
-            variant="primary"
-          >
-            Ingresar
-          </SEButton>
-          {loading && (
-            <SEParragraph className="text-center mt-4" theme="neutral">
-              Cargando...
-            </SEParragraph>
-          )}
-          {attempSubmit && error && (
-            <SEParragraph className="text-center mt-4" theme="error">
-              {error}
-            </SEParragraph>
-          )}
-        </SEForm>
-        <div className="flex justify-center mt-6">
-          <SELinkButton
-            className="text-sm"
-            variant="secondary"
-            link="/registro/usuario"
-          >
-            ¿No tienes cuenta? Regístrate
-          </SELinkButton>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
         </div>
-      </SECard>
-    </main>
+      )}
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <div className="text-center text-primary font-bold text-2xl mb-2">
+            Chambita
+          </div>
+          <CardTitle className="text-2xl font-bold text-center">
+            ¡Hola de nuevo!
+          </CardTitle>
+          <CardDescription className="text-center">
+            Ingresa a tu cuenta para continuar
+          </CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo o teléfono</Label>
+              <Input
+                id="email"
+                name="email"
+                type="text"
+                placeholder="tu@correo.com"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Contraseña</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary hover:underline"
+                >
+                  ¿La olvidaste?
+                </Link>
+              </div>
+              <Input id="password" name="password" type="password" required />
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button type="submit" className="w-full">
+              Entrar
+            </Button>
+            <div className="text-center text-sm">
+              ¿No tienes cuenta?{" "}
+              <Link href="/register" className="text-primary hover:underline">
+                Regístrate aquí
+              </Link>
+            </div>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
-};
-
-LoginPage.displayName = "LoginPage";
-
-export default LoginPage;
+}

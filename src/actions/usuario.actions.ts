@@ -24,7 +24,7 @@ export const registrarUsuarioDatos = async (
   createUsuarioBody: CreateUsuarioBody
 ) => {
   const resp = await (
-    await getBackendInstanceAuth()
+    await getBackendInstance()
   ).post(`usuario`, createUsuarioBody);
   return resp.data as UsuarioRegisteredResponse;
 };
