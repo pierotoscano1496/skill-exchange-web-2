@@ -23,6 +23,7 @@ import { SearchForm } from "./search-form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useUsuario } from "@/contexts/UsuarioContext";
 
 // Add user data
 const userData = {
@@ -33,6 +34,11 @@ const userData = {
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
+  const { usuario, loading } = useUsuario();
+
+  const name = usuario?.nombres || usuario?.nombres || "Usuario";
+  const email = usuario?.correo || usuario?.correo || "";
+  const avatar = "/avatars/default.jpg";
 
   return (
     <header className="flex sticky top-0 z-50 w-full items-center border-b bg-background">
@@ -62,14 +68,18 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 px-2">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={userData.avatar || "/placeholder.svg"}
-                    alt={userData.name}
-                  />
-                  <AvatarFallback className="rounded-lg">ML</AvatarFallback>
+                  <AvatarImage src={avatar} alt={name} />
+                  <AvatarFallback className="rounded-lg">
+                    {name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </AvatarFallback>
                 </Avatar>
                 <span className="hidden md:inline-block font-medium">
-                  {userData.name}
+                  {loading ? "Cargando..." : name}
                 </span>
                 <ChevronsUpDown className="h-4 w-4" />
               </Button>
@@ -78,17 +88,21 @@ export function SiteHeader() {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      src={userData.avatar || "/placeholder.svg"}
-                      alt={userData.name}
-                    />
-                    <AvatarFallback className="rounded-lg">ML</AvatarFallback>
+                    <AvatarImage src={avatar} alt={name} />
+                    <AvatarFallback className="rounded-lg">
+                      {name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                      {userData.name}
+                      {loading ? "Cargando..." : name}
                     </span>
-                    <span className="truncate text-xs">{userData.email}</span>
+                    <span className="truncate text-xs">{email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>

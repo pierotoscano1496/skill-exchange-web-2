@@ -14,6 +14,7 @@ const ServicioPage = async ({ searchParams }: Props) => {
   const servicios = await searchServicioWithParams(await searchParams);
 
   return (
+    
     <SEContainer direction="column" size="large">
       <SearchServicioForm />
       <SEGridContainer columns={2} size="full">

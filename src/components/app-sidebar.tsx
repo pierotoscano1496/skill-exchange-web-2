@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/sidebar";
 import { icon } from "@fortawesome/fontawesome-svg-core";
 import { url } from "inspector";
+import { useUsuario } from "@/contexts/UsuarioContext";
 
 const data = {
   user: {
@@ -159,6 +160,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { usuario, loading } = useUsuario();
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
@@ -180,6 +182,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className="flex items-center gap-3 mt-4 px-2">
+          <img
+            src={"/avatars/default.jpg"}
+            alt={usuario?.nombres || "Usuario"}
+            className="w-10 h-10 rounded-full object-cover border"
+          />
+          <div className="flex flex-col">
+            <span className="font-medium text-sm">
+              {loading ? "Cargando..." : usuario?.nombres || "Usuario"}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {usuario?.correo || ""}
+            </span>
+          </div>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
