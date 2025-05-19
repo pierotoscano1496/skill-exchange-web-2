@@ -28,6 +28,15 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import SEForm from "../skill-exchange/form/SEForm";
 import SEContainer from "../skill-exchange/containers/SEContainer";
 import SEGridContainer from "../skill-exchange/containers/SEGridContainer";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 type Props = {
   redirect?: string;
@@ -87,91 +96,88 @@ const SearchServicioForm = ({ redirect = "servicio" }: Props) => {
   );
 
   return (
-    <SEContainer size="full">
-      <SEForm
-        size="full"
-        className="p-6 rounded-lg shadow-sm border grid items-baseline justify-items-start lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2"
+    <form
+      className="p-6 rounded-lg shadow-sm border grid items-baseline justify-items-start gap-2 lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 w-full"
+      onSubmit={(e) => {
+        e.preventDefault();
+        buscarServicios();
+      }}
+    >
+      <Input
+        className="px-2 justify-self-stretch"
+        name="keyWord"
+        type="text"
+        value={keyWord}
+        onChange={(e) => setKeyWord(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            buscarServicios();
+          }
+        }}
+        placeholder="Palabra clave"
+      />
+      <Select
+        value={categoriaSelected ?? ""}
+        onValueChange={(value) => {
+          setCategoriaSelected(value || undefined);
+          setSubCategoriaSelected(undefined);
+          setSkillSelected(undefined);
+        }}
       >
-        <SEInput
-          className="px-2 justify-self-stretch"
-          name="keyWord"
-          type="text"
-          value={keyWord}
-          onChange={(e) => setKeyWord(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              buscarServicios();
-            }
-          }}
-          placeholder="Palabra clave"
-        />
-        <SESelect
-          className="px-2 justify-self-stretch"
-          key={"categoria"}
-          initOption={{ label: "--Categoría--", value: "" }}
-          options={categorias.map(
-            (categoria) =>
-              ({
-                label: categoria.nombre,
-                value: categoria.id,
-              }) as SelectOptions
-          )}
-          value={categoriaSelected}
-          onChange={(e) => {
-            setCategoriaSelected(
-              categorias.find((categoria) => categoria.id === e.target.value)
-                ?.id
-            );
-            setSubCategoriaSelected(undefined);
-            setSkillSelected(undefined);
-          }}
-        />
-        <SESelect
-          className="px-2 justify-self-stretch"
-          key={"subCategoria"}
-          initOption={{ label: "--Sub categoría--", value: "" }}
-          options={subCategoriasFiltered.map(
-            (subCategoria) =>
-              ({
-                value: subCategoria.id,
-                label: subCategoria.nombre,
-              }) as SelectOptions
-          )}
-          value={subcategoriaSelected}
-          onChange={(e) => {
-            setSubCategoriaSelected(
-              subCategoriasFiltered.find(
-                (subCategoria) => subCategoria.id === e.target.value
-              )?.id
-            );
-            setSkillSelected(undefined);
-          }}
-        />
-        <SESelect
-          className="px-2 justify-self-stretch"
-          key={"skill"}
-          initOption={{ label: "--Habilidad--", value: "" }}
-          options={skillsFiltered.map(
-            (skill) =>
-              ({
-                value: skill.id,
-                label: skill.descripcion,
-              }) as SelectOptions
-          )}
-          value={skillSelected}
-          onChange={(e) => {
-            setSkillSelected(
-              skillsFiltered.find((skill) => skill.id === e.target.value)?.id
-            );
-          }}
-        />
-        <SEButton
-          icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-          variant="primary"
-          onClick={buscarServicios}
-        />
-      </SEForm>
-    </SEContainer>
+        <SelectTrigger className="px-2 justify-self-stretch">
+          <SelectValue placeholder="--Categoría--" />
+        </SelectTrigger>
+        <SelectContent>
+          {categorias.map((categoria) => (
+            <SelectItem key={categoria.id} value={categoria.id}>
+              {categoria.nombre}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select
+        value={subcategoriaSelected ?? ""}
+        onValueChange={(value) => {
+          setSubCategoriaSelected(value || undefined);
+          setSkillSelected(undefined);
+        }}
+        disabled={!categoriaSelected}
+      >
+        <SelectTrigger className="px-2 justify-self-stretch">
+          <SelectValue placeholder="--Sub categoría--" />
+        </SelectTrigger>
+        <SelectContent>
+          {subCategoriasFiltered.map((subCategoria) => (
+            <SelectItem key={subCategoria.id} value={subCategoria.id}>
+              {subCategoria.nombre}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select
+        value={skillSelected ?? ""}
+        onValueChange={(value) => setSkillSelected(value || undefined)}
+        disabled={!subcategoriaSelected}
+      >
+        <SelectTrigger className="px-2 justify-self-stretch">
+          <SelectValue placeholder="--Habilidad--" />
+        </SelectTrigger>
+        <SelectContent>
+          {skillsFiltered.map((skill) => (
+            <SelectItem key={skill.id} value={skill.id}>
+              {skill.descripcion}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button
+        type="submit"
+        variant="default"
+        className="flex items-center justify-center"
+      >
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+      </Button>
+    </form>
   );
 };
 
