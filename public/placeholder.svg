@@ -1,0 +1,11 @@
+<!-- filepath: d:\projects\chambita\skill-exchange-web-2\public\placeholder.svg -->
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" rx="16" fill="#E5E7EB"/>
+  <g>
+    <circle cx="200" cy="130" r="50" fill="#D1D5DB"/>
+    <rect x="80" y="200" width="240" height="40" rx="8" fill="#D1D5DB"/>
+  </g>
+  <text x="200" y="170" text-anchor="middle" fill="#9CA3AF" font-size="20" font-family="Arial, sans-serif">
+    Imagen
+  </text>
+</svg>

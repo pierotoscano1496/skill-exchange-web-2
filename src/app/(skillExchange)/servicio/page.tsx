@@ -1,10 +1,6 @@
 import { searchServicioWithParams } from "@/actions/servicio.actions";
 import SearchServicioForm from "@/components/busqueda-servicio/SearchServicioForm";
 import ServicioCard from "@/components/servicios/servicio-card";
-import SEServicio from "@/components/servicios/SEServicio";
-import SEContainer from "@/components/skill-exchange/containers/SEContainer";
-import SEGridContainer from "@/components/skill-exchange/containers/SEGridContainer";
-import SEParragraph from "@/components/skill-exchange/text/SEParragraph";
 import { Card } from "@/components/ui/card";
 import SearchServiciosParametersBody from "@/interfaces/requestbody/servicio/SearchServiciosParametersBody";
 

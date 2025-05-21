@@ -182,21 +182,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <div className="flex items-center gap-3 mt-4 px-2">
-          <img
-            src={"/avatars/default.jpg"}
-            alt={usuario?.nombres || "Usuario"}
-            className="w-10 h-10 rounded-full object-cover border"
-          />
-          <div className="flex flex-col">
-            <span className="font-medium text-sm">
-              {loading ? "Cargando..." : usuario?.nombres || "Usuario"}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              {usuario?.correo || ""}
-            </span>
-          </div>
-        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
