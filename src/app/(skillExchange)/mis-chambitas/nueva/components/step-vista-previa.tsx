@@ -9,12 +9,14 @@ import {
   Monitor,
   User,
 } from "lucide-react";
+import { useUsuario } from "@/contexts/UsuarioContext";
 
 interface StepVistaPreviaProps {
   formData: ServicioFormData;
 }
 
 export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
+  const { usuario, loading } = useUsuario();
   // Función para formatear el precio según el tipo
   const formatearPrecio = () => {
     if (formData.tipoPrecio === "fijo") {
@@ -171,7 +173,7 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="font-medium">María López</p>
+                <p className="font-medium">{usuario?.nombres}</p>
                 <p className="text-sm text-muted-foreground">
                   Proveedor del servicio
                 </p>

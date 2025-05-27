@@ -93,6 +93,7 @@ export const asignarModalidadesPagoToServicio = async (
 export const searchServicioWithParams = async (
   params: SearchServiciosParametersBody
 ) => {
+  console.log("params", params);
   const resp = await (
     await getBackendInstance()
   ).post("servicio/busqueda", params);

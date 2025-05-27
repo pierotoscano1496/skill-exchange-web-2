@@ -18,6 +18,7 @@ import { StepDetallesAdicionales } from "./components/step-detalles-adicionales"
 import { StepTerminosCondiciones } from "./components/step-terminos-condiciones";
 import { StepVistaPrevia } from "./components/step-vista-previa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { StepModalidadesPago } from "./components/step-modalidades-pago";
 
 // Definir la interfaz para los datos del servicio
 export interface ServicioFormData {
@@ -43,6 +44,12 @@ export interface ServicioFormData {
   ubicacion: string;
   modalidad: "presencial" | "remoto" | "ambos";
   imagenes: string[];
+  modalidadesPago: {
+    tipo: "yape" | "tarjeta" | "linea" | "efectivo";
+    cuentaBancaria?: string;
+    numeroCelular?: string;
+    url?: string;
+  }[];
 
   // Términos y condiciones
   aceptaTerminos: boolean;
@@ -67,7 +74,7 @@ const initialFormData: ServicioFormData = {
   ubicacion: "",
   modalidad: "presencial",
   imagenes: ["/placeholder.svg?height=300&width=400"],
-
+  modalidadesPago: [],
   aceptaTerminos: false,
 };
 
@@ -150,6 +157,28 @@ export default function NuevoServicioPage() {
         newErrors.imagenes = "Debes agregar al menos una imagen";
       }
     } else if (step === 4) {
+      // Validar modalidades de pago
+      if (formData.modalidadesPago.length === 0) {
+        newErrors.modalidadesPago =
+          "Debes agregar al menos una modalidad de pago";
+      } else {
+        // Validar cada modalidad de pago
+        formData.modalidadesPago.forEach((modalidad, index) => {
+          if (modalidad.tipo === "yape" && !modalidad.numeroCelular) {
+            newErrors[`modalidad_${index}_celular`] =
+              "El número de celular es requerido para Yape";
+          }
+          if (modalidad.tipo === "tarjeta" && !modalidad.cuentaBancaria) {
+            newErrors[`modalidad_${index}_cuenta`] =
+              "La cuenta bancaria es requerida para tarjeta";
+          }
+          if (modalidad.tipo === "linea" && !modalidad.url) {
+            newErrors[`modalidad_${index}_url`] =
+              "La URL es requerida para pago en línea";
+          }
+        });
+      }
+    } else if (step === 5) {
       // Validar términos y condiciones
       if (!formData.aceptaTerminos) {
         newErrors.aceptaTerminos = "Debes aceptar los términos y condiciones";
@@ -188,6 +217,7 @@ export default function NuevoServicioPage() {
 
     try {
       // Aquí iría la lógica para enviar los datos a la API
+      console.log("Datos a registrar:", formData);
       // Por ahora, simulamos una petición exitosa
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -233,13 +263,21 @@ export default function NuevoServicioPage() {
         );
       case 4:
         return (
-          <StepTerminosCondiciones
+          <StepModalidadesPago
             formData={formData}
             updateFormData={updateFormData}
             errors={errors}
           />
         );
       case 5:
+        return (
+          <StepTerminosCondiciones
+            formData={formData}
+            updateFormData={updateFormData}
+            errors={errors}
+          />
+        );
+      case 6:
         return <StepVistaPrevia formData={formData} />;
       default:
         return null;
@@ -371,6 +409,7 @@ export default function NuevoServicioPage() {
           <span>Información</span>
           <span>Categorización</span>
           <span>Detalles</span>
+          <span>Pagos</span>
           <span>Términos</span>
           <span>Vista previa</span>
         </div>
