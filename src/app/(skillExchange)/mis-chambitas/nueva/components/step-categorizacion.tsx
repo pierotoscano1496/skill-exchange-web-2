@@ -13,124 +13,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import type { ServicioFormData } from "../page";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import { obtenerCategoriasDetails } from "@/actions/categoria.actions";
 
-// Datos de ejemplo para categorías y subcategorías
-const categories = [
-  {
-    id: "tech",
-    name: "Tecnología",
-    subcategories: [
-      {
-        id: "programming",
-        name: "Programación",
-        skills: [
-          "JavaScript",
-          "Python",
-          "Java",
-          "React",
-          "Angular",
-          "Node.js",
-          "PHP",
-        ],
-      },
-      {
-        id: "design",
-        name: "Diseño",
-        skills: [
-          "Photoshop",
-          "Illustrator",
-          "Figma",
-          "UI/UX",
-          "Diseño web",
-          "Diseño gráfico",
-        ],
-      },
-      {
-        id: "hardware",
-        name: "Hardware",
-        skills: [
-          "Reparación de PC",
-          "Reparación de celulares",
-          "Instalación de redes",
-          "Soporte técnico",
-        ],
-      },
-    ],
-  },
-  {
-    id: "home",
-    name: "Hogar",
-    subcategories: [
-      {
-        id: "cleaning",
-        name: "Limpieza",
-        skills: [
-          "Limpieza general",
-          "Limpieza profunda",
-          "Lavado de alfombras",
-          "Limpieza de vidrios",
-        ],
-      },
-      {
-        id: "gardening",
-        name: "Jardinería",
-        skills: [
-          "Mantenimiento de jardines",
-          "Poda de árboles",
-          "Diseño de jardines",
-          "Fumigación",
-        ],
-      },
-      {
-        id: "repairs",
-        name: "Reparaciones",
-        skills: [
-          "Plomería",
-          "Electricidad",
-          "Carpintería",
-          "Pintura",
-          "Albañilería",
-        ],
-      },
-    ],
-  },
-  {
-    id: "education",
-    name: "Educación",
-    subcategories: [
-      {
-        id: "languages",
-        name: "Idiomas",
-        skills: [
-          "Inglés",
-          "Español",
-          "Francés",
-          "Alemán",
-          "Portugués",
-          "Italiano",
-          "Chino",
-        ],
-      },
-      {
-        id: "tutoring",
-        name: "Tutoría",
-        skills: [
-          "Matemáticas",
-          "Física",
-          "Química",
-          "Biología",
-          "Historia",
-          "Literatura",
-        ],
-      },
-      {
-        id: "arts",
-        name: "Artes",
-        skills: ["Música", "Pintura", "Danza", "Teatro", "Fotografía", "Canto"],
-      },
-    ],
-  },
-];
+interface Categoria {
+  id: string;
+  nombre: string;
+  subCategorias: {
+    id: string;
+    nombre: string;
+    skills: {
+      id: string;
+      descripcion: string;
+    }[];
+  }[];
+}
 
 interface StepCategorizacionProps {
   formData: ServicioFormData;
@@ -143,20 +39,36 @@ export function StepCategorizacion({
   updateFormData,
   errors,
 }: StepCategorizacionProps) {
-  const [availableSkills, setAvailableSkills] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Categoria[]>([]);
+  const [availableSkills, setAvailableSkills] = useState<
+    {
+      id: string;
+      descripcion: string;
+    }[]
+  >([]);
+  const [loading, setLoading] = useState(true);
 
-  // Obtener subcategorías basadas en la categoría seleccionada
-  const getSubcategories = () => {
-    const category = categories.find((cat) => cat.id === formData.categoria);
-    return category ? category.subcategories : [];
-  };
+  // Obtener categorías desde el endpoint al montar el componente
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const data = await obtenerCategoriasDetails();
+        setCategories(data || []);
+      } catch (e) {
+        setCategories([]);
+      }
+      setLoading(false);
+    };
+    fetchCategories();
+  }, []);
 
   // Obtener habilidades basadas en la subcategoría seleccionada
   useEffect(() => {
-    if (formData.categoria && formData.subcategoria) {
+    if (formData.categoria && formData.subcategoria && categories.length > 0) {
       const category = categories.find((cat) => cat.id === formData.categoria);
       if (category) {
-        const subcategory = category.subcategories.find(
+        const subcategory = category.subCategorias.find(
           (subcat) => subcat.id === formData.subcategoria
         );
         if (subcategory) {
@@ -166,7 +78,7 @@ export function StepCategorizacion({
     } else {
       setAvailableSkills([]);
     }
-  }, [formData.categoria, formData.subcategoria]);
+  }, [formData.categoria, formData.subcategoria, categories]);
 
   // Manejar cambio de categoría
   const handleCategoriaChange = (value: string) => {
@@ -186,22 +98,22 @@ export function StepCategorizacion({
   };
 
   // Manejar cambio de habilidades
-  const handleHabilidadChange = (skill: string, checked: boolean) => {
+  const handleHabilidadChange = (skillId: string, checked: boolean) => {
     if (checked) {
       updateFormData({
-        habilidades: [...formData.habilidades, skill],
+        habilidades: [...formData.habilidades, skillId],
       });
     } else {
       updateFormData({
-        habilidades: formData.habilidades.filter((s) => s !== skill),
+        habilidades: formData.habilidades.filter((s) => s !== skillId),
       });
     }
   };
 
   // Eliminar una habilidad
-  const removeHabilidad = (skill: string) => {
+  const removeHabilidad = (skillId: string) => {
     updateFormData({
-      habilidades: formData.habilidades.filter((s) => s !== skill),
+      habilidades: formData.habilidades.filter((s) => s !== skillId),
     });
   };
 
@@ -212,17 +124,20 @@ export function StepCategorizacion({
         <Select
           value={formData.categoria}
           onValueChange={handleCategoriaChange}
+          disabled={loading}
         >
           <SelectTrigger
             id="categoria"
             className={errors.categoria ? "border-red-500" : ""}
           >
-            <SelectValue placeholder="Selecciona una categoría" />
+            <SelectValue
+              placeholder={loading ? "Cargando..." : "Selecciona una categoría"}
+            />
           </SelectTrigger>
           <SelectContent>
             {categories.map((category) => (
               <SelectItem key={category.id} value={category.id}>
-                {category.name}
+                {category.nombre}
               </SelectItem>
             ))}
           </SelectContent>
@@ -238,17 +153,25 @@ export function StepCategorizacion({
           <Select
             value={formData.subcategoria}
             onValueChange={handleSubcategoriaChange}
+            disabled={loading}
           >
             <SelectTrigger
               id="subcategoria"
               className={errors.subcategoria ? "border-red-500" : ""}
             >
-              <SelectValue placeholder="Selecciona una subcategoría" />
+              <SelectValue
+                placeholder={
+                  loading ? "Cargando..." : "Selecciona una subcategoría"
+                }
+              />
             </SelectTrigger>
             <SelectContent>
-              {getSubcategories().map((subcategory) => (
+              {(
+                categories.find((cat) => cat.id === formData.categoria)
+                  ?.subCategorias || []
+              ).map((subcategory) => (
                 <SelectItem key={subcategory.id} value={subcategory.id}>
-                  {subcategory.name}
+                  {subcategory.nombre}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -265,16 +188,19 @@ export function StepCategorizacion({
           <div className="border rounded-md p-4">
             <div className="grid grid-cols-2 gap-2">
               {availableSkills.map((skill) => (
-                <div key={skill} className="flex items-center space-x-2">
+                <div key={skill.id} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`skill-${skill}`}
-                    checked={formData.habilidades.includes(skill)}
+                    id={`skill-${skill.id}`}
+                    checked={formData.habilidades.includes(skill.id)}
                     onCheckedChange={(checked) =>
-                      handleHabilidadChange(skill, checked as boolean)
+                      handleHabilidadChange(skill.id, checked as boolean)
                     }
                   />
-                  <Label htmlFor={`skill-${skill}`} className="cursor-pointer">
-                    {skill}
+                  <Label
+                    htmlFor={`skill-${skill.id}`}
+                    className="cursor-pointer"
+                  >
+                    {skill.descripcion}
                   </Label>
                 </div>
               ))}
@@ -288,23 +214,28 @@ export function StepCategorizacion({
             <div className="mt-4">
               <Label>Habilidades seleccionadas</Label>
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.habilidades.map((skill) => (
-                  <Badge
-                    key={skill}
-                    variant="secondary"
-                    className="pl-2 pr-1 py-1"
-                  >
-                    {skill}
-                    <button
-                      type="button"
-                      onClick={() => removeHabilidad(skill)}
-                      className="ml-1 rounded-full hover:bg-muted-foreground/20 p-1"
+                {formData.habilidades.map((skillId) => {
+                  const skillObj = availableSkills.find(
+                    (s) => s.id === skillId
+                  );
+                  return (
+                    <Badge
+                      key={skillId}
+                      variant="secondary"
+                      className="pl-2 pr-1 py-1"
                     >
-                      <X className="h-3 w-3" />
-                      <span className="sr-only">Eliminar</span>
-                    </button>
-                  </Badge>
-                ))}
+                      {skillObj?.descripcion || skillId}
+                      <button
+                        type="button"
+                        onClick={() => removeHabilidad(skillId)}
+                        className="ml-1 rounded-full hover:bg-muted-foreground/20 p-1"
+                      >
+                        <X className="h-3 w-3" />
+                        <span className="sr-only">Eliminar</span>
+                      </button>
+                    </Badge>
+                  );
+                })}
               </div>
             </div>
           )}
