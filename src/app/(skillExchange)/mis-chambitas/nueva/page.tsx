@@ -19,6 +19,7 @@ import { StepTerminosCondiciones } from "./components/step-terminos-condiciones"
 import { StepVistaPrevia } from "./components/step-vista-previa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { StepModalidadesPago } from "./components/step-modalidades-pago";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 
 // Definir la interfaz para los datos del servicio
 export interface ServicioFormData {
@@ -85,6 +86,7 @@ export default function NuevoServicioPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
 
   const totalSteps = 5;
 
@@ -216,14 +218,18 @@ export default function NuevoServicioPage() {
     setIsSubmitting(true);
 
     try {
-      // Aquí iría la lógica para enviar los datos a la API
-      console.log("Datos a registrar:", formData);
-      // Por ahora, simulamos una petición exitosa
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const body = mapFormDataToCreateServicioBody(formData, usuario);
 
+      // Previsualizar el body en consola
+      console.log("Body para el backend:", body);
+
+      // Aquí iría la lógica para enviar los datos a la API, por ejemplo:
+      // await api.post("/servicio", body);
+
+      // Simulación de éxito
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setSuccess(true);
 
-      // Redirigir después de 2 segundos
       setTimeout(() => {
         router.push("/mis-chambitas");
       }, 2000);
@@ -233,6 +239,43 @@ export default function NuevoServicioPage() {
       setIsSubmitting(false);
     }
   };
+
+  function mapFormDataToCreateServicioBody(
+    formData: ServicioFormData,
+    usuario: any
+  ) {
+    // Suponiendo que tienes el usuario logueado y su id es usuario.id
+    return {
+      titulo: formData.titulo,
+      descripcion: formData.descripcion,
+      precio: Number(formData.precio) || 0,
+      idProveedor: usuario?.id, // Debes obtener el UUID del usuario logueado
+      tipoPrecio: formData.tipoPrecio,
+      precioMinimo: Number(formData.precioMinimo) || 0,
+      precioMaximo: Number(formData.precioMaximo) || 0,
+      ubicacion: formData.ubicacion,
+      modalidad: formData.modalidad === "ambos" ? "mixto" : formData.modalidad,
+      aceptaTerminos: formData.aceptaTerminos,
+      skills: formData.habilidades.map((idSkill: string) => ({
+        idSkill, // UUID de la habilidad seleccionada
+      })),
+      disponibilidades: formData.disponibilidad.dias.map((dia: string) => ({
+        dia,
+        horaInicio: formData.disponibilidad.horaInicio,
+        horaFin: formData.disponibilidad.horaFin,
+      })),
+      modalidadesPago: formData.modalidadesPago.map((m) => ({
+        tipo: m.tipo,
+        cuentaBancaria: m.cuentaBancaria || "",
+        numeroCelular: m.numeroCelular || "",
+        url: m.url || "",
+      })),
+      recursosMultimedia: formData.imagenes.map((url: string) => ({
+        medio: "imagen",
+        url,
+      })),
+    };
+  }
 
   // Renderizar el paso actual
   const renderStep = () => {
