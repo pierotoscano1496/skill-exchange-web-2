@@ -19,6 +19,7 @@ import { StepTerminosCondiciones } from "./components/step-terminos-condiciones"
 import { StepVistaPrevia } from "./components/step-vista-previa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { StepModalidadesPago } from "./components/step-modalidades-pago";
+import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 
 // Definir la interfaz para los datos del servicio
 export interface ServicioFormData {
@@ -43,7 +44,7 @@ export interface ServicioFormData {
   };
   ubicacion: string;
   modalidad: "presencial" | "remoto" | "ambos";
-  imagenes: string[];
+  imagenes: File[];
   modalidadesPago: {
     tipo: "yape" | "tarjeta" | "linea" | "efectivo";
     cuentaBancaria?: string;
@@ -73,7 +74,7 @@ const initialFormData: ServicioFormData = {
   },
   ubicacion: "",
   modalidad: "presencial",
-  imagenes: ["/placeholder.svg?height=300&width=400"],
+  imagenes: [],
   modalidadesPago: [],
   aceptaTerminos: false,
 };
@@ -85,6 +86,7 @@ export default function NuevoServicioPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
 
   const totalSteps = 5;
 
@@ -216,14 +218,67 @@ export default function NuevoServicioPage() {
     setIsSubmitting(true);
 
     try {
-      // Aquí iría la lógica para enviar los datos a la API
-      console.log("Datos a registrar:", formData);
-      // Por ahora, simulamos una petición exitosa
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const body = mapFormDataToCreateServicioBody(formData, usuario);
 
+      // Crear FormData para multipart/form-data
+      const formDataToSend = new FormData();
+      formDataToSend.append("titulo", body.titulo);
+      formDataToSend.append("descripcion", body.descripcion);
+      formDataToSend.append("precio", body.precio.toString());
+      formDataToSend.append("idProveedor", body.idProveedor);
+      formDataToSend.append("tipoPrecio", body.tipoPrecio);
+      formDataToSend.append("precioMinimo", body.precioMinimo.toString());
+      formDataToSend.append("precioMaximo", body.precioMaximo.toString());
+      formDataToSend.append("ubicacion", body.ubicacion);
+      formDataToSend.append("modalidad", body.modalidad);
+      formDataToSend.append("aceptaTerminos", body.aceptaTerminos);
+
+      // skills
+      body.skills.forEach((skill: any, idx: number) => {
+        formDataToSend.append(`skills[${idx}].idSkill`, skill.idSkill);
+      });
+
+      // disponibilidades
+      body.disponibilidades.forEach((disp: any, idx: number) => {
+        formDataToSend.append(`disponibilidades[${idx}].dia`, disp.dia);
+        formDataToSend.append(
+          `disponibilidades[${idx}].horaInicio`,
+          disp.horaInicio
+        );
+        formDataToSend.append(`disponibilidades[${idx}].horaFin`, disp.horaFin);
+      });
+
+      // modalidadesPago
+      body.modalidadesPago.forEach((mod: any, idx: number) => {
+        formDataToSend.append(`modalidadesPago[${idx}].tipo`, mod.tipo);
+        formDataToSend.append(
+          `modalidadesPago[${idx}].cuentaBancaria`,
+          mod.cuentaBancaria
+        );
+        formDataToSend.append(
+          `modalidadesPago[${idx}].numeroCelular`,
+          mod.numeroCelular
+        );
+        formDataToSend.append(`modalidadesPago[${idx}].url`, mod.url);
+      });
+
+      // recursosMultimedia (imágenes)
+      formData.imagenes.forEach((file: File) => {
+        formDataToSend.append("recursosMultimedia", file);
+      });
+
+      // Previsualizar el FormData (solo para debug)
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0] + ": " + pair[1]);
+      }
+
+      // Aquí iría la lógica para enviar los datos a la API:
+      // await api.post("/servicio", formDataToSend, { headers: { "Content-Type": "multipart/form-data" } });
+
+      // Simulación de éxito
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setSuccess(true);
 
-      // Redirigir después de 2 segundos
       setTimeout(() => {
         router.push("/mis-chambitas");
       }, 2000);
@@ -233,6 +288,45 @@ export default function NuevoServicioPage() {
       setIsSubmitting(false);
     }
   };
+
+  function mapFormDataToCreateServicioBody(
+    formData: ServicioFormData,
+    usuario: any
+  ) {
+    // Suponiendo que tienes el usuario logueado y su id es usuario.id
+    const formDataRecursos = new FormData();
+    formData.imagenes.forEach((img) => {
+      formDataRecursos.append("files", img);
+    });
+
+    return {
+      titulo: formData.titulo,
+      descripcion: formData.descripcion,
+      precio: Number(formData.precio) || 0,
+      idProveedor: usuario?.id, // Debes obtener el UUID del usuario logueado
+      tipoPrecio: formData.tipoPrecio,
+      precioMinimo: Number(formData.precioMinimo) || 0,
+      precioMaximo: Number(formData.precioMaximo) || 0,
+      ubicacion: formData.ubicacion,
+      modalidad: formData.modalidad === "ambos" ? "mixto" : formData.modalidad,
+      aceptaTerminos: formData.aceptaTerminos,
+      skills: formData.habilidades.map((idSkill: string) => ({
+        idSkill, // UUID de la habilidad seleccionada
+      })),
+      disponibilidades: formData.disponibilidad.dias.map((dia: string) => ({
+        dia,
+        horaInicio: formData.disponibilidad.horaInicio,
+        horaFin: formData.disponibilidad.horaFin,
+      })),
+      modalidadesPago: formData.modalidadesPago.map((m) => ({
+        tipo: m.tipo,
+        cuentaBancaria: m.cuentaBancaria || "",
+        numeroCelular: m.numeroCelular || "",
+        url: m.url || "",
+      })),
+      recursosMultimedia: formDataRecursos,
+    };
+  }
 
   // Renderizar el paso actual
   const renderStep = () => {

@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import type { ServicioFormData } from "../page";
 import { Camera, X } from "lucide-react";
+import { useRef } from "react";
 
 interface StepDetallesAdicionalesProps {
   formData: ServicioFormData;
@@ -28,7 +29,8 @@ export function StepDetallesAdicionales({
     { id: "domingo", label: "Domingo" },
   ];
 
-  // Manejar cambio en los días de disponibilidad
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleDiaChange = (dia: string, checked: boolean) => {
     if (checked) {
       updateFormData({
@@ -47,7 +49,6 @@ export function StepDetallesAdicionales({
     }
   };
 
-  // Manejar cambio en las horas de disponibilidad
   const handleHoraChange = (tipo: "inicio" | "fin", value: string) => {
     updateFormData({
       disponibilidad: {
@@ -57,14 +58,26 @@ export function StepDetallesAdicionales({
     });
   };
 
-  // Agregar una imagen
   const handleAddImage = () => {
-    // En un caso real, aquí se implementaría la carga de imágenes
-    // Por ahora, agregamos una imagen de placeholder
-    const newImage = `/placeholder.svg?height=300&width=400&text=Imagen ${formData.imagenes.length + 1}`;
-    updateFormData({
-      imagenes: [...formData.imagenes, newImage],
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
+    const newImages: File[] = [];
+    Array.from(files).forEach((file) => {
+      if (validTypes.includes(file.type)) {
+        newImages.push(file);
+      }
     });
+    if (newImages.length > 0) {
+      updateFormData({
+        imagenes: [...formData.imagenes, ...newImages],
+      });
+    }
+    e.target.value = "";
   };
 
   // Eliminar una imagen
@@ -178,6 +191,14 @@ export function StepDetallesAdicionales({
             <Camera className="mr-2 h-4 w-4" />
             Agregar imagen
           </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/jpg,image/webp"
+            multiple
+            className="hidden"
+            onChange={handleFileChange}
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
