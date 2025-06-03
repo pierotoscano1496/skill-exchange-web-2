@@ -20,6 +20,7 @@ import { StepVistaPrevia } from "./components/step-vista-previa";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { StepModalidadesPago } from "./components/step-modalidades-pago";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
+import { useUsuario } from "@/contexts/UsuarioContext";
 
 // Definir la interfaz para los datos del servicio
 export interface ServicioFormData {
@@ -86,7 +87,7 @@ export default function NuevoServicioPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [usuario, setUsuario] = useState<UsuarioRegisteredResponse>();
+  const { usuario, loading } = useUsuario();
 
   const totalSteps = 5;
 
@@ -220,61 +221,7 @@ export default function NuevoServicioPage() {
     try {
       const body = mapFormDataToCreateServicioBody(formData, usuario);
 
-      // Crear FormData para multipart/form-data
-      const formDataToSend = new FormData();
-      formDataToSend.append("titulo", body.titulo);
-      formDataToSend.append("descripcion", body.descripcion);
-      formDataToSend.append("precio", body.precio.toString());
-      formDataToSend.append("idProveedor", body.idProveedor);
-      formDataToSend.append("tipoPrecio", body.tipoPrecio);
-      formDataToSend.append("precioMinimo", body.precioMinimo.toString());
-      formDataToSend.append("precioMaximo", body.precioMaximo.toString());
-      formDataToSend.append("ubicacion", body.ubicacion);
-      formDataToSend.append("modalidad", body.modalidad);
-      formDataToSend.append("aceptaTerminos", body.aceptaTerminos);
-
-      // skills
-      body.skills.forEach((skill: any, idx: number) => {
-        formDataToSend.append(`skills[${idx}].idSkill`, skill.idSkill);
-      });
-
-      // disponibilidades
-      body.disponibilidades.forEach((disp: any, idx: number) => {
-        formDataToSend.append(`disponibilidades[${idx}].dia`, disp.dia);
-        formDataToSend.append(
-          `disponibilidades[${idx}].horaInicio`,
-          disp.horaInicio
-        );
-        formDataToSend.append(`disponibilidades[${idx}].horaFin`, disp.horaFin);
-      });
-
-      // modalidadesPago
-      body.modalidadesPago.forEach((mod: any, idx: number) => {
-        formDataToSend.append(`modalidadesPago[${idx}].tipo`, mod.tipo);
-        formDataToSend.append(
-          `modalidadesPago[${idx}].cuentaBancaria`,
-          mod.cuentaBancaria
-        );
-        formDataToSend.append(
-          `modalidadesPago[${idx}].numeroCelular`,
-          mod.numeroCelular
-        );
-        formDataToSend.append(`modalidadesPago[${idx}].url`, mod.url);
-      });
-
-      // recursosMultimedia (imágenes)
-      formData.imagenes.forEach((file: File) => {
-        formDataToSend.append("recursosMultimedia", file);
-      });
-
-      // Previsualizar el FormData (solo para debug)
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0] + ": " + pair[1]);
-      }
-
-      // Aquí iría la lógica para enviar los datos a la API:
-      // await api.post("/servicio", formDataToSend, { headers: { "Content-Type": "multipart/form-data" } });
-
+      console.log("Datos del servicio a publicar:", body);
       // Simulación de éxito
       await new Promise((resolve) => setTimeout(resolve, 1500));
       setSuccess(true);
@@ -293,7 +240,6 @@ export default function NuevoServicioPage() {
     formData: ServicioFormData,
     usuario: any
   ) {
-    // Suponiendo que tienes el usuario logueado y su id es usuario.id
     const formDataRecursos = new FormData();
     formData.imagenes.forEach((img) => {
       formDataRecursos.append("files", img);
@@ -303,7 +249,7 @@ export default function NuevoServicioPage() {
       titulo: formData.titulo,
       descripcion: formData.descripcion,
       precio: Number(formData.precio) || 0,
-      idProveedor: usuario?.id, // Debes obtener el UUID del usuario logueado
+      idProveedor: usuario?.id,
       tipoPrecio: formData.tipoPrecio,
       precioMinimo: Number(formData.precioMinimo) || 0,
       precioMaximo: Number(formData.precioMaximo) || 0,
@@ -311,7 +257,7 @@ export default function NuevoServicioPage() {
       modalidad: formData.modalidad === "ambos" ? "mixto" : formData.modalidad,
       aceptaTerminos: formData.aceptaTerminos,
       skills: formData.habilidades.map((idSkill: string) => ({
-        idSkill, // UUID de la habilidad seleccionada
+        idSkill,
       })),
       disponibilidades: formData.disponibilidad.dias.map((dia: string) => ({
         dia,

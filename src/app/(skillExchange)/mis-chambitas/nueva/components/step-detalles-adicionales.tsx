@@ -205,7 +205,11 @@ export function StepDetallesAdicionales({
           {formData.imagenes.map((imagen, index) => (
             <div key={index} className="relative group">
               <img
-                src={imagen || "/placeholder.svg"}
+                src={
+                  imagen instanceof File
+                    ? URL.createObjectURL(imagen)
+                    : "/placeholder.svg"
+                }
                 alt={`Imagen ${index + 1}`}
                 className="w-full h-40 object-cover rounded-md border"
               />
