@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { ServicioFormData } from "../page";
 import { Camera, X } from "lucide-react";
 import { useRef } from "react";
+import { DiaServicio } from "@/utils/types";
 
 interface StepDetallesAdicionalesProps {
   formData: ServicioFormData;
@@ -19,7 +20,7 @@ export function StepDetallesAdicionales({
   updateFormData,
   errors,
 }: StepDetallesAdicionalesProps) {
-  const diasSemana = [
+  const diasSemana: { id: DiaServicio; label: string }[] = [
     { id: "lunes", label: "Lunes" },
     { id: "martes", label: "Martes" },
     { id: "miercoles", label: "Miércoles" },
@@ -31,7 +32,7 @@ export function StepDetallesAdicionales({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDiaChange = (dia: string, checked: boolean) => {
+  const handleDiaChange = (dia: DiaServicio, checked: boolean) => {
     if (checked) {
       updateFormData({
         disponibilidad: {

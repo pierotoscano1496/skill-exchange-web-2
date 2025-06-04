@@ -10,6 +10,7 @@ import {
   User,
 } from "lucide-react";
 import { useUsuario } from "@/contexts/UsuarioContext";
+import { DiaServicio } from "@/utils/types";
 
 interface StepVistaPreviaProps {
   formData: ServicioFormData;
@@ -62,7 +63,7 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
 
   // Función para formatear los días de disponibilidad
   const formatearDias = () => {
-    const diasMap: Record<string, string> = {
+    const diasMap: Record<DiaServicio, string> = {
       lunes: "Lunes",
       martes: "Martes",
       miercoles: "Miércoles",
@@ -105,7 +106,7 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
               {formData.imagenes.map((imagen, index) => (
                 <img
                   key={index}
-                  src={imagen || "/placeholder.svg"}
+                  src={URL.createObjectURL(imagen) || "/placeholder.svg"}
                   alt={`Imagen ${index + 1}`}
                   className="w-full h-40 object-cover rounded-md border"
                 />

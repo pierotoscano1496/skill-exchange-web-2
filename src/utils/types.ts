@@ -20,7 +20,7 @@ export type MedioRecursoMultimedia =
   | "web-externa"
   | SocialMedia;
 
-export type TipoModalidadPago = "yape" | "tarjeta";
+export type TipoModalidadPago = "yape" | "tarjeta" | "linea" | "efectivo";
 export type TipoModalidadPagoName = "YAPE" | "CASH" | "CREDIT_CARD";
 
 export type TipoModalidadPagoOption = {
@@ -53,6 +53,17 @@ export type FileExtension =
   | "pptx"
   | "xls"
   | "xlsx";
+
+export type TipoPrecio = "fijo" | "hora" | "rango";
+export type ModalidadServicio = "presencial" | "remoto" | "ambos";
+export type DiaServicio =
+  | "lunes"
+  | "martes"
+  | "miercoles"
+  | "jueves"
+  | "viernes"
+  | "sabado"
+  | "domingo";
 
 export type Variant = {
   background?: string;

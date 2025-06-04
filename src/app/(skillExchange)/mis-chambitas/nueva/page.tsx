@@ -21,6 +21,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { StepModalidadesPago } from "./components/step-modalidades-pago";
 import UsuarioRegisteredResponse from "@/interfaces/responsebody/usuario/UsuarioRegisteredResponse";
 import { useUsuario } from "@/contexts/UsuarioContext";
+import { registrarServicio } from "@/actions/servicio.actions";
+import CreateServicioBody from "@/interfaces/requestbody/servicio/CreateServicioBody";
+import {
+  DiaServicio,
+  ModalidadServicio,
+  TipoModalidadPago,
+  TipoPrecio,
+} from "@/utils/types";
 
 // Definir la interfaz para los datos del servicio
 export interface ServicioFormData {
@@ -28,7 +36,7 @@ export interface ServicioFormData {
   titulo: string;
   descripcion: string;
   precio: string;
-  tipoPrecio: "fijo" | "hora" | "rango";
+  tipoPrecio: TipoPrecio;
   precioMinimo?: string;
   precioMaximo?: string;
 
@@ -39,15 +47,15 @@ export interface ServicioFormData {
 
   // Detalles adicionales
   disponibilidad: {
-    dias: string[];
+    dias: DiaServicio[];
     horaInicio: string;
     horaFin: string;
   };
   ubicacion: string;
-  modalidad: "presencial" | "remoto" | "ambos";
+  modalidad: ModalidadServicio;
   imagenes: File[];
   modalidadesPago: {
-    tipo: "yape" | "tarjeta" | "linea" | "efectivo";
+    tipo: TipoModalidadPago;
     cuentaBancaria?: string;
     numeroCelular?: string;
     url?: string;
@@ -222,8 +230,11 @@ export default function NuevoServicioPage() {
       const body = mapFormDataToCreateServicioBody(formData, usuario);
 
       console.log("Datos del servicio a publicar:", body);
+
       // Simulación de éxito
+      await registrarServicio(body);
       await new Promise((resolve) => setTimeout(resolve, 1500));
+
       setSuccess(true);
 
       setTimeout(() => {
@@ -239,7 +250,7 @@ export default function NuevoServicioPage() {
   function mapFormDataToCreateServicioBody(
     formData: ServicioFormData,
     usuario: any
-  ) {
+  ): CreateServicioBody {
     const formDataRecursos = new FormData();
     formData.imagenes.forEach((img) => {
       formDataRecursos.append("files", img);
@@ -259,11 +270,13 @@ export default function NuevoServicioPage() {
       skills: formData.habilidades.map((idSkill: string) => ({
         idSkill,
       })),
-      disponibilidades: formData.disponibilidad.dias.map((dia: string) => ({
-        dia,
-        horaInicio: formData.disponibilidad.horaInicio,
-        horaFin: formData.disponibilidad.horaFin,
-      })),
+      disponibilidades: formData.disponibilidad.dias.map(
+        (dia: DiaServicio) => ({
+          dia,
+          horaInicio: formData.disponibilidad.horaInicio,
+          horaFin: formData.disponibilidad.horaFin,
+        })
+      ),
       modalidadesPago: formData.modalidadesPago.map((m) => ({
         tipo: m.tipo,
         cuentaBancaria: m.cuentaBancaria || "",
