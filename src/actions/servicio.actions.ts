@@ -37,10 +37,10 @@ export const obtenerImagenMetodoPago = async (
   return resp.data as string;
 };
 
-export const registrarServicio = async (servicio: CreateServicioBody) => {
+export const registrarServicio = async (formDataServicio: FormData) => {
   const resp = await (
-    await getBackendInstanceAuth()
-  ).post("servicio", servicio);
+    await getBackendInstanceAuthForms()
+  ).post("servicio", formDataServicio);
   return resp.data as ServicioRegisteredResponse;
 };
 

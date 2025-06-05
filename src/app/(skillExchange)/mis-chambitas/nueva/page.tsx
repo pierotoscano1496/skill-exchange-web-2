@@ -97,6 +97,8 @@ export default function NuevoServicioPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { usuario, loading } = useUsuario();
 
+  const MAX_TOTAL_SIZE_MB = 50;
+
   const totalSteps = 5;
 
   // Función para actualizar los datos del formulario
@@ -226,14 +228,26 @@ export default function NuevoServicioPage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    try {
-      const body = mapFormDataToCreateServicioBody(formData, usuario);
+    const totalSizeMB =
+      formData.imagenes.reduce((acc, file) => acc + file.size, 0) /
+      (1024 * 1024);
+    if (totalSizeMB > MAX_TOTAL_SIZE_MB) {
+      setErrors({
+        ...errors,
+        imagenes: `El tamaño total de las imágenes no debe superar ${MAX_TOTAL_SIZE_MB} MB.`,
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
-      console.log("Datos del servicio a publicar:", body);
+    try {
+      const formServicio = mapFormDataToCreateServicioBody(formData, usuario);
+
+      console.log("Datos del servicio a publicar:", formServicio);
 
       // Simulación de éxito
-      await registrarServicio(body);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await registrarServicio(formServicio);
+      //await new Promise((resolve) => setTimeout(resolve, 1500));
 
       setSuccess(true);
 
@@ -250,41 +264,51 @@ export default function NuevoServicioPage() {
   function mapFormDataToCreateServicioBody(
     formData: ServicioFormData,
     usuario: any
-  ): CreateServicioBody {
-    const formDataRecursos = new FormData();
+  ): FormData {
+    const formServicio = new FormData();
     formData.imagenes.forEach((img) => {
-      formDataRecursos.append("files", img);
+      formServicio.append("multimedia", img);
     });
 
-    return {
-      titulo: formData.titulo,
-      descripcion: formData.descripcion,
-      precio: Number(formData.precio) || 0,
-      idProveedor: usuario?.id,
-      tipoPrecio: formData.tipoPrecio,
-      precioMinimo: Number(formData.precioMinimo) || 0,
-      precioMaximo: Number(formData.precioMaximo) || 0,
-      ubicacion: formData.ubicacion,
-      modalidad: formData.modalidad === "ambos" ? "mixto" : formData.modalidad,
-      aceptaTerminos: formData.aceptaTerminos,
-      skills: formData.habilidades.map((idSkill: string) => ({
-        idSkill,
-      })),
-      disponibilidades: formData.disponibilidad.dias.map(
-        (dia: DiaServicio) => ({
-          dia,
-          horaInicio: formData.disponibilidad.horaInicio,
-          horaFin: formData.disponibilidad.horaFin,
-        })
-      ),
-      modalidadesPago: formData.modalidadesPago.map((m) => ({
-        tipo: m.tipo,
-        cuentaBancaria: m.cuentaBancaria || "",
-        numeroCelular: m.numeroCelular || "",
-        url: m.url || "",
-      })),
-      recursosMultimedia: formDataRecursos,
-    };
+    formServicio.append(
+      "data",
+      new Blob(
+        [
+          JSON.stringify({
+            titulo: formData.titulo,
+            descripcion: formData.descripcion,
+            precio: Number(formData.precio) || 0,
+            idProveedor: usuario?.id,
+            tipoPrecio: formData.tipoPrecio,
+            precioMinimo: Number(formData.precioMinimo) || 0,
+            precioMaximo: Number(formData.precioMaximo) || 0,
+            ubicacion: formData.ubicacion,
+            modalidad:
+              formData.modalidad === "ambos" ? "mixto" : formData.modalidad,
+            aceptaTerminos: formData.aceptaTerminos,
+            skills: formData.habilidades.map((idSkill: string) => ({
+              idSkill,
+            })),
+            disponibilidades: formData.disponibilidad.dias.map(
+              (dia: DiaServicio) => ({
+                dia,
+                horaInicio: formData.disponibilidad.horaInicio,
+                horaFin: formData.disponibilidad.horaFin,
+              })
+            ),
+            modalidadesPago: formData.modalidadesPago.map((m) => ({
+              tipo: m.tipo,
+              cuentaBancaria: m.cuentaBancaria || "",
+              numeroCelular: m.numeroCelular || "",
+              url: m.url || "",
+            })),
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    return formServicio;
   }
 
   // Renderizar el paso actual

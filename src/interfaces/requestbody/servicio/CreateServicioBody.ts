@@ -27,5 +27,4 @@ export default interface CreateServicioBody {
     numeroCelular: string;
     url: string;
   }[];
-  recursosMultimedia: FormData;
 }
