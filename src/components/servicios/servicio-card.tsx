@@ -18,12 +18,14 @@ const ServicioCard = ({ servicio, forPublic = false }: ServicioProps) => {
           {servicio.descripcion.substring(0, 100)}...
         </p>
         <p className="font-semibold">S/. {servicio.precio}</p>
+        // ...existing code...
         {forPublic && (
           <p className="text-xs text-muted-foreground">
             Creado por:{" "}
-            {`${servicio.usuario.nombres} ${servicio.usuario.apellidos}`}
+            {`${servicio.proveedor.nombres} ${servicio.proveedor.apellidos}`}
           </p>
         )}
+        // ...existing code...
         <Button asChild variant="link" className="px-0 py-0 h-auto w-fit">
           <Link href={`/servicio/details/${servicio.id}`}>Ver más</Link>
         </Button>
