@@ -10,7 +10,7 @@ import type {
   ReviewsServicio,
   SolicitudRecibida,
   SolicitudEnviada,
-} from "../types/api-responses"
+} from "../types/api-responses";
 
 // Skills estáticos (solo los datos, sin ApiResponse wrapper)
 export const STATIC_SKILLS: Skill[] = [
@@ -50,7 +50,7 @@ export const STATIC_SKILLS: Skill[] = [
     categoria: "hogar",
     descripcion: "Servicios de limpieza doméstica",
   },
-]
+];
 
 // Categorías estáticas (solo los datos, sin ApiResponse wrapper)
 export const STATIC_CATEGORIAS: Categoria[] = [
@@ -69,7 +69,11 @@ export const STATIC_CATEGORIAS: Categoria[] = [
     nombre: "Tecnología",
     descripcion: "Servicios tecnológicos",
     subcategorias: [
-      { id: "sub-4", nombre: "Reparación de dispositivos", categoriaId: "cat-2" },
+      {
+        id: "sub-4",
+        nombre: "Reparación de dispositivos",
+        categoriaId: "cat-2",
+      },
       { id: "sub-5", nombre: "Desarrollo web", categoriaId: "cat-2" },
       { id: "sub-6", nombre: "Soporte técnico", categoriaId: "cat-2" },
     ],
@@ -84,7 +88,7 @@ export const STATIC_CATEGORIAS: Categoria[] = [
       { id: "sub-9", nombre: "Música", categoriaId: "cat-3" },
     ],
   },
-]
+];
 
 // Servicios estáticos para búsqueda
 export const STATIC_SERVICIOS: ServicioBusqueda[] = [
@@ -98,11 +102,13 @@ export const STATIC_SERVICIOS: ServicioBusqueda[] = [
       nombres: "Carlos",
       apellidos: "Mendoza",
       fechaNacimiento: "1990-05-15",
-      introduccion: "Técnico especializado en reparación de celulares con 5 años de experiencia",
+      introduccion:
+        "Técnico especializado en reparación de celulares con 5 años de experiencia",
       perfilLinkedin: "https://linkedin.com/in/carlos-mendoza",
     },
     titulo: "Reparación de celulares",
-    descripcion: "Servicio profesional de reparación de smartphones y tablets. Cambio de pantallas, baterías, y más.",
+    descripcion:
+      "Servicio profesional de reparación de smartphones y tablets. Cambio de pantallas, baterías, y más.",
     precio: 200,
     precioMaximo: 500,
     precioMinimo: 150,
@@ -154,7 +160,8 @@ export const STATIC_SERVICIOS: ServicioBusqueda[] = [
       perfilInstagram: "https://instagram.com/carlos_mendoza",
     },
     titulo: "Clases de guitarra",
-    descripcion: "Clases personalizadas de guitarra para todos los niveles. Método adaptado a cada estudiante.",
+    descripcion:
+      "Clases personalizadas de guitarra para todos los niveles. Método adaptado a cada estudiante.",
     precio: 150,
     tipoPrecio: "hora",
     ubicacion: "Lima, Perú",
@@ -201,10 +208,12 @@ export const STATIC_SERVICIOS: ServicioBusqueda[] = [
       nombres: "Carlos",
       apellidos: "Mendoza",
       fechaNacimiento: "1992-03-10",
-      introduccion: "Amante de los animales, especializado en cuidado de mascotas",
+      introduccion:
+        "Amante de los animales, especializado en cuidado de mascotas",
     },
     titulo: "Paseo de perros",
-    descripcion: "Servicio confiable de paseo y cuidado de perros. Experiencia con todas las razas.",
+    descripcion:
+      "Servicio confiable de paseo y cuidado de perros. Experiencia con todas las razas.",
     precio: 100,
     tipoPrecio: "hora",
     ubicacion: "Lima, Perú",
@@ -250,10 +259,12 @@ export const STATIC_SERVICIOS: ServicioBusqueda[] = [
       nombres: "Carlos",
       apellidos: "Mendoza",
       fechaNacimiento: "1992-03-10",
-      introduccion: "Amante de los animales, especializado en cuidado de mascotas",
+      introduccion:
+        "Amante de los animales, especializado en cuidado de mascotas",
     },
     titulo: "Servicio de jardinería",
-    descripcion: "Mantenimiento y diseño de jardines. Poda, siembra y cuidado de plantas.",
+    descripcion:
+      "Mantenimiento y diseño de jardines. Poda, siembra y cuidado de plantas.",
     precio: 120,
     tipoPrecio: "hora",
     ubicacion: "Lima, Perú",
@@ -284,7 +295,7 @@ export const STATIC_SERVICIOS: ServicioBusqueda[] = [
     ],
     urlImagePreview: "/placeholder.svg?height=200&width=300",
   },
-]
+];
 
 // Solicitudes recibidas estáticas (como prestamista)
 export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
@@ -329,7 +340,8 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
     estado: "pendiente_pago",
     puntuacion: 0,
     costo: 150,
-    mensaje: "Me interesa tomar clases de guitarra. Soy principiante total. ¿Cuándo podríamos empezar?",
+    mensaje:
+      "Me interesa tomar clases de guitarra. Soy principiante total. ¿Cuándo podríamos empezar?",
   },
   {
     id: "match-3",
@@ -350,7 +362,8 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
     estado: "ejecucion",
     puntuacion: 0,
     costo: 100,
-    mensaje: "Necesito que paseen a mi perro Max los lunes y martes por las mañanas. Es muy amigable y obediente.",
+    mensaje:
+      "Necesito que paseen a mi perro Max los lunes y martes por las mañanas. Es muy amigable y obediente.",
   },
   {
     id: "match-4",
@@ -371,7 +384,8 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
     estado: "finalizado",
     puntuacion: 5,
     costo: 180,
-    mensaje: "Mi Samsung Galaxy se quedó sin sonido. ¿Podrías revisarlo? Es urgente por trabajo.",
+    mensaje:
+      "Mi Samsung Galaxy se quedó sin sonido. ¿Podrías revisarlo? Es urgente por trabajo.",
   },
   {
     id: "match-5",
@@ -392,9 +406,10 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
     estado: "rechazado",
     puntuacion: 0,
     costo: 120,
-    mensaje: "Hola, necesito que mantengan mi jardín. Tengo muchas plantas que requieren cuidado especializado.",
+    mensaje:
+      "Hola, necesito que mantengan mi jardín. Tengo muchas plantas que requieren cuidado especializado.",
   },
-]
+];
 
 // NUEVO: Solicitudes enviadas estáticas (como cliente)
 export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
@@ -408,6 +423,7 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "solicitado",
     puntuacion: 0,
     costo: 150,
+    mensaje,
   },
   {
     id: "solicitud-enviada-2",
@@ -419,6 +435,8 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "pendiente_pago",
     puntuacion: 0,
     costo: 200,
+    mensaje:
+      "Estoy interesado en este servicio, pero necesito más información sobre los horarios.",
   },
   {
     id: "solicitud-enviada-3",
@@ -430,6 +448,7 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "ejecucion",
     puntuacion: 0,
     costo: 300,
+    mensaje: "Todo en orden, gracias.",
   },
   {
     id: "solicitud-enviada-4",
@@ -441,6 +460,7 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "finalizado",
     puntuacion: 5,
     costo: 180,
+    mensaje: "Todo en orden, gracias.",
   },
   {
     id: "solicitud-enviada-5",
@@ -452,11 +472,16 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "rechazado",
     puntuacion: 0,
     costo: 250,
+    mensaje: "No estoy interesado en este servicio.",
   },
-]
+];
 
 // Reviews estáticas por servicio
-export const STATIC_REVIEWS: { idServicio: string; comentarios: any[]; puntajePromedio: number }[] = [
+export const STATIC_REVIEWS: {
+  idServicio: string;
+  comentarios: any[];
+  puntajePromedio: number;
+}[] = [
   {
     idServicio: "servicio-1",
     comentarios: [
@@ -496,74 +521,92 @@ export const STATIC_REVIEWS: { idServicio: string; comentarios: any[]; puntajePr
     ],
     puntajePromedio: 5.0,
   },
-]
+];
 
 // Función para simular búsqueda de servicios
-export function buscarServiciosEstaticos(filtros: BusquedaServiciosRequest): ServicioBusqueda[] {
-  let resultados = [...STATIC_SERVICIOS]
+export function buscarServiciosEstaticos(
+  filtros: BusquedaServiciosRequest
+): ServicioBusqueda[] {
+  let resultados = [...STATIC_SERVICIOS];
 
   // Filtrar por palabra clave
   if (filtros.keyWord) {
-    const keyword = filtros.keyWord.toLowerCase()
+    const keyword = filtros.keyWord.toLowerCase();
     resultados = resultados.filter(
       (servicio) =>
         servicio.titulo.toLowerCase().includes(keyword) ||
         servicio.descripcion.toLowerCase().includes(keyword) ||
         servicio.proveedor.nombres.toLowerCase().includes(keyword) ||
-        servicio.proveedor.apellidos.toLowerCase().includes(keyword),
-    )
+        servicio.proveedor.apellidos.toLowerCase().includes(keyword)
+    );
   }
 
   // Filtrar por skill
   if (filtros.idSkill) {
-    resultados = resultados.filter((servicio) => servicio.skills.some((skill) => skill.idSkill === filtros.idSkill))
+    resultados = resultados.filter((servicio) =>
+      servicio.skills.some((skill) => skill.idSkill === filtros.idSkill)
+    );
   }
 
   // Filtrar por subcategoría (simulado)
   if (filtros.idSubcategoria) {
     // En un caso real, esto requeriría mapear skills a subcategorías
-    resultados = resultados.filter((servicio) => servicio.id !== "servicio-999") // Placeholder
+    resultados = resultados.filter(
+      (servicio) => servicio.id !== "servicio-999"
+    ); // Placeholder
   }
 
   // Filtrar por categoría (simulado)
   if (filtros.idCategoria) {
     // En un caso real, esto requeriría mapear skills a categorías
-    resultados = resultados.filter((servicio) => servicio.id !== "servicio-999") // Placeholder
+    resultados = resultados.filter(
+      (servicio) => servicio.id !== "servicio-999"
+    ); // Placeholder
   }
 
-  return resultados
+  return resultados;
 }
 
 // Obtener servicios de un usuario específico
-export function getServiciosUsuarioEstaticos(idUsuario: string): ServicioBusqueda[] {
-  return STATIC_SERVICIOS.filter((servicio) => servicio.proveedor.id === idUsuario)
+export function getServiciosUsuarioEstaticos(
+  idUsuario: string
+): ServicioBusqueda[] {
+  return STATIC_SERVICIOS.filter(
+    (servicio) => servicio.proveedor.id === idUsuario
+  );
 }
 
 // Obtener solicitudes recibidas de un prestamista específico
-export function getSolicitudesPrestamisaEstaticas(idPrestamista: string): SolicitudRecibida[] {
-  return STATIC_SOLICITUDES_PRESTAMISTA.filter((solicitud) => solicitud.servicio.proveedor.id === idPrestamista)
+export function getSolicitudesPrestamisaEstaticas(
+  idPrestamista: string
+): SolicitudRecibida[] {
+  return STATIC_SOLICITUDES_PRESTAMISTA.filter(
+    (solicitud) => solicitud.servicio.proveedor.id === idPrestamista
+  );
 }
 
 // NUEVA: Obtener solicitudes enviadas de un cliente específico
-export function getSolicitudesEnviadasEstaticas(idCliente: string): SolicitudEnviada[] {
-  return STATIC_SOLICITUDES_ENVIADAS
+export function getSolicitudesEnviadasEstaticas(
+  idCliente: string
+): SolicitudEnviada[] {
+  return STATIC_SOLICITUDES_ENVIADAS;
 }
 
 // Obtener detalle de un servicio específico
 export function getServicioDetalleEstatico(id: string): ServicioDetalle | null {
-  const servicio = STATIC_SERVICIOS.find((s) => s.id === id)
-  return servicio ? { ...servicio } : null
+  const servicio = STATIC_SERVICIOS.find((s) => s.id === id);
+  return servicio ? { ...servicio } : null;
 }
 
 // Obtener reviews de un servicio específico
 export function getServicioReviewsEstatico(id: string): ReviewsServicio {
-  const reviewData = STATIC_REVIEWS.find((r) => r.idServicio === id)
+  const reviewData = STATIC_REVIEWS.find((r) => r.idServicio === id);
 
   if (reviewData) {
     return {
       comentarios: reviewData.comentarios,
       puntajePromedio: reviewData.puntajePromedio,
-    }
+    };
   }
 
   // Retornar reviews por defecto si no se encuentra
@@ -589,11 +632,13 @@ export function getServicioReviewsEstatico(id: string): ReviewsServicio {
       },
     ],
     puntajePromedio: 4.5,
-  }
+  };
 }
 
 // Funciones de utilidad para crear respuestas estáticas
-export function createStaticServicioResponse(titulo: string): ApiResponse<ServicioCreado> {
+export function createStaticServicioResponse(
+  titulo: string
+): ApiResponse<ServicioCreado> {
   return {
     success: true,
     message: "Servicio creado exitosamente",
@@ -605,10 +650,12 @@ export function createStaticServicioResponse(titulo: string): ApiResponse<Servic
       estado: "activo",
       fechaCreacion: new Date().toISOString(),
     },
-  }
+  };
 }
 
-export function createStaticUploadResponse(filename: string): ApiResponse<UploadResponse> {
+export function createStaticUploadResponse(
+  filename: string
+): ApiResponse<UploadResponse> {
   return {
     success: true,
     message: "Archivo subido exitosamente",
@@ -617,7 +664,7 @@ export function createStaticUploadResponse(filename: string): ApiResponse<Upload
       filename,
       size: Math.floor(Math.random() * 1000000) + 100000, // Tamaño aleatorio
     },
-  }
+  };
 }
 
 // Export all static data as a single object for backward compatibility
@@ -628,4 +675,4 @@ export const STATIC_DATA = {
   solicitudesPrestamista: STATIC_SOLICITUDES_PRESTAMISTA,
   solicitudesEnviadas: STATIC_SOLICITUDES_ENVIADAS,
   reviews: STATIC_REVIEWS,
-}
+};
