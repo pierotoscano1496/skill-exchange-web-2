@@ -1,0 +1,208 @@
+// Tipos de respuesta que coinciden con el backend
+export interface ApiResponse<T> {
+  success: boolean
+  message: string
+  data: T
+}
+
+export interface Skill {
+  id: string
+  nombre: string
+  categoria: string
+  descripcion?: string
+}
+
+export interface Categoria {
+  id: string
+  nombre: string
+  descripcion?: string
+  subcategorias: Subcategoria[]
+}
+
+export interface Subcategoria {
+  id: string
+  nombre: string
+  descripcion?: string
+  categoriaId: string
+}
+
+export interface ServicioCreado {
+  id: string
+  titulo: string
+  descripcion: string
+  precio: number
+  estado: string
+  fechaCreacion: string
+}
+
+export interface UploadResponse {
+  url: string
+  filename: string
+  size: number
+}
+
+// Tipos para búsqueda de servicios
+export interface BusquedaServiciosRequest {
+  keyWord?: string
+  idSkill?: string
+  idSubcategoria?: string
+  idCategoria?: string
+}
+
+export interface Proveedor {
+  id: string
+  dni?: string
+  carnetExtranjeria?: string
+  tipoDocumento: "dni" | "carnet_extranjeria"
+  introduccion?: string
+  correo: string
+  nombres: string
+  apellidos: string
+  fechaNacimiento: string
+  perfilLinkedin?: string
+  perfilFacebook?: string
+  perfilInstagram?: string
+  perfilTiktok?: string
+}
+
+export interface DisponibilidadServicio {
+  id: string
+  idServicio: string
+  dia: "lunes" | "martes" | "miercoles" | "jueves" | "viernes" | "sabado" | "domingo"
+  horaInicio: {
+    hour: number
+    minute: number
+    second: number
+    nano: number
+  }
+  horaFin: {
+    hour: number
+    minute: number
+    second: number
+    nano: number
+  }
+}
+
+export interface SkillServicio {
+  idServicio: string
+  idSkill: string
+}
+
+export interface ModalidadPagoServicio {
+  id: string
+  tipo: "yape" | "tarjeta" | "linea" | "efectivo"
+  cuentaBancaria?: string
+  numeroCelular?: string
+  url?: string
+}
+
+export interface ServicioBusqueda {
+  id: string
+  proveedor: Proveedor
+  titulo: string
+  descripcion: string
+  precio: number
+  precioMaximo?: number
+  precioMinimo?: number
+  tipoPrecio: "fijo" | "hora" | "rango"
+  ubicacion: string
+  modalidad: "presencial" | "remoto" | "mixto"
+  aceptaTerminos: boolean
+  disponibilidades: DisponibilidadServicio[]
+  skills: SkillServicio[]
+  modalidadesPago: ModalidadPagoServicio[]
+  urlImagePreview?: string
+}
+
+// Tipos para detalles de servicio y reviews
+export interface ServicioDetalle extends ServicioBusqueda {
+  // Extiende ServicioBusqueda ya que tienen la misma estructura
+}
+
+export interface ComentarioServicio {
+  id: string
+  idServicio: string
+  idComentarista: string
+  nombresComentarista: string
+  apellidosComentarista: string
+  comentario: string
+  puntaje: number
+}
+
+export interface ReviewsServicio {
+  comentarios: ComentarioServicio[]
+  puntajePromedio: number
+}
+
+// Tipos para match de servicio
+export interface MatchServicioRequest {
+  idServicio: string
+  idCliente: string
+  puntuacion: number
+  costo: number
+}
+
+export interface MatchServicioResponse {
+  id: string
+  idServicio: string
+  idCliente: string
+  fecha: string
+  fechaInicio: string
+  fechaCierre: string
+  estado: "solicitado" | "pendiente_pago" | "rechazado" | "ejecucion" | "finalizado"
+  puntuacion: number
+  costo: number
+}
+
+// Tipos para solicitudes recibidas (como prestamista)
+export interface SolicitudRecibida {
+  id: string
+  servicio: ServicioBusqueda
+  cliente: Proveedor // Reutilizamos el tipo Proveedor para el cliente
+  fecha: string
+  fechaInicio: string
+  fechaCierre: string
+  estado: "solicitado" | "pendiente_pago" | "rechazado" | "ejecucion" | "finalizado"
+  puntuacion: number
+  costo: number
+  mensaje: string
+}
+
+// NUEVO: Tipos para solicitudes enviadas (como cliente)
+export interface SolicitudEnviada {
+  id: string
+  servicio: ServicioBusqueda
+  proveedor: Proveedor
+  fecha: string
+  fechaInicio: string
+  fechaCierre: string
+  estado: "solicitado" | "pendiente_pago" | "rechazado" | "ejecucion" | "finalizado"
+  puntuacion: number
+  costo: number
+}
+
+// Tipos para chat
+export interface ChatMessageRequest {
+  idReceptor: string
+  mensaje: string
+  resourceUrl?: string
+}
+
+export interface ChatContact {
+  idContact: string
+  fullName: string
+  email: string
+}
+
+export interface ChatMessage {
+  sentBy: string
+  fecha: string
+  mensaje: string
+  resourceUrl?: string
+}
+
+export interface ChatResponse {
+  id: string
+  contacts: ChatContact[]
+  messages: ChatMessage[]
+}

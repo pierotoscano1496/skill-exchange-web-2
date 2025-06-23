@@ -1,0 +1,390 @@
+import { ENV_CONFIG } from "../config/environment"
+import type {
+  ApiResponse,
+  Skill,
+  Categoria,
+  ServicioCreado,
+  UploadResponse,
+  ServicioBusqueda,
+  BusquedaServiciosRequest,
+  ServicioDetalle,
+  ReviewsServicio,
+  MatchServicioRequest,
+  MatchServicioResponse,
+  ChatMessageRequest,
+  ChatResponse,
+  SolicitudRecibida,
+  SolicitudEnviada,
+} from "../types/api-responses"
+import type {
+  AceptarSolicitudRequest,
+  RechazarSolicitudRequest,
+  ConfirmarPagoRequest,
+  FinalizarServicioRequest,
+  ActualizarSolicitudResponse,
+  ProcesoFinalizacion,
+  ConfirmacionPago,
+} from "../types/solicitud-updates"
+import type { ServicioRequestBody } from "../api/servicio-api"
+
+class ApiService {
+  private baseUrl = ENV_CONFIG.API.BASE_URL
+
+  private async fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+        },
+        ...options,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return {
+        success: true,
+        message: "Operación exitosa",
+        data,
+      }
+    } catch (error) {
+      console.error("API Error:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error desconocido",
+        data: null as any,
+      }
+    }
+  }
+
+  async getSkills(): Promise<ApiResponse<Skill[]>> {
+    return this.fetchApi<Skill[]>(ENV_CONFIG.API.ENDPOINTS.SKILLS)
+  }
+
+  async getCategorias(): Promise<ApiResponse<Categoria[]>> {
+    return this.fetchApi<Categoria[]>(ENV_CONFIG.API.ENDPOINTS.CATEGORIAS)
+  }
+
+  async createServicio(data: ServicioRequestBody): Promise<ApiResponse<ServicioCreado>> {
+    return this.fetchApi<ServicioCreado>(ENV_CONFIG.API.ENDPOINTS.SERVICIOS, {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+  }
+
+  async uploadFile(file: File): Promise<ApiResponse<UploadResponse>> {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    try {
+      const response = await fetch(`${this.baseUrl}${ENV_CONFIG.API.ENDPOINTS.UPLOAD}`, {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return {
+        success: true,
+        message: "Archivo subido exitosamente",
+        data,
+      }
+    } catch (error) {
+      console.error("Upload Error:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al subir archivo",
+        data: null as any,
+      }
+    }
+  }
+
+  async buscarServicios(filtros: BusquedaServiciosRequest): Promise<ApiResponse<ServicioBusqueda[]>> {
+    const params = new URLSearchParams()
+    if (filtros.keyWord) params.append("keyWord", filtros.keyWord)
+    if (filtros.idSkill) params.append("idSkill", filtros.idSkill)
+    if (filtros.idSubcategoria) params.append("idSubcategoria", filtros.idSubcategoria)
+    if (filtros.idCategoria) params.append("idCategoria", filtros.idCategoria)
+
+    const endpoint = `${ENV_CONFIG.API.ENDPOINTS.BUSQUEDA_SERVICIOS}?${params.toString()}`
+    return this.fetchApi<ServicioBusqueda[]>(endpoint)
+  }
+
+  async getServicioDetalle(id: string): Promise<ApiResponse<ServicioDetalle>> {
+    return this.fetchApi<ServicioDetalle>(`${ENV_CONFIG.API.ENDPOINTS.SERVICIO_DETALLE}/${id}`)
+  }
+
+  async getServicioReviews(id: string): Promise<ApiResponse<ReviewsServicio>> {
+    return this.fetchApi<ReviewsServicio>(`${ENV_CONFIG.API.ENDPOINTS.SERVICIO_REVIEWS}/${id}`)
+  }
+
+  async getServiciosUsuario(idUsuario: string): Promise<ApiResponse<ServicioBusqueda[]>> {
+    return this.fetchApi<ServicioBusqueda[]>(`${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}/${idUsuario}`)
+  }
+
+  async getSolicitudesPrestamista(idPrestamista: string): Promise<ApiResponse<SolicitudRecibida[]>> {
+    return this.fetchApi<SolicitudRecibida[]>(`${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PRESTAMISTA}/${idPrestamista}`)
+  }
+
+  async getSolicitudesEnviadas(idCliente: string): Promise<ApiResponse<SolicitudEnviada[]>> {
+    return this.fetchApi<SolicitudEnviada[]>(`/match/details/cliente/${idCliente}`)
+  }
+
+  async createMatchServicio(data: MatchServicioRequest): Promise<ApiResponse<MatchServicioResponse>> {
+    return this.fetchApi<MatchServicioResponse>(ENV_CONFIG.API.ENDPOINTS.MATCH, {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+  }
+
+  async sendChatMessage(data: ChatMessageRequest): Promise<ApiResponse<ChatResponse>> {
+    return this.fetchApi<ChatResponse>(ENV_CONFIG.API.ENDPOINTS.CHAT, {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+  }
+
+  // ===== FUNCIÓN GENÉRICA PARA ACTUALIZAR ESTADO DE SOLICITUDES =====
+
+  private async actualizarEstadoSolicitud(
+    idSolicitud: string,
+    nuevoEstado: string,
+  ): Promise<ApiResponse<MatchServicioResponse>> {
+    try {
+      const response = await fetch(`${this.baseUrl}/match/estado/${idSolicitud}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          estado: nuevoEstado,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      return {
+        success: true,
+        message: `Estado actualizado a ${nuevoEstado} exitosamente`,
+        data,
+      }
+    } catch (error) {
+      console.error("Error al actualizar estado:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al actualizar estado",
+        data: null as any,
+      }
+    }
+  }
+
+  // ===== FUNCIONES ESPECÍFICAS PARA CADA ACCIÓN =====
+
+  async aceptarSolicitud(data: AceptarSolicitudRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    try {
+      const response = await this.actualizarEstadoSolicitud(data.idSolicitud, "pendiente_pago")
+
+      if (response.success) {
+        const actualizacionResponse: ActualizarSolicitudResponse = {
+          success: true,
+          message: "Solicitud aceptada exitosamente. El cliente ha sido notificado y debe proceder con el pago.",
+          solicitudActualizada: {
+            id: response.data.id,
+            estadoAnterior: "solicitado",
+            estadoNuevo: "pendiente_pago",
+            fechaActualizacion: new Date().toISOString(),
+          },
+        }
+
+        return {
+          success: true,
+          message: actualizacionResponse.message,
+          data: actualizacionResponse,
+        }
+      }
+
+      return {
+        success: false,
+        message: response.message,
+        data: {} as ActualizarSolicitudResponse,
+      }
+    } catch (error) {
+      console.error("Error al aceptar solicitud:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al aceptar solicitud",
+        data: {} as ActualizarSolicitudResponse,
+      }
+    }
+  }
+
+  async rechazarSolicitud(data: RechazarSolicitudRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    try {
+      const response = await this.actualizarEstadoSolicitud(data.idSolicitud, "rechazado")
+
+      if (response.success) {
+        const actualizacionResponse: ActualizarSolicitudResponse = {
+          success: true,
+          message: "Solicitud rechazada exitosamente. El cliente ha sido notificado del motivo.",
+          solicitudActualizada: {
+            id: response.data.id,
+            estadoAnterior: "solicitado",
+            estadoNuevo: "rechazado",
+            fechaActualizacion: new Date().toISOString(),
+          },
+        }
+
+        return {
+          success: true,
+          message: actualizacionResponse.message,
+          data: actualizacionResponse,
+        }
+      }
+
+      return {
+        success: false,
+        message: response.message,
+        data: {} as ActualizarSolicitudResponse,
+      }
+    } catch (error) {
+      console.error("Error al rechazar solicitud:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al rechazar solicitud",
+        data: {} as ActualizarSolicitudResponse,
+      }
+    }
+  }
+
+  async confirmarPago(data: ConfirmarPagoRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    try {
+      const response = await this.actualizarEstadoSolicitud(data.idSolicitud, "ejecucion")
+
+      if (response.success) {
+        const actualizacionResponse: ActualizarSolicitudResponse = {
+          success: true,
+          message: "Pago confirmado exitosamente. El servicio ahora está en ejecución.",
+          solicitudActualizada: {
+            id: response.data.id,
+            estadoAnterior: "pendiente_pago",
+            estadoNuevo: "ejecucion",
+            fechaActualizacion: new Date().toISOString(),
+          },
+        }
+
+        return {
+          success: true,
+          message: actualizacionResponse.message,
+          data: actualizacionResponse,
+        }
+      }
+
+      return {
+        success: false,
+        message: response.message,
+        data: {} as ActualizarSolicitudResponse,
+      }
+    } catch (error) {
+      console.error("Error al confirmar pago:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al confirmar pago",
+        data: {} as ActualizarSolicitudResponse,
+      }
+    }
+  }
+
+  async finalizarServicio(data: FinalizarServicioRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    try {
+      const response = await this.actualizarEstadoSolicitud(data.idSolicitud, "finalizado")
+
+      if (response.success) {
+        const actualizacionResponse: ActualizarSolicitudResponse = {
+          success: true,
+          message: "Servicio finalizado exitosamente. El cliente será notificado para calificar el servicio.",
+          solicitudActualizada: {
+            id: response.data.id,
+            estadoAnterior: "ejecucion",
+            estadoNuevo: "finalizado",
+            fechaActualizacion: new Date().toISOString(),
+          },
+        }
+
+        return {
+          success: true,
+          message: actualizacionResponse.message,
+          data: actualizacionResponse,
+        }
+      }
+
+      return {
+        success: false,
+        message: response.message,
+        data: {} as ActualizarSolicitudResponse,
+      }
+    } catch (error) {
+      console.error("Error al finalizar servicio:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al finalizar servicio",
+        data: {} as ActualizarSolicitudResponse,
+      }
+    }
+  }
+
+  async getProcesoFinalizacion(): Promise<ProcesoFinalizacion> {
+    return {
+      pasos: [
+        "Confirmar que el trabajo se ha completado satisfactoriamente",
+        "Documentar el resumen del trabajo realizado",
+        "Registrar el tiempo empleado y materiales utilizados",
+        "Proporcionar recomendaciones al cliente (opcional)",
+        "Solicitar calificación del cliente",
+        "Cerrar oficialmente el servicio",
+      ],
+      tiempoEstimado: "5-10 minutos",
+      requisitos: [
+        "El trabajo debe estar 100% completado",
+        "Todos los entregables deben estar listos",
+        "El cliente debe estar satisfecho con el resultado",
+      ],
+      consecuencias: [
+        "El servicio se marcará como finalizado",
+        "Se liberará el pago (si aplica)",
+        "El cliente podrá calificar tu servicio",
+        "No podrás modificar el estado después",
+        "Se generará un registro permanente del servicio",
+      ],
+    }
+  }
+
+  async getConfirmacionPago(): Promise<ConfirmacionPago> {
+    return {
+      mensaje:
+        "Antes de confirmar el pago, asegúrate de haber verificado que efectivamente recibiste el pago del cliente.",
+      verificaciones: [
+        "¿Has recibido el pago completo acordado?",
+        "¿El método de pago coincide con lo acordado?",
+        "¿Tienes comprobante del pago recibido?",
+        "¿El monto recibido es correcto?",
+      ],
+      advertencias: [
+        "Solo confirma el pago si realmente lo has recibido",
+        "Una vez confirmado, el servicio pasará a estado 'En Ejecución'",
+        "Deberás cumplir con el servicio acordado",
+        "El cliente esperará que inicies el trabajo inmediatamente",
+      ],
+    }
+  }
+}
+
+export const apiService = new ApiService()
