@@ -423,7 +423,8 @@ export const STATIC_SOLICITUDES_ENVIADAS: SolicitudEnviada[] = [
     estado: "solicitado",
     puntuacion: 0,
     costo: 150,
-    mensaje,
+    mensaje:
+      "Hola, estoy interesado en reparar la pantalla de mi celular. ¿Podrías ayudarme? Tengo disponibilidad mañana por la tarde.",
   },
   {
     id: "solicitud-enviada-2",

@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CheckCircle,
   Clock,
@@ -18,108 +18,117 @@ import {
   AlertCircle,
   Play,
   Square,
-} from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
-import { getCurrentUserId } from "@/lib/config/environment"
-import type { SolicitudRecibida } from "@/lib/types/api-responses"
-import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicitud-dialog"
-import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog"
-import { ConfirmarPagoDialog } from "@/components/solicitudes/confirmar-pago-dialog"
-import { FinalizarServicioDialog } from "@/components/solicitudes/finalizar-servicio-dialog"
+} from "lucide-react";
+import { dataService } from "@/lib/services/data-service";
+import { getCurrentUserId } from "@/lib/config/environment";
+import type { SolicitudRecibida } from "@/lib/types/api-responses";
+import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicitud-dialog";
+import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog";
+import { ConfirmarPagoDialog } from "@/components/solicitudes/confirmar-pago-dialog";
+import { FinalizarServicioDialog } from "@/components/solicitudes/finalizar-servicio-dialog";
+
+export function getEstadoBadge(estado: string) {
+  switch (estado) {
+    case "solicitado":
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-yellow-100 text-yellow-800 border-yellow-300"
+        >
+          <Clock className="w-3 h-3 mr-1" />
+          Solicitado
+        </Badge>
+      );
+    case "pendiente_pago":
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-orange-100 text-orange-800 border-orange-300"
+        >
+          <DollarSign className="w-3 h-3 mr-1" />
+          Pendiente Pago
+        </Badge>
+      );
+    case "rechazado":
+      return (
+        <Badge variant="destructive">
+          <XCircle className="w-3 h-3 mr-1" />
+          Rechazado
+        </Badge>
+      );
+    case "ejecucion":
+      return (
+        <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
+          <Play className="w-3 h-3 mr-1" />
+          En Ejecución
+        </Badge>
+      );
+    case "finalizado":
+      return (
+        <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          Finalizado
+        </Badge>
+      );
+    default:
+      return <Badge variant="outline">{estado}</Badge>;
+  }
+}
 
 export default function SolicitudesRecibidasPage() {
-  const [solicitudes, setSolicitudes] = useState<SolicitudRecibida[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<SolicitudRecibida | null>(null)
-  const [dialogoAceptar, setDialogoAceptar] = useState(false)
-  const [dialogoRechazar, setDialogoRechazar] = useState(false)
-  const [dialogoConfirmarPago, setDialogoConfirmarPago] = useState(false)
-  const [dialogoFinalizar, setDialogoFinalizar] = useState(false)
+  const [solicitudes, setSolicitudes] = useState<SolicitudRecibida[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [solicitudSeleccionada, setSolicitudSeleccionada] =
+    useState<SolicitudRecibida | null>(null);
+  const [dialogoAceptar, setDialogoAceptar] = useState(false);
+  const [dialogoRechazar, setDialogoRechazar] = useState(false);
+  const [dialogoConfirmarPago, setDialogoConfirmarPago] = useState(false);
+  const [dialogoFinalizar, setDialogoFinalizar] = useState(false);
 
   useEffect(() => {
-    cargarSolicitudes()
-  }, [])
+    cargarSolicitudes();
+  }, []);
 
   const cargarSolicitudes = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      const idPrestamista = getCurrentUserId()
-      const response = await dataService.getSolicitudesPrestamista(idPrestamista)
+      setLoading(true);
+      setError(null);
+      const idPrestamista = getCurrentUserId();
+      const response = await dataService.getSolicitudesPrestamista(
+        idPrestamista
+      );
 
       if (response.success) {
-        setSolicitudes(response.data)
+        setSolicitudes(response.data);
       } else {
-        setError(response.message)
+        setError(response.message);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error desconocido")
+      setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
-  const getEstadoBadge = (estado: string) => {
-    switch (estado) {
-      case "solicitado":
-        return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-            <Clock className="w-3 h-3 mr-1" />
-            Solicitado
-          </Badge>
-        )
-      case "pendiente_pago":
-        return (
-          <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-300">
-            <DollarSign className="w-3 h-3 mr-1" />
-            Pendiente Pago
-          </Badge>
-        )
-      case "rechazado":
-        return (
-          <Badge variant="destructive">
-            <XCircle className="w-3 h-3 mr-1" />
-            Rechazado
-          </Badge>
-        )
-      case "ejecucion":
-        return (
-          <Badge variant="default" className="bg-blue-500 hover:bg-blue-600">
-            <Play className="w-3 h-3 mr-1" />
-            En Ejecución
-          </Badge>
-        )
-      case "finalizado":
-        return (
-          <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-            <CheckCircle className="w-3 h-3 mr-1" />
-            Finalizado
-          </Badge>
-        )
-      default:
-        return <Badge variant="outline">{estado}</Badge>
-    }
-  }
+  };
 
   const formatearFecha = (fechaISO: string) => {
-    const fecha = new Date(fechaISO)
+    const fecha = new Date(fechaISO);
     return fecha.toLocaleDateString("es-PE", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
   const formatearPrecio = (precio: number) => {
-    return `S/ ${precio.toFixed(2)}`
-  }
+    return `S/ ${precio.toFixed(2)}`;
+  };
 
   const contarPorEstado = (estado: string) => {
-    return solicitudes.filter((s) => s.estado === estado).length
-  }
+    return solicitudes.filter((s) => s.estado === estado).length;
+  };
 
   const renderAcciones = (solicitud: SolicitudRecibida) => {
     switch (solicitud.estado) {
@@ -130,8 +139,8 @@ export default function SolicitudesRecibidasPage() {
               size="sm"
               className="bg-green-600 hover:bg-green-700"
               onClick={() => {
-                setSolicitudSeleccionada(solicitud)
-                setDialogoAceptar(true)
+                setSolicitudSeleccionada(solicitud);
+                setDialogoAceptar(true);
               }}
             >
               <CheckCircle className="w-4 h-4 mr-1" />
@@ -141,8 +150,8 @@ export default function SolicitudesRecibidasPage() {
               size="sm"
               variant="outline"
               onClick={() => {
-                setSolicitudSeleccionada(solicitud)
-                setDialogoRechazar(true)
+                setSolicitudSeleccionada(solicitud);
+                setDialogoRechazar(true);
               }}
             >
               <XCircle className="w-4 h-4 mr-1" />
@@ -153,7 +162,7 @@ export default function SolicitudesRecibidasPage() {
               Responder
             </Button>
           </div>
-        )
+        );
       case "pendiente_pago":
         return (
           <div className="flex gap-2 pt-2">
@@ -161,8 +170,8 @@ export default function SolicitudesRecibidasPage() {
               size="sm"
               className="bg-blue-600 hover:bg-blue-700"
               onClick={() => {
-                setSolicitudSeleccionada(solicitud)
-                setDialogoConfirmarPago(true)
+                setSolicitudSeleccionada(solicitud);
+                setDialogoConfirmarPago(true);
               }}
             >
               <Play className="w-4 h-4 mr-1" />
@@ -176,7 +185,7 @@ export default function SolicitudesRecibidasPage() {
               Ver Detalles
             </Button>
           </div>
-        )
+        );
       case "ejecucion":
         return (
           <div className="flex gap-2 pt-2">
@@ -184,8 +193,8 @@ export default function SolicitudesRecibidasPage() {
               size="sm"
               className="bg-green-600 hover:bg-green-700"
               onClick={() => {
-                setSolicitudSeleccionada(solicitud)
-                setDialogoFinalizar(true)
+                setSolicitudSeleccionada(solicitud);
+                setDialogoFinalizar(true);
               }}
             >
               <Square className="w-4 h-4 mr-1" />
@@ -199,7 +208,7 @@ export default function SolicitudesRecibidasPage() {
               Ver Progreso
             </Button>
           </div>
-        )
+        );
       case "finalizado":
         return (
           <div className="flex gap-2 pt-2">
@@ -210,7 +219,7 @@ export default function SolicitudesRecibidasPage() {
               Ver Calificación
             </Button>
           </div>
-        )
+        );
       case "rechazado":
         return (
           <div className="flex gap-2 pt-2">
@@ -218,22 +227,24 @@ export default function SolicitudesRecibidasPage() {
               Ver Detalles
             </Button>
           </div>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const handleOperacionExitosa = () => {
-    cargarSolicitudes() // Recargar las solicitudes
-  }
+    cargarSolicitudes(); // Recargar las solicitudes
+  };
 
   const renderSolicitudCard = (solicitud: SolicitudRecibida) => (
     <Card key={solicitud.id}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg">{solicitud.servicio.titulo}</CardTitle>
+            <CardTitle className="text-lg">
+              {solicitud.servicio.titulo}
+            </CardTitle>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
               <User className="w-4 h-4" />
               <span>
@@ -262,7 +273,9 @@ export default function SolicitudesRecibidasPage() {
             </div>
             <div className="flex items-center gap-1">
               <DollarSign className="w-4 h-4" />
-              <span className="font-medium text-foreground">{formatearPrecio(solicitud.costo)}</span>
+              <span className="font-medium text-foreground">
+                {formatearPrecio(solicitud.costo)}
+              </span>
             </div>
           </div>
 
@@ -278,12 +291,12 @@ export default function SolicitudesRecibidasPage() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   const filtrarPorEstado = (estado: string) => {
-    if (estado === "todas") return solicitudes
-    return solicitudes.filter((s) => s.estado === estado)
-  }
+    if (estado === "todas") return solicitudes;
+    return solicitudes.filter((s) => s.estado === estado);
+  };
 
   if (loading) {
     return (
@@ -295,7 +308,7 @@ export default function SolicitudesRecibidasPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -304,13 +317,15 @@ export default function SolicitudesRecibidasPage() {
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <AlertCircle className="w-8 h-8 text-destructive mx-auto mb-4" />
-            <p className="text-destructive mb-4">Error al cargar las solicitudes</p>
+            <p className="text-destructive mb-4">
+              Error al cargar las solicitudes
+            </p>
             <p className="text-muted-foreground mb-4">{error}</p>
             <Button onClick={cargarSolicitudes}>Reintentar</Button>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -322,24 +337,37 @@ export default function SolicitudesRecibidasPage() {
         </Button>
       </div>
       <p className="text-muted-foreground">
-        Gestiona las solicitudes que has recibido para tus servicios como prestamista.
+        Gestiona las solicitudes que has recibido para tus servicios como
+        prestamista.
       </p>
 
       <Tabs defaultValue="todas" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="todas">Todas ({solicitudes.length})</TabsTrigger>
-          <TabsTrigger value="solicitado">Solicitadas ({contarPorEstado("solicitado")})</TabsTrigger>
-          <TabsTrigger value="pendiente_pago">Pendiente Pago ({contarPorEstado("pendiente_pago")})</TabsTrigger>
-          <TabsTrigger value="ejecucion">En Ejecución ({contarPorEstado("ejecucion")})</TabsTrigger>
-          <TabsTrigger value="finalizado">Finalizadas ({contarPorEstado("finalizado")})</TabsTrigger>
-          <TabsTrigger value="rechazado">Rechazadas ({contarPorEstado("rechazado")})</TabsTrigger>
+          <TabsTrigger value="solicitado">
+            Solicitadas ({contarPorEstado("solicitado")})
+          </TabsTrigger>
+          <TabsTrigger value="pendiente_pago">
+            Pendiente Pago ({contarPorEstado("pendiente_pago")})
+          </TabsTrigger>
+          <TabsTrigger value="ejecucion">
+            En Ejecución ({contarPorEstado("ejecucion")})
+          </TabsTrigger>
+          <TabsTrigger value="finalizado">
+            Finalizadas ({contarPorEstado("finalizado")})
+          </TabsTrigger>
+          <TabsTrigger value="rechazado">
+            Rechazadas ({contarPorEstado("rechazado")})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="todas">
           <div className="space-y-4">
             {solicitudes.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-muted-foreground">No tienes solicitudes recibidas</p>
+                <p className="text-muted-foreground">
+                  No tienes solicitudes recibidas
+                </p>
               </div>
             ) : (
               solicitudes.map(renderSolicitudCard)
@@ -348,23 +376,33 @@ export default function SolicitudesRecibidasPage() {
         </TabsContent>
 
         <TabsContent value="solicitado">
-          <div className="space-y-4">{filtrarPorEstado("solicitado").map(renderSolicitudCard)}</div>
+          <div className="space-y-4">
+            {filtrarPorEstado("solicitado").map(renderSolicitudCard)}
+          </div>
         </TabsContent>
 
         <TabsContent value="pendiente_pago">
-          <div className="space-y-4">{filtrarPorEstado("pendiente_pago").map(renderSolicitudCard)}</div>
+          <div className="space-y-4">
+            {filtrarPorEstado("pendiente_pago").map(renderSolicitudCard)}
+          </div>
         </TabsContent>
 
         <TabsContent value="ejecucion">
-          <div className="space-y-4">{filtrarPorEstado("ejecucion").map(renderSolicitudCard)}</div>
+          <div className="space-y-4">
+            {filtrarPorEstado("ejecucion").map(renderSolicitudCard)}
+          </div>
         </TabsContent>
 
         <TabsContent value="finalizado">
-          <div className="space-y-4">{filtrarPorEstado("finalizado").map(renderSolicitudCard)}</div>
+          <div className="space-y-4">
+            {filtrarPorEstado("finalizado").map(renderSolicitudCard)}
+          </div>
         </TabsContent>
 
         <TabsContent value="rechazado">
-          <div className="space-y-4">{filtrarPorEstado("rechazado").map(renderSolicitudCard)}</div>
+          <div className="space-y-4">
+            {filtrarPorEstado("rechazado").map(renderSolicitudCard)}
+          </div>
         </TabsContent>
       </Tabs>
       {/* Diálogos para gestión de solicitudes */}
@@ -397,5 +435,5 @@ export default function SolicitudesRecibidasPage() {
         </>
       )}
     </div>
-  )
+  );
 }
