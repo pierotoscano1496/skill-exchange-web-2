@@ -1,107 +1,127 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Search, MapPin, Clock, User, Plus } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
-import type { ServicioBusqueda, Categoria, Skill } from "@/lib/types/api-responses"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Search, MapPin, Clock, User, Plus } from "lucide-react";
+import { dataService } from "@/lib/services/data-service";
+import type {
+  ServicioBusqueda,
+  Categoria,
+  Skill,
+} from "@/lib/types/api-responses";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ExplorarPage() {
-  const [servicios, setServicios] = useState<ServicioBusqueda[]>([])
-  const [categorias, setCategorias] = useState<Categoria[]>([])
-  const [skills, setSkills] = useState<Skill[]>([])
-  const [loading, setLoading] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategoria, setSelectedCategoria] = useState<string>("all")
-  const [selectedSkill, setSelectedSkill] = useState<string>("all")
+  const [servicios, setServicios] = useState<ServicioBusqueda[]>([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategoria, setSelectedCategoria] = useState<string>("all");
+  const [selectedSkill, setSelectedSkill] = useState<string>("all");
 
-  const router = useRouter()
+  const router = useRouter();
 
   // Cargar datos iniciales
   useEffect(() => {
     const cargarDatosIniciales = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        const [categoriasResponse, skillsResponse, serviciosResponse] = await Promise.all([
-          dataService.getCategorias(),
-          dataService.getSkills(),
-          dataService.buscarServicios({}), // Búsqueda sin filtros para mostrar todos
-        ])
+        const [categoriasResponse, skillsResponse, serviciosResponse] =
+          await Promise.all([
+            dataService.getCategorias(),
+            dataService.getSkills(),
+            dataService.buscarServicios({}), // Búsqueda sin filtros para mostrar todos
+          ]);
 
-        if (categoriasResponse.success) setCategorias(categoriasResponse.data || [])
-        if (skillsResponse.success) setSkills(skillsResponse.data || [])
-        if (serviciosResponse.success) setServicios(serviciosResponse.data || [])
+        if (categoriasResponse.success)
+          setCategorias(categoriasResponse.data || []);
+        if (skillsResponse.success) setSkills(skillsResponse.data || []);
+        if (serviciosResponse.success)
+          setServicios(serviciosResponse.data || []);
       } catch (error) {
-        console.error("Error cargando datos:", error)
+        console.error("Error cargando datos:", error);
         // Establecer arrays vacíos en caso de error
-        setCategorias([])
-        setSkills([])
-        setServicios([])
+        setCategorias([]);
+        setSkills([]);
+        setServicios([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    cargarDatosIniciales()
-  }, [])
+    cargarDatosIniciales();
+  }, []);
 
   // Función de búsqueda
   const realizarBusqueda = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const filtros = {
         keyWord: searchTerm || undefined,
-        idCategoria: selectedCategoria !== "all" ? selectedCategoria : undefined,
+        idCategoria:
+          selectedCategoria !== "all" ? selectedCategoria : undefined,
         idSkill: selectedSkill !== "all" ? selectedSkill : undefined,
-      }
+      };
 
-      const response = await dataService.buscarServicios(filtros)
+      const response = await dataService.buscarServicios(filtros);
       if (response.success) {
-        setServicios(response.data || [])
+        setServicios(response.data || []);
       }
     } catch (error) {
-      console.error("Error en búsqueda:", error)
-      setServicios([])
+      console.error("Error en búsqueda:", error);
+      setServicios([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Formatear precio
   const formatearPrecio = (servicio: ServicioBusqueda) => {
     if (servicio.tipoPrecio === "fijo") {
-      return `S/ ${servicio.precio}`
+      return `S/ ${servicio.precio}`;
     } else if (servicio.tipoPrecio === "hora") {
-      return `S/ ${servicio.precio}/hora`
+      return `S/ ${servicio.precio}/hora`;
     } else if (servicio.tipoPrecio === "rango") {
-      return `S/ ${servicio.precioMinimo || 0} - S/ ${servicio.precioMaximo || 0}`
+      return `S/ ${servicio.precioMinimo || 0} - S/ ${
+        servicio.precioMaximo || 0
+      }`;
     }
-    return `S/ ${servicio.precio || 0}`
-  }
+    return `S/ ${servicio.precio || 0}`;
+  };
 
   // Formatear horarios
   const formatearHorario = (hora: { hour: number; minute: number }) => {
-    if (!hora) return "00:00"
-    return `${hora.hour.toString().padStart(2, "0")}:${hora.minute.toString().padStart(2, "0")}`
-  }
+    if (!hora) return "00:00";
+    return `${hora.hour.toString().padStart(2, "0")}:${hora.minute
+      .toString()
+      .padStart(2, "0")}`;
+  };
 
   // Obtener emoji de categoría
   const getCategoriaEmoji = (nombreCategoria: string) => {
-    const nombre = nombreCategoria.toLowerCase()
-    if (nombre.includes("hogar")) return "🏠"
-    if (nombre.includes("tecnología") || nombre.includes("tecnologia")) return "💻"
-    if (nombre.includes("educación") || nombre.includes("educacion")) return "📚"
-    if (nombre.includes("mascotas")) return "🐾"
-    if (nombre.includes("belleza")) return "💇"
-    if (nombre.includes("transporte")) return "🚗"
-    return "⭐"
-  }
+    const nombre = nombreCategoria.toLowerCase();
+    if (nombre.includes("hogar")) return "🏠";
+    if (nombre.includes("tecnología") || nombre.includes("tecnologia"))
+      return "💻";
+    if (nombre.includes("educación") || nombre.includes("educacion"))
+      return "📚";
+    if (nombre.includes("mascotas")) return "🐾";
+    if (nombre.includes("belleza")) return "💇";
+    if (nombre.includes("transporte")) return "🚗";
+    return "⭐";
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -109,7 +129,9 @@ export default function ExplorarPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">¡Hola, María!</h1>
-          <p className="text-muted-foreground">Explora servicios disponibles o publica el tuyo.</p>
+          <p className="text-muted-foreground">
+            Explora servicios disponibles o publica el tuyo.
+          </p>
         </div>
         <Link href="/mis-chambitas/nueva">
           <Button className="flex items-center gap-2">
@@ -119,8 +141,8 @@ export default function ExplorarPage() {
         </Link>
       </div>
 
-      {/* Stats rápidas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      {/* Stats rápidas WIP: desarrollar integración futura*/}
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
         {[
           { title: "Servicios disponibles", value: (servicios?.length || 0).toString() },
           { title: "Categorías", value: (categorias?.length || 0).toString() },
@@ -134,7 +156,7 @@ export default function ExplorarPage() {
             </CardContent>
           </Card>
         ))}
-      </div>
+      </div> */}
 
       {/* Barra de búsqueda y filtros */}
       <div className="flex flex-col sm:flex-row gap-4 mt-6">
@@ -189,12 +211,14 @@ export default function ExplorarPage() {
             key={categoria.id}
             className="bg-muted/30 hover:bg-muted/50 cursor-pointer transition-colors"
             onClick={() => {
-              setSelectedCategoria(categoria.id)
-              realizarBusqueda()
+              setSelectedCategoria(categoria.id);
+              realizarBusqueda();
             }}
           >
             <CardContent className="p-4 text-center">
-              <div className="text-3xl mb-2">{getCategoriaEmoji(categoria.nombre)}</div>
+              <div className="text-3xl mb-2">
+                {getCategoriaEmoji(categoria.nombre)}
+              </div>
               <h3 className="font-medium text-sm">{categoria.nombre}</h3>
             </CardContent>
           </Card>
@@ -205,23 +229,32 @@ export default function ExplorarPage() {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle>
-            {loading ? "Buscando servicios..." : `Servicios encontrados (${servicios?.length || 0})`}
+            {loading
+              ? "Buscando servicios..."
+              : `Servicios encontrados (${servicios?.length || 0})`}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-muted-foreground">Cargando servicios...</p>
+              <p className="mt-2 text-muted-foreground">
+                Cargando servicios...
+              </p>
             </div>
           ) : !servicios || servicios.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No se encontraron servicios con los filtros seleccionados.</p>
+              <p className="text-muted-foreground">
+                No se encontraron servicios con los filtros seleccionados.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {servicios.map((servicio) => (
-                <Card key={servicio.id} className="hover:shadow-md transition-shadow">
+                <Card
+                  key={servicio.id}
+                  className="hover:shadow-md transition-shadow"
+                >
                   <CardContent className="p-4">
                     {/* Imagen del servicio */}
                     {servicio.urlImagePreview && (
@@ -238,13 +271,16 @@ export default function ExplorarPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <User className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm font-medium">
-                        {servicio.proveedor?.nombres || "N/A"} {servicio.proveedor?.apellidos || ""}
+                        {servicio.proveedor?.nombres || "N/A"}{" "}
+                        {servicio.proveedor?.apellidos || ""}
                       </span>
                     </div>
 
                     {/* Título y descripción */}
                     <h3 className="font-medium mb-1">{servicio.titulo}</h3>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{servicio.descripcion}</p>
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      {servicio.descripcion}
+                    </p>
 
                     {/* Modalidad y ubicación */}
                     <div className="flex items-center gap-4 mb-2 text-sm">
@@ -258,34 +294,51 @@ export default function ExplorarPage() {
                     </div>
 
                     {/* Disponibilidad */}
-                    {servicio.disponibilidades && servicio.disponibilidades.length > 0 && (
-                      <div className="flex items-center gap-1 mb-2 text-sm text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        <span className="capitalize">
-                          {servicio.disponibilidades[0].dia} {formatearHorario(servicio.disponibilidades[0].horaInicio)}{" "}
-                          - {formatearHorario(servicio.disponibilidades[0].horaFin)}
-                        </span>
-                      </div>
-                    )}
+                    {servicio.disponibilidades &&
+                      servicio.disponibilidades.length > 0 && (
+                        <div className="flex items-center gap-1 mb-2 text-sm text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span className="capitalize">
+                            {servicio.disponibilidades[0].dia}{" "}
+                            {formatearHorario(
+                              servicio.disponibilidades[0].horaInicio
+                            )}{" "}
+                            -{" "}
+                            {formatearHorario(
+                              servicio.disponibilidades[0].horaFin
+                            )}
+                          </span>
+                        </div>
+                      )}
 
                     {/* Precio */}
                     <div className="flex justify-between items-center mt-3">
-                      <span className="font-medium text-lg">{formatearPrecio(servicio)}</span>
-                      <Button size="sm" onClick={() => router.push(`/explorar/${servicio.id}`)}>
+                      <span className="font-medium text-lg">
+                        {formatearPrecio(servicio)}
+                      </span>
+                      <Button
+                        size="sm"
+                        onClick={() => router.push(`/explorar/${servicio.id}`)}
+                      >
                         Ver detalles
                       </Button>
                     </div>
 
                     {/* Modalidades de pago */}
-                    {servicio.modalidadesPago && servicio.modalidadesPago.length > 0 && (
-                      <div className="flex gap-1 mt-2">
-                        {servicio.modalidadesPago.map((modalidad) => (
-                          <Badge key={modalidad.id} variant="secondary" className="text-xs">
-                            {modalidad.tipo}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                    {servicio.modalidadesPago &&
+                      servicio.modalidadesPago.length > 0 && (
+                        <div className="flex gap-1 mt-2">
+                          {servicio.modalidadesPago.map((modalidad) => (
+                            <Badge
+                              key={modalidad.id}
+                              variant="secondary"
+                              className="text-xs"
+                            >
+                              {modalidad.tipo}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                   </CardContent>
                 </Card>
               ))}
@@ -294,5 +347,5 @@ export default function ExplorarPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

@@ -1,138 +1,164 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, MessageCircle, CheckCheck } from "lucide-react"
+import { useEffect, useMemo, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { MessageCircle, Search, Send } from "lucide-react";
+
+import { STATIC_CHAT_CONVERSATIONS } from "@/lib/data/static-data";
+import { getCurrentUserId } from "@/lib/config/environment";
+import { chatMessagingService } from "@/lib/services/chat-messaging-service";
+import { Message } from "@/lib/types/chat-messaging-interface";
+
+const currentUserId = getCurrentUserId(); // Usa el usuario actual desde config
+
+function getOtherContact(contacts: any[]) {
+  return contacts.find((c) => c.idContact !== currentUserId);
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("");
+}
 
 export default function MensajesBandejaPage() {
-  const conversaciones = [
-    {
-      id: 1,
-      nombre: "Carlos Mendoza",
-      avatar: "/placeholder.svg?height=40&width=40",
-      ultimoMensaje: "¿Podrías confirmar la hora para mañana?",
-      fecha: "10:30 AM",
-      noLeidos: 2,
-      servicio: "Reparación de computadoras",
-      estado: "activa",
-    },
-    {
-      id: 2,
-      nombre: "Ana García",
-      avatar: "/placeholder.svg?height=40&width=40",
-      ultimoMensaje: "Perfecto, nos vemos el sábado entonces",
-      fecha: "Ayer",
-      noLeidos: 0,
-      servicio: "Clases de cocina",
-      estado: "leida",
-    },
-    {
-      id: 3,
-      nombre: "Luis Torres",
-      avatar: "/placeholder.svg?height=40&width=40",
-      ultimoMensaje: "Gracias por la información",
-      fecha: "2 días",
-      noLeidos: 0,
-      servicio: "Paseo de perros",
-      estado: "leida",
-    },
-    {
-      id: 4,
-      nombre: "María Rodríguez",
-      avatar: "/placeholder.svg?height=40&width=40",
-      ultimoMensaje: "¿Tienes disponibilidad para esta semana?",
-      fecha: "3 días",
-      noLeidos: 1,
-      servicio: "Clases de guitarra",
-      estado: "activa",
-    },
-  ]
+  const conversaciones = useMemo(() => STATIC_CHAT_CONVERSATIONS, []);
+  const [chatActivo, setChatActivo] = useState(conversaciones[0]);
+  const [mensajes, setMensajes] = useState<Message[]>([]);
+  const [nuevoMensaje, setNuevoMensaje] = useState("");
+
+  // Suscribirse a los mensajes del chat activo usando el servicio
+  useEffect(() => {
+    if (!chatActivo) return;
+    setMensajes([]); // Limpia mensajes al cambiar de chat
+    const unsubscribe = chatMessagingService.subscribe(chatActivo.id, (msg) => {
+      setMensajes((prev) => [...prev, msg]);
+    });
+    return unsubscribe;
+  }, [chatActivo]);
+
+  const enviarMensaje = () => {
+    if (!nuevoMensaje.trim() || !chatActivo) return;
+    chatMessagingService.sendMessage(chatActivo.id, {
+      sentBy: currentUserId,
+      mensaje: nuevoMensaje,
+    });
+    setNuevoMensaje("");
+  };
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Bandeja de Entrada</h1>
-        <Button>
-          <MessageCircle className="mr-2 h-4 w-4" />
-          Nuevo mensaje
-        </Button>
-      </div>
-      <p className="text-muted-foreground">Gestiona tus conversaciones con clientes y proveedores.</p>
-
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar conversaciones..." className="pl-8" />
+    <div className="flex flex-1 gap-4 p-4 h-[80vh]">
+      {/* Lista de conversaciones */}
+      <div className="w-80 flex-shrink-0 space-y-4">
+        <div className="flex items-center space-x-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Buscar conversaciones..." className="pl-8" />
+          </div>
+          <Button variant="outline">Filtrar</Button>
         </div>
-        <Button variant="outline">Filtrar</Button>
-      </div>
-
-      <div className="grid gap-4">
-        {conversaciones.map((conversacion) => (
-          <Card
-            key={conversacion.id}
-            className={`cursor-pointer transition-colors hover:bg-muted/50 ${
-              conversacion.noLeidos > 0 ? "border-primary/50 bg-primary/5" : ""
-            }`}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src={conversacion.avatar || "/placeholder.svg"} alt={conversacion.nombre} />
-                  <AvatarFallback>
-                    {conversacion.nombre
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium leading-none">{conversacion.nombre}</p>
-                      {conversacion.noLeidos > 0 && (
-                        <Badge
-                          variant="default"
-                          className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-                        >
-                          {conversacion.noLeidos}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{conversacion.fecha}</span>
-                      {conversacion.estado === "leida" && <CheckCheck className="h-3 w-3" />}
+        <div className="space-y-2">
+          {conversaciones.map((chat) => {
+            const other = getOtherContact(chat.contacts);
+            const lastMsg = chat.messages[chat.messages.length - 1];
+            return (
+              <Card
+                key={chat.id}
+                className={`cursor-pointer ${
+                  chatActivo?.id === chat.id ? "bg-muted" : ""
+                }`}
+                onClick={() => setChatActivo(chat)}
+              >
+                <CardContent className="flex items-center gap-3 p-3">
+                  <Avatar>
+                    <AvatarFallback>
+                      {getInitials(other?.fullName || "U")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="font-medium">{other?.fullName}</div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {lastMsg?.mensaje}
                     </div>
                   </div>
-
-                  <p className="text-xs text-muted-foreground">{conversacion.servicio}</p>
-
-                  <p className={`text-sm ${conversacion.noLeidos > 0 ? "font-medium" : "text-muted-foreground"}`}>
-                    {conversacion.ultimoMensaje}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
 
-      {conversaciones.length === 0 && (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <MessageCircle className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">No tienes mensajes</h3>
-            <p className="text-muted-foreground text-center mb-4">
-              Cuando recibas mensajes de clientes interesados en tus servicios, aparecerán aquí.
-            </p>
-            <Button>Explorar servicios</Button>
-          </CardContent>
-        </Card>
-      )}
+      {/* Ventana de chat */}
+      <Card className="flex-1 flex flex-col">
+        <CardContent className="flex-1 flex flex-col p-0">
+          {chatActivo ? (
+            <>
+              <div className="border-b px-4 py-3 flex items-center gap-2">
+                <Avatar>
+                  <AvatarFallback>
+                    {getInitials(
+                      getOtherContact(chatActivo.contacts)?.fullName || "U"
+                    )}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="font-semibold">
+                  {getOtherContact(chatActivo.contacts)?.fullName}
+                </span>
+              </div>
+              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 bg-muted/30">
+                {mensajes.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${
+                      msg.sentBy === currentUserId
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
+                    <div
+                      className={`rounded-lg px-3 py-2 max-w-xs text-sm ${
+                        msg.sentBy === currentUserId
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-white border"
+                      }`}
+                    >
+                      {msg.mensaje}
+                      <span className="block text-xs text-muted-foreground mt-1 text-right">
+                        {new Date(msg.fecha).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <form
+                className="flex gap-2 border-t p-3"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  enviarMensaje();
+                }}
+              >
+                <Input
+                  placeholder="Escribe un mensaje..."
+                  value={nuevoMensaje}
+                  onChange={(e) => setNuevoMensaje(e.target.value)}
+                  autoComplete="off"
+                />
+                <Button type="submit" disabled={!nuevoMensaje.trim()}>
+                  <Send className="w-4 h-4" />
+                </Button>
+              </form>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">
+              Selecciona un chat para comenzar
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }

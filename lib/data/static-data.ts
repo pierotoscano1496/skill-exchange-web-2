@@ -677,3 +677,56 @@ export const STATIC_DATA = {
   solicitudesEnviadas: STATIC_SOLICITUDES_ENVIADAS,
   reviews: STATIC_REVIEWS,
 };
+
+export const STATIC_CHAT_CONVERSATIONS = [
+  {
+    id: "chat-1",
+    contacts: [
+      {
+        idContact: "user-1",
+        fullName: "Carlos Mendoza",
+        email: "carlos@email.com",
+      },
+      { idContact: "user-2", fullName: "Ana García", email: "ana@email.com" },
+    ],
+    messages: [
+      {
+        id: "msg-1",
+        sentBy: "user-1",
+        fecha: "2024-06-29T10:00:00Z",
+        mensaje: "¡Hola Ana! ¿Cómo estás?",
+      },
+      {
+        id: "msg-2",
+        sentBy: "user-2",
+        fecha: "2024-06-29T10:01:00Z",
+        mensaje: "¡Hola Carlos! Todo bien, ¿y tú?",
+      },
+    ],
+  },
+  {
+    id: "chat-2",
+    contacts: [
+      {
+        idContact: "user-1",
+        fullName: "Carlos Mendoza",
+        email: "carlos@email.com",
+      },
+      { idContact: "user-3", fullName: "Luis Torres", email: "luis@email.com" },
+    ],
+    messages: [
+      {
+        id: "msg-3",
+        sentBy: "user-3",
+        fecha: "2024-06-28T09:00:00Z",
+        mensaje: "¿Tienes disponibilidad para esta semana?",
+      },
+      {
+        id: "msg-4",
+        sentBy: "user-1",
+        fecha: "2024-06-28T09:05:00Z",
+        mensaje: "Sí, tengo horarios libres por las tardes.",
+      },
+    ],
+  },
+];
