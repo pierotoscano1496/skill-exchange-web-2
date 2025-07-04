@@ -1,164 +1,250 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Search, Send } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Search,
+  MessageCircle,
+  CheckCheck,
+  Clock,
+  Phone,
+  Video,
+} from "lucide-react";
+import { STATIC_CHAT_OWN_LAST_MESSAGE } from "@/lib/data/static-data";
+import { getCurrentUserId, isStaticMode } from "@/lib/config/environment";
+import { apiService } from "@/lib/services/api-service";
 
-import { STATIC_CHAT_CONVERSATIONS } from "@/lib/data/static-data";
-import { getCurrentUserId } from "@/lib/config/environment";
-import { chatMessagingService } from "@/lib/services/chat-messaging-service";
-import { Message } from "@/lib/types/chat-messaging-interface";
-
-const currentUserId = getCurrentUserId(); // Usa el usuario actual desde config
-
-function getOtherContact(contacts: any[]) {
-  return contacts.find((c) => c.idContact !== currentUserId);
-}
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("");
+interface ConversacionPreview {
+  id: string;
+  nombre: string;
+  email: string;
+  avatar: string;
+  ultimoMensaje: string;
+  fecha: string;
+  enviadoPorMi: boolean;
+  estado: "activa" | "leida";
 }
 
 export default function MensajesBandejaPage() {
-  const conversaciones = useMemo(() => STATIC_CHAT_CONVERSATIONS, []);
-  const [chatActivo, setChatActivo] = useState(conversaciones[0]);
-  const [mensajes, setMensajes] = useState<Message[]>([]);
-  const [nuevoMensaje, setNuevoMensaje] = useState("");
+  const router = useRouter();
+  const [busqueda, setBusqueda] = useState("");
+  const [conversaciones, setConversaciones] = useState<ConversacionPreview[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
 
-  // Suscribirse a los mensajes del chat activo usando el servicio
   useEffect(() => {
-    if (!chatActivo) return;
-    setMensajes([]); // Limpia mensajes al cambiar de chat
-    const unsubscribe = chatMessagingService.subscribe(chatActivo.id, (msg) => {
-      setMensajes((prev) => [...prev, msg]);
-    });
-    return unsubscribe;
-  }, [chatActivo]);
+    async function cargarConversaciones() {
+      setLoading(true);
+      let chats: any[] = [];
+      if (isStaticMode()) {
+        chats = STATIC_CHAT_OWN_LAST_MESSAGE;
+      } else {
+        try {
+          const resp = await apiService.getOwnChatConversations();
+          chats = resp.data || [];
+        } catch (e) {
+          chats = [];
+        }
+      }
 
-  const enviarMensaje = () => {
-    if (!nuevoMensaje.trim() || !chatActivo) return;
-    chatMessagingService.sendMessage(chatActivo.id, {
-      sentBy: currentUserId,
-      mensaje: nuevoMensaje,
+      const currentUserId = getCurrentUserId();
+
+      const mapped: ConversacionPreview[] = chats.map((conv, idx) => {
+        const contacto = conv.contacts[0];
+        const lastMsg = conv.lastMessage;
+        const enviadoPorMi = lastMsg?.sentBy === currentUserId;
+        return {
+          id: contacto?.idContact || `conv-${idx}`,
+          nombre: contacto?.fullName || "Sin nombre",
+          email: contacto?.email || "",
+          avatar: "/placeholder.svg?height=40&width=40",
+          ultimoMensaje: lastMsg?.mensaje || "Sin mensajes",
+          fecha: formatearFechaRelativa(
+            lastMsg?.fecha || new Date().toISOString()
+          ),
+          enviadoPorMi,
+          estado: enviadoPorMi ? "leida" : "activa",
+        };
+      });
+
+      setConversaciones(mapped);
+      setLoading(false);
+    }
+    cargarConversaciones();
+  }, []);
+
+  function formatearFechaRelativa(fecha: string): string {
+    const date = new Date(fecha);
+    const ahora = new Date();
+    const diferencia = ahora.getTime() - date.getTime();
+    const minutos = Math.floor(diferencia / (1000 * 60));
+    const horas = Math.floor(diferencia / (1000 * 60 * 60));
+    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+    if (minutos < 60) return `${minutos}m`;
+    if (horas < 24) return `${horas}h`;
+    if (dias === 1) return "Ayer";
+    if (dias < 7) return `${dias} días`;
+
+    return date.toLocaleDateString("es-ES", {
+      day: "numeric",
+      month: "short",
     });
-    setNuevoMensaje("");
+  }
+
+  const conversacionesFiltradas = conversaciones.filter(
+    (conv) =>
+      conv.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+      conv.email.toLowerCase().includes(busqueda.toLowerCase()) ||
+      conv.ultimoMensaje.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const totalNoLeidos = conversaciones.filter((c) => !c.enviadoPorMi).length;
+
+  const abrirChat = (chatId: string) => {
+    router.push(`/mensajes/${chatId}`);
   };
 
   return (
-    <div className="flex flex-1 gap-4 p-4 h-[80vh]">
-      {/* Lista de conversaciones */}
-      <div className="w-80 flex-shrink-0 space-y-4">
-        <div className="flex items-center space-x-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Buscar conversaciones..." className="pl-8" />
-          </div>
-          <Button variant="outline">Filtrar</Button>
+    <div className="flex flex-1 flex-col gap-4 p-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Mensajes</h1>
+          {totalNoLeidos > 0 && (
+            <p className="text-sm text-muted-foreground">
+              {totalNoLeidos} mensaje{totalNoLeidos !== 1 ? "s" : ""} sin leer
+            </p>
+          )}
         </div>
-        <div className="space-y-2">
-          {conversaciones.map((chat) => {
-            const other = getOtherContact(chat.contacts);
-            const lastMsg = chat.messages[chat.messages.length - 1];
-            return (
-              <Card
-                key={chat.id}
-                className={`cursor-pointer ${
-                  chatActivo?.id === chat.id ? "bg-muted" : ""
-                }`}
-                onClick={() => setChatActivo(chat)}
-              >
-                <CardContent className="flex items-center gap-3 p-3">
-                  <Avatar>
-                    <AvatarFallback>
-                      {getInitials(other?.fullName || "U")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="font-medium">{other?.fullName}</div>
-                    <div className="text-xs text-muted-foreground truncate">
-                      {lastMsg?.mensaje}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <Button onClick={() => router.push("/mensajes/nuevo")}>
+          <MessageCircle className="mr-2 h-4 w-4" />
+          Nuevo mensaje
+        </Button>
       </div>
 
-      {/* Ventana de chat */}
-      <Card className="flex-1 flex flex-col">
-        <CardContent className="flex-1 flex flex-col p-0">
-          {chatActivo ? (
-            <>
-              <div className="border-b px-4 py-3 flex items-center gap-2">
-                <Avatar>
-                  <AvatarFallback>
-                    {getInitials(
-                      getOtherContact(chatActivo.contacts)?.fullName || "U"
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="font-semibold">
-                  {getOtherContact(chatActivo.contacts)?.fullName}
-                </span>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2 bg-muted/30">
-                {mensajes.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      msg.sentBy === currentUserId
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`rounded-lg px-3 py-2 max-w-xs text-sm ${
-                        msg.sentBy === currentUserId
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-white border"
+      <p className="text-muted-foreground">
+        Gestiona tus conversaciones con clientes y proveedores.
+      </p>
+
+      <div className="flex items-center space-x-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar conversaciones..."
+            className="pl-8"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
+        <Button variant="outline">Filtrar</Button>
+      </div>
+
+      <div className="grid gap-3">
+        {loading ? (
+          <div className="text-center text-muted-foreground py-12">
+            Cargando...
+          </div>
+        ) : (
+          conversacionesFiltradas.map((conversacion) => (
+            <Card
+              key={conversacion.id}
+              className={`cursor-pointer transition-all hover:bg-muted/50 hover:shadow-md ${
+                !conversacion.enviadoPorMi
+                  ? "border-primary/50 bg-primary/5"
+                  : ""
+              }`}
+              onClick={() => abrirChat(conversacion.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-4">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback>
+                      {conversacion.nombre
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <p className="text-sm font-medium leading-none truncate">
+                          {conversacion.nombre}
+                        </p>
+                        {!conversacion.enviadoPorMi && (
+                          <Badge
+                            variant="default"
+                            className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs shrink-0"
+                          >
+                            <Clock className="h-3 w-3" />
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground shrink-0">
+                        <span>{conversacion.fecha}</span>
+                        {conversacion.enviadoPorMi && (
+                          <CheckCheck className="h-3 w-3" />
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {conversacion.email}
+                    </p>
+                    <p
+                      className={`text-sm truncate ${
+                        !conversacion.enviadoPorMi
+                          ? "font-medium"
+                          : "text-muted-foreground"
                       }`}
                     >
-                      {msg.mensaje}
-                      <span className="block text-xs text-muted-foreground mt-1 text-right">
-                        {new Date(msg.fecha).toLocaleTimeString()}
-                      </span>
-                    </div>
+                      {conversacion.ultimoMensaje}
+                    </p>
                   </div>
-                ))}
-              </div>
-              <form
-                className="flex gap-2 border-t p-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  enviarMensaje();
-                }}
-              >
-                <Input
-                  placeholder="Escribe un mensaje..."
-                  value={nuevoMensaje}
-                  onChange={(e) => setNuevoMensaje(e.target.value)}
-                  autoComplete="off"
-                />
-                <Button type="submit" disabled={!nuevoMensaje.trim()}>
-                  <Send className="w-4 h-4" />
-                </Button>
-              </form>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground">
-              Selecciona un chat para comenzar
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
+
+      {conversacionesFiltradas.length === 0 && !loading && busqueda && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Search className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium mb-2">
+              No se encontraron conversaciones
+            </h3>
+            <p className="text-muted-foreground text-center mb-4">
+              No hay conversaciones que coincidan con "{busqueda}"
+            </p>
+            <Button variant="outline" onClick={() => setBusqueda("")}>
+              Limpiar búsqueda
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {conversaciones.length === 0 && !loading && (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <MessageCircle className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium mb-2">No tienes mensajes</h3>
+            <p className="text-muted-foreground text-center mb-4">
+              Cuando recibas mensajes de clientes interesados en tus servicios,
+              aparecerán aquí.
+            </p>
+            <Button onClick={() => router.push("/explorar")}>
+              Explorar servicios
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

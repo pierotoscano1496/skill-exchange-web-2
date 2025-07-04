@@ -683,11 +683,10 @@ export const STATIC_CHAT_CONVERSATIONS = [
     id: "chat-1",
     contacts: [
       {
-        idContact: "user-1",
-        fullName: "Carlos Mendoza",
-        email: "carlos@email.com",
+        idContact: "user-2",
+        fullName: "Ana García",
+        email: "ana@email.com",
       },
-      { idContact: "user-2", fullName: "Ana García", email: "ana@email.com" },
     ],
     messages: [
       {
@@ -702,31 +701,75 @@ export const STATIC_CHAT_CONVERSATIONS = [
         fecha: "2024-06-29T10:01:00Z",
         mensaje: "¡Hola Carlos! Todo bien, ¿y tú?",
       },
+      {
+        id: "msg-3",
+        sentBy: "user-1",
+        fecha: "2024-06-29T10:02:00Z",
+        mensaje: "¿Listo para la reunión?",
+      },
     ],
   },
   {
     id: "chat-2",
     contacts: [
       {
-        idContact: "user-1",
-        fullName: "Carlos Mendoza",
-        email: "carlos@email.com",
+        idContact: "user-3",
+        fullName: "Luis Torres",
+        email: "luis@email.com",
       },
-      { idContact: "user-3", fullName: "Luis Torres", email: "luis@email.com" },
     ],
     messages: [
       {
-        id: "msg-3",
+        id: "msg-4",
         sentBy: "user-3",
         fecha: "2024-06-28T09:00:00Z",
         mensaje: "¿Tienes disponibilidad para esta semana?",
       },
       {
-        id: "msg-4",
+        id: "msg-5",
         sentBy: "user-1",
         fecha: "2024-06-28T09:05:00Z",
         mensaje: "Sí, tengo horarios libres por las tardes.",
       },
     ],
+  },
+];
+
+export function findStaticChatConversationByContactId(idContact: string) {
+  return STATIC_CHAT_CONVERSATIONS.find((conv) =>
+    conv.contacts.some((c) => c.idContact === idContact)
+  );
+}
+
+export const STATIC_CHAT_OWN_LAST_MESSAGE = [
+  {
+    contacts: [
+      {
+        idContact: "2",
+        fullName: "Ana García",
+        email: "ana@email.com",
+      },
+    ],
+    lastMessage: {
+      sentBy: "user-1",
+      fecha: "2025-07-03T10:00:00.000Z",
+      mensaje: "¡Nos vemos mañana!",
+      resourceUrl: "",
+    },
+  },
+  {
+    contacts: [
+      {
+        idContact: "3",
+        fullName: "Luis Torres",
+        email: "luis@email.com",
+      },
+    ],
+    lastMessage: {
+      sentBy: "3",
+      fecha: "2025-07-02T18:30:00.000Z",
+      mensaje: "¿A qué hora puedes conectarte?",
+      resourceUrl: "",
+    },
   },
 ];
