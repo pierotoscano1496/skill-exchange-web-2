@@ -9,12 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Send, ChevronLeft } from "lucide-react";
 import { dataService } from "@/lib/services/data-service";
 import { getCurrentUserId } from "@/lib/config/environment";
-import type { ChatConversation, ChatMessage, ChatContact } from "@/lib/types/api-responses";
+import type {
+  ChatConversation,
+  ChatMessage,
+  ChatContact,
+} from "@/lib/types/api-responses";
 
 export default function ChatPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { id: conversationId } = params;
-  const [conversation, setConversation] = useState<ChatConversation | null>(null);
+  const [conversation, setConversation] = useState<ChatConversation | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState("");
@@ -33,7 +39,11 @@ export default function ChatPage({ params }: { params: { id: string } }) {
           setError(response.message);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar la conversación.");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Error al cargar la conversación."
+        );
       } finally {
         setLoading(false);
       }
@@ -53,11 +63,9 @@ export default function ChatPage({ params }: { params: { id: string } }) {
   const handleSendMessage = async () => {
     if (newMessage.trim() === "" || !conversation) return;
 
-    const recipient = conversation.contacts.find(
-      (contact) => contact.idContact !== currentUserId
-    );
+    const recipientId = conversation.otherContact.idContact;
 
-    if (!recipient) {
+    if (!recipientId) {
       setError("No se encontró el destinatario del chat.");
       return;
     }
@@ -80,7 +88,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
       setNewMessage("");
 
       const response = await dataService.sendChatMessage({
-        idReceptor: recipient.idContact,
+        idReceptor: recipientId,
         mensaje: newMessage.trim(),
       });
 
@@ -89,12 +97,10 @@ export default function ChatPage({ params }: { params: { id: string } }) {
         // Revert optimistic update if send fails (optional, for simplicity not implemented here)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al enviar el mensaje.");
+      setError(
+        err instanceof Error ? err.message : "Error al enviar el mensaje."
+      );
     }
-  };
-
-  const getContactInfo = (contactId: string): ChatContact | undefined => {
-    return conversation?.contacts.find((c) => c.idContact === contactId);
   };
 
   const getOtherParticipant = (): ChatContact | undefined => {
@@ -143,12 +149,20 @@ export default function ChatPage({ params }: { params: { id: string } }) {
               <ChevronLeft className="h-5 w-5" />
             </Button>
             <Avatar className="h-9 w-9">
-              <AvatarImage src={otherParticipant?.avatar || "/placeholder-user.jpg"} />
-              <AvatarFallback>{otherParticipant?.fullName?.charAt(0)}</AvatarFallback>
+              <AvatarImage
+                src={otherParticipant?.avatarUrl || "/placeholder-user.jpg"}
+              />
+              <AvatarFallback>
+                {otherParticipant?.fullName?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-lg">{otherParticipant?.fullName || "Usuario Desconocido"}</CardTitle>
-              <p className="text-sm text-muted-foreground">{otherParticipant?.email}</p>
+              <CardTitle className="text-lg">
+                {otherParticipant?.fullName || "Usuario Desconocido"}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {otherParticipant?.email}
+              </p>
             </div>
           </div>
         </CardHeader>
@@ -157,7 +171,11 @@ export default function ChatPage({ params }: { params: { id: string } }) {
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20">
         {conversation.messages.map((message, index) => {
           const isSentByCurrentUser = message.sentBy === currentUserId;
-          const sender = getContactInfo(message.sentBy);
+          // Determine sender for avatar and fallback. If sent by current user, use a generic representation or a placeholder for self.
+          // Otherwise, use the other participant's info.
+          const sender = isSentByCurrentUser
+            ? { fullName: "Tú", avatarUrl: "/placeholder-user.jpg" }
+            : otherParticipant;
           return (
             <div
               key={index}
@@ -171,7 +189,9 @@ export default function ChatPage({ params }: { params: { id: string } }) {
                 }`}
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={sender?.avatar || "/placeholder-user.jpg"} />
+                  <AvatarImage
+                    src={sender?.avatarUrl || "/placeholder-user.jpg"}
+                  />
                   <AvatarFallback>{sender?.fullName?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div
@@ -225,7 +245,10 @@ export default function ChatPage({ params }: { params: { id: string } }) {
             }}
             className="flex-1"
           />
-          <Button onClick={handleSendMessage} disabled={newMessage.trim() === ""}>
+          <Button
+            onClick={handleSendMessage}
+            disabled={newMessage.trim() === ""}
+          >
             <Send className="h-5 w-5" />
             <span className="sr-only">Enviar</span>
           </Button>

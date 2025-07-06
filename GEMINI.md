@@ -1,4 +1,4 @@
-- Cuando realices cambios en el código, al finalzar dale el formato con prettier y asegúrate de que no haya errores de eslint.
+- Cuando realices cambios en el código, asegura de que no haya errores de eslint.
 
 # Documentación de los endpoints:
 

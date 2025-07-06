@@ -215,6 +215,7 @@ export interface ChatContact {
   idContact: string;
   fullName: string;
   email: string;
+  avatarUrl?: string;
 }
 
 export interface ChatMessage {

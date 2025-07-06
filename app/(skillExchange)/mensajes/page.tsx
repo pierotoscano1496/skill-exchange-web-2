@@ -24,7 +24,7 @@ interface ConversacionPreview {
   conversationId: string;
   nombre: string;
   email: string;
-  avatar: string;
+  avatar?: string; // Now optional, as it comes from contact.avatarUrl
   ultimoMensaje: string;
   fecha: string;
   enviadoPorMi: boolean;
@@ -61,7 +61,7 @@ export default function MensajesBandejaPage() {
           conversationId: conv.conversationId || `conv-${idx}`,
           nombre: contact?.fullName || "Sin nombre",
           email: contact?.email || "",
-          avatar: "/placeholder.svg?height=40&width=40",
+          avatar: contact?.avatarUrl || "/placeholder-user.jpg", // Use avatarUrl from contact or a default placeholder
           ultimoMensaje: lastMsg?.mensaje || "Sin mensajes",
           fecha: formatearFechaRelativa(
             lastMsg?.fecha || new Date().toISOString()

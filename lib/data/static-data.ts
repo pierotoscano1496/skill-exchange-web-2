@@ -687,6 +687,7 @@ export const STATIC_CHAT_CONVERSATIONS = [
         idContact: "user-2",
         fullName: "Ana García",
         email: "ana@email.com",
+        avatarUrl: "/placeholder-user.jpg",
       },
     ],
     messages: [
@@ -717,6 +718,7 @@ export const STATIC_CHAT_CONVERSATIONS = [
         idContact: "user-3",
         fullName: "Luis Torres",
         email: "luis@email.com",
+        avatarUrl: "/placeholder-user.jpg",
       },
     ],
     messages: [
@@ -763,6 +765,7 @@ export const STATIC_CHAT_OWN_LAST_MESSAGE: OwnLastMessage[] = [
       idContact: "2",
       fullName: "Ana García",
       email: "ana@email.com",
+      avatarUrl: "/placeholder-user.jpg",
     },
     lastMessage: {
       sentBy: "user-1",
@@ -777,6 +780,7 @@ export const STATIC_CHAT_OWN_LAST_MESSAGE: OwnLastMessage[] = [
       idContact: "3",
       fullName: "Luis Torres",
       email: "luis@email.com",
+      avatarUrl: "/placeholder-user.jpg",
     },
     lastMessage: {
       sentBy: "3",
