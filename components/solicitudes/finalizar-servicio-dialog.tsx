@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,97 +9,116 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Square, Clock, FileText, Star, AlertTriangle, Loader2 } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
-import type { SolicitudRecibida } from "@/lib/types/api-responses"
-import type { ProcesoFinalizacion } from "@/lib/types/solicitud-updates"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Square,
+  Clock,
+  FileText,
+  Star,
+  AlertTriangle,
+  Loader2,
+} from "lucide-react";
+import { dataService } from "@/lib/services/data-service";
+import type { SolicitudRecibida } from "@/lib/types/api-responses";
+import type { ProcesoFinalizacion } from "@/lib/types/solicitud-updates";
 
 interface FinalizarServicioDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  solicitud: SolicitudRecibida
-  onSuccess: () => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  solicitud: SolicitudRecibida;
+  onSuccess: () => void;
 }
 
-export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSuccess }: FinalizarServicioDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [procesoInfo, setProcesoInfo] = useState<ProcesoFinalizacion | null>(null)
-  const [resumenTrabajo, setResumenTrabajo] = useState("")
-  const [tiempoEmpleado, setTiempoEmpleado] = useState("")
-  const [materiales, setMateriales] = useState("")
-  const [recomendaciones, setRecomendaciones] = useState("")
-  const [solicitarCalificacion, setSolicitarCalificacion] = useState(true)
-  const [requisitosConfirmados, setRequisitosConfirmados] = useState<boolean[]>([])
-  const [aceptaConsecuencias, setAceptaConsecuencias] = useState(false)
+export function FinalizarServicioDialog({
+  open,
+  onOpenChange,
+  solicitud,
+  onSuccess,
+}: FinalizarServicioDialogProps) {
+  const [loading, setLoading] = useState(false);
+  const [procesoInfo, setProcesoInfo] = useState<ProcesoFinalizacion | null>(
+    null
+  );
+  const [resumenTrabajo, setResumenTrabajo] = useState("");
+  const [tiempoEmpleado, setTiempoEmpleado] = useState("");
+  const [materiales, setMateriales] = useState("");
+  const [recomendaciones, setRecomendaciones] = useState("");
+  const [solicitarCalificacion, setSolicitarCalificacion] = useState(true);
+  const [requisitosConfirmados, setRequisitosConfirmados] = useState<boolean[]>(
+    []
+  );
+  const [aceptaConsecuencias, setAceptaConsecuencias] = useState(false);
 
   useEffect(() => {
     if (open) {
-      loadProcesoInfo()
+      loadProcesoInfo();
     }
-  }, [open])
+  }, [open]);
 
   const loadProcesoInfo = async () => {
     try {
-      const info = await dataService.getProcesoFinalizacion()
-      setProcesoInfo(info)
-      setRequisitosConfirmados(new Array(info.requisitos.length).fill(false))
+      const info = await dataService.getProcesoFinalizacion();
+      setProcesoInfo(info);
+      setRequisitosConfirmados(new Array(info.requisitos.length).fill(false));
     } catch (error) {
-      console.error("Error al cargar información del proceso:", error)
+      console.error("Error al cargar información del proceso:", error);
     }
-  }
+  };
 
   const handleRequisitoChange = (index: number, checked: boolean) => {
-    const newRequisitos = [...requisitosConfirmados]
-    newRequisitos[index] = checked
-    setRequisitosConfirmados(newRequisitos)
-  }
+    const newRequisitos = [...requisitosConfirmados];
+    newRequisitos[index] = checked;
+    setRequisitosConfirmados(newRequisitos);
+  };
 
   const handleFinalizar = async () => {
-    if (!isFormValid) return
+    if (!isFormValid) return;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       const response = await dataService.finalizarServicio({
         idSolicitud: solicitud.id,
         resumenTrabajo,
-        tiempoEmpleado: tiempoEmpleado ? Number.parseFloat(tiempoEmpleado) : undefined,
+        tiempoEmpleado: tiempoEmpleado
+          ? Number.parseFloat(tiempoEmpleado)
+          : undefined,
         materialesUtilizados: materiales || undefined,
         recomendacionesCliente: recomendaciones || undefined,
         solicitudCalificacion: solicitarCalificacion,
-      })
+      });
 
       if (response.success) {
-        onSuccess()
-        onOpenChange(false)
-        resetForm()
+        onSuccess();
+        onOpenChange(false);
+        resetForm();
       } else {
-        console.error("Error al finalizar servicio:", response.message)
+        console.error("Error al finalizar servicio:", response.message);
       }
     } catch (error) {
-      console.error("Error al finalizar servicio:", error)
+      console.error("Error al finalizar servicio:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const resetForm = () => {
-    setResumenTrabajo("")
-    setTiempoEmpleado("")
-    setMateriales("")
-    setRecomendaciones("")
-    setSolicitarCalificacion(true)
-    setRequisitosConfirmados([])
-    setAceptaConsecuencias(false)
-  }
+    setResumenTrabajo("");
+    setTiempoEmpleado("");
+    setMateriales("");
+    setRecomendaciones("");
+    setSolicitarCalificacion(true);
+    setRequisitosConfirmados([]);
+    setAceptaConsecuencias(false);
+  };
 
-  const todosRequisitosConfirmados = requisitosConfirmados.every((r) => r)
-  const isFormValid = resumenTrabajo.trim() && todosRequisitosConfirmados && aceptaConsecuencias
+  const todosRequisitosConfirmados = requisitosConfirmados.every((r) => r);
+  const isFormValid =
+    resumenTrabajo.trim() && todosRequisitosConfirmados && aceptaConsecuencias;
 
   if (!procesoInfo) {
     return (
@@ -110,7 +129,7 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
           </div>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -163,9 +182,14 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
                 <Checkbox
                   id={`requisito-${index}`}
                   checked={requisitosConfirmados[index] || false}
-                  onCheckedChange={(checked) => handleRequisitoChange(index, checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleRequisitoChange(index, checked as boolean)
+                  }
                 />
-                <Label htmlFor={`requisito-${index}`} className="text-sm leading-5">
+                <Label
+                  htmlFor={`requisito-${index}`}
+                  className="text-sm leading-5"
+                >
                   {requisito}
                 </Label>
               </div>
@@ -218,7 +242,9 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="recomendaciones">Recomendaciones para el cliente</Label>
+              <Label htmlFor="recomendaciones">
+                Recomendaciones para el cliente
+              </Label>
               <Textarea
                 id="recomendaciones"
                 placeholder="Consejos de mantenimiento, cuidados especiales, próximas revisiones..."
@@ -232,9 +258,14 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
               <Checkbox
                 id="solicitar-calificacion"
                 checked={solicitarCalificacion}
-                onCheckedChange={setSolicitarCalificacion}
+                onCheckedChange={(checked) =>
+                  setSolicitarCalificacion(checked as boolean)
+                }
               />
-              <Label htmlFor="solicitar-calificacion" className="flex items-center gap-2">
+              <Label
+                htmlFor="solicitar-calificacion"
+                className="flex items-center gap-2"
+              >
                 <Star className="w-4 h-4" />
                 Solicitar calificación al cliente
               </Label>
@@ -243,7 +274,9 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
 
           {/* Consecuencias */}
           <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-            <h4 className="font-medium text-amber-900 mb-2">Consecuencias de finalizar:</h4>
+            <h4 className="font-medium text-amber-900 mb-2">
+              Consecuencias de finalizar:
+            </h4>
             <ul className="text-sm text-amber-800 space-y-1">
               {procesoInfo.consecuencias.map((consecuencia, index) => (
                 <li key={index}>• {consecuencia}</li>
@@ -256,17 +289,23 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
             <Checkbox
               id="acepta-consecuencias"
               checked={aceptaConsecuencias}
-              onCheckedChange={setAceptaConsecuencias}
+              onCheckedChange={(checked) =>
+                setAceptaConsecuencias(checked as boolean)
+              }
             />
             <Label htmlFor="acepta-consecuencias" className="text-sm leading-5">
-              He leído y acepto las consecuencias de finalizar este servicio. Confirmo que el trabajo está completamente
-              terminado.
+              He leído y acepto las consecuencias de finalizar este servicio.
+              Confirmo que el trabajo está completamente terminado.
             </Label>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
             Cancelar
           </Button>
           <Button onClick={handleFinalizar} disabled={loading || !isFormValid}>
@@ -285,5 +324,5 @@ export function FinalizarServicioDialog({ open, onOpenChange, solicitud, onSucce
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

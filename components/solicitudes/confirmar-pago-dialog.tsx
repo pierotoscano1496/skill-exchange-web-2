@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,22 +9,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { DollarSign, AlertCircle, CheckCircle, Loader2 } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
-import type { SolicitudRecibida } from "@/lib/types/api-responses"
-import type { ConfirmacionPago } from "@/lib/types/solicitud-updates"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DollarSign, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { dataService } from "@/lib/services/data-service";
+import type { SolicitudRecibida } from "@/lib/types/api-responses";
+import type { ConfirmacionPago } from "@/lib/types/solicitud-updates";
 
 interface ConfirmarPagoDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  solicitud: SolicitudRecibida
-  onSuccess: () => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  solicitud: SolicitudRecibida;
+  onSuccess: () => void;
 }
 
 const metodosPago = [
@@ -32,45 +38,57 @@ const metodosPago = [
   { value: "transferencia", label: "Transferencia bancaria" },
   { value: "efectivo", label: "Efectivo" },
   { value: "tarjeta", label: "Tarjeta de crédito/débito" },
-]
+];
 
-export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }: ConfirmarPagoDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [confirmacionInfo, setConfirmacionInfo] = useState<ConfirmacionPago | null>(null)
-  const [metodoPago, setMetodoPago] = useState<string>("")
-  const [montoRecibido, setMontoRecibido] = useState<string>(solicitud.costo.toString())
-  const [comprobante, setComprobante] = useState("")
-  const [notas, setNotas] = useState("")
-  const [verificacionesConfirmadas, setVerificacionesConfirmadas] = useState<boolean[]>([])
-  const [aceptaResponsabilidad, setAceptaResponsabilidad] = useState(false)
+export function ConfirmarPagoDialog({
+  open,
+  onOpenChange,
+  solicitud,
+  onSuccess,
+}: ConfirmarPagoDialogProps) {
+  const [loading, setLoading] = useState(false);
+  const [confirmacionInfo, setConfirmacionInfo] =
+    useState<ConfirmacionPago | null>(null);
+  const [metodoPago, setMetodoPago] = useState<string>("");
+  const [montoRecibido, setMontoRecibido] = useState<string>(
+    solicitud.costo.toString()
+  );
+  const [comprobante, setComprobante] = useState("");
+  const [notas, setNotas] = useState("");
+  const [verificacionesConfirmadas, setVerificacionesConfirmadas] = useState<
+    boolean[]
+  >([]);
+  const [aceptaResponsabilidad, setAceptaResponsabilidad] = useState(false);
 
   useEffect(() => {
     if (open) {
-      loadConfirmacionInfo()
+      loadConfirmacionInfo();
     }
-  }, [open])
+  }, [open]);
 
   const loadConfirmacionInfo = async () => {
     try {
-      const info = await dataService.getConfirmacionPago()
-      setConfirmacionInfo(info)
-      setVerificacionesConfirmadas(new Array(info.verificaciones.length).fill(false))
+      const info = await dataService.getConfirmacionPago();
+      setConfirmacionInfo(info);
+      setVerificacionesConfirmadas(
+        new Array(info.verificaciones.length).fill(false)
+      );
     } catch (error) {
-      console.error("Error al cargar información de confirmación:", error)
+      console.error("Error al cargar información de confirmación:", error);
     }
-  }
+  };
 
   const handleVerificacionChange = (index: number, checked: boolean) => {
-    const newVerificaciones = [...verificacionesConfirmadas]
-    newVerificaciones[index] = checked
-    setVerificacionesConfirmadas(newVerificaciones)
-  }
+    const newVerificaciones = [...verificacionesConfirmadas];
+    newVerificaciones[index] = checked;
+    setVerificacionesConfirmadas(newVerificaciones);
+  };
 
   const handleConfirmar = async () => {
-    if (!isFormValid) return
+    if (!isFormValid) return;
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       const response = await dataService.confirmarPago({
         idSolicitud: solicitud.id,
@@ -78,34 +96,40 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
         montoRecibido: Number.parseFloat(montoRecibido),
         comprobantePago: comprobante || undefined,
         notasProveedor: notas || undefined,
-      })
+      });
 
       if (response.success) {
-        onSuccess()
-        onOpenChange(false)
+        onSuccess();
+        onOpenChange(false);
         // Reset form
-        resetForm()
+        resetForm();
       } else {
-        console.error("Error al confirmar pago:", response.message)
+        console.error("Error al confirmar pago:", response.message);
       }
     } catch (error) {
-      console.error("Error al confirmar pago:", error)
+      console.error("Error al confirmar pago:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const resetForm = () => {
-    setMetodoPago("")
-    setMontoRecibido(solicitud.costo.toString())
-    setComprobante("")
-    setNotas("")
-    setVerificacionesConfirmadas([])
-    setAceptaResponsabilidad(false)
-  }
+    setMetodoPago("");
+    setMontoRecibido(solicitud.costo.toString());
+    setComprobante("");
+    setNotas("");
+    setVerificacionesConfirmadas([]);
+    setAceptaResponsabilidad(false);
+  };
 
-  const todasVerificacionesConfirmadas = verificacionesConfirmadas.every((v) => v)
-  const isFormValid = metodoPago && montoRecibido && todasVerificacionesConfirmadas && aceptaResponsabilidad
+  const todasVerificacionesConfirmadas = verificacionesConfirmadas.every(
+    (v) => v
+  );
+  const isFormValid =
+    metodoPago &&
+    montoRecibido &&
+    todasVerificacionesConfirmadas &&
+    aceptaResponsabilidad;
 
   if (!confirmacionInfo) {
     return (
@@ -116,7 +140,7 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
           </div>
         </DialogContent>
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -142,8 +166,12 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
             <div className="flex items-start gap-2">
               <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-blue-900 mb-2">Antes de continuar</h4>
-                <p className="text-sm text-blue-800">{confirmacionInfo.mensaje}</p>
+                <h4 className="font-medium text-blue-900 mb-2">
+                  Antes de continuar
+                </h4>
+                <p className="text-sm text-blue-800">
+                  {confirmacionInfo.mensaje}
+                </p>
               </div>
             </div>
           </div>
@@ -156,9 +184,14 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
                 <Checkbox
                   id={`verificacion-${index}`}
                   checked={verificacionesConfirmadas[index] || false}
-                  onCheckedChange={(checked) => handleVerificacionChange(index, checked as boolean)}
+                  onCheckedChange={(checked) =>
+                    handleVerificacionChange(index, checked as boolean)
+                  }
                 />
-                <Label htmlFor={`verificacion-${index}`} className="text-sm leading-5">
+                <Label
+                  htmlFor={`verificacion-${index}`}
+                  className="text-sm leading-5"
+                >
                   {verificacion}
                 </Label>
               </div>
@@ -197,7 +230,9 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="comprobante">Número de comprobante/referencia (opcional)</Label>
+            <Label htmlFor="comprobante">
+              Número de comprobante/referencia (opcional)
+            </Label>
             <Input
               id="comprobante"
               placeholder="Ej: Número de operación, código de transacción..."
@@ -219,7 +254,9 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
 
           {/* Advertencias */}
           <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-            <h4 className="font-medium text-amber-900 mb-2">Advertencias importantes:</h4>
+            <h4 className="font-medium text-amber-900 mb-2">
+              Advertencias importantes:
+            </h4>
             <ul className="text-sm text-amber-800 space-y-1">
               {confirmacionInfo.advertencias.map((advertencia, index) => (
                 <li key={index}>• {advertencia}</li>
@@ -232,16 +269,26 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
             <Checkbox
               id="acepta-responsabilidad"
               checked={aceptaResponsabilidad}
-              onCheckedChange={setAceptaResponsabilidad}
+              onCheckedChange={(checked) =>
+                setAceptaResponsabilidad(checked as boolean)
+              }
             />
-            <Label htmlFor="acepta-responsabilidad" className="text-sm leading-5">
-              Confirmo que he recibido el pago completo y me comprometo a realizar el servicio acordado.
+            <Label
+              htmlFor="acepta-responsabilidad"
+              className="text-sm leading-5"
+            >
+              Confirmo que he recibido el pago completo y me comprometo a
+              realizar el servicio acordado.
             </Label>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
             Cancelar
           </Button>
           <Button onClick={handleConfirmar} disabled={loading || !isFormValid}>
@@ -260,5 +307,5 @@ export function ConfirmarPagoDialog({ open, onOpenChange, solicitud, onSuccess }
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
