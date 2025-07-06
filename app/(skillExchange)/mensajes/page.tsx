@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 import { STATIC_CHAT_OWN_LAST_MESSAGE } from "@/lib/data/static-data";
 import { getCurrentUserId, isStaticMode } from "@/lib/config/environment";
-import { apiService } from "@/lib/services/api-service";
+import { dataService } from "@/lib/services/data-service";
 
 interface ConversacionPreview {
   id: string;
+  conversationId: string;
   nombre: string;
   email: string;
   avatar: string;
@@ -42,27 +43,24 @@ export default function MensajesBandejaPage() {
     async function cargarConversaciones() {
       setLoading(true);
       let chats: any[] = [];
-      if (isStaticMode()) {
-        chats = STATIC_CHAT_OWN_LAST_MESSAGE;
-      } else {
-        try {
-          const resp = await apiService.getOwnChatConversations();
-          chats = resp.data || [];
-        } catch (e) {
-          chats = [];
-        }
+      try {
+        const resp = await dataService.getOwnChatConversations();
+        chats = resp.data || [];
+      } catch (e) {
+        chats = [];
       }
 
       const currentUserId = getCurrentUserId();
 
       const mapped: ConversacionPreview[] = chats.map((conv, idx) => {
-        const contacto = conv.contacts[0];
+        const contact = conv.contact;
         const lastMsg = conv.lastMessage;
         const enviadoPorMi = lastMsg?.sentBy === currentUserId;
         return {
-          id: contacto?.idContact || `conv-${idx}`,
-          nombre: contacto?.fullName || "Sin nombre",
-          email: contacto?.email || "",
+          id: contact?.idContact || `conv-${idx}`,
+          conversationId: conv.conversationId || `conv-${idx}`,
+          nombre: contact?.fullName || "Sin nombre",
+          email: contact?.email || "",
           avatar: "/placeholder.svg?height=40&width=40",
           ultimoMensaje: lastMsg?.mensaje || "Sin mensajes",
           fecha: formatearFechaRelativa(
@@ -159,7 +157,7 @@ export default function MensajesBandejaPage() {
                   ? "border-primary/50 bg-primary/5"
                   : ""
               }`}
-              onClick={() => abrirChat(conversacion.id)}
+              onClick={() => abrirChat(conversacion.conversationId)}
             >
               <CardContent className="p-4">
                 <div className="flex items-center space-x-4">

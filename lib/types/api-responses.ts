@@ -229,3 +229,15 @@ export interface ChatResponse {
   contacts: ChatContact[];
   messages: ChatMessage[];
 }
+
+export interface OwnLastMessage {
+  conversationId: string;
+  contact: ChatContact;
+  lastMessage: ChatMessage;
+}
+
+export interface ChatConversation {
+  conversationId: string;
+  otherContact: ChatContact;
+  messages: ChatMessage[];
+}

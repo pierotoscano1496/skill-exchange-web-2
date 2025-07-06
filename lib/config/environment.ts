@@ -15,6 +15,7 @@ export const ENV_CONFIG = {
       MATCH: "/match",
       CHAT: "/chat",
       UPLOAD: "/upload",
+      CHAT_CONVERSATION_BY_ID: "/chat",
     },
   },
   // Usuario actual simulado para modo estático

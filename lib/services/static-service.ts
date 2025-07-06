@@ -14,8 +14,10 @@ import type {
   ChatResponse,
   SolicitudRecibida,
   SolicitudEnviada,
-} from "../types/api-responses"
-import type { ServicioRequestBody } from "../api/servicio-api"
+  OwnLastMessage,
+  ChatConversation,
+} from "../types/api-responses";
+import type { ServicioRequestBody } from "../api/servicio-api";
 import {
   STATIC_SKILLS,
   STATIC_CATEGORIAS,
@@ -27,7 +29,9 @@ import {
   getServiciosUsuarioEstaticos,
   getSolicitudesPrestamisaEstaticas,
   getSolicitudesEnviadasEstaticas,
-} from "../data/static-data"
+  STATIC_CHAT_OWN_LAST_MESSAGE,
+  getChatConversationStatic,
+} from "../data/static-data";
 import type {
   AceptarSolicitudRequest,
   RechazarSolicitudRequest,
@@ -36,34 +40,36 @@ import type {
   ActualizarSolicitudResponse,
   ProcesoFinalizacion,
   ConfirmacionPago,
-} from "../types/solicitud-updates"
+} from "../types/solicitud-updates";
 
 class StaticService {
   // Simular delay de red para hacer más realista
   private async delay(ms = 500): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   async getSkills(): Promise<ApiResponse<Skill[]>> {
-    await this.delay()
+    await this.delay();
     return {
       success: true,
       message: "Skills obtenidos exitosamente",
       data: STATIC_SKILLS,
-    }
+    };
   }
 
   async getCategorias(): Promise<ApiResponse<Categoria[]>> {
-    await this.delay()
+    await this.delay();
     return {
       success: true,
       message: "Categorías obtenidas exitosamente",
       data: STATIC_CATEGORIAS,
-    }
+    };
   }
 
-  async createServicio(data: ServicioRequestBody): Promise<ApiResponse<ServicioCreado>> {
-    await this.delay(1000) // Simular proceso más lento para creación
+  async createServicio(
+    data: ServicioRequestBody
+  ): Promise<ApiResponse<ServicioCreado>> {
+    await this.delay(1000); // Simular proceso más lento para creación
 
     // Simular posible error (5% de probabilidad)
     if (Math.random() < 0.05) {
@@ -71,14 +77,14 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo crear el servicio",
         data: {} as ServicioCreado,
-      }
+      };
     }
 
-    return createStaticServicioResponse(data.data.titulo)
+    return createStaticServicioResponse(data.data.titulo);
   }
 
   async uploadFile(file: File): Promise<ApiResponse<UploadResponse>> {
-    await this.delay(800) // Simular upload
+    await this.delay(800); // Simular upload
 
     // Simular posible error (3% de probabilidad)
     if (Math.random() < 0.03) {
@@ -86,94 +92,104 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo subir el archivo",
         data: {} as UploadResponse,
-      }
+      };
     }
 
-    return createStaticUploadResponse(file.name)
+    return createStaticUploadResponse(file.name);
   }
 
-  async buscarServicios(filtros: BusquedaServiciosRequest): Promise<ApiResponse<ServicioBusqueda[]>> {
-    await this.delay(600) // Simular búsqueda
+  async buscarServicios(
+    filtros: BusquedaServiciosRequest
+  ): Promise<ApiResponse<ServicioBusqueda[]>> {
+    await this.delay(600); // Simular búsqueda
 
-    const resultados = buscarServiciosEstaticos(filtros)
+    const resultados = buscarServiciosEstaticos(filtros);
 
     return {
       success: true,
       message: `Se encontraron ${resultados.length} servicios`,
       data: resultados,
-    }
+    };
   }
 
   async getServicioDetalle(id: string): Promise<ApiResponse<ServicioDetalle>> {
-    await this.delay(400)
+    await this.delay(400);
 
-    const servicio = getServicioDetalleEstatico(id)
+    const servicio = getServicioDetalleEstatico(id);
 
     if (!servicio) {
       return {
         success: false,
         message: "Servicio no encontrado",
         data: {} as ServicioDetalle,
-      }
+      };
     }
 
     return {
       success: true,
       message: "Servicio encontrado",
       data: servicio,
-    }
+    };
   }
 
   async getServicioReviews(id: string): Promise<ApiResponse<ReviewsServicio>> {
-    await this.delay(300)
+    await this.delay(300);
 
-    const reviews = getServicioReviewsEstatico(id)
+    const reviews = getServicioReviewsEstatico(id);
 
     return {
       success: true,
       message: `Se encontraron ${reviews.comentarios.length} comentarios`,
       data: reviews,
-    }
+    };
   }
 
-  async getServiciosUsuario(idUsuario: string): Promise<ApiResponse<ServicioBusqueda[]>> {
-    await this.delay(500)
+  async getServiciosUsuario(
+    idUsuario: string
+  ): Promise<ApiResponse<ServicioBusqueda[]>> {
+    await this.delay(500);
 
-    const servicios = getServiciosUsuarioEstaticos(idUsuario)
+    const servicios = getServiciosUsuarioEstaticos(idUsuario);
 
     return {
       success: true,
       message: `Se encontraron ${servicios.length} servicios del usuario`,
       data: servicios,
-    }
+    };
   }
 
-  async getSolicitudesPrestamista(idPrestamista: string): Promise<ApiResponse<SolicitudRecibida[]>> {
-    await this.delay(600)
+  async getSolicitudesPrestamista(
+    idPrestamista: string
+  ): Promise<ApiResponse<SolicitudRecibida[]>> {
+    await this.delay(600);
 
-    const solicitudes = getSolicitudesPrestamisaEstaticas(idPrestamista)
+    const solicitudes = getSolicitudesPrestamisaEstaticas(idPrestamista);
 
     return {
       success: true,
       message: `Se encontraron ${solicitudes.length} solicitudes`,
       data: solicitudes,
-    }
+    };
   }
 
-  async getSolicitudesEnviadas(idCliente: string): Promise<ApiResponse<SolicitudEnviada[]>> {
-    await this.delay(600)
+  async getSolicitudesEnviadas(
+    idCliente: string
+  ): Promise<ApiResponse<SolicitudEnviada[]>> {
+    await this.delay(600);
 
-    const solicitudesEnviadas = getSolicitudesEnviadasEstaticas(idCliente)
+    const solicitudesEnviadas = getSolicitudesEnviadasEstaticas(idCliente);
 
     return {
       success: true,
       message: `Se encontraron ${solicitudesEnviadas.length} solicitudes enviadas`,
       data: solicitudesEnviadas,
-    }
+    };
   }
 
-  async createMatchServicio(data: MatchServicioRequest): Promise<ApiResponse<MatchServicioResponse>> {
-    await this.delay(800)
+  async createMatchServicio(
+    data: MatchServicioRequest
+  ): Promise<ApiResponse<MatchServicioResponse>> {
+    await this.delay(800);
 
     // Simular posible error (3% de probabilidad)
     if (Math.random() < 0.03) {
@@ -181,7 +197,7 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo crear el match",
         data: {} as MatchServicioResponse,
-      }
+      };
     }
 
     const mockResponse: MatchServicioResponse = {
@@ -190,21 +206,25 @@ class StaticService {
       idCliente: data.idCliente,
       fecha: new Date().toISOString().split("T")[0],
       fechaInicio: new Date().toISOString().split("T")[0],
-      fechaCierre: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      fechaCierre: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
       estado: "solicitado",
       puntuacion: data.puntuacion,
       costo: data.costo,
-    }
+    };
 
     return {
       success: true,
       message: "Match creado exitosamente",
       data: mockResponse,
-    }
+    };
   }
 
-  async sendChatMessage(data: ChatMessageRequest): Promise<ApiResponse<ChatResponse>> {
-    await this.delay(600)
+  async sendChatMessage(
+    data: ChatMessageRequest
+  ): Promise<ApiResponse<ChatResponse>> {
+    await this.delay(600);
 
     // Simular posible error (2% de probabilidad)
     if (Math.random() < 0.02) {
@@ -212,7 +232,7 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo enviar el mensaje",
         data: {} as ChatResponse,
-      }
+      };
     }
 
     const mockResponse: ChatResponse = {
@@ -232,19 +252,21 @@ class StaticService {
           resourceUrl: data.resourceUrl,
         },
       ],
-    }
+    };
 
     return {
       success: true,
       message: "Mensaje enviado exitosamente",
       data: mockResponse,
-    }
+    };
   }
 
   // ===== NUEVAS FUNCIONES PARA ACTUALIZACIÓN DE SOLICITUDES =====
 
-  async aceptarSolicitud(data: AceptarSolicitudRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
-    await this.delay(800)
+  async aceptarSolicitud(
+    data: AceptarSolicitudRequest
+  ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    await this.delay(800);
 
     // Simular posible error (2% de probabilidad)
     if (Math.random() < 0.02) {
@@ -252,7 +274,7 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo aceptar la solicitud",
         data: {} as ActualizarSolicitudResponse,
-      }
+      };
     }
 
     const response: ActualizarSolicitudResponse = {
@@ -264,17 +286,20 @@ class StaticService {
         estadoNuevo: "pendiente_pago",
         fechaActualizacion: new Date().toISOString(),
       },
-    }
+    };
 
     return {
       success: true,
-      message: "Solicitud aceptada exitosamente. El cliente ha sido notificado y debe proceder con el pago.",
+      message:
+        "Solicitud aceptada exitosamente. El cliente ha sido notificado y debe proceder con el pago.",
       data: response,
-    }
+    };
   }
 
-  async rechazarSolicitud(data: RechazarSolicitudRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
-    await this.delay(600)
+  async rechazarSolicitud(
+    data: RechazarSolicitudRequest
+  ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    await this.delay(600);
 
     const response: ActualizarSolicitudResponse = {
       success: true,
@@ -285,17 +310,20 @@ class StaticService {
         estadoNuevo: "rechazado",
         fechaActualizacion: new Date().toISOString(),
       },
-    }
+    };
 
     return {
       success: true,
-      message: "Solicitud rechazada exitosamente. El cliente ha sido notificado del motivo.",
+      message:
+        "Solicitud rechazada exitosamente. El cliente ha sido notificado del motivo.",
       data: response,
-    }
+    };
   }
 
-  async confirmarPago(data: ConfirmarPagoRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
-    await this.delay(1000)
+  async confirmarPago(
+    data: ConfirmarPagoRequest
+  ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    await this.delay(1000);
 
     // Simular posible error (1% de probabilidad)
     if (Math.random() < 0.01) {
@@ -303,7 +331,7 @@ class StaticService {
         success: false,
         message: "Error simulado: No se pudo confirmar el pago",
         data: {} as ActualizarSolicitudResponse,
-      }
+      };
     }
 
     const response: ActualizarSolicitudResponse = {
@@ -315,17 +343,20 @@ class StaticService {
         estadoNuevo: "ejecucion",
         fechaActualizacion: new Date().toISOString(),
       },
-    }
+    };
 
     return {
       success: true,
-      message: "Pago confirmado exitosamente. El servicio ahora está en ejecución.",
+      message:
+        "Pago confirmado exitosamente. El servicio ahora está en ejecución.",
       data: response,
-    }
+    };
   }
 
-  async finalizarServicio(data: FinalizarServicioRequest): Promise<ApiResponse<ActualizarSolicitudResponse>> {
-    await this.delay(1200)
+  async finalizarServicio(
+    data: FinalizarServicioRequest
+  ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+    await this.delay(1200);
 
     const response: ActualizarSolicitudResponse = {
       success: true,
@@ -336,13 +367,14 @@ class StaticService {
         estadoNuevo: "finalizado",
         fechaActualizacion: new Date().toISOString(),
       },
-    }
+    };
 
     return {
       success: true,
-      message: "Servicio finalizado exitosamente. El cliente será notificado para calificar el servicio.",
+      message:
+        "Servicio finalizado exitosamente. El cliente será notificado para calificar el servicio.",
       data: response,
-    }
+    };
   }
 
   async getProcesoFinalizacion(): Promise<ProcesoFinalizacion> {
@@ -368,7 +400,7 @@ class StaticService {
         "No podrás modificar el estado después",
         "Se generará un registro permanente del servicio",
       ],
-    }
+    };
   }
 
   async getConfirmacionPago(): Promise<ConfirmacionPago> {
@@ -387,8 +419,37 @@ class StaticService {
         "Deberás cumplir con el servicio acordado",
         "El cliente esperará que inicies el trabajo inmediatamente",
       ],
+    };
+  }
+
+  async getOwnChatConversations(): Promise<ApiResponse<OwnLastMessage[]>> {
+    await this.delay(500);
+    return {
+      success: true,
+      message: "Conversaciones de chat obtenidas exitosamente",
+      data: STATIC_CHAT_OWN_LAST_MESSAGE,
+    };
+  }
+
+  async getChatConversation(
+    idConversation: string
+  ): Promise<ApiResponse<ChatConversation>> {
+    await this.delay(500);
+    const conversation = getChatConversationStatic(idConversation);
+    if (conversation) {
+      return {
+        success: true,
+        message: "Conversación de chat obtenida exitosamente",
+        data: conversation,
+      };
+    } else {
+      return {
+        success: false,
+        message: "Conversación no encontrada",
+        data: {} as ChatConversation,
+      };
     }
   }
 }
 
-export const staticService = new StaticService()
+export const staticService = new StaticService();

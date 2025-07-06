@@ -15,6 +15,8 @@ import type {
   ChatResponse,
   SolicitudRecibida,
   SolicitudEnviada,
+  OwnLastMessage,
+  ChatConversation,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -459,8 +461,8 @@ class ApiService {
     };
   }
 
-  async getOwnChatConversations(): Promise<ApiResponse<any[]>> {
-    return this.fetchApi<any[]>(
+  async getOwnChatConversations(): Promise<ApiResponse<OwnLastMessage[]>> {
+    return this.fetchApi<OwnLastMessage[]>(
       `${ENV_CONFIG.API.ENDPOINTS.CHAT}/own-last-message`
     );
   }
@@ -479,6 +481,14 @@ class ApiService {
       body: JSON.stringify({ idReceptor, mensaje, resourceUrl }),
       headers: { "Content-Type": "application/json" },
     });
+  }
+
+  async getChatConversation(
+    idConversation: string
+  ): Promise<ApiResponse<ChatConversation>> {
+    return this.fetchApi<ChatConversation>(
+      `${ENV_CONFIG.API.ENDPOINTS.CHAT_CONVERSATION_BY_ID}/${idConversation}`
+    );
   }
 }
 

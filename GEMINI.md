@@ -1,0 +1,41 @@
+- Cuando realices cambios en el código, al finalzar dale el formato con prettier y asegúrate de que no haya errores de eslint.
+
+# Documentación de los endpoints:
+
+- Endpoint: GET /chat/own-last-message
+  Response body:
+  [
+  {
+  "conversationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "contact": {
+  "idContact": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fullName": "string",
+  "email": "string"
+  },
+  "lastMessage": {
+  "sentBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fecha": "2025-07-06T00:23:44.166Z",
+  "mensaje": "string",
+  "resourceUrl": "string"
+  }
+  }
+  ]
+
+- Endpoint: GET /chat/{idConversation}
+  Response body:
+  {
+  "conversationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "otherContact": {
+  "idContact": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fullName": "string",
+  "email": "string"
+  },
+  "messages": [
+  {
+  "sentBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fecha": "2025-07-06T01:36:48.555Z",
+  "mensaje": "string",
+  "resourceUrl": "string"
+  }
+  ]
+  }

@@ -10,6 +10,7 @@ import type {
   ReviewsServicio,
   SolicitudRecibida,
   SolicitudEnviada,
+  OwnLastMessage,
 } from "../types/api-responses";
 
 // Skills estáticos (solo los datos, sin ApiResponse wrapper)
@@ -741,15 +742,28 @@ export function findStaticChatConversationByContactId(idContact: string) {
   );
 }
 
-export const STATIC_CHAT_OWN_LAST_MESSAGE = [
+export function getChatConversationStatic(idConversation: string) {
+  const conversation = STATIC_CHAT_CONVERSATIONS.find((conv) => conv.id === idConversation);
+  if (conversation) {
+    // Assuming there are always two contacts in a conversation and one is the current user
+    const otherContact = conversation.contacts.find(contact => contact.idContact !== "user-1"); // Replace "user-1" with actual current user ID if available
+    return {
+      conversationId: conversation.id,
+      otherContact: otherContact || conversation.contacts[0], // Fallback to first contact if other not found
+      messages: conversation.messages,
+    };
+  }
+  return undefined;
+}
+
+export const STATIC_CHAT_OWN_LAST_MESSAGE: OwnLastMessage[] = [
   {
-    contacts: [
-      {
-        idContact: "2",
-        fullName: "Ana García",
-        email: "ana@email.com",
-      },
-    ],
+    conversationId: "conv-1",
+    contact: {
+      idContact: "2",
+      fullName: "Ana García",
+      email: "ana@email.com",
+    },
     lastMessage: {
       sentBy: "user-1",
       fecha: "2025-07-03T10:00:00.000Z",
@@ -758,13 +772,12 @@ export const STATIC_CHAT_OWN_LAST_MESSAGE = [
     },
   },
   {
-    contacts: [
-      {
-        idContact: "3",
-        fullName: "Luis Torres",
-        email: "luis@email.com",
-      },
-    ],
+    conversationId: "conv-2",
+    contact: {
+      idContact: "3",
+      fullName: "Luis Torres",
+      email: "luis@email.com",
+    },
     lastMessage: {
       sentBy: "3",
       fecha: "2025-07-02T18:30:00.000Z",
