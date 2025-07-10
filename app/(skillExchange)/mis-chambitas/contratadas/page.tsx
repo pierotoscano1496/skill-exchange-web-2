@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -13,35 +20,53 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Calendar, Clock, DollarSign, CheckCircle, XCircle, User } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  CheckCircle,
+  XCircle,
+  User,
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Tipos para los servicios
-type ServiceStatus = "solicitado" | "pendiente_pago" | "en_proceso" | "rechazado" | "finalizado"
+type ServiceStatus =
+  | "solicitado"
+  | "pendiente_pago"
+  | "en_proceso"
+  | "rechazado"
+  | "finalizado";
 
 interface Service {
-  id: string
-  title: string
-  description: string
-  price: string
-  status: ServiceStatus
-  date: string
-  time: string
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  status: ServiceStatus;
+  date: string;
+  time: string;
   client?: {
-    name: string
-    avatar?: string
-    rating: number
-  }
+    name: string;
+    avatar?: string;
+    rating: number;
+  };
   provider?: {
-    name: string
-    avatar?: string
-    rating: number
-  }
+    name: string;
+    avatar?: string;
+    rating: number;
+  };
 }
 
 // Datos de ejemplo
@@ -49,7 +74,8 @@ const providerServices: Service[] = [
   {
     id: "serv-1",
     title: "Reparación de computadora",
-    description: "Reparación de laptop que no enciende, posible problema de fuente de poder",
+    description:
+      "Reparación de laptop que no enciende, posible problema de fuente de poder",
     price: "$350",
     status: "solicitado",
     date: "15/05/2025",
@@ -63,7 +89,8 @@ const providerServices: Service[] = [
   {
     id: "serv-2",
     title: "Instalación de software",
-    description: "Instalación de paquete de diseño gráfico y configuración inicial",
+    description:
+      "Instalación de paquete de diseño gráfico y configuración inicial",
     price: "$200",
     status: "pendiente_pago",
     date: "16/05/2025",
@@ -97,7 +124,7 @@ const providerServices: Service[] = [
     date: "10/05/2025",
     time: "11:30 AM",
     client: {
-      name: "María González",
+      name: "Usuario de Ejemplo",
       avatar: "/avatars/maria.jpg",
       rating: 4.5,
     },
@@ -116,7 +143,7 @@ const providerServices: Service[] = [
       rating: 4.6,
     },
   },
-]
+];
 
 const clientServices: Service[] = [
   {
@@ -150,7 +177,8 @@ const clientServices: Service[] = [
   {
     id: "serv-8",
     title: "Jardinería",
-    description: "Mantenimiento mensual de jardín, incluye poda y fertilización",
+    description:
+      "Mantenimiento mensual de jardín, incluye poda y fertilización",
     price: "$400",
     status: "en_proceso",
     date: "12/05/2025",
@@ -189,45 +217,60 @@ const clientServices: Service[] = [
       rating: 4.9,
     },
   },
-]
+];
 
 // Componente para mostrar el estado con un badge
 const StatusBadge = ({ status }: { status: ServiceStatus }) => {
   switch (status) {
     case "solicitado":
       return (
-        <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50">
+        <Badge
+          variant="outline"
+          className="bg-blue-50 text-blue-700 hover:bg-blue-50"
+        >
           Solicitado
         </Badge>
-      )
+      );
     case "pendiente_pago":
       return (
-        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 hover:bg-yellow-50">
+        <Badge
+          variant="outline"
+          className="bg-yellow-50 text-yellow-700 hover:bg-yellow-50"
+        >
           Pendiente de pago
         </Badge>
-      )
+      );
     case "en_proceso":
       return (
-        <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
+        <Badge
+          variant="outline"
+          className="bg-green-50 text-green-700 hover:bg-green-50"
+        >
           En proceso
         </Badge>
-      )
+      );
     case "rechazado":
       return (
-        <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50">
+        <Badge
+          variant="outline"
+          className="bg-red-50 text-red-700 hover:bg-red-50"
+        >
           Rechazado
         </Badge>
-      )
+      );
     case "finalizado":
       return (
-        <Badge variant="outline" className="bg-purple-50 text-purple-700 hover:bg-purple-50">
+        <Badge
+          variant="outline"
+          className="bg-purple-50 text-purple-700 hover:bg-purple-50"
+        >
           Finalizado
         </Badge>
-      )
+      );
     default:
-      return null
+      return null;
   }
-}
+};
 
 // Componente para el formulario de pago
 const PaymentForm = ({ onClose }: { onClose: () => void }) => {
@@ -253,7 +296,10 @@ const PaymentForm = ({ onClose }: { onClose: () => void }) => {
 
       <div className="space-y-2">
         <Label htmlFor="payment-details">Detalles adicionales</Label>
-        <Textarea id="payment-details" placeholder="Información adicional sobre el pago..." />
+        <Textarea
+          id="payment-details"
+          placeholder="Información adicional sobre el pago..."
+        />
       </div>
 
       <DialogFooter>
@@ -263,8 +309,8 @@ const PaymentForm = ({ onClose }: { onClose: () => void }) => {
         <Button onClick={onClose}>Confirmar pago</Button>
       </DialogFooter>
     </div>
-  )
-}
+  );
+};
 
 // Componente para el formulario de rechazo
 const RejectForm = ({ onClose }: { onClose: () => void }) => {
@@ -277,8 +323,12 @@ const RejectForm = ({ onClose }: { onClose: () => void }) => {
             <SelectValue placeholder="Selecciona un motivo" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="no-disponible">No estoy disponible en esa fecha/hora</SelectItem>
-            <SelectItem value="fuera-area">Fuera de mi área de servicio</SelectItem>
+            <SelectItem value="no-disponible">
+              No estoy disponible en esa fecha/hora
+            </SelectItem>
+            <SelectItem value="fuera-area">
+              Fuera de mi área de servicio
+            </SelectItem>
             <SelectItem value="precio">El precio no es adecuado</SelectItem>
             <SelectItem value="otro">Otro motivo</SelectItem>
           </SelectContent>
@@ -287,7 +337,10 @@ const RejectForm = ({ onClose }: { onClose: () => void }) => {
 
       <div className="space-y-2">
         <Label htmlFor="reject-details">Detalles adicionales</Label>
-        <Textarea id="reject-details" placeholder="Explica el motivo del rechazo..." />
+        <Textarea
+          id="reject-details"
+          placeholder="Explica el motivo del rechazo..."
+        />
       </div>
 
       <DialogFooter>
@@ -299,8 +352,8 @@ const RejectForm = ({ onClose }: { onClose: () => void }) => {
         </Button>
       </DialogFooter>
     </div>
-  )
-}
+  );
+};
 
 // Componente para el formulario de finalización
 const CompleteForm = ({ onClose }: { onClose: () => void }) => {
@@ -308,12 +361,20 @@ const CompleteForm = ({ onClose }: { onClose: () => void }) => {
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="complete-details">Detalles de finalización</Label>
-        <Textarea id="complete-details" placeholder="Describe cómo se completó el servicio..." />
+        <Textarea
+          id="complete-details"
+          placeholder="Describe cómo se completó el servicio..."
+        />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="complete-feedback">Retroalimentación para el cliente</Label>
-        <Textarea id="complete-feedback" placeholder="Comparte tu experiencia con el cliente..." />
+        <Label htmlFor="complete-feedback">
+          Retroalimentación para el cliente
+        </Label>
+        <Textarea
+          id="complete-feedback"
+          placeholder="Comparte tu experiencia con el cliente..."
+        />
       </div>
 
       <DialogFooter>
@@ -323,35 +384,45 @@ const CompleteForm = ({ onClose }: { onClose: () => void }) => {
         <Button onClick={onClose}>Confirmar finalización</Button>
       </DialogFooter>
     </div>
-  )
-}
+  );
+};
 
 // Componente principal de la página
 export default function ContractedServicesPage() {
-  const [activeRole, setActiveRole] = useState<"provider" | "client">("provider")
-  const [activeTab, setActiveTab] = useState<"tracking" | "completed">("tracking")
-  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false)
-  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false)
-  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
+  const [activeRole, setActiveRole] = useState<"provider" | "client">(
+    "provider"
+  );
+  const [activeTab, setActiveTab] = useState<"tracking" | "completed">(
+    "tracking"
+  );
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
 
   // Filtrar servicios según el estado y la pestaña activa
   const getFilteredProviderServices = () => {
     if (activeTab === "tracking") {
       return providerServices.filter((service) =>
-        ["solicitado", "pendiente_pago", "en_proceso"].includes(service.status),
-      )
+        ["solicitado", "pendiente_pago", "en_proceso"].includes(service.status)
+      );
     } else {
-      return providerServices.filter((service) => ["rechazado", "finalizado"].includes(service.status))
+      return providerServices.filter((service) =>
+        ["rechazado", "finalizado"].includes(service.status)
+      );
     }
-  }
+  };
 
   const getFilteredClientServices = () => {
     if (activeTab === "tracking") {
-      return clientServices.filter((service) => ["solicitado", "pendiente_pago", "en_proceso"].includes(service.status))
+      return clientServices.filter((service) =>
+        ["solicitado", "pendiente_pago", "en_proceso"].includes(service.status)
+      );
     } else {
-      return clientServices.filter((service) => ["rechazado", "finalizado"].includes(service.status))
+      return clientServices.filter((service) =>
+        ["rechazado", "finalizado"].includes(service.status)
+      );
     }
-  }
+  };
 
   // Renderizar acciones según el estado del servicio
   const renderProviderActions = (service: Service) => {
@@ -360,7 +431,10 @@ export default function ContractedServicesPage() {
         return (
           <div className="flex gap-2">
             <Button size="sm">Aprobar</Button>
-            <Dialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+            <Dialog
+              open={isRejectDialogOpen}
+              onOpenChange={setIsRejectDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button size="sm" variant="outline">
                   Rechazar
@@ -370,14 +444,15 @@ export default function ContractedServicesPage() {
                 <DialogHeader>
                   <DialogTitle>Rechazar solicitud</DialogTitle>
                   <DialogDescription>
-                    Por favor, indica el motivo por el cual rechazas esta solicitud.
+                    Por favor, indica el motivo por el cual rechazas esta
+                    solicitud.
                   </DialogDescription>
                 </DialogHeader>
                 <RejectForm onClose={() => setIsRejectDialogOpen(false)} />
               </DialogContent>
             </Dialog>
           </div>
-        )
+        );
       case "pendiente_pago":
         return (
           <div className="flex gap-2">
@@ -385,10 +460,13 @@ export default function ContractedServicesPage() {
               Recordar pago
             </Button>
           </div>
-        )
+        );
       case "en_proceso":
         return (
-          <Dialog open={isCompleteDialogOpen} onOpenChange={setIsCompleteDialogOpen}>
+          <Dialog
+            open={isCompleteDialogOpen}
+            onOpenChange={setIsCompleteDialogOpen}
+          >
             <DialogTrigger asChild>
               <Button size="sm">Finalizar servicio</Button>
             </DialogTrigger>
@@ -396,17 +474,18 @@ export default function ContractedServicesPage() {
               <DialogHeader>
                 <DialogTitle>Finalizar servicio</DialogTitle>
                 <DialogDescription>
-                  Confirma que has completado el servicio y proporciona detalles adicionales.
+                  Confirma que has completado el servicio y proporciona detalles
+                  adicionales.
                 </DialogDescription>
               </DialogHeader>
               <CompleteForm onClose={() => setIsCompleteDialogOpen(false)} />
             </DialogContent>
           </Dialog>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const renderClientActions = (service: Service) => {
     switch (service.status) {
@@ -417,10 +496,13 @@ export default function ContractedServicesPage() {
               Cancelar solicitud
             </Button>
           </div>
-        )
+        );
       case "pendiente_pago":
         return (
-          <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+          <Dialog
+            open={isPaymentDialogOpen}
+            onOpenChange={setIsPaymentDialogOpen}
+          >
             <DialogTrigger asChild>
               <Button size="sm">Realizar pago</Button>
             </DialogTrigger>
@@ -428,13 +510,14 @@ export default function ContractedServicesPage() {
               <DialogHeader>
                 <DialogTitle>Realizar pago</DialogTitle>
                 <DialogDescription>
-                  Selecciona el método de pago y proporciona los detalles necesarios.
+                  Selecciona el método de pago y proporciona los detalles
+                  necesarios.
                 </DialogDescription>
               </DialogHeader>
               <PaymentForm onClose={() => setIsPaymentDialogOpen(false)} />
             </DialogContent>
           </Dialog>
-        )
+        );
       case "en_proceso":
         return (
           <div className="flex gap-2">
@@ -442,21 +525,25 @@ export default function ContractedServicesPage() {
               Ver progreso
             </Button>
           </div>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
       <h1 className="text-2xl font-bold">Mis Chambitas Contratadas</h1>
-      <p className="text-muted-foreground">Gestiona los servicios que ofreces y contratas.</p>
+      <p className="text-muted-foreground">
+        Gestiona los servicios que ofreces y contratas.
+      </p>
 
       {/* Selector de rol */}
       <div className="flex flex-col sm:flex-row gap-4 mt-4">
         <Card
-          className={`flex-1 cursor-pointer transition-all ${activeRole === "provider" ? "ring-2 ring-primary" : ""}`}
+          className={`flex-1 cursor-pointer transition-all ${
+            activeRole === "provider" ? "ring-2 ring-primary" : ""
+          }`}
           onClick={() => setActiveRole("provider")}
         >
           <CardContent className="p-6 flex items-center gap-4">
@@ -464,14 +551,20 @@ export default function ContractedServicesPage() {
               <User className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium text-lg">Como prestador de servicios</h3>
-              <p className="text-sm text-muted-foreground">Gestiona los servicios que ofreces a tus clientes</p>
+              <h3 className="font-medium text-lg">
+                Como prestador de servicios
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Gestiona los servicios que ofreces a tus clientes
+              </p>
             </div>
           </CardContent>
         </Card>
 
         <Card
-          className={`flex-1 cursor-pointer transition-all ${activeRole === "client" ? "ring-2 ring-primary" : ""}`}
+          className={`flex-1 cursor-pointer transition-all ${
+            activeRole === "client" ? "ring-2 ring-primary" : ""
+          }`}
           onClick={() => setActiveRole("client")}
         >
           <CardContent className="p-6 flex items-center gap-4">
@@ -480,7 +573,9 @@ export default function ContractedServicesPage() {
             </div>
             <div>
               <h3 className="font-medium text-lg">Como cliente</h3>
-              <p className="text-sm text-muted-foreground">Gestiona los servicios que has contratado</p>
+              <p className="text-sm text-muted-foreground">
+                Gestiona los servicios que has contratado
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -490,7 +585,9 @@ export default function ContractedServicesPage() {
       <Tabs
         defaultValue="tracking"
         className="mt-6"
-        onValueChange={(value) => setActiveTab(value as "tracking" | "completed")}
+        onValueChange={(value) =>
+          setActiveTab(value as "tracking" | "completed")
+        }
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="tracking">En seguimiento</TabsTrigger>
@@ -516,11 +613,19 @@ export default function ContractedServicesPage() {
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                           <div className="flex items-center gap-2">
                             <Avatar>
-                              <AvatarImage src={service.client?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{service.client?.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={
+                                  service.client?.avatar || "/placeholder.svg"
+                                }
+                              />
+                              <AvatarFallback>
+                                {service.client?.name.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{service.client?.name}</p>
+                              <p className="font-medium">
+                                {service.client?.name}
+                              </p>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <span className="flex items-center">
                                   <svg
@@ -560,7 +665,9 @@ export default function ContractedServicesPage() {
                 ) : (
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <p className="text-muted-foreground">No tienes servicios en seguimiento actualmente.</p>
+                      <p className="text-muted-foreground">
+                        No tienes servicios en seguimiento actualmente.
+                      </p>
                     </CardContent>
                   </Card>
                 )}
@@ -583,11 +690,19 @@ export default function ContractedServicesPage() {
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                           <div className="flex items-center gap-2">
                             <Avatar>
-                              <AvatarImage src={service.client?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{service.client?.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={
+                                  service.client?.avatar || "/placeholder.svg"
+                                }
+                              />
+                              <AvatarFallback>
+                                {service.client?.name.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{service.client?.name}</p>
+                              <p className="font-medium">
+                                {service.client?.name}
+                              </p>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <span className="flex items-center">
                                   <svg
@@ -639,7 +754,9 @@ export default function ContractedServicesPage() {
                 ) : (
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <p className="text-muted-foreground">No tienes servicios finalizados o rechazados.</p>
+                      <p className="text-muted-foreground">
+                        No tienes servicios finalizados o rechazados.
+                      </p>
                     </CardContent>
                   </Card>
                 )}
@@ -667,11 +784,19 @@ export default function ContractedServicesPage() {
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                           <div className="flex items-center gap-2">
                             <Avatar>
-                              <AvatarImage src={service.provider?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{service.provider?.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={
+                                  service.provider?.avatar || "/placeholder.svg"
+                                }
+                              />
+                              <AvatarFallback>
+                                {service.provider?.name.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{service.provider?.name}</p>
+                              <p className="font-medium">
+                                {service.provider?.name}
+                              </p>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <span className="flex items-center">
                                   <svg
@@ -712,7 +837,8 @@ export default function ContractedServicesPage() {
                   <Card>
                     <CardContent className="p-6 text-center">
                       <p className="text-muted-foreground">
-                        No tienes servicios contratados en seguimiento actualmente.
+                        No tienes servicios contratados en seguimiento
+                        actualmente.
                       </p>
                     </CardContent>
                   </Card>
@@ -736,11 +862,19 @@ export default function ContractedServicesPage() {
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                           <div className="flex items-center gap-2">
                             <Avatar>
-                              <AvatarImage src={service.provider?.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{service.provider?.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={
+                                  service.provider?.avatar || "/placeholder.svg"
+                                }
+                              />
+                              <AvatarFallback>
+                                {service.provider?.name.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{service.provider?.name}</p>
+                              <p className="font-medium">
+                                {service.provider?.name}
+                              </p>
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <span className="flex items-center">
                                   <svg
@@ -797,7 +931,9 @@ export default function ContractedServicesPage() {
                 ) : (
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <p className="text-muted-foreground">No tienes servicios finalizados o rechazados.</p>
+                      <p className="text-muted-foreground">
+                        No tienes servicios finalizados o rechazados.
+                      </p>
                     </CardContent>
                   </Card>
                 )}
@@ -807,5 +943,5 @@ export default function ContractedServicesPage() {
         )}
       </Tabs>
     </div>
-  )
+  );
 }

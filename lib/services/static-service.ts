@@ -16,6 +16,7 @@ import type {
   SolicitudEnviada,
   OwnLastMessage,
   ChatConversation,
+  Usuario,
 } from "../types/api-responses";
 import type { ServicioRequestBody } from "../api/servicio-api";
 import {
@@ -449,6 +450,31 @@ class StaticService {
         data: {} as ChatConversation,
       };
     }
+  }
+
+  async getUsuario(): Promise<ApiResponse<Usuario>> {
+    await this.delay(500);
+    return {
+      success: true,
+      message: "Usuario obtenido exitosamente",
+      data: {
+        id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        dni: "12345678",
+        carnetExtranjeria: "",
+        tipoDocumento: "dni",
+        correo: "usuario@example.com",
+        nombres: "Juan",
+        apellidos: "Perez",
+        tipo: "cliente",
+        fechaNacimiento: "1990-01-01",
+        perfilLinkedin: "",
+        perfilFacebook: "",
+        perfilInstagram: "",
+        perfilTiktok: "",
+        introduccion: "",
+        skills: [],
+      },
+    };
   }
 }
 

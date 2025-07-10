@@ -1,10 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+"use client";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUser } from "@/hooks/use-user";
 
 export default function InicioPage() {
+  const { user } = useUser();
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
-      <h1 className="text-2xl font-bold">¡Hola, María!</h1>
-      <p className="text-muted-foreground">Aquí tienes un resumen de tu actividad reciente.</p>
+      <h1 className="text-2xl font-bold">¡Hola, {user?.nombres}!</h1>
+      <p className="text-muted-foreground">
+        Aquí tienes un resumen de tu actividad reciente.
+      </p>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
@@ -27,14 +33,22 @@ export default function InicioPage() {
       <div className="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-4 mt-6">
         {[
           { title: "Nueva chambita", description: "Publica un nuevo servicio" },
-          { title: "Buscar servicios", description: "Encuentra chambitas cerca de ti" },
+          {
+            title: "Buscar servicios",
+            description: "Encuentra chambitas cerca de ti",
+          },
           { title: "Ver mensajes", description: "Revisa tus conversaciones" },
-          { title: "Invitar amigos", description: "Gana $100 por cada referido" },
+          {
+            title: "Invitar amigos",
+            description: "Gana $100 por cada referido",
+          },
         ].map((action, i) => (
           <Card key={i} className="bg-muted/50">
             <CardContent className="p-6 flex flex-col items-center justify-center text-center">
               <CardTitle className="text-lg mb-2">{action.title}</CardTitle>
-              <p className="text-sm text-muted-foreground">{action.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {action.description}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -54,7 +68,8 @@ export default function InicioPage() {
             },
             {
               title: "Mensaje nuevo",
-              description: "Ana te envió un mensaje sobre tu chambita de reparaciones",
+              description:
+                "Ana te envió un mensaje sobre tu chambita de reparaciones",
               time: "Hace 2 horas",
             },
             {
@@ -63,12 +78,19 @@ export default function InicioPage() {
               time: "Hace 1 día",
             },
           ].map((activity, i) => (
-            <div key={i} className="flex items-center justify-between border-b pb-2">
+            <div
+              key={i}
+              className="flex items-center justify-between border-b pb-2"
+            >
               <div>
                 <p className="font-medium">{activity.title}</p>
-                <p className="text-sm text-muted-foreground">{activity.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {activity.description}
+                </p>
               </div>
-              <span className="text-sm text-muted-foreground">{activity.time}</span>
+              <span className="text-sm text-muted-foreground">
+                {activity.time}
+              </span>
             </div>
           ))}
         </CardContent>
@@ -82,16 +104,30 @@ export default function InicioPage() {
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { title: "Reparación de celulares", price: "$200 - $500", distance: "2 km" },
-              { title: "Clases de guitarra", price: "$150/hora", distance: "5 km" },
-              { title: "Paseo de perros", price: "$100/hora", distance: "1 km" },
+              {
+                title: "Reparación de celulares",
+                price: "$200 - $500",
+                distance: "2 km",
+              },
+              {
+                title: "Clases de guitarra",
+                price: "$150/hora",
+                distance: "5 km",
+              },
+              {
+                title: "Paseo de perros",
+                price: "$100/hora",
+                distance: "1 km",
+              },
             ].map((item, i) => (
               <Card key={i}>
                 <CardContent className="p-4">
                   <h3 className="font-medium">{item.title}</h3>
                   <div className="flex justify-between mt-2 text-sm">
                     <span>{item.price}</span>
-                    <span className="text-muted-foreground">A {item.distance}</span>
+                    <span className="text-muted-foreground">
+                      A {item.distance}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -110,5 +146,5 @@ export default function InicioPage() {
       {/* New Card Section */}
       <Card className="min-h-[100vh] flex-1 bg-muted/50 md:min-h-min" />
     </div>
-  )
+  );
 }

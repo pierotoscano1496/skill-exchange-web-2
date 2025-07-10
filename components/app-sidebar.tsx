@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import type * as React from "react"
+import type * as React from "react";
 import {
   Command,
   LifeBuoy,
@@ -13,11 +13,11 @@ import {
   Star,
   Heart,
   Home,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavSecondary } from "./nav-secondary"
+import { NavMain } from "./nav-main";
+import { NavProjects } from "./nav-projects";
+import { NavSecondary } from "./nav-secondary";
 import {
   Sidebar,
   SidebarContent,
@@ -26,118 +26,117 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { useUser } from "@/hooks/use-user";
 
-const data = {
-  user: {
-    name: "María López",
-    email: "maria@ejemplo.com",
-    avatar: "/avatars/shadcn.jpg",
+const navMain = [
+  {
+    title: "Explorar",
+    url: "/explorar", // Ahora Explorar es la página principal
+    icon: ShoppingBag,
+    isActive: true,
   },
-  navMain: [
-    {
-      title: "Explorar",
-      url: "/explorar", // Ahora Explorar es la página principal
-      icon: ShoppingBag,
-      isActive: true,
-    },
-    {
-      title: "Inicio",
-      url: "/inicio",
-      icon: Home,
-    },
-    {
-      title: "Mis Chambitas",
-      url: "#", // Sin ruta, solo para desplegar
-      icon: Hammer,
-      items: [
-        {
-          title: "Publicadas",
-          url: "/mis-chambitas", // Esta toma la ruta que antes tenía el padre
-        },
-        {
-          title: "Borradores",
-          url: "/mis-chambitas/borradores",
-        },
-        {
-          title: "Archivadas",
-          url: "/mis-chambitas/archivadas",
-        },
-      ],
-    },
-    {
-      title: "Solicitudes",
-      url: "#", // Sin ruta, solo para desplegar
-      icon: ClipboardList,
-      items: [
-        {
-          title: "Recibidas",
-          url: "/solicitudes", // Esta toma la ruta que antes tenía el padre
-        },
-        {
-          title: "Enviadas",
-          url: "/solicitudes/enviadas",
-        },
-        {
-          title: "Historial",
-          url: "/solicitudes/historial",
-        },
-      ],
-    },
-    {
-      title: "Mensajes",
-      url: "#", // Sin ruta, solo para desplegar
-      icon: MessageSquare,
-      items: [
-        {
-          title: "Bandeja de entrada",
-          url: "/mensajes", // Esta toma la ruta que antes tenía el padre
-        },
-        {
-          title: "Enviados",
-          url: "/mensajes/enviados",
-        },
-        {
-          title: "Archivados",
-          url: "/mensajes/archivados",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Ayuda",
-      url: "/ayuda",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Sugerencias",
-      url: "/sugerencias",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Favoritos",
-      url: "/favoritos",
-      icon: Heart,
-    },
-    {
-      name: "Mis reseñas",
-      url: "/resenas",
-      icon: Star,
-    },
-    {
-      name: "Guardados",
-      url: "/guardados",
-      icon: Map,
-    },
-  ],
-}
+  {
+    title: "Inicio",
+    url: "/inicio",
+    icon: Home,
+  },
+  {
+    title: "Mis Chambitas",
+    url: "#", // Sin ruta, solo para desplegar
+    icon: Hammer,
+    items: [
+      {
+        title: "Publicadas",
+        url: "/mis-chambitas", // Esta toma la ruta que antes tenía el padre
+      },
+      {
+        title: "Borradores",
+        url: "/mis-chambitas/borradores",
+      },
+      {
+        title: "Archivadas",
+        url: "/mis-chambitas/archivadas",
+      },
+    ],
+  },
+  {
+    title: "Solicitudes",
+    url: "#", // Sin ruta, solo para desplegar
+    icon: ClipboardList,
+    items: [
+      {
+        title: "Recibidas",
+        url: "/solicitudes", // Esta toma la ruta que antes tenía el padre
+      },
+      {
+        title: "Enviadas",
+        url: "/solicitudes/enviadas",
+      },
+      {
+        title: "Historial",
+        url: "/solicitudes/historial",
+      },
+    ],
+  },
+  {
+    title: "Mensajes",
+    url: "#", // Sin ruta, solo para desplegar
+    icon: MessageSquare,
+    items: [
+      {
+        title: "Bandeja de entrada",
+        url: "/mensajes", // Esta toma la ruta que antes tenía el padre
+      },
+      {
+        title: "Enviados",
+        url: "/mensajes/enviados",
+      },
+      {
+        title: "Archivados",
+        url: "/mensajes/archivados",
+      },
+    ],
+  },
+];
+const navSecondary = [
+  {
+    title: "Ayuda",
+    url: "/ayuda",
+    icon: LifeBuoy,
+  },
+  {
+    title: "Sugerencias",
+    url: "/sugerencias",
+    icon: Send,
+  },
+];
+const projects = [
+  {
+    name: "Favoritos",
+    url: "/favoritos",
+    icon: Heart,
+  },
+  {
+    name: "Mis reseñas",
+    url: "/resenas",
+    icon: Star,
+  },
+  {
+    name: "Guardados",
+    url: "/guardados",
+    icon: Map,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, loading } = useUser();
+
   return (
-    <Sidebar className="top-[--header-height] !h-[calc(100svh-var(--header-height))]" {...props}>
+    <Sidebar
+      className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
+      {...props}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -156,11 +155,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavProjects projects={projects} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>{/* NavUser removed from here */}</SidebarFooter>
     </Sidebar>
-  )
+  );
 }

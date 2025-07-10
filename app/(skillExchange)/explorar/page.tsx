@@ -22,7 +22,10 @@ import type {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+import { useUser } from "@/hooks/use-user";
+
 export default function ExplorarPage() {
+  const { user } = useUser();
   const [servicios, setServicios] = useState<ServicioBusqueda[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -128,7 +131,7 @@ export default function ExplorarPage() {
       {/* Header de bienvenida */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">¡Hola, María!</h1>
+          <h1 className="text-2xl font-bold">¡Hola, {user?.nombres}!</h1>
           <p className="text-muted-foreground">
             Explora servicios disponibles o publica el tuyo.
           </p>

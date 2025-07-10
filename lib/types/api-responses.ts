@@ -1,4 +1,34 @@
 // Tipos de respuesta que coinciden con el backend
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+export interface Usuario {
+  id: string;
+  dni: string;
+  carnetExtranjeria: string;
+  tipoDocumento: "dni" | "carnet_extranjeria";
+  correo: string;
+  nombres: string;
+  apellidos: string;
+  tipo: "cliente" | "prestamista" | "ambos";
+  fechaNacimiento: string;
+  perfilLinkedin: string;
+  perfilFacebook: string;
+  perfilInstagram: string;
+  perfilTiktok: string;
+  introduccion: string;
+  skills: {
+    id: string;
+    nivelConocimiento: number;
+    descripcion: string;
+  }[];
+}
+
+
 export interface ApiResponse<T> {
   success: boolean;
   message: string;

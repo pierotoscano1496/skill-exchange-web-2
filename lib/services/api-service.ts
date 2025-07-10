@@ -17,6 +17,7 @@ import type {
   SolicitudEnviada,
   OwnLastMessage,
   ChatConversation,
+  Usuario,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -489,6 +490,10 @@ class ApiService {
     return this.fetchApi<ChatConversation>(
       `${ENV_CONFIG.API.ENDPOINTS.CHAT_CONVERSATION_BY_ID}/${idConversation}`
     );
+  }
+
+  async getUsuario(): Promise<ApiResponse<Usuario>> {
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO);
   }
 }
 

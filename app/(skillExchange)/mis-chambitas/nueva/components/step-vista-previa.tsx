@@ -1,24 +1,33 @@
-import type { ServicioFormData } from "../page"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, DollarSign, MapPin, Monitor, User } from "lucide-react"
-import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums"
+import type { ServicioFormData } from "../page";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Calendar,
+  Clock,
+  DollarSign,
+  MapPin,
+  Monitor,
+  User,
+} from "lucide-react";
+import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums";
+import { useUser } from "@/hooks/use-user";
 
 interface StepVistaPreviaProps {
-  formData: ServicioFormData
+  formData: ServicioFormData;
 }
 
 export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
+  const { user } = useUser();
   // Función para formatear el precio según el tipo
   const formatearPrecio = () => {
     if (formData.tipoPrecio === ServicioTipoPrecio.FIJO) {
-      return `$${formData.precio}`
+      return `$${formData.precio}`;
     } else if (formData.tipoPrecio === ServicioTipoPrecio.HORA) {
-      return `$${formData.precio}/hora`
+      return `$${formData.precio}/hora`;
     } else {
-      return `$${formData.precioMinimo} - $${formData.precioMaximo}`
+      return `$${formData.precioMinimo} - $${formData.precioMaximo}`;
     }
-  }
+  };
 
   // Función para obtener el nombre de la categoría
   const obtenerNombreCategoria = () => {
@@ -26,9 +35,12 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
       { id: "tech", name: "Tecnología" },
       { id: "home", name: "Hogar" },
       { id: "education", name: "Educación" },
-    ]
-    return categories.find((cat) => cat.id === formData.categoria)?.name || formData.categoria
-  }
+    ];
+    return (
+      categories.find((cat) => cat.id === formData.categoria)?.name ||
+      formData.categoria
+    );
+  };
 
   // Función para obtener el nombre de la subcategoría
   const obtenerNombreSubcategoria = () => {
@@ -42,9 +54,12 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
       { id: "languages", name: "Idiomas" },
       { id: "tutoring", name: "Tutoría" },
       { id: "arts", name: "Artes" },
-    ]
-    return subcategories.find((subcat) => subcat.id === formData.subcategoria)?.name || formData.subcategoria
-  }
+    ];
+    return (
+      subcategories.find((subcat) => subcat.id === formData.subcategoria)
+        ?.name || formData.subcategoria
+    );
+  };
 
   // Función para formatear los días de disponibilidad
   const formatearDias = () => {
@@ -56,10 +71,12 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
       viernes: "Viernes",
       sabado: "Sábado",
       domingo: "Domingo",
-    }
+    };
 
-    return formData.disponibilidad.dias.map((dia) => diasMap[dia] || dia).join(", ")
-  }
+    return formData.disponibilidad.dias
+      .map((dia) => diasMap[dia] || dia)
+      .join(", ");
+  };
 
   // Función para formatear la modalidad
   const formatearModalidad = () => {
@@ -67,16 +84,18 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
       presencial: "Presencial",
       remoto: "Remoto",
       mixto: "Presencial y remoto",
-    }
+    };
 
-    return modalidadMap[formData.modalidad] || formData.modalidad
-  }
+    return modalidadMap[formData.modalidad] || formData.modalidad;
+  };
 
   return (
     <div className="space-y-6">
       <div className="text-center mb-4">
         <h3 className="text-lg font-semibold">Vista previa de tu servicio</h3>
-        <p className="text-sm text-muted-foreground">Así es como se verá tu servicio para los usuarios de Chambita</p>
+        <p className="text-sm text-muted-foreground">
+          Así es como se verá tu servicio para los usuarios de Chambita
+        </p>
       </div>
 
       <Card>
@@ -85,7 +104,10 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
             {/* Galería de imágenes */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {formData.imagenes.map((imagen, index) => {
-                const imgUrl = imagen instanceof File ? URL.createObjectURL(imagen) : imagen || "/placeholder.svg"
+                const imgUrl =
+                  imagen instanceof File
+                    ? URL.createObjectURL(imagen)
+                    : imagen || "/placeholder.svg";
 
                 return (
                   <img
@@ -94,7 +116,7 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
                     alt={`Imagen ${index + 1}`}
                     className="w-full h-40 object-cover rounded-md border"
                   />
-                )
+                );
               })}
             </div>
 
@@ -139,7 +161,8 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-muted-foreground" />
                 <span>
-                  Horario: {formData.disponibilidad.horaInicio} - {formData.disponibilidad.horaFin}
+                  Horario: {formData.disponibilidad.horaInicio} -{" "}
+                  {formData.disponibilidad.horaFin}
                 </span>
               </div>
             </div>
@@ -147,12 +170,16 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
             {/* Descripción */}
             <div>
               <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-              <p className="text-muted-foreground whitespace-pre-line">{formData.descripcion}</p>
+              <p className="text-muted-foreground whitespace-pre-line">
+                {formData.descripcion}
+              </p>
             </div>
 
             {/* Modalidades de pago */}
             <div>
-              <h3 className="text-lg font-semibold mb-2">Modalidades de pago aceptadas</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                Modalidades de pago aceptadas
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {formData.modalidadesPago.map((modalidad, index) => {
                   const iconMap = {
@@ -160,18 +187,22 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
                     [ModalidadPagoTipo.TARJETA]: "💳",
                     [ModalidadPagoTipo.LINEA]: "🌐",
                     [ModalidadPagoTipo.EFECTIVO]: "💵",
-                  }
+                  };
                   const nameMap = {
                     [ModalidadPagoTipo.YAPE]: "Yape",
                     [ModalidadPagoTipo.TARJETA]: "Tarjeta",
                     [ModalidadPagoTipo.LINEA]: "Pago en línea",
                     [ModalidadPagoTipo.EFECTIVO]: "Efectivo",
-                  }
+                  };
                   return (
-                    <Badge key={index} variant="outline" className="bg-primary/10">
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="bg-primary/10"
+                    >
                       {iconMap[modalidad.tipo]} {nameMap[modalidad.tipo]}
                     </Badge>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -182,13 +213,15 @@ export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
                 <User className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="font-medium">María López</p>
-                <p className="text-sm text-muted-foreground">Proveedor del servicio</p>
+                <p className="font-medium">{user?.nombres}</p>
+                <p className="text-sm text-muted-foreground">
+                  Proveedor del servicio
+                </p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

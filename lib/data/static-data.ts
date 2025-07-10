@@ -308,7 +308,7 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
       dni: "87654321",
       tipoDocumento: "dni",
       correo: "maria.garcia@email.com",
-      nombres: "María",
+      nombres: "Usuario de Ejemplo",
       apellidos: "García",
       fechaNacimiento: "1988-03-20",
       introduccion: "Necesito reparar mi celular urgentemente",
@@ -491,7 +491,7 @@ export const STATIC_REVIEWS: {
         id: "comment-1-servicio-1",
         idServicio: "servicio-1",
         idComentarista: "user-2",
-        nombresComentarista: "María",
+        nombresComentarista: "Usuario de Ejemplo",
         apellidosComentarista: "González",
         comentario: "Excelente servicio, muy profesional y puntual.",
         puntaje: 5,
@@ -618,7 +618,7 @@ export function getServicioReviewsEstatico(id: string): ReviewsServicio {
         id: `comment-1-${id}`,
         idServicio: id,
         idComentarista: "user-2",
-        nombresComentarista: "María",
+        nombresComentarista: "Usuario de Ejemplo",
         apellidosComentarista: "González",
         comentario: "Excelente servicio, muy profesional y puntual.",
         puntaje: 5,
@@ -745,10 +745,14 @@ export function findStaticChatConversationByContactId(idContact: string) {
 }
 
 export function getChatConversationStatic(idConversation: string) {
-  const conversation = STATIC_CHAT_CONVERSATIONS.find((conv) => conv.id === idConversation);
+  const conversation = STATIC_CHAT_CONVERSATIONS.find(
+    (conv) => conv.id === idConversation
+  );
   if (conversation) {
     // Assuming there are always two contacts in a conversation and one is the current user
-    const otherContact = conversation.contacts.find(contact => contact.idContact !== "user-1"); // Replace "user-1" with actual current user ID if available
+    const otherContact = conversation.contacts.find(
+      (contact) => contact.idContact !== "user-1"
+    ); // Replace "user-1" with actual current user ID if available
     return {
       conversationId: conversation.id,
       otherContact: otherContact || conversation.contacts[0], // Fallback to first contact if other not found

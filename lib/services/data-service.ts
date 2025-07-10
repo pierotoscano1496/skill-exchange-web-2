@@ -20,6 +20,7 @@ import type {
   SolicitudEnviada,
   OwnLastMessage,
   ChatConversation,
+  Usuario,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -142,6 +143,10 @@ class DataService {
     idConversation: string
   ): Promise<ApiResponse<ChatConversation>> {
     return this.service.getChatConversation(idConversation);
+  }
+
+  async getUsuario(): Promise<ApiResponse<Usuario>> {
+    return this.service.getUsuario();
   }
 
   // Métodos de utilidad para obtener datos específicos
