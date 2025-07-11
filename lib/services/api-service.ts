@@ -35,12 +35,24 @@ class ApiService {
 
   private async fetchApi<T>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
+    isPrivate: boolean = false
   ): Promise<ApiResponse<T>> {
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (isPrivate) {
+        const token = localStorage.getItem("token");
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+      }
+
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         headers: {
-          "Content-Type": "application/json",
+          ...headers,
           ...options?.headers,
         },
         ...options,
@@ -77,10 +89,14 @@ class ApiService {
   async createServicio(
     data: ServicioRequestBody
   ): Promise<ApiResponse<ServicioCreado>> {
-    return this.fetchApi<ServicioCreado>(ENV_CONFIG.API.ENDPOINTS.SERVICIOS, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    return this.fetchApi<ServicioCreado>(
+      ENV_CONFIG.API.ENDPOINTS.SERVICIOS,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
   }
 
   async uploadFile(file: File): Promise<ApiResponse<UploadResponse>> {
@@ -149,7 +165,9 @@ class ApiService {
     idUsuario: string
   ): Promise<ApiResponse<ServicioBusqueda[]>> {
     return this.fetchApi<ServicioBusqueda[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}/${idUsuario}`
+      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}/${idUsuario}`,
+      {},
+      true
     );
   }
 
@@ -157,7 +175,9 @@ class ApiService {
     idPrestamista: string
   ): Promise<ApiResponse<SolicitudRecibida[]>> {
     return this.fetchApi<SolicitudRecibida[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PRESTAMISTA}/${idPrestamista}`
+      `${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PRESTAMISTA}/${idPrestamista}`,
+      {},
+      true
     );
   }
 
@@ -165,7 +185,9 @@ class ApiService {
     idCliente: string
   ): Promise<ApiResponse<SolicitudEnviada[]>> {
     return this.fetchApi<SolicitudEnviada[]>(
-      `/match/details/cliente/${idCliente}`
+      `/match/details/cliente/${idCliente}`,
+      {},
+      true
     );
   }
 
@@ -177,17 +199,22 @@ class ApiService {
       {
         method: "POST",
         body: JSON.stringify(data),
-      }
+      },
+      true
     );
   }
 
   async sendChatMessage(
     data: ChatMessageRequest
   ): Promise<ApiResponse<ChatResponse>> {
-    return this.fetchApi<ChatResponse>(ENV_CONFIG.API.ENDPOINTS.CHAT, {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    return this.fetchApi<ChatResponse>(
+      ENV_CONFIG.API.ENDPOINTS.CHAT,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
   }
 
   // ===== FUNCIÓN GENÉRICA PARA ACTUALIZAR ESTADO DE SOLICITUDES =====
@@ -196,39 +223,14 @@ class ApiService {
     idSolicitud: string,
     nuevoEstado: string
   ): Promise<ApiResponse<MatchServicioResponse>> {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/match/estado/${idSolicitud}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            estado: nuevoEstado,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        success: true,
-        message: `Estado actualizado a ${nuevoEstado} exitosamente`,
-        data,
-      };
-    } catch (error) {
-      console.error("Error al actualizar estado:", error);
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Error al actualizar estado",
-        data: null as any,
-      };
-    }
+    return this.fetchApi<MatchServicioResponse>(
+      `/match/estado/${idSolicitud}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ estado: nuevoEstado }),
+      },
+      true
+    );
   }
 
   // ===== FUNCIONES ESPECÍFICAS PARA CADA ACCIÓN =====
@@ -464,7 +466,9 @@ class ApiService {
 
   async getOwnChatConversations(): Promise<ApiResponse<OwnLastMessage[]>> {
     return this.fetchApi<OwnLastMessage[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.CHAT}/own-last-message`
+      `${ENV_CONFIG.API.ENDPOINTS.CHAT}/own-last-message`,
+      {},
+      true
     );
   }
 
@@ -477,23 +481,29 @@ class ApiService {
     mensaje: string;
     resourceUrl?: string;
   }): Promise<ApiResponse<any>> {
-    return this.fetchApi<any>(`${ENV_CONFIG.API.ENDPOINTS.CHAT}`, {
-      method: "POST",
-      body: JSON.stringify({ idReceptor, mensaje, resourceUrl }),
-      headers: { "Content-Type": "application/json" },
-    });
+    return this.fetchApi<any>(
+      `${ENV_CONFIG.API.ENDPOINTS.CHAT}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ idReceptor, mensaje, resourceUrl }),
+        headers: { "Content-Type": "application/json" },
+      },
+      true
+    );
   }
 
   async getChatConversation(
     idConversation: string
   ): Promise<ApiResponse<ChatConversation>> {
     return this.fetchApi<ChatConversation>(
-      `${ENV_CONFIG.API.ENDPOINTS.CHAT_CONVERSATION_BY_ID}/${idConversation}`
+      `${ENV_CONFIG.API.ENDPOINTS.CHAT_CONVERSATION_BY_ID}/${idConversation}`,
+      {},
+      true
     );
   }
 
   async getUsuario(): Promise<ApiResponse<Usuario>> {
-    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO);
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {}, true);
   }
 }
 

@@ -2,6 +2,22 @@
 
 # Documentación de los endpoints:
 
+- Endpoint: POST /auth/login
+  Request body:
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+Response headers:
+
+```http
+Authorization: Bearer {token}
+```
+
 - Endpoint: GET /usuario
   Response body:
 
