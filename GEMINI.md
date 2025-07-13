@@ -2,6 +2,34 @@
 
 # Documentación de los endpoints:
 
+- Endpoint: POST /usuario
+
+```json
+{
+  "dni": "string",
+  "carnetExtranjeria": "string",
+  "tipoDocumento": "dni",
+  "correo": "string",
+  "nombres": "string",
+  "apellidos": "string",
+  "tipo": "cliente",
+  "fechaNacimiento": "2025-07-13",
+  "clave": "string",
+  "perfilLinkedin": "string",
+  "perfilFacebook": "string",
+  "perfilInstagram": "string",
+  "perfilTiktok": "string",
+  "introduccion": "string",
+  "skills": [
+    {
+      "idSkill": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nivelConocimiento": 0,
+      "descripcion": "string"
+    }
+  ]
+}
+```
+
 - Endpoint: POST /auth/login
   Request body:
 

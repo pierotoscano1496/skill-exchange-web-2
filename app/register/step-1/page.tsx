@@ -1,73 +1,86 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ArrowLeft, ArrowRight } from "lucide-react"
-import { format } from "date-fns"
-import { es } from "date-fns/locale"
-import { Calendar } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function RegisterStep1Page() {
-  const router = useRouter()
-  const [documentType, setDocumentType] = useState<string>("dni")
-  const [documentNumber, setDocumentNumber] = useState<string>("")
-  const [firstName, setFirstName] = useState<string>("")
-  const [lastName, setLastName] = useState<string>("")
-  const [date, setDate] = useState<Date>()
-  const [description, setDescription] = useState<string>("")
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const router = useRouter();
+  const [documentType, setDocumentType] = useState<string>("dni");
+  const [documentNumber, setDocumentNumber] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [date, setDate] = useState<Date>();
+  const [description, setDescription] = useState<string>("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (!documentNumber) {
-      newErrors.documentNumber = "El número de documento es requerido"
+      newErrors.documentNumber = "El número de documento es requerido";
     } else if (documentType === "dni" && documentNumber.length !== 8) {
-      newErrors.documentNumber = "El DNI debe tener 8 dígitos"
+      newErrors.documentNumber = "El DNI debe tener 8 dígitos";
     } else if (documentType === "ce" && documentNumber.length < 8) {
-      newErrors.documentNumber = "El carné de extranjería debe tener al menos 8 caracteres"
+      newErrors.documentNumber =
+        "El carné de extranjería debe tener al menos 8 caracteres";
     }
 
     if (!firstName) {
-      newErrors.firstName = "El nombre es requerido"
+      newErrors.firstName = "El nombre es requerido";
     }
 
     if (!lastName) {
-      newErrors.lastName = "Los apellidos son requeridos"
+      newErrors.lastName = "Los apellidos son requeridos";
     }
 
     if (!date) {
-      newErrors.date = "La fecha de nacimiento es requerida"
+      newErrors.date = "La fecha de nacimiento es requerida";
     } else {
-      const today = new Date()
-      const birthDate = new Date(date)
-      let age = today.getFullYear() - birthDate.getFullYear()
-      const m = today.getMonth() - birthDate.getMonth()
+      const today = new Date();
+      const birthDate = new Date(date);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--
+        age--;
       }
       if (age < 18) {
-        newErrors.date = "Debes ser mayor de 18 años"
+        newErrors.date = "Debes ser mayor de 18 años";
       }
     }
 
     if (!description) {
-      newErrors.description = "La descripción es requerida"
+      newErrors.description = "La descripción es requerida";
     } else if (description.length < 10) {
-      newErrors.description = "La descripción debe tener al menos 10 caracteres"
+      newErrors.description =
+        "La descripción debe tener al menos 10 caracteres";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleNext = () => {
     if (validateForm()) {
@@ -79,17 +92,17 @@ export default function RegisterStep1Page() {
           documentNumber,
           firstName,
           lastName,
-          birthDate: date?.toISOString(),
+          fechaNacimiento: date ? format(date, "yyyy-MM-dd") : undefined,
           description,
-        }),
-      )
-      router.push("/register/step-2")
+        })
+      );
+      router.push("/register/step-2");
     }
-  }
+  };
 
   const handleBack = () => {
-    router.push("/register")
-  }
+    router.push("/register");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
@@ -104,7 +117,9 @@ export default function RegisterStep1Page() {
             </div>
             <div className="text-sm text-muted-foreground">Paso 1 de 3</div>
           </div>
-          <CardDescription>Ingresa tus datos personales para crear tu cuenta</CardDescription>
+          <CardDescription>
+            Ingresa tus datos personales para crear tu cuenta
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -112,7 +127,10 @@ export default function RegisterStep1Page() {
             <RadioGroup
               defaultValue="dni"
               value={documentType}
-              onValueChange={setDocumentType}
+              onValueChange={(type) => {
+                setDocumentType(type);
+                setDocumentNumber("");
+              }}
               className="flex flex-col space-y-1"
             >
               <div className="flex items-center space-x-2">
@@ -139,8 +157,11 @@ export default function RegisterStep1Page() {
               onChange={(e) => setDocumentNumber(e.target.value)}
               placeholder={documentType === "dni" ? "12345678" : "CE123456"}
               className={errors.documentNumber ? "border-red-500" : ""}
+              maxLength={documentType === "dni" ? 8 : 12}
             />
-            {errors.documentNumber && <p className="text-sm text-red-500">{errors.documentNumber}</p>}
+            {errors.documentNumber && (
+              <p className="text-sm text-red-500">{errors.documentNumber}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -153,7 +174,9 @@ export default function RegisterStep1Page() {
               placeholder="Ingresa tus nombres"
               className={errors.firstName ? "border-red-500" : ""}
             />
-            {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
+            {errors.firstName && (
+              <p className="text-sm text-red-500">{errors.firstName}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -166,7 +189,9 @@ export default function RegisterStep1Page() {
               placeholder="Ingresa tus apellidos"
               className={errors.lastName ? "border-red-500" : ""}
             />
-            {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
+            {errors.lastName && (
+              <p className="text-sm text-red-500">{errors.lastName}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -178,10 +203,12 @@ export default function RegisterStep1Page() {
                   className={cn(
                     "w-full justify-start text-left font-normal",
                     !date && "text-muted-foreground",
-                    errors.date && "border-red-500",
+                    errors.date && "border-red-500"
                   )}
                 >
-                  {date ? format(date, "PPP", { locale: es }) : "Selecciona tu fecha de nacimiento"}
+                  {date
+                    ? format(date, "PPP", { locale: es })
+                    : "Selecciona tu fecha de nacimiento"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -190,15 +217,21 @@ export default function RegisterStep1Page() {
                   selected={date}
                   onSelect={setDate}
                   disabled={(date) => {
-                    const today = new Date()
-                    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-                    return date > today || date > eighteenYearsAgo
+                    const today = new Date();
+                    const eighteenYearsAgo = new Date(
+                      today.getFullYear() - 18,
+                      today.getMonth(),
+                      today.getDate()
+                    );
+                    return date > today || date > eighteenYearsAgo;
                   }}
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
-            {errors.date && <p className="text-sm text-red-500">{errors.date}</p>}
+            {errors.date && (
+              <p className="text-sm text-red-500">{errors.date}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -211,7 +244,9 @@ export default function RegisterStep1Page() {
               className={errors.description ? "border-red-500" : ""}
               rows={4}
             />
-            {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+            {errors.description && (
+              <p className="text-sm text-red-500">{errors.description}</p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -224,5 +259,5 @@ export default function RegisterStep1Page() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
