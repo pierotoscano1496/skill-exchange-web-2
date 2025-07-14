@@ -183,7 +183,11 @@ export default function RegisterStep3Page() {
           )}
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleBack} disabled={isLoading || success}>
+          <Button
+            variant="outline"
+            onClick={handleBack}
+            disabled={isLoading || success}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" /> Atrás
           </Button>
           <Button onClick={handleRegister} disabled={isLoading || success}>

@@ -33,7 +33,7 @@ import type { ServicioRequestBody } from "../api/servicio-api";
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
 
-  private async fetchApi<T>(
+  public async fetchApi<T>(
     endpoint: string,
     options?: RequestInit,
     isPrivate: boolean = false
@@ -76,6 +76,13 @@ class ApiService {
         data: null as any,
       };
     }
+  }
+
+  async postSimpleCheck(nombre: string): Promise<ApiResponse<string>> {
+    return this.fetchApi<string>(ENV_CONFIG.API.ENDPOINTS.SIMPLE_CHECK, {
+      method: "POST",
+      body: JSON.stringify({ nombre }),
+    });
   }
 
   async getSkills(): Promise<ApiResponse<Skill[]>> {

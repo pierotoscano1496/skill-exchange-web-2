@@ -15,66 +15,98 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function RegisterStep1Page() {
   const router = useRouter();
-  const [documentType, setDocumentType] = useState<string>("dni");
+  const [tipoDocumento, setTipoDocumento] = useState<string>("dni");
   const [documentNumber, setDocumentNumber] = useState<string>("");
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [date, setDate] = useState<Date>();
-  const [description, setDescription] = useState<string>("");
+  const [nombres, setNombres] = useState<string>("");
+  const [apellidos, setApellidos] = useState<string>("");
+  const [fechaNacimiento, setFechaNacimiento] = useState<string>("");
+  const [introduccion, setIntroduccion] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length > 8) {
+      value = value.slice(0, 8);
+    }
+
+    if (value.length > 4) {
+      value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+    } else if (value.length > 2) {
+      value = `${value.slice(0, 2)}/${value.slice(2)}`;
+    }
+
+    setFechaNacimiento(value);
+  };
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!documentNumber) {
       newErrors.documentNumber = "El número de documento es requerido";
-    } else if (documentType === "dni" && documentNumber.length !== 8) {
+    } else if (tipoDocumento === "dni" && documentNumber.length !== 8) {
       newErrors.documentNumber = "El DNI debe tener 8 dígitos";
-    } else if (documentType === "ce" && documentNumber.length < 8) {
+    } else if (
+      tipoDocumento === "carnet_extranjeria" &&
+      documentNumber.length < 8
+    ) {
       newErrors.documentNumber =
         "El carné de extranjería debe tener al menos 8 caracteres";
     }
 
-    if (!firstName) {
-      newErrors.firstName = "El nombre es requerido";
+    if (!nombres) {
+      newErrors.nombres = "El nombre es requerido";
     }
 
-    if (!lastName) {
-      newErrors.lastName = "Los apellidos son requeridos";
+    if (!apellidos) {
+      newErrors.apellidos = "Los apellidos son requeridos";
     }
 
-    if (!date) {
-      newErrors.date = "La fecha de nacimiento es requerida";
+    if (!fechaNacimiento) {
+      newErrors.fechaNacimiento = "La fecha de nacimiento es requerida";
     } else {
-      const today = new Date();
-      const birthDate = new Date(date);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      if (age < 18) {
-        newErrors.date = "Debes ser mayor de 18 años";
+      const parts = fechaNacimiento.split("/");
+      if (
+        parts.length !== 3 ||
+        parts[0].length !== 2 ||
+        parts[1].length !== 2 ||
+        parts[2].length !== 4
+      ) {
+        newErrors.fechaNacimiento = "El formato debe ser dd/mm/yyyy";
+      } else {
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        const dateObj = new Date(year, month, day);
+
+        if (
+          isNaN(dateObj.getTime()) ||
+          dateObj.getDate() !== day ||
+          dateObj.getMonth() !== month ||
+          dateObj.getFullYear() !== year
+        ) {
+          newErrors.fechaNacimiento = "La fecha no es válida.";
+        } else {
+          const today = new Date();
+          let age = today.getFullYear() - dateObj.getFullYear();
+          const m = today.getMonth() - dateObj.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < dateObj.getDate())) {
+            age--;
+          }
+          if (age < 18) {
+            newErrors.fechaNacimiento = "Debes ser mayor de 18 años";
+          }
+        }
       }
     }
 
-    if (!description) {
-      newErrors.description = "La descripción es requerida";
-    } else if (description.length < 10) {
-      newErrors.description =
+    if (!introduccion) {
+      newErrors.introduccion = "La descripción es requerida";
+    } else if (introduccion.length < 10) {
+      newErrors.introduccion =
         "La descripción debe tener al menos 10 caracteres";
     }
 
@@ -84,16 +116,19 @@ export default function RegisterStep1Page() {
 
   const handleNext = () => {
     if (validateForm()) {
-      // En un caso real, aquí guardaríamos los datos en un estado global o en localStorage
+      const parts = fechaNacimiento.split("/");
+      const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
       localStorage.setItem(
         "registrationData",
         JSON.stringify({
-          documentType,
-          documentNumber,
-          firstName,
-          lastName,
-          fechaNacimiento: date ? format(date, "yyyy-MM-dd") : undefined,
-          description,
+          tipoDocumento,
+          carnetExtranjeria:
+            tipoDocumento == "carnet_extranjeria" ? documentNumber : "",
+          dni: tipoDocumento == "dni" ? documentNumber : "",
+          nombres,
+          apellidos,
+          fechaNacimiento: formattedDate,
+          introduccion,
         })
       );
       router.push("/register/step-2");
@@ -126,9 +161,9 @@ export default function RegisterStep1Page() {
             <Label>Tipo de documento</Label>
             <RadioGroup
               defaultValue="dni"
-              value={documentType}
+              value={tipoDocumento}
               onValueChange={(type) => {
-                setDocumentType(type);
+                setTipoDocumento(type);
                 setDocumentNumber("");
               }}
               className="flex flex-col space-y-1"
@@ -140,8 +175,11 @@ export default function RegisterStep1Page() {
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="ce" id="ce" />
-                <Label htmlFor="ce" className="cursor-pointer">
+                <RadioGroupItem
+                  value="carnet_extranjeria"
+                  id="carnet_extranjeria"
+                />
+                <Label htmlFor="carnet_extranjeria" className="cursor-pointer">
                   Carné de extranjería
                 </Label>
               </div>
@@ -155,9 +193,9 @@ export default function RegisterStep1Page() {
               type="text"
               value={documentNumber}
               onChange={(e) => setDocumentNumber(e.target.value)}
-              placeholder={documentType === "dni" ? "12345678" : "CE123456"}
+              placeholder={tipoDocumento === "dni" ? "12345678" : "CE123456"}
               className={errors.documentNumber ? "border-red-500" : ""}
-              maxLength={documentType === "dni" ? 8 : 12}
+              maxLength={tipoDocumento === "dni" ? 8 : 12}
             />
             {errors.documentNumber && (
               <p className="text-sm text-red-500">{errors.documentNumber}</p>
@@ -169,13 +207,13 @@ export default function RegisterStep1Page() {
             <Input
               id="first-name"
               type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={nombres}
+              onChange={(e) => setNombres(e.target.value)}
               placeholder="Ingresa tus nombres"
-              className={errors.firstName ? "border-red-500" : ""}
+              className={errors.nombres ? "border-red-500" : ""}
             />
-            {errors.firstName && (
-              <p className="text-sm text-red-500">{errors.firstName}</p>
+            {errors.nombres && (
+              <p className="text-sm text-red-500">{errors.nombres}</p>
             )}
           </div>
 
@@ -184,68 +222,43 @@ export default function RegisterStep1Page() {
             <Input
               id="last-name"
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={apellidos}
+              onChange={(e) => setApellidos(e.target.value)}
               placeholder="Ingresa tus apellidos"
-              className={errors.lastName ? "border-red-500" : ""}
+              className={errors.apellidos ? "border-red-500" : ""}
             />
-            {errors.lastName && (
-              <p className="text-sm text-red-500">{errors.lastName}</p>
+            {errors.apellidos && (
+              <p className="text-sm text-red-500">{errors.apellidos}</p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="birth-date">Fecha de nacimiento</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground",
-                    errors.date && "border-red-500"
-                  )}
-                >
-                  {date
-                    ? format(date, "PPP", { locale: es })
-                    : "Selecciona tu fecha de nacimiento"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  disabled={(date) => {
-                    const today = new Date();
-                    const eighteenYearsAgo = new Date(
-                      today.getFullYear() - 18,
-                      today.getMonth(),
-                      today.getDate()
-                    );
-                    return date > today || date > eighteenYearsAgo;
-                  }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            {errors.date && (
-              <p className="text-sm text-red-500">{errors.date}</p>
+            <Input
+              id="birth-date"
+              type="text"
+              value={fechaNacimiento}
+              onChange={handleDateChange}
+              placeholder="dd/mm/yyyy"
+              className={errors.fechaNacimiento ? "border-red-500" : ""}
+            />
+            {errors.fechaNacimiento && (
+              <p className="text-sm text-red-500">{errors.fechaNacimiento}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Cuéntanos sobre ti</Label>
+            <Label htmlFor="introduccion">Cuéntanos sobre ti</Label>
             <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              id="introduccion"
+              value={introduccion}
+              onChange={(e) => setIntroduccion(e.target.value)}
               placeholder="Describe brevemente quién eres, tus intereses y qué te motiva a unirte a Chambita..."
-              className={errors.description ? "border-red-500" : ""}
+              className={errors.introduccion ? "border-red-500" : ""}
               rows={4}
             />
-            {errors.description && (
-              <p className="text-sm text-red-500">{errors.description}</p>
+            {errors.introduccion && (
+              <p className="text-sm text-red-500">{errors.introduccion}</p>
             )}
           </div>
         </CardContent>

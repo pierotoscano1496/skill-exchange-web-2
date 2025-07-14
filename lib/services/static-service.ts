@@ -49,6 +49,15 @@ class StaticService {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  async postSimpleCheck(nombre: string): Promise<ApiResponse<string>> {
+    await this.delay();
+    return {
+      success: true,
+      message: "Éxito del check",
+      data: "Hola " + nombre,
+    };
+  }
+
   async getSkills(): Promise<ApiResponse<Skill[]>> {
     await this.delay();
     return {

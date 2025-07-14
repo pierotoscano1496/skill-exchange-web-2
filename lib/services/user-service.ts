@@ -25,16 +25,11 @@ export interface RegisterUserRequest {
 }
 
 class UserService {
-  async registerUser(
-    data: RegisterUserRequest
-  ): Promise<ApiResponse<Usuario>> {
-    return apiService.fetchApi<Usuario>(
-      ENV_CONFIG.API.ENDPOINTS.USUARIO,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-      }
-    );
+  async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
+    return apiService.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 }
 

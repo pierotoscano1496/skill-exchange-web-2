@@ -23,7 +23,8 @@ export default function RegisterStep2Page() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [userType, setUserType] = useState<"cliente" | "trabajador">("cliente");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -94,7 +95,8 @@ export default function RegisterStep2Page() {
             <div className="text-sm text-muted-foreground">Paso 2 de 3</div>
           </div>
           <CardDescription>
-            Define cómo accederás a tu cuenta y qué rol tendrás en la plataforma.
+            Define cómo accederás a tu cuenta y qué rol tendrás en la
+            plataforma.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -108,7 +110,9 @@ export default function RegisterStep2Page() {
               placeholder="tu@correo.com"
               className={errors.email ? "border-red-500" : ""}
             />
-            {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -127,10 +131,16 @@ export default function RegisterStep2Page() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
-            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -142,24 +152,34 @@ export default function RegisterStep2Page() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repite tu contraseña"
-                className={errors.confirmPassword ? "border-red-500 pr-10" : "pr-10"}
+                className={
+                  errors.confirmPassword ? "border-red-500 pr-10" : "pr-10"
+                }
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               >
-                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
-            {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label>Tipo de cuenta</Label>
             <RadioGroup
               value={userType}
-              onValueChange={(type: "cliente" | "trabajador") => setUserType(type)}
+              onValueChange={(type: "cliente" | "trabajador") =>
+                setUserType(type)
+              }
               className="flex flex-col space-y-1"
             >
               <div className="flex items-center space-x-2">

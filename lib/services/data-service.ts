@@ -38,6 +38,10 @@ class DataService {
     return isStaticMode() ? staticService : apiService;
   }
 
+  async postSimpleCheck(nombre: string): Promise<ApiResponse<string>> {
+    return this.service.postSimpleCheck(nombre);
+  }
+
   async getSkills(): Promise<ApiResponse<Skill[]>> {
     return this.service.getSkills();
   }

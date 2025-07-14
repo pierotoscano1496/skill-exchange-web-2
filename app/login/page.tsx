@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { authService } from "@/lib/services/auth-service";
+import { dataService } from "@/lib/services/data-service";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,6 +36,11 @@ export default function LoginPage() {
     } catch (err) {
       setError("Error. Inténtalo más adelante.");
     }
+  };
+
+  const handleCheck = async (nombre: string) => {
+    const resp = await dataService.postSimpleCheck(nombre);
+    alert(resp.success ? resp.data : "Error");
   };
 
   return (
@@ -87,6 +93,13 @@ export default function LoginPage() {
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full">
               Entrar
+            </Button>
+            <Button
+              type="button"
+              className="w-full"
+              onClick={() => handleCheck("Jorge")}
+            >
+              Pruebas
             </Button>
             <div className="text-center text-sm">
               ¿No tienes cuenta?{" "}
