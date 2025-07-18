@@ -93,6 +93,22 @@ class ApiService {
     return this.fetchApi<Categoria[]>(ENV_CONFIG.API.ENDPOINTS.CATEGORIAS);
   }
 
+  async getSubCategoriasByCategoria(
+    idCategoria: string
+  ): Promise<ApiResponse<any[]>> {
+    return this.fetchApi<any[]>(
+      `${ENV_CONFIG.API.ENDPOINTS.SUB_CATEGORIAS_BY_CATEGORIA}/${idCategoria}`
+    );
+  }
+
+  async getSkillsBySubCategoria(
+    idSubcategoria: string
+  ): Promise<ApiResponse<Skill[]>> {
+    return this.fetchApi<Skill[]>(
+      `${ENV_CONFIG.API.ENDPOINTS.SKILLS_BY_SUB_CATEGORIA}/${idSubcategoria}`
+    );
+  }
+
   async createServicio(
     data: ServicioRequestBody
   ): Promise<ApiResponse<ServicioCreado>> {

@@ -50,6 +50,18 @@ class DataService {
     return this.service.getCategorias();
   }
 
+  async getSubCategoriasByCategoria(
+    idCategoria: string
+  ): Promise<ApiResponse<any[]>> {
+    return this.service.getSubCategoriasByCategoria(idCategoria);
+  }
+
+  async getSkillsBySubCategoria(
+    idSubcategoria: string
+  ): Promise<ApiResponse<Skill[]>> {
+    return this.service.getSkillsBySubCategoria(idSubcategoria);
+  }
+
   async createServicio(
     data: ServicioRequestBody
   ): Promise<ApiResponse<ServicioCreado>> {
@@ -154,10 +166,12 @@ class DataService {
   }
 
   // Métodos de utilidad para obtener datos específicos
-  async getSkillsByCategoria(categoria: string): Promise<Skill[]> {
+  async getSkillsBySubcCtegoria(subCategoria: string): Promise<Skill[]> {
     const response = await this.getSkills();
     if (response.success) {
-      return response.data.filter((skill) => skill.categoria === categoria);
+      return response.data.filter(
+        (skill) => skill.idSubCategoria === subCategoria
+      );
     }
     return [];
   }

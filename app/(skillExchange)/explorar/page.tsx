@@ -17,6 +17,7 @@ import { dataService } from "@/lib/services/data-service";
 import type {
   ServicioBusqueda,
   Categoria,
+  Subcategoria,
   Skill,
 } from "@/lib/types/api-responses";
 import { useRouter } from "next/navigation";
@@ -28,44 +29,97 @@ export default function ExplorarPage() {
   const { user } = useUser();
   const [servicios, setServicios] = useState<ServicioBusqueda[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [subcategorias, setSubcategorias] = useState<Subcategoria[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all");
+  const [selectedSubcategoria, setSelectedSubcategoria] =
+    useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<string>("all");
 
   const router = useRouter();
 
-  // Cargar datos iniciales
+  // Cargar categorías iniciales
   useEffect(() => {
-    const cargarDatosIniciales = async () => {
+    const cargarCategorias = async () => {
       setLoading(true);
       try {
-        const [categoriasResponse, skillsResponse, serviciosResponse] =
-          await Promise.all([
-            dataService.getCategorias(),
-            dataService.getSkills(),
-            dataService.buscarServicios({}), // Búsqueda sin filtros para mostrar todos
-          ]);
-
-        if (categoriasResponse.success)
+        const categoriasResponse = await dataService.getCategorias();
+        if (categoriasResponse.success) {
           setCategorias(categoriasResponse.data || []);
-        if (skillsResponse.success) setSkills(skillsResponse.data || []);
-        if (serviciosResponse.success)
+        }
+        const serviciosResponse = await dataService.buscarServicios({});
+        if (serviciosResponse.success) {
           setServicios(serviciosResponse.data || []);
+        }
       } catch (error) {
-        console.error("Error cargando datos:", error);
-        // Establecer arrays vacíos en caso de error
+        console.error("Error cargando datos iniciales:", error);
         setCategorias([]);
-        setSkills([]);
         setServicios([]);
       } finally {
         setLoading(false);
       }
     };
 
-    cargarDatosIniciales();
+    cargarCategorias();
   }, []);
+
+  // Cargar subcategorías cuando cambia la categoría
+  useEffect(() => {
+    const cargarSubcategorias = async () => {
+      if (selectedCategoria && selectedCategoria !== "all") {
+        setLoading(true);
+        try {
+          const response = await dataService.getSubCategoriasByCategoria(
+            selectedCategoria
+          );
+          if (response.success) {
+            setSubcategorias(response.data || []);
+          }
+        } catch (error) {
+          console.error("Error cargando subcategorías:", error);
+          setSubcategorias([]);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setSubcategorias([]);
+        setSkills([]);
+        setSelectedSubcategoria("all");
+        setSelectedSkill("all");
+      }
+    };
+
+    cargarSubcategorias();
+  }, [selectedCategoria]);
+
+  // Cargar skills cuando cambia la subcategoría
+  useEffect(() => {
+    const cargarSkills = async () => {
+      if (selectedSubcategoria && selectedSubcategoria !== "all") {
+        setLoading(true);
+        try {
+          const response = await dataService.getSkillsBySubCategoria(
+            selectedSubcategoria
+          );
+          if (response.success) {
+            setSkills(response.data || []);
+          }
+        } catch (error) {
+          console.error("Error cargando skills:", error);
+          setSkills([]);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setSkills([]);
+        setSelectedSkill("all");
+      }
+    };
+
+    cargarSkills();
+  }, [selectedSubcategoria]);
 
   // Función de búsqueda
   const realizarBusqueda = async () => {
@@ -75,6 +129,8 @@ export default function ExplorarPage() {
         keyWord: searchTerm || undefined,
         idCategoria:
           selectedCategoria !== "all" ? selectedCategoria : undefined,
+        idSubcategoria:
+          selectedSubcategoria !== "all" ? selectedSubcategoria : undefined,
         idSkill: selectedSkill !== "all" ? selectedSkill : undefined,
       };
 
@@ -144,23 +200,6 @@ export default function ExplorarPage() {
         </Link>
       </div>
 
-      {/* Stats rápidas WIP: desarrollar integración futura*/}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-        {[
-          { title: "Servicios disponibles", value: (servicios?.length || 0).toString() },
-          { title: "Categorías", value: (categorias?.length || 0).toString() },
-          { title: "Cerca de ti", value: "12" },
-          { title: "Nuevos hoy", value: "5" },
-        ].map((stat, i) => (
-          <Card key={i} className="bg-primary/10">
-            <CardContent className="p-4">
-              <p className="text-sm text-muted-foreground">{stat.title}</p>
-              <p className="text-2xl font-bold">{stat.value}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div> */}
-
       {/* Barra de búsqueda y filtros */}
       <div className="flex flex-col sm:flex-row gap-4 mt-6">
         <div className="relative flex-1">
@@ -188,7 +227,29 @@ export default function ExplorarPage() {
           </SelectContent>
         </Select>
 
-        <Select value={selectedSkill} onValueChange={setSelectedSkill}>
+        <Select
+          value={selectedSubcategoria}
+          onValueChange={setSelectedSubcategoria}
+          disabled={!selectedCategoria || selectedCategoria === "all"}
+        >
+          <SelectTrigger className="w-full sm:w-[200px]">
+            <SelectValue placeholder="Todas las subcategorías" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas las subcategorías</SelectItem>
+            {subcategorias.map((sub) => (
+              <SelectItem key={sub.id} value={sub.id}>
+                {sub.nombre}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={selectedSkill}
+          onValueChange={setSelectedSkill}
+          disabled={!selectedSubcategoria || selectedSubcategoria === "all"}
+        >
           <SelectTrigger className="w-full sm:w-[200px]">
             <SelectValue placeholder="Todas las habilidades" />
           </SelectTrigger>
@@ -196,7 +257,7 @@ export default function ExplorarPage() {
             <SelectItem value="all">Todas las habilidades</SelectItem>
             {skills.map((skill) => (
               <SelectItem key={skill.id} value={skill.id}>
-                {skill.nombre}
+                {skill.descripcion}
               </SelectItem>
             ))}
           </SelectContent>

@@ -76,6 +76,43 @@ class StaticService {
     };
   }
 
+  async getSubCategoriasByCategoria(
+    idCategoria: string
+  ): Promise<ApiResponse<any[]>> {
+    await this.delay();
+    const categoria = STATIC_CATEGORIAS.find((cat) => cat.id === idCategoria);
+    if (categoria) {
+      return {
+        success: true,
+        message: "Subcategorías obtenidas exitosamente",
+        data: categoria.subcategorias,
+      };
+    }
+    return {
+      success: false,
+      message: "Categoría no encontrada",
+      data: [],
+    };
+  }
+
+  async getSkillsBySubCategoria(
+    idSubcategoria: string
+  ): Promise<ApiResponse<Skill[]>> {
+    await this.delay();
+    // En un entorno estático, necesitamos encontrar la subcategoría y luego los skills.
+    // Esto es una simulación, ya que la estructura actual no vincula skills a subcategorías directamente.
+    const allSkills = STATIC_SKILLS;
+    const filteredSkills = allSkills.filter(
+      (skill) => skill.idSubCategoria === idSubcategoria
+    ); // Asumiendo que categoria es idSubcategoria para la simulación
+
+    return {
+      success: true,
+      message: "Skills obtenidos exitosamente",
+      data: filteredSkills,
+    };
+  }
+
   async createServicio(
     data: ServicioRequestBody
   ): Promise<ApiResponse<ServicioCreado>> {

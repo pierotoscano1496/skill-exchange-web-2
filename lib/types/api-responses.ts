@@ -28,7 +28,6 @@ export interface Usuario {
   }[];
 }
 
-
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -37,9 +36,8 @@ export interface ApiResponse<T> {
 
 export interface Skill {
   id: string;
-  nombre: string;
-  categoria: string;
   descripcion?: string;
+  idSubCategoria: string;
 }
 
 export interface Categoria {

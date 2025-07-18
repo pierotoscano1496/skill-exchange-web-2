@@ -118,3 +118,95 @@ Authorization: Bearer {token}
   ]
 }
 ```
+
+- Endpoint: POST /skill
+  Request body:`
+
+```json
+{
+  "descripcion": "string",
+  "idSubcategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+Response body:
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "descripcion": "string",
+  "idSubcategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+- Endpoint: GET /skill/sub-categoria/{idSubcategoria}
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "descripcion": "string",
+    "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+]
+```
+
+- Endpoint: GET /categoria
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "nombre": "string",
+    "subCategorias": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nombre": "string",
+        "idCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "skills": [
+          {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "descripcion": "string",
+            "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+
+- Endpoint: GET /sub-categoria/categoria/{idCategoria}
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "nombre": "string",
+    "idCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "skills": [
+      {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descripcion": "string",
+        "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      }
+    ]
+  }
+]
+```
+
+- Endpoint: GET /skill/sub-categoria/{idSubcategoria}
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "descripcion": "string",
+    "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+]
+```

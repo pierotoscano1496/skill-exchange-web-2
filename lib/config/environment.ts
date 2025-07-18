@@ -7,6 +7,8 @@ export const ENV_CONFIG = {
       LOGIN: "/auth/login",
       SKILLS: "/skills",
       CATEGORIAS: "/categorias",
+      SUB_CATEGORIAS_BY_CATEGORIA: "/sub-categoria/categoria",
+      SKILLS_BY_SUB_CATEGORIA: "/skill/sub-categoria",
       SERVICIOS: "/servicio",
       BUSQUEDA_SERVICIOS: "/servicio/busqueda",
       SERVICIO_DETALLE: "/servicio/details/preview",
