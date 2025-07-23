@@ -17,6 +17,7 @@ import type {
   OwnLastMessage,
   ChatConversation,
   Usuario,
+  SkillInfo,
 } from "../types/api-responses";
 import type { ServicioRequestBody } from "../api/servicio-api";
 import {
@@ -67,6 +68,20 @@ class StaticService {
     };
   }
 
+  async getSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    await this.delay();
+    // En un entorno estático, simplemente devolvemos los skills con la info adicional.
+    return {
+      success: true,
+      message: "Skills info obtenidos exitosamente",
+      data: STATIC_SKILLS.map((skill) => ({
+        ...skill,
+        nombreSubCategoria: "Subcategoría de " + skill.idSubCategoria,
+        nombreCategoria: "Categoría de " + skill.idSubCategoria,
+      })),
+    };
+  }
+
   async getCategorias(): Promise<ApiResponse<Categoria[]>> {
     await this.delay();
     return {
@@ -85,7 +100,7 @@ class StaticService {
       return {
         success: true,
         message: "Subcategorías obtenidas exitosamente",
-        data: categoria.subcategorias,
+        data: categoria.subCategorias,
       };
     }
     return {

@@ -40,18 +40,24 @@ export interface Skill {
   idSubCategoria: string;
 }
 
+export interface SkillInfo {
+  id: string;
+  descripcion: string;
+  nombreSubCategoria: string;
+  nombreCategoria: string;
+}
+
 export interface Categoria {
   id: string;
   nombre: string;
-  descripcion?: string;
-  subcategorias: Subcategoria[];
+  subCategorias: Subcategoria[];
 }
 
 export interface Subcategoria {
   id: string;
   nombre: string;
-  descripcion?: string;
-  categoriaId: string;
+  idCategoria: string;
+  skills: Skill[];
 }
 
 export interface ServicioCreado {

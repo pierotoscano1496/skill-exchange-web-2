@@ -5,8 +5,8 @@ export const ENV_CONFIG = {
     BASE_URL: "http://localhost:9081/api",
     ENDPOINTS: {
       LOGIN: "/auth/login",
-      SKILLS: "/skills",
-      CATEGORIAS: "/categorias",
+      SKILLS: "/skill",
+      CATEGORIAS: "/categoria",
       SUB_CATEGORIAS_BY_CATEGORIA: "/sub-categoria/categoria",
       SKILLS_BY_SUB_CATEGORIA: "/skill/sub-categoria",
       SERVICIOS: "/servicio",

@@ -21,6 +21,7 @@ import type {
   OwnLastMessage,
   ChatConversation,
   Usuario,
+  SkillInfo,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -44,6 +45,10 @@ class DataService {
 
   async getSkills(): Promise<ApiResponse<Skill[]>> {
     return this.service.getSkills();
+  }
+
+  async getSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    return this.service.getSkillsInfo();
   }
 
   async getCategorias(): Promise<ApiResponse<Categoria[]>> {
@@ -180,7 +185,7 @@ class DataService {
     const response = await this.getCategorias();
     if (response.success) {
       const categoria = response.data.find((cat) => cat.id === categoriaId);
-      return categoria?.subcategorias || [];
+      return categoria?.subCategorias || [];
     }
     return [];
   }

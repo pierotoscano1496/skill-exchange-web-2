@@ -13,7 +13,7 @@
   "nombres": "string",
   "apellidos": "string",
   "tipo": "cliente",
-  "fechaNacimiento": "2025-07-13",
+  "fechaNacimiento": "2025-07-23",
   "clave": "string",
   "perfilLinkedin": "string",
   "perfilFacebook": "string",

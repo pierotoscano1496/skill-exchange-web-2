@@ -18,6 +18,7 @@ import type {
   OwnLastMessage,
   ChatConversation,
   Usuario,
+  SkillInfo,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -87,6 +88,12 @@ class ApiService {
 
   async getSkills(): Promise<ApiResponse<Skill[]>> {
     return this.fetchApi<Skill[]>(ENV_CONFIG.API.ENDPOINTS.SKILLS);
+  }
+
+  async getSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    return this.fetchApi<SkillInfo[]>(
+      `${ENV_CONFIG.API.ENDPOINTS.SKILLS}/info`
+    );
   }
 
   async getCategorias(): Promise<ApiResponse<Categoria[]>> {
