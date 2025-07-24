@@ -1,227 +1,219 @@
-import type { ServicioFormData } from "../page";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import type { ServicioFormData } from "../page"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   Calendar,
   Clock,
   DollarSign,
   MapPin,
   Monitor,
-  User,
-} from "lucide-react";
-import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums";
-import { useUser } from "@/hooks/use-user";
+  Banknote,
+  CreditCard,
+  Globe,
+  Smartphone,
+} from "lucide-react"
+import { ModalidadPagoTipo, ServicioModalidad, ServicioTipoPrecio } from "@/lib/constants/enums"
+import { useUser } from "@/hooks/use-user"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface StepVistaPreviaProps {
-  formData: ServicioFormData;
+  formData: ServicioFormData
 }
 
 export function StepVistaPrevia({ formData }: StepVistaPreviaProps) {
-  const { user } = useUser();
-  // Función para formatear el precio según el tipo
+  const { user } = useUser()
+
   const formatearPrecio = () => {
-    if (formData.tipoPrecio === ServicioTipoPrecio.FIJO) {
-      return `$${formData.precio}`;
-    } else if (formData.tipoPrecio === ServicioTipoPrecio.HORA) {
-      return `$${formData.precio}/hora`;
-    } else {
-      return `$${formData.precioMinimo} - $${formData.precioMaximo}`;
+    switch (formData.tipoPrecio) {
+      case ServicioTipoPrecio.FIJO:
+        return `S/ ${Number(formData.precio).toFixed(2)}`
+      case ServicioTipoPrecio.HORA:
+        return `S/ ${Number(formData.precio).toFixed(2)} / hora`
+      case ServicioTipoPrecio.RANGO:
+        return `S/ ${Number(formData.precioMinimo).toFixed(2)} - S/ ${Number(formData.precioMaximo).toFixed(2)}`
+      default:
+        return "Precio no definido"
     }
-  };
+  }
 
-  // Función para obtener el nombre de la categoría
+  // TODO: This is a temporary solution. The full category/subcategory objects
+  // should be passed down to this component to avoid hardcoding and ensure correctness.
   const obtenerNombreCategoria = () => {
-    const categories = [
-      { id: "tech", name: "Tecnología" },
-      { id: "home", name: "Hogar" },
-      { id: "education", name: "Educación" },
-    ];
-    return (
-      categories.find((cat) => cat.id === formData.categoria)?.name ||
-      formData.categoria
-    );
-  };
+    return formData.categoria || "Categoría"
+  }
 
-  // Función para obtener el nombre de la subcategoría
   const obtenerNombreSubcategoria = () => {
-    const subcategories = [
-      { id: "programming", name: "Programación" },
-      { id: "design", name: "Diseño" },
-      { id: "hardware", name: "Hardware" },
-      { id: "cleaning", name: "Limpieza" },
-      { id: "gardening", name: "Jardinería" },
-      { id: "repairs", name: "Reparaciones" },
-      { id: "languages", name: "Idiomas" },
-      { id: "tutoring", name: "Tutoría" },
-      { id: "arts", name: "Artes" },
-    ];
-    return (
-      subcategories.find((subcat) => subcat.id === formData.subcategoria)
-        ?.name || formData.subcategoria
-    );
-  };
+    return formData.subcategoria || "Subcategoría"
+  }
 
-  // Función para formatear los días de disponibilidad
   const formatearDias = () => {
     const diasMap: Record<string, string> = {
-      lunes: "Lunes",
-      martes: "Martes",
-      miercoles: "Miércoles",
-      jueves: "Jueves",
-      viernes: "Viernes",
-      sabado: "Sábado",
-      domingo: "Domingo",
-    };
+      lunes: "Lu",
+      martes: "Ma",
+      miercoles: "Mi",
+      jueves: "Ju",
+      viernes: "Vi",
+      sabado: "Sá",
+      domingo: "Do",
+    }
+    if (formData.disponibilidad.dias.length === 7) return "Todos los días"
+    if (formData.disponibilidad.dias.length === 0) return "No especificado"
+    return formData.disponibilidad.dias.map((dia) => diasMap[dia] || dia).join(", ")
+  }
 
-    return formData.disponibilidad.dias
-      .map((dia) => diasMap[dia] || dia)
-      .join(", ");
-  };
-
-  // Función para formatear la modalidad
   const formatearModalidad = () => {
     const modalidadMap: Record<string, string> = {
-      presencial: "Presencial",
-      remoto: "Remoto",
-      mixto: "Presencial y remoto",
-    };
+      [ServicioModalidad.PRESENCIAL]: "Presencial",
+      [ServicioModalidad.REMOTO]: "Remoto",
+      [ServicioModalidad.MIXTO]: "Mixto",
+    }
+    return modalidadMap[formData.modalidad] || formData.modalidad
+  }
 
-    return modalidadMap[formData.modalidad] || formData.modalidad;
-  };
+  const getPaymentMethodInfo = (tipo: ModalidadPagoTipo) => {
+    const iconMap = {
+      [ModalidadPagoTipo.YAPE]: <Smartphone className="h-4 w-4" />,
+      [ModalidadPagoTipo.TARJETA]: <CreditCard className="h-4 w-4" />,
+      [ModalidadPagoTipo.LINEA]: <Globe className="h-4 w-4" />,
+      [ModalidadPagoTipo.EFECTIVO]: <Banknote className="h-4 w-4" />,
+    }
+    const nameMap = {
+      [ModalidadPagoTipo.YAPE]: "Yape",
+      [ModalidadPagoTipo.TARJETA]: "Transferencia",
+      [ModalidadPagoTipo.LINEA]: "Pago en línea",
+      [ModalidadPagoTipo.EFECTIVO]: "Efectivo",
+    }
+    return { icon: iconMap[tipo], name: nameMap[tipo] }
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-semibold">Vista previa de tu servicio</h3>
-        <p className="text-sm text-muted-foreground">
-          Así es como se verá tu servicio para los usuarios de Chambita
-        </p>
-      </div>
-
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-6">
-            {/* Galería de imágenes */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {formData.imagenes.map((imagen, index) => {
-                const imgUrl =
-                  imagen instanceof File
-                    ? URL.createObjectURL(imagen)
-                    : imagen || "/placeholder.svg";
-
-                return (
-                  <img
-                    key={index}
-                    src={imgUrl || "/placeholder.svg"}
-                    alt={`Imagen ${index + 1}`}
-                    className="w-full h-40 object-cover rounded-md border"
-                  />
-                );
-              })}
-            </div>
-
-            {/* Título y precio */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-              <h2 className="text-2xl font-bold">{formData.titulo}</h2>
-              <div className="flex items-center text-xl font-semibold">
-                <DollarSign className="h-5 w-5 text-primary" />
-                <span>{formatearPrecio()}</span>
+    <div className="space-y-6 bg-muted/20 p-4 rounded-lg border">
+      <div className="space-y-4">
+        {formData.imagenes.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {formData.imagenes.map((imagen, index) => (
+              <div key={index} className="aspect-video relative">
+                <img
+                  src={imagen instanceof File ? URL.createObjectURL(imagen) : imagen}
+                  alt={`Imagen de servicio ${index + 1}`}
+                  className="w-full h-full object-cover rounded-md"
+                />
               </div>
-            </div>
-
-            {/* Categorización */}
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="bg-primary/10">
-                {obtenerNombreCategoria()}
-              </Badge>
-              <Badge variant="outline" className="bg-primary/10">
-                {obtenerNombreSubcategoria()}
-              </Badge>
-              {formData.habilidades.map((habilidad) => (
-                <Badge key={habilidad.id} variant="outline">
-                  {habilidad.nombre}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Detalles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-muted-foreground" />
-                <span>{formData.ubicacion}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Monitor className="h-5 w-5 text-muted-foreground" />
-                <span>Modalidad: {formatearModalidad()}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <span>Disponible: {formatearDias()}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-muted-foreground" />
-                <span>
-                  Horario: {formData.disponibilidad.horaInicio} -{" "}
-                  {formData.disponibilidad.horaFin}
-                </span>
-              </div>
-            </div>
-
-            {/* Descripción */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Descripción</h3>
-              <p className="text-muted-foreground whitespace-pre-line">
-                {formData.descripcion}
-              </p>
-            </div>
-
-            {/* Modalidades de pago */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">
-                Modalidades de pago aceptadas
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {formData.modalidadesPago.map((modalidad, index) => {
-                  const iconMap = {
-                    [ModalidadPagoTipo.YAPE]: "📱",
-                    [ModalidadPagoTipo.TARJETA]: "💳",
-                    [ModalidadPagoTipo.LINEA]: "🌐",
-                    [ModalidadPagoTipo.EFECTIVO]: "💵",
-                  };
-                  const nameMap = {
-                    [ModalidadPagoTipo.YAPE]: "Yape",
-                    [ModalidadPagoTipo.TARJETA]: "Tarjeta",
-                    [ModalidadPagoTipo.LINEA]: "Pago en línea",
-                    [ModalidadPagoTipo.EFECTIVO]: "Efectivo",
-                  };
-                  return (
-                    <Badge
-                      key={index}
-                      variant="outline"
-                      className="bg-primary/10"
-                    >
-                      {iconMap[modalidad.tipo]} {nameMap[modalidad.tipo]}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Proveedor */}
-            <div className="flex items-center gap-3 border-t pt-4">
-              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <p className="font-medium">{user?.nombres}</p>
-                <p className="text-sm text-muted-foreground">
-                  Proveedor del servicio
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">{formData.titulo || "Título de tu servicio"}</h1>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary">{obtenerNombreCategoria()}</Badge>
+            <Badge variant="secondary">{obtenerNombreSubcategoria()}</Badge>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Descripción del Servicio</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground whitespace-pre-line">
+                  {formData.descripcion || "Descripción detallada de tu servicio."}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Habilidades</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {formData.habilidades.map((habilidad) => (
+                    <Badge key={habilidad.id} variant="outline">
+                      {habilidad.nombre}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center text-3xl font-bold text-primary">
+                  {formatearPrecio()}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Detalles</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex items-start gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <span>{formData.ubicacion || "Ubicación no especificada"}</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Monitor className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <span>{formatearModalidad()}</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <span>
+                    <strong>Días:</strong> {formatearDias()}
+                  </span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Clock className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <span>
+                    <strong>Horario:</strong> {formData.disponibilidad.horaInicio} - {formData.disponibilidad.horaFin}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Formas de Pago</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-3">
+                {formData.modalidadesPago.map((modalidad, index) => {
+                  const { icon, name } = getPaymentMethodInfo(modalidad.tipo)
+                  return (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      {icon}
+                      <span>{name}</span>
+                    </div>
+                  )
+                })}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center gap-4 space-y-0 p-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={user?.foto} alt={user?.nombres} />
+                  <AvatarFallback>
+                    {user?.nombres?.[0]}
+                    {user?.apellidos?.[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle className="text-base">
+                    {user?.nombres} {user?.apellidos}
+                  </CardTitle>
+                  <CardDescription>Proveedor del servicio</CardDescription>
+                </div>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

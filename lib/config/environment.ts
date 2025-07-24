@@ -20,6 +20,7 @@ export const ENV_CONFIG = {
       UPLOAD: "/upload",
       CHAT_CONVERSATION_BY_ID: "/chat",
       USUARIO: "/usuario",
+      USUARIO_OWN_SKILLS_INFO: "/usuario/own/skills/info",
       SIMPLE_CHECK: "/simple-check",
     },
   },

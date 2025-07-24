@@ -1,5 +1,5 @@
 import { ENV_CONFIG } from "../config/environment";
-import type { ApiResponse, Usuario } from "../types/api-responses";
+import type { ApiResponse, SkillInfo, Usuario } from "../types/api-responses";
 import { apiService } from "./api-service";
 
 export interface RegisterUserRequest {
@@ -30,6 +30,16 @@ class UserService {
       method: "POST",
       body: JSON.stringify(data),
     });
+  }
+
+  async getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    return apiService.fetchApi<SkillInfo[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_OWN_SKILLS_INFO,
+      {
+        method: "GET",
+      },
+      true
+    );
   }
 }
 

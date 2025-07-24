@@ -47,7 +47,9 @@ class ApiService {
       if (isPrivate) {
         const token = localStorage.getItem("token");
         if (token) {
-          headers.Authorization = `Bearer ${token}`;
+          headers.Authorization = token.startsWith("Bearer ")
+            ? token
+            : `Bearer ${token}`;
         }
       }
 
@@ -534,6 +536,14 @@ class ApiService {
 
   async getUsuario(): Promise<ApiResponse<Usuario>> {
     return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {}, true);
+  }
+
+  async getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    return this.fetchApi<SkillInfo[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_OWN_SKILLS_INFO,
+      {},
+      true
+    );
   }
 }
 

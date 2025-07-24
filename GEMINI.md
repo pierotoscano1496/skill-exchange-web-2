@@ -75,6 +75,33 @@ Authorization: Bearer {token}
 }
 ```
 
+- Endpoint: GET /usuario/own/skills/info
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "descripcion": "string",
+    "nombreSubCategoria": "string",
+    "nombreCategoria": "string"
+  }
+]
+```
+
+- Endpoint: GET /usuario/own/skills
+  Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "descripcion": "string",
+    "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  }
+]
+```
+
 - Endpoint: GET /chat/own-last-message
   Response body:
 
@@ -209,4 +236,85 @@ Response body:
     "idSubCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
 ]
+```
+
+- Endpoint: POST /servicio
+  Request body:
+
+```json
+{
+  "data": {
+    "titulo": "string",
+    "descripcion": "string",
+    "precio": 0,
+    "idProveedor": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "tipoPrecio": "fijo",
+    "precioMinimo": 0,
+    "precioMaximo": 0,
+    "ubicacion": "string",
+    "modalidad": "presencial",
+    "aceptaTerminos": true,
+    "skills": [
+      {
+        "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "idSkill": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      }
+    ],
+    "disponibilidades": [
+      {
+        "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "dia": "lunes",
+        "horaInicio": {
+          "hour": 0,
+          "minute": 0,
+          "second": 0,
+          "nano": 0
+        },
+        "horaFin": {
+          "hour": 0,
+          "minute": 0,
+          "second": 0,
+          "nano": 0
+        }
+      }
+    ],
+    "modalidadesPago": [
+      {
+        "tipo": "yape",
+        "cuentaBancaria": "string",
+        "numeroCelular": "string",
+        "url": "string"
+      }
+    ]
+  },
+  "multimedia": ["string"]
+}
+```
+
+Response body:
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "dni": "string",
+  "carnetExtranjeria": "string",
+  "tipoDocumento": "dni",
+  "correo": "string",
+  "nombres": "string",
+  "apellidos": "string",
+  "tipo": "cliente",
+  "fechaNacimiento": "2025-07-10",
+  "perfilLinkedin": "string",
+  "perfilFacebook": "string",
+  "perfilInstagram": "string",
+  "perfilTiktok": "string",
+  "introduccion": "string",
+  "skills": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nivelConocimiento": 0,
+      "descripcion": "string"
+    }
+  ]
+}
 ```

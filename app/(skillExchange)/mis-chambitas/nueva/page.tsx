@@ -15,6 +15,7 @@ import { StepModalidadesPago } from "./components/step-modalidades-pago"
 import { transformarDisponibilidades, type ServicioRequestBody } from "@/lib/api/servicio-api"
 import { ModalidadPagoTipo, type ServicioDia, ServicioModalidad, ServicioTipoPrecio } from "@/lib/constants/enums"
 import { dataService } from "@/lib/services/data-service"
+import { Stepper } from "@/components/ui/stepper"
 
 // Actualizar la interfaz para usar los enums
 export interface ServicioFormData {
@@ -27,8 +28,6 @@ export interface ServicioFormData {
   precioMaximo?: string
 
   // Categorización
-  categoria: string
-  subcategoria: string
   habilidades: { id: string; nombre: string }[]
 
   // Detalles adicionales
@@ -58,8 +57,6 @@ const initialFormData: ServicioFormData = {
   precio: "",
   tipoPrecio: ServicioTipoPrecio.FIJO,
 
-  categoria: "",
-  subcategoria: "",
   habilidades: [],
 
   disponibilidad: {
@@ -75,16 +72,25 @@ const initialFormData: ServicioFormData = {
   aceptaTerminos: false,
 }
 
+const stepsConfig = [
+  { label: "Información" },
+  { label: "Categorización" },
+  { label: "Detalles" },
+  { label: "Pagos" },
+  { label: "Términos" },
+  { label: "Vista previa" },
+]
+
 export default function NuevoServicioPage() {
   const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<ServicioFormData>(initialFormData)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitError, setSubmitError] = useState<string>("")
 
-  const totalSteps = 6
+  const totalSteps = stepsConfig.length
 
   // Función para actualizar los datos del formulario
   const updateFormData = (data: Partial<ServicioFormData>) => {
@@ -95,7 +101,7 @@ export default function NuevoServicioPage() {
   const validateStep = (step: number): boolean => {
     const newErrors: Record<string, string> = {}
 
-    if (step === 1) {
+    if (step === 0) {
       // Validar información básica
       if (!formData.titulo) {
         newErrors.titulo = "El título es requerido"
@@ -126,20 +132,11 @@ export default function NuevoServicioPage() {
           newErrors.precioMaximo = "El precio máximo debe ser mayor que el precio mínimo"
         }
       }
-    } else if (step === 2) {
-      // Validar categorización
-      if (!formData.categoria) {
-        newErrors.categoria = "La categoría es requerida"
-      }
-
-      if (!formData.subcategoria) {
-        newErrors.subcategoria = "La subcategoría es requerida"
-      }
-
+    } else if (step === 1) {
       if (formData.habilidades.length === 0) {
         newErrors.habilidades = "Debes seleccionar al menos una habilidad"
       }
-    } else if (step === 3) {
+    } else if (step === 2) {
       // Validar detalles adicionales
       if (formData.disponibilidad.dias.length === 0) {
         newErrors.dias = "Debes seleccionar al menos un día de disponibilidad"
@@ -152,7 +149,7 @@ export default function NuevoServicioPage() {
       if (formData.imagenes.length === 0) {
         newErrors.imagenes = "Debes agregar al menos una imagen"
       }
-    } else if (step === 4) {
+    } else if (step === 3) {
       // Validar modalidades de pago
       if (formData.modalidadesPago.length === 0) {
         newErrors.modalidadesPago = "Debes agregar al menos una modalidad de pago"
@@ -170,7 +167,7 @@ export default function NuevoServicioPage() {
           }
         })
       }
-    } else if (step === 5) {
+    } else if (step === 4) {
       // Validar términos y condiciones
       if (!formData.aceptaTerminos) {
         newErrors.aceptaTerminos = "Debes aceptar los términos y condiciones"
@@ -184,7 +181,7 @@ export default function NuevoServicioPage() {
   // Avanzar al siguiente paso
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      if (currentStep < totalSteps) {
+      if (currentStep < totalSteps - 1) {
         setCurrentStep(currentStep + 1)
         setErrors({})
       } else {
@@ -195,11 +192,22 @@ export default function NuevoServicioPage() {
 
   // Retroceder al paso anterior
   const handleBack = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
       setErrors({})
     } else {
       router.push("/mis-chambitas")
+    }
+  }
+
+  // Navegar a un paso específico
+  const handleStepClick = (stepIndex: number) => {
+    if (stepIndex < currentStep) {
+      setCurrentStep(stepIndex)
+      setErrors({})
+    } else if (validateStep(currentStep)) {
+      setCurrentStep(stepIndex)
+      setErrors({})
     }
   }
 
@@ -287,17 +295,17 @@ export default function NuevoServicioPage() {
   // Renderizar el paso actual
   const renderStep = () => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return <StepInformacionBasica formData={formData} updateFormData={updateFormData} errors={errors} />
-      case 2:
+      case 1:
         return <StepCategorizacion formData={formData} updateFormData={updateFormData} errors={errors} />
-      case 3:
+      case 2:
         return <StepDetallesAdicionales formData={formData} updateFormData={updateFormData} errors={errors} />
-      case 4:
+      case 3:
         return <StepModalidadesPago formData={formData} updateFormData={updateFormData} errors={errors} />
-      case 5:
+      case 4:
         return <StepTerminosCondiciones formData={formData} updateFormData={updateFormData} errors={errors} />
-      case 6:
+      case 5:
         return <StepVistaPrevia formData={formData} />
       default:
         return null
@@ -306,38 +314,23 @@ export default function NuevoServicioPage() {
 
   // Obtener el título del paso actual
   const getStepTitle = () => {
-    switch (currentStep) {
-      case 1:
-        return "Información básica"
-      case 2:
-        return "Categorización"
-      case 3:
-        return "Detalles adicionales"
-      case 4:
-        return "Modalidades de pago"
-      case 5:
-        return "Términos y condiciones"
-      case 6:
-        return "Vista previa"
-      default:
-        return ""
-    }
+    return stepsConfig[currentStep].label
   }
 
   // Obtener la descripción del paso actual
   const getStepDescription = () => {
     switch (currentStep) {
-      case 1:
+      case 0:
         return "Ingresa la información básica de tu servicio"
-      case 2:
+      case 1:
         return "Categoriza tu servicio para que sea más fácil de encontrar"
-      case 3:
+      case 2:
         return "Agrega detalles adicionales sobre tu servicio"
-      case 4:
+      case 3:
         return "Configura las formas de pago que aceptas"
-      case 5:
+      case 4:
         return "Revisa y acepta los términos y condiciones"
-      case 6:
+      case 5:
         return "Revisa toda la información antes de publicar"
       default:
         return ""
@@ -346,11 +339,17 @@ export default function NuevoServicioPage() {
 
   // Obtener el texto del botón de acción principal
   const getActionButtonText = () => {
-    if (currentStep === totalSteps) {
+    if (currentStep === totalSteps - 1) {
       return isSubmitting ? "Publicando..." : "Publicar servicio"
     }
     return "Siguiente"
   }
+
+  const stepperSteps = stepsConfig.map((step, index) => ({
+    label: step.label,
+    isCompleted: index < currentStep,
+    isActive: index === currentStep,
+  }))
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -372,62 +371,36 @@ export default function NuevoServicioPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                  {currentStep}
-                </div>
-                <CardTitle>{getStepTitle()}</CardTitle>
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Paso {currentStep} de {totalSteps}
-              </div>
-            </div>
-            <CardDescription>{getStepDescription()}</CardDescription>
-          </CardHeader>
+        <>
+          <Stepper steps={stepperSteps} onStepClick={handleStepClick} className="mb-8" />
+          <Card>
+            <CardHeader>
+              <CardTitle>{getStepTitle()}</CardTitle>
+              <CardDescription>{getStepDescription()}</CardDescription>
+            </CardHeader>
 
-          <CardContent>
-            {submitError && (
-              <Alert className="mb-4 border-red-200 bg-red-50">
-                <AlertDescription className="text-red-700">{submitError}</AlertDescription>
-              </Alert>
-            )}
-            {renderStep()}
-          </CardContent>
+            <CardContent>
+              {submitError && (
+                <Alert className="mb-4 border-red-200 bg-red-50">
+                  <AlertDescription className="text-red-700">{submitError}</AlertDescription>
+                </Alert>
+              )}
+              {renderStep()}
+            </CardContent>
 
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={handleBack} disabled={isSubmitting}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {currentStep === 1 ? "Cancelar" : "Atrás"}
-            </Button>
-            <Button onClick={handleNext} disabled={isSubmitting}>
-              {getActionButtonText()}
-              {currentStep < totalSteps && <ArrowRight className="ml-2 h-4 w-4" />}
-            </Button>
-          </CardFooter>
-        </Card>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" onClick={handleBack} disabled={isSubmitting}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {currentStep === 0 ? "Cancelar" : "Atrás"}
+              </Button>
+              <Button onClick={handleNext} disabled={isSubmitting}>
+                {getActionButtonText()}
+                {currentStep < totalSteps - 1 && <ArrowRight className="ml-2 h-4 w-4" />}
+              </Button>
+            </CardFooter>
+          </Card>
+        </>
       )}
-
-      {/* Indicador de progreso */}
-      <div className="mt-6">
-        <div className="flex justify-between mb-2">
-          {Array.from({ length: totalSteps }).map((_, index) => (
-            <div key={index} className={`flex-1 ${index < totalSteps - 1 ? "mr-1" : ""}`}>
-              <div className={`h-2 rounded-full ${index + 1 <= currentStep ? "bg-primary" : "bg-muted"}`} />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>Información</span>
-          <span>Categorización</span>
-          <span>Detalles</span>
-          <span>Pagos</span>
-          <span>Términos</span>
-          <span>Vista previa</span>
-        </div>
-      </div>
     </div>
   )
 }

@@ -7,9 +7,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import type { ServicioFormData } from "../page"
-import { Camera, X } from "lucide-react"
+import { Camera, Image as ImageIcon, X } from "lucide-react"
 import { useRef } from "react"
 import { ServicioDia, ServicioModalidad } from "@/lib/constants/enums"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 interface StepDetallesAdicionalesProps {
   formData: ServicioFormData
@@ -32,21 +34,13 @@ export function StepDetallesAdicionales({ formData, updateFormData, errors }: St
 
   // Manejar cambio en los días de disponibilidad
   const handleDiaChange = (dia: ServicioDia, checked: boolean) => {
-    if (checked) {
-      updateFormData({
-        disponibilidad: {
-          ...formData.disponibilidad,
-          dias: [...formData.disponibilidad.dias, dia],
-        },
-      })
-    } else {
-      updateFormData({
-        disponibilidad: {
-          ...formData.disponibilidad,
-          dias: formData.disponibilidad.dias.filter((d) => d !== dia),
-        },
-      })
-    }
+    const newDias = checked
+      ? [...formData.disponibilidad.dias, dia]
+      : formData.disponibilidad.dias.filter((d) => d !== dia)
+
+    updateFormData({
+      disponibilidad: { ...formData.disponibilidad, dias: newDias },
+    })
   }
 
   // Manejar cambio en las horas de disponibilidad
@@ -63,7 +57,7 @@ export function StepDetallesAdicionales({ formData, updateFormData, errors }: St
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (files) {
-      const newImages = Array.from(files)
+      const newImages = Array.from(files).slice(0, 5 - formData.imagenes.length) // Limitar a 5 imágenes
       updateFormData({
         imagenes: [...formData.imagenes, ...newImages],
       })
@@ -84,29 +78,16 @@ export function StepDetallesAdicionales({ formData, updateFormData, errors }: St
     })
   }
 
-  // Obtener URL para mostrar la imagen
-  const getImageUrl = (imagen: File | string): string => {
-    if (imagen instanceof File) {
-      return URL.createObjectURL(imagen)
-    }
-    return imagen
-  }
-
-  // Obtener nombre del archivo
-  const getImageName = (imagen: File | string): string => {
-    if (imagen instanceof File) {
-      return imagen.name
-    }
-    return "Imagen"
-  }
-
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <Label>Disponibilidad</Label>
-        <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Disponibilidad</CardTitle>
+          <CardDescription>Define cuándo y a qué horas puedes realizar el servicio.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
           <div>
-            <Label className="text-sm text-muted-foreground mb-2 block">Días de la semana</Label>
+            <Label className="text-sm font-medium mb-2 block">Días de la semana</Label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {diasSemana.map((dia) => (
                 <div key={dia.id} className="flex items-center space-x-2">
@@ -115,7 +96,7 @@ export function StepDetallesAdicionales({ formData, updateFormData, errors }: St
                     checked={formData.disponibilidad.dias.includes(dia.id)}
                     onCheckedChange={(checked) => handleDiaChange(dia.id, checked as boolean)}
                   />
-                  <Label htmlFor={`dia-${dia.id}`} className="cursor-pointer">
+                  <Label htmlFor={`dia-${dia.id}`} className="cursor-pointer font-normal">
                     {dia.label}
                   </Label>
                 </div>
@@ -144,87 +125,109 @@ export function StepDetallesAdicionales({ formData, updateFormData, errors }: St
               />
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="space-y-2">
-        <Label htmlFor="ubicacion">Ubicación</Label>
-        <Input
-          id="ubicacion"
-          placeholder="Ej. San Isidro, Lima"
-          value={formData.ubicacion}
-          onChange={(e) => updateFormData({ ubicacion: e.target.value })}
-          className={errors.ubicacion ? "border-red-500" : ""}
-        />
-        {errors.ubicacion && <p className="text-sm text-red-500">{errors.ubicacion}</p>}
-      </div>
-
-      <div className="space-y-2">
-        <Label>Modalidad del servicio</Label>
-        <RadioGroup
-          value={formData.modalidad}
-          onValueChange={(value: ServicioModalidad) => updateFormData({ modalidad: value })}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value={ServicioModalidad.PRESENCIAL} id="modalidad-presencial" />
-            <Label htmlFor="modalidad-presencial">Presencial</Label>
+      <Card>
+        <CardHeader>
+          <CardTitle>Ubicación y Modalidad</CardTitle>
+          <CardDescription>Especifica dónde y cómo se realizará el trabajo.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="ubicacion">Ubicación</Label>
+            <Input
+              id="ubicacion"
+              placeholder="Ej. San Isidro, Lima"
+              value={formData.ubicacion}
+              onChange={(e) => updateFormData({ ubicacion: e.target.value })}
+              className={errors.ubicacion ? "border-red-500" : ""}
+            />
+            {errors.ubicacion && <p className="text-sm text-red-500">{errors.ubicacion}</p>}
           </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value={ServicioModalidad.REMOTO} id="modalidad-remoto" />
-            <Label htmlFor="modalidad-remoto">Remoto</Label>
+
+          <div className="space-y-3">
+            <Label>Modalidad del servicio</Label>
+            <RadioGroup
+              value={formData.modalidad}
+              onValueChange={(value: ServicioModalidad) => updateFormData({ modalidad: value })}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+            >
+              <Label htmlFor="modalidad-presencial" className="cursor-pointer">
+                <Card className={cn("p-4", formData.modalidad === ServicioModalidad.PRESENCIAL && "border-primary")}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={ServicioModalidad.PRESENCIAL} id="modalidad-presencial" />
+                    <p className="font-semibold">Presencial</p>
+                  </div>
+                </Card>
+              </Label>
+              <Label htmlFor="modalidad-remoto" className="cursor-pointer">
+                <Card className={cn("p-4", formData.modalidad === ServicioModalidad.REMOTO && "border-primary")}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={ServicioModalidad.REMOTO} id="modalidad-remoto" />
+                    <p className="font-semibold">Remoto</p>
+                  </div>
+                </Card>
+              </Label>
+              <Label htmlFor="modalidad-mixto" className="cursor-pointer">
+                <Card className={cn("p-4", formData.modalidad === ServicioModalidad.MIXTO && "border-primary")}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value={ServicioModalidad.MIXTO} id="modalidad-mixto" />
+                    <p className="font-semibold">Mixto</p>
+                  </div>
+                </Card>
+              </Label>
+            </RadioGroup>
           </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value={ServicioModalidad.MIXTO} id="modalidad-mixto" />
-            <Label htmlFor="modalidad-mixto">Mixto (Presencial y remoto)</Label>
-          </div>
-        </RadioGroup>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label>Imágenes del servicio</Label>
-          <Button type="button" variant="outline" size="sm" onClick={handleAddImage}>
-            <Camera className="mr-2 h-4 w-4" />
-            Agregar imagen
-          </Button>
-        </div>
-
-        {/* Input oculto para seleccionar archivos */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileSelect}
-          className="hidden"
-        />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-          {formData.imagenes.map((imagen, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={getImageUrl(imagen) || "/placeholder.svg"}
-                alt={getImageName(imagen)}
-                className="w-full h-40 object-cover rounded-md border"
-              />
+      <Card>
+        <CardHeader>
+          <CardTitle>Imágenes del Servicio</CardTitle>
+          <CardDescription>Sube hasta 5 imágenes que muestren tu trabajo. Una buena foto vende más.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {formData.imagenes.map((imagen, index) => (
+              <div key={index} className="relative group aspect-square">
+                <img
+                  src={imagen instanceof File ? URL.createObjectURL(imagen) : imagen}
+                  alt={`Imagen de servicio ${index + 1}`}
+                  className="w-full h-full object-cover rounded-md border"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Eliminar</span>
+                </button>
+              </div>
+            ))}
+            {formData.imagenes.length < 5 && (
               <button
                 type="button"
-                onClick={() => handleRemoveImage(index)}
-                className="absolute top-2 right-2 bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handleAddImage}
+                className="aspect-square flex flex-col items-center justify-center w-full border-2 border-dashed rounded-md hover:bg-muted/50 transition-colors"
               >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Eliminar</span>
+                <Camera className="h-8 w-8 text-muted-foreground" />
+                <span className="mt-2 text-sm text-muted-foreground">Agregar foto</span>
               </button>
-              {imagen instanceof File && (
-                <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                  {imagen.name}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-        {errors.imagenes && <p className="text-sm text-red-500">{errors.imagenes}</p>}
-      </div>
+            )}
+          </div>
+          {errors.imagenes && <p className="text-sm text-red-500 mt-2">{errors.imagenes}</p>}
+        </CardContent>
+      </Card>
     </div>
   )
 }
