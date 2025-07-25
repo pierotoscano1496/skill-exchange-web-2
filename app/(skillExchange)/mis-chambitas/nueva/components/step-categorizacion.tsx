@@ -73,7 +73,12 @@ export function StepCategorizacion({
       updateFormData({
         habilidades: [
           ...formData.habilidades,
-          { id: skill.id, nombre: skill.descripcion },
+          {
+            id: skill.id,
+            nombre: skill.descripcion,
+            nombreCategoria: skill.nombreCategoria,
+            nombreSubCategoria: skill.nombreSubCategoria,
+          },
         ],
       });
     }
@@ -124,7 +129,8 @@ export function StepCategorizacion({
                       >
                         <span className="font-medium">{skill.descripcion}</span>
                         <span className="text-xs text-muted-foreground">
-                          {skill.nombreCategoria} &gt; {skill.nombreSubCategoria}
+                          {skill.nombreCategoria} &gt;{" "}
+                          {skill.nombreSubCategoria}
                         </span>
                       </CommandItem>
                     ))}
