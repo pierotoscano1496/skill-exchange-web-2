@@ -32,7 +32,15 @@ import type {
   ProcesoFinalizacion,
   ConfirmacionPago,
 } from "../types/solicitud-updates";
-import type { ServicioRequestBody } from "../api/servicio-api";
+import type {
+  ServicioRequestBody,
+  ServicioResponse,
+} from "../api/servicio-api";
+
+export enum ApiServiceType {
+  API = "API",
+  SERVICIOS = "SERVICIOS",
+}
 
 class DataService {
   private get service() {
@@ -69,7 +77,7 @@ class DataService {
 
   async createServicio(
     data: ServicioRequestBody
-  ): Promise<ApiResponse<ServicioCreado>> {
+  ): Promise<ApiResponse<ServicioResponse>> {
     return this.service.createServicio(data);
   }
 

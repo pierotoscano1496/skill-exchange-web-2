@@ -1,3 +1,11 @@
+import { ServicioResponse } from "../api/servicio-api";
+import {
+  Medio,
+  ModalidadPagoTipo,
+  ServicioDia,
+  ServicioModalidad,
+  ServicioTipoPrecio,
+} from "../constants/enums";
 import type {
   ApiResponse,
   Skill,
@@ -640,17 +648,63 @@ export function getServicioReviewsEstatico(id: string): ReviewsServicio {
 // Funciones de utilidad para crear respuestas estáticas
 export function createStaticServicioResponse(
   titulo: string
-): ApiResponse<ServicioCreado> {
+): ApiResponse<ServicioResponse> {
   return {
     success: true,
     message: "Servicio creado exitosamente",
     data: {
-      id: `servicio-${Date.now()}`,
-      titulo,
-      descripcion: "Servicio creado desde el formulario",
+      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      idProveedor: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      titulo: "string",
+      descripcion: "string",
       precio: 0,
-      estado: "activo",
-      fechaCreacion: new Date().toISOString(),
+      precioMaximo: 0,
+      precioMinimo: 0,
+      tipoPrecio: ServicioTipoPrecio.FIJO,
+      ubicacion: "string",
+      modalidad: ServicioModalidad.PRESENCIAL,
+      aceptaTerminos: true,
+      skills: [
+        {
+          idServicio: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          idSkill: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        },
+      ],
+      disponibilidades: [
+        {
+          id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          idServicio: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          dia: ServicioDia.LUNES,
+          horaInicio: {
+            hour: 0,
+            minute: 0,
+            second: 0,
+            nano: 0,
+          },
+          horaFin: {
+            hour: 0,
+            minute: 0,
+            second: 0,
+            nano: 0,
+          },
+        },
+      ],
+      modalidadesPago: [
+        {
+          id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          tipo: ModalidadPagoTipo.YAPE,
+          cuentaBancaria: "string",
+          numeroCelular: "string",
+          url: "string",
+        },
+      ],
+      recursosMultimedia: [
+        {
+          id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          medio: Medio.IMAGEN,
+          url: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgPE3DtqhZC2a5BXS-PFrBxM5WipFW7Tam61J0g97uyLtlpviSVc3yPTrVFAErHLp4bmSWJudIKEHpXjhCLJO037mof86gkUNsv9GtplALYXqSBqKIYD6Q4HWXluq2Sab8QVaZmjP19QXI/s400/Raul+Romero.jpg",
+        },
+      ],
     },
   };
 }

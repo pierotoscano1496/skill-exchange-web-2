@@ -23,11 +23,12 @@ import { SearchForm } from "./search-form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useUser } from "@/hooks/use-user"; // Import the custom hook
+import { useUser } from "@/hooks/use-user";
+import { redirect } from "next/navigation";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
-  const { user, loading } = useUser(); // Use the custom hook
+  const { user, loading } = useUser();
 
   if (loading) {
     return (
@@ -59,7 +60,7 @@ export function SiteHeader() {
   }
 
   if (!user) {
-    return null; // or a login button
+    redirect("/login");
   }
 
   return (

@@ -1,59 +1,61 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Skeleton } from "@/components/ui/skeleton"
-import { AlertCircle, Edit, Eye, PlusCircle, Star } from "lucide-react"
-import Link from "next/link"
-import { dataService } from "@/lib/services/data-service"
-import { getCurrentUserId } from "@/lib/config/environment"
-import type { ServicioBusqueda } from "@/lib/types/api-responses"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AlertCircle, Edit, Eye, PlusCircle, Star } from "lucide-react";
+import Link from "next/link";
+import { dataService } from "@/lib/services/data-service";
+import { getCurrentUserId } from "@/lib/config/environment";
+import type { ServicioBusqueda } from "@/lib/types/api-responses";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function MisChambitasPage() {
-  const [servicios, setServicios] = useState<ServicioBusqueda[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [servicios, setServicios] = useState<ServicioBusqueda[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchServicios = async () => {
       try {
-        setLoading(true)
-        const userId = getCurrentUserId() // En un caso real, esto vendría de un contexto de autenticación
-        const response = await dataService.getServiciosUsuario(userId)
+        setLoading(true);
+        const userId = getCurrentUserId(); // En un caso real, esto vendría de un contexto de autenticación
+        const response = await dataService.getServiciosUsuario(userId);
 
         if (response.success) {
-          setServicios(response.data)
+          setServicios(response.data);
         } else {
-          setError(response.message || "Error al cargar los servicios")
+          setError(response.message || "Error al cargar los servicios");
         }
       } catch (err) {
-        setError("Error al cargar los servicios. Por favor, intenta de nuevo más tarde.")
-        console.error(err)
+        setError(
+          "Error al cargar los servicios. Por favor, intenta de nuevo más tarde."
+        );
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchServicios()
-  }, [])
+    fetchServicios();
+  }, []);
 
   // Función para formatear el precio según el tipo
   const formatearPrecio = (servicio: ServicioBusqueda) => {
     switch (servicio.tipoPrecio) {
       case "fijo":
-        return `S/ ${servicio.precio}`
+        return `S/ ${servicio.precio}`;
       case "hora":
-        return `S/ ${servicio.precio}/hora`
+        return `S/ ${servicio.precio}/hora`;
       case "rango":
-        return `S/ ${servicio.precioMinimo} - S/ ${servicio.precioMaximo}`
+        return `S/ ${servicio.precioMinimo} - S/ ${servicio.precioMaximo}`;
       default:
-        return `S/ ${servicio.precio}`
+        return `S/ ${servicio.precio}`;
     }
-  }
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4">
@@ -66,20 +68,16 @@ export default function MisChambitasPage() {
           </Button>
         </Link>
       </div>
-      <p className="text-muted-foreground">Administra los servicios que ofreces.</p>
-
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      <p className="text-muted-foreground">
+        Administra los servicios que ofreces.
+      </p>
 
       <Tabs defaultValue="todos" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="todos">Todos ({servicios.length})</TabsTrigger>
-          <TabsTrigger value="activos">Activos ({servicios.length})</TabsTrigger>
+          <TabsTrigger value="activos">
+            Activos ({servicios.length})
+          </TabsTrigger>
           <TabsTrigger value="borradores">Borradores (0)</TabsTrigger>
         </TabsList>
 
@@ -94,7 +92,10 @@ export default function MisChambitasPage() {
                 Array(3)
                   .fill(0)
                   .map((_, i) => (
-                    <div key={i} className="flex items-center justify-between border-b pb-4">
+                    <div
+                      key={i}
+                      className="flex items-center justify-between border-b pb-4"
+                    >
                       <div className="flex items-center gap-4">
                         <Skeleton className="h-16 w-16 rounded-md" />
                         <div>
@@ -110,7 +111,10 @@ export default function MisChambitasPage() {
                   ))
               ) : servicios.length > 0 ? (
                 servicios.map((servicio) => (
-                  <div key={servicio.id} className="flex items-center justify-between border-b pb-4">
+                  <div
+                    key={servicio.id}
+                    className="flex items-center justify-between border-b pb-4"
+                  >
                     <div className="flex items-center gap-4">
                       <div className="h-16 w-16 rounded-md bg-gray-100 overflow-hidden">
                         {servicio.urlImagePreview ? (
@@ -154,7 +158,9 @@ export default function MisChambitasPage() {
                 ))
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">No tienes servicios publicados.</p>
+                  <p className="text-muted-foreground">
+                    No tienes servicios publicados.
+                  </p>
                   <Link href="/mis-chambitas/nueva">
                     <Button className="mt-4">Crear mi primer servicio</Button>
                   </Link>
@@ -175,7 +181,10 @@ export default function MisChambitasPage() {
                 Array(3)
                   .fill(0)
                   .map((_, i) => (
-                    <div key={i} className="flex items-center justify-between border-b pb-4">
+                    <div
+                      key={i}
+                      className="flex items-center justify-between border-b pb-4"
+                    >
                       <div className="flex items-center gap-4">
                         <Skeleton className="h-16 w-16 rounded-md" />
                         <div>
@@ -191,7 +200,10 @@ export default function MisChambitasPage() {
                   ))
               ) : servicios.length > 0 ? (
                 servicios.map((servicio) => (
-                  <div key={servicio.id} className="flex items-center justify-between border-b pb-4">
+                  <div
+                    key={servicio.id}
+                    className="flex items-center justify-between border-b pb-4"
+                  >
                     <div className="flex items-center gap-4">
                       <div className="h-16 w-16 rounded-md bg-gray-100 overflow-hidden">
                         {servicio.urlImagePreview ? (
@@ -240,7 +252,9 @@ export default function MisChambitasPage() {
                 ))
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">No tienes servicios activos.</p>
+                  <p className="text-muted-foreground">
+                    No tienes servicios activos.
+                  </p>
                   <Link href="/mis-chambitas/nueva">
                     <Button className="mt-4">Crear un servicio</Button>
                   </Link>
@@ -257,12 +271,14 @@ export default function MisChambitasPage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <p className="text-muted-foreground">No tienes borradores guardados.</p>
+                <p className="text-muted-foreground">
+                  No tienes borradores guardados.
+                </p>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

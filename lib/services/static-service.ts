@@ -19,7 +19,10 @@ import type {
   Usuario,
   SkillInfo,
 } from "../types/api-responses";
-import type { ServicioRequestBody } from "../api/servicio-api";
+import type {
+  ServicioRequestBody,
+  ServicioResponse,
+} from "../api/servicio-api";
 import {
   STATIC_SKILLS,
   STATIC_CATEGORIAS,
@@ -130,7 +133,7 @@ class StaticService {
 
   async createServicio(
     data: ServicioRequestBody
-  ): Promise<ApiResponse<ServicioCreado>> {
+  ): Promise<ApiResponse<ServicioResponse>> {
     await this.delay(1000); // Simular proceso más lento para creación
 
     // Simular posible error (5% de probabilidad)
@@ -138,7 +141,7 @@ class StaticService {
       return {
         success: false,
         message: "Error simulado: No se pudo crear el servicio",
-        data: {} as ServicioCreado,
+        data: {} as ServicioResponse,
       };
     }
 

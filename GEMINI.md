@@ -105,24 +105,24 @@ Authorization: Bearer {token}
 - Endpoint: GET /chat/own-last-message
   Response body:
 
-  ```json
-  [
-    {
-      "conversationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "contact": {
-        "idContact": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "fullName": "string",
-        "email": "string"
-      },
-      "lastMessage": {
-        "sentBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "fecha": "2025-07-06T00:23:44.166Z",
-        "mensaje": "string",
-        "resourceUrl": "string"
-      }
+```json
+[
+  {
+    "conversationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "contact": {
+      "idContact": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "fullName": "string",
+      "email": "string"
+    },
+    "lastMessage": {
+      "sentBy": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "fecha": "2025-07-06T00:23:44.166Z",
+      "mensaje": "string",
+      "resourceUrl": "string"
     }
-  ]
-  ```
+  }
+]
+```
 
 - Endpoint: GET /chat/{idConversation}
   Response body:
@@ -288,6 +288,43 @@ Response body:
     ]
   },
   "multimedia": ["string"]
+}
+```
+
+Código de Spring Boot para el endpoint POST /servicio:
+
+```java
+@PostMapping
+@Operation(summary = "Guarda un servicio con su metadata", description = "Guarda primero los archivos de los recursos multimedia de un servicio a S3: imágenes, videos cortos, etc. y la información del servicio adicionalmente con: habilidades, disponibilidades y modalidades de pago")
+private ServicioRegisteredResponse registrar(@RequestPart("data") CreateServicioBody requestBody,
+        @RequestPart(value = "multimedia", required = false) List<MultipartFile> recursosMultimedia) {
+    if (recursosMultimedia == null || recursosMultimedia.isEmpty()) {
+        logger.warn("No se han proporcionado recursos multimedia para el servicio.");
+    } else {
+        recursosMultimedia = recursosMultimedia.stream()
+                .filter(file -> file != null && !file.isEmpty())
+                .collect(Collectors.toList());
+        if (recursosMultimedia.isEmpty()) {
+            logger.warn("Todos los archivos multimedia proporcionados están vacíos.");
+        } else {
+            logger.info("Recursos multimedia proporcionados: {}", recursosMultimedia.size());
+        }
+    }
+    logger.info("Iniciando registro de servicio. Datos recibidos: {}", requestBody);
+    try {
+        ServicioRegisteredResponse response = service.registrar(requestBody, recursosMultimedia);
+        logger.info("Registro de servicio exitoso. ID generado: {}", response.getId());
+        return response;
+    } catch (DatabaseNotWorkingException | NotCreatedException | IOException | InvalidFileException
+            | FileNotUploadedException e) {
+        if (e instanceof IOException) {
+            logger.error("Error al registrar el servicio: {}", e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al registrar el servicio");
+        } else {
+            logger.error("Respuesta de error del servicio: {}", e.getMessage(), e);
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 }
 ```
 

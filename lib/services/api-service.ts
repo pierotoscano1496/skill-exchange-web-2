@@ -29,7 +29,16 @@ import type {
   ProcesoFinalizacion,
   ConfirmacionPago,
 } from "../types/solicitud-updates";
-import type { ServicioRequestBody } from "../api/servicio-api";
+import type {
+  ServicioRequestBody,
+  ServicioResponse,
+} from "../api/servicio-api";
+import { tr } from "date-fns/locale";
+
+function getTokenFromCookie(): string | null {
+  const match = document.cookie.match(/(^|;) ?token=([^;]*)(;|$)/);
+  return match ? match[2] : null;
+}
 
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
@@ -40,12 +49,17 @@ class ApiService {
     isPrivate: boolean = false
   ): Promise<ApiResponse<T>> {
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
+      const headers: Record<string, string> = {};
+
+      if (options && !(options.body instanceof FormData)) {
+        headers["Content-Type"] = "application/json";
+      }
 
       if (isPrivate) {
-        const token = localStorage.getItem("token");
+        let token = localStorage.getItem("token");
+        /* if (!token) {
+          token = getTokenFromCookie();
+        } */
         if (token) {
           headers.Authorization = token.startsWith("Bearer ")
             ? token
@@ -62,7 +76,9 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorBody = await response.text();
+        console.error("API Error Response Body:", errorBody);
+        throw new Error(`${response.status}`);
       }
 
       const data = await response.json();
@@ -73,10 +89,16 @@ class ApiService {
       };
     } catch (error) {
       console.error("API Error:", error);
+      const statusCode =
+        error instanceof Error ? parseInt(error.message, 10) : 500;
       return {
         success: false,
-        message: error instanceof Error ? error.message : "Error desconocido",
+        message:
+          error instanceof Error
+            ? `HTTP error! status: ${statusCode}`
+            : "Ocurrió un error",
         data: null as any,
+        statusCode,
       };
     }
   }
@@ -119,13 +141,25 @@ class ApiService {
   }
 
   async createServicio(
-    data: ServicioRequestBody
-  ): Promise<ApiResponse<ServicioCreado>> {
-    return this.fetchApi<ServicioCreado>(
+    requestBody: ServicioRequestBody
+  ): Promise<ApiResponse<ServicioResponse>> {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(requestBody.data)], { type: "application/json" })
+    );
+
+    requestBody.multimedia.forEach((file) => {
+      if (file instanceof File) {
+        formData.append("multimedia", file, file.name);
+      }
+    });
+
+    return this.fetchApi<ServicioResponse>(
       ENV_CONFIG.API.ENDPOINTS.SERVICIOS,
       {
         method: "POST",
-        body: JSON.stringify(data),
+        body: formData,
       },
       true
     );
@@ -135,34 +169,14 @@ class ApiService {
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-      const response = await fetch(
-        `${this.baseUrl}${ENV_CONFIG.API.ENDPOINTS.UPLOAD}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        success: true,
-        message: "Archivo subido exitosamente",
-        data,
-      };
-    } catch (error) {
-      console.error("Upload Error:", error);
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Error al subir archivo",
-        data: null as any,
-      };
-    }
+    return this.fetchApi<UploadResponse>(
+      ENV_CONFIG.API.ENDPOINTS.UPLOAD,
+      {
+        method: "POST",
+        body: formData,
+      },
+      true
+    );
   }
 
   async buscarServicios(
@@ -197,7 +211,7 @@ class ApiService {
     idUsuario: string
   ): Promise<ApiResponse<ServicioBusqueda[]>> {
     return this.fetchApi<ServicioBusqueda[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}/${idUsuario}`,
+      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}`,
       {},
       true
     );

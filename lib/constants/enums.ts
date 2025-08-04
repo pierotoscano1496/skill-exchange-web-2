@@ -44,6 +44,18 @@ export enum ModalidadPagoTipo {
   EFECTIVO = "efectivo",
 }
 
+export enum Medio {
+  VIDEO = "video",
+  IMAGEN = "imagen",
+  WEB_EXTERNA = "web_externa",
+  FACEBOOK = "facebook",
+  INSTAGRAM = "instagram",
+  TIKTOK = "tiktok",
+  YOUTUBE = "youtube",
+  TWITTER = "twitter",
+  LINKEDIN = "linkedin",
+}
+
 export enum MatchServicioEstado {
   SOLICITADO = "solicitado",
   PENDIENTE_PAGO = "pendiente_pago",

@@ -21,6 +21,7 @@ export interface Usuario {
   perfilInstagram: string;
   perfilTiktok: string;
   introduccion: string;
+  foto?: string;
   skills: {
     id: string;
     nivelConocimiento: number;
@@ -32,6 +33,7 @@ export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
+  statusCode?: number; // Nuevo campo para el código de estado HTTP
 }
 
 export interface Skill {

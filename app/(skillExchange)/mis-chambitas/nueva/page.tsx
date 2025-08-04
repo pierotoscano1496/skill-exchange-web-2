@@ -64,8 +64,9 @@ export interface ServicioFormData {
     cuentaBancaria?: string;
     numeroCelular?: string;
     url?: string;
+    imagen?: File | string;
   }[];
-
+  modalidadesPagoImagenes?: (File | string)[];
   // Términos y condiciones
   aceptaTerminos: boolean;
 }
@@ -275,7 +276,7 @@ export default function NuevoServicioPage() {
 
     try {
       // Subir archivos multimedia
-      const multimediaUrls = await uploadMultimedia();
+      //const multimediaUrls = await uploadMultimedia();
 
       // Preparar el request body según la estructura de la API
       const requestBody: ServicioRequestBody = {
@@ -307,7 +308,7 @@ export default function NuevoServicioPage() {
             url: modalidad.url,
           })),
         },
-        multimedia: multimediaUrls,
+        multimedia: formData.imagenes,
       };
 
       // Enviar usando el servicio de datos
