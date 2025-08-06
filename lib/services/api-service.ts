@@ -33,12 +33,8 @@ import type {
   ServicioRequestBody,
   ServicioResponse,
 } from "../api/servicio-api";
-import { tr } from "date-fns/locale";
-
-function getTokenFromCookie(): string | null {
-  const match = document.cookie.match(/(^|;) ?token=([^;]*)(;|$)/);
-  return match ? match[2] : null;
-}
+import { cookies } from "next/headers";
+import { AUTH_COOKIE } from "../constants/auth";
 
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
@@ -56,10 +52,7 @@ class ApiService {
       }
 
       if (isPrivate) {
-        let token = localStorage.getItem("token");
-        /* if (!token) {
-          token = getTokenFromCookie();
-        } */
+        let token = (await cookies()).get(AUTH_COOKIE)?.value;
         if (token) {
           headers.Authorization = token.startsWith("Bearer ")
             ? token
@@ -68,11 +61,11 @@ class ApiService {
       }
 
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
+        ...options,
         headers: {
           ...headers,
           ...options?.headers,
         },
-        ...options,
       });
 
       if (!response.ok) {
@@ -81,7 +74,7 @@ class ApiService {
         throw new Error(`${response.status}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as T;
       return {
         success: true,
         message: "Operación exitosa",

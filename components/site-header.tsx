@@ -60,7 +60,7 @@ export function SiteHeader() {
   }
 
   if (!user) {
-    redirect("/login");
+    return null;
   }
 
   return (

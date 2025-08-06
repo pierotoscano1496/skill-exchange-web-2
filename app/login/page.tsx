@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/card";
 import { authService } from "@/lib/services/auth-service";
 import { dataService } from "@/lib/services/data-service";
+import { loginAction } from "../(auth)/actions";
+import { HOME_PATH } from "@/lib/constants/auth";
 
-export default function LoginPage() {
+export default function LoginPage({ next = HOME_PATH }: { next?: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,15 +28,12 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    try {
-      const token = await authService.login(email, password);
-      if (token) {
-        router.push("/explorar");
-      } else {
-        setError("Credenciales incorrectas. Inténtalo de nuevo.");
-      }
-    } catch (err) {
-      setError("Error. Inténtalo más adelante.");
+    const result = await loginAction(email, password);
+    if (result.ok) {
+      router.replace(next);
+      router.refresh();
+    } else {
+      setError(result.error || "Error al iniciar sesión");
     }
   };
 
