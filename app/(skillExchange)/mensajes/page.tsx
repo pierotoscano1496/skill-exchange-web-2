@@ -15,9 +15,7 @@ import {
   Phone,
   Video,
 } from "lucide-react";
-import { STATIC_CHAT_OWN_LAST_MESSAGE } from "@/lib/data/static-data";
-import { getCurrentUserId, isStaticMode } from "@/lib/config/environment";
-import { dataService } from "@/lib/services/data-service";
+import { getOwnChatConversations } from "@/lib/actions/data";
 
 interface ConversacionPreview {
   id: string;
@@ -44,7 +42,7 @@ export default function MensajesBandejaPage() {
       setLoading(true);
       let chats: any[] = [];
       try {
-        const resp = await dataService.getOwnChatConversations();
+        const resp = await getOwnChatConversations();
         chats = resp.data || [];
       } catch (e) {
         chats = [];

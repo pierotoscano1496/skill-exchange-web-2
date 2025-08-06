@@ -22,8 +22,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { userService, RegisterUserRequest } from "@/lib/services/user-service";
-import { dataService } from "@/lib/services/data-service";
+import { getSkillsInfo } from "@/lib/actions/data";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
@@ -70,7 +69,7 @@ export default function RegisterStep4Page() {
 
   useEffect(() => {
     const fetchAndProcessSkills = async () => {
-      const response = await dataService.getSkillsInfo();
+      const response = await getSkillsInfo();
       if (response.success) {
         /* setAllSkills(
           response.data.map((skill) => ({

@@ -29,7 +29,7 @@ import {
   ServicioModalidad,
   ServicioTipoPrecio,
 } from "@/lib/constants/enums";
-import { dataService } from "@/lib/services/data-service";
+import { uploadFile, createServicio } from "@/lib/actions/data";
 import { Stepper } from "@/components/ui/stepper";
 
 // Actualizar la interfaz para usar los enums
@@ -251,7 +251,7 @@ export default function NuevoServicioPage() {
     for (const imagen of formData.imagenes) {
       if (imagen instanceof File) {
         try {
-          const response = await dataService.uploadFile(imagen);
+          const response = await uploadFile(imagen);
           if (response.success) {
             uploadedUrls.push(response.data.url);
           } else {
@@ -312,7 +312,7 @@ export default function NuevoServicioPage() {
       };
 
       // Enviar usando el servicio de datos
-      const response = await dataService.createServicio(requestBody);
+      const response = await createServicio(requestBody);
 
       if (response.success) {
         setSuccess(true);

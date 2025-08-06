@@ -14,8 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { authService } from "@/lib/services/auth-service";
-import { dataService } from "@/lib/services/data-service";
+import { postSimpleCheck } from "@/lib/actions/data";
 import { loginAction } from "../(auth)/actions";
 import { HOME_PATH } from "@/lib/constants/auth";
 
@@ -38,7 +37,7 @@ export default function LoginPage({ next = HOME_PATH }: { next?: string }) {
   };
 
   const handleCheck = async (nombre: string) => {
-    const resp = await dataService.postSimpleCheck(nombre);
+    const resp = await postSimpleCheck(nombre);
     alert(resp.success ? resp.data : "Error");
   };
 

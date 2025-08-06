@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { CheckCircle, Calendar, FileText, Loader2 } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
+import { aceptarSolicitud } from "@/lib/actions/data"
 import type { SolicitudRecibida } from "@/lib/types/api-responses"
 
 interface AceptarSolicitudDialogProps {
@@ -33,7 +33,7 @@ export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSucces
     try {
       setLoading(true)
 
-      const response = await dataService.aceptarSolicitud({
+      const response = await aceptarSolicitud({
         idSolicitud: solicitud.id,
         fechaInicioEstimada: fechaInicio || undefined,
         notasProveedor: notas || undefined,

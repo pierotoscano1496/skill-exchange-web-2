@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dataService } from "@/lib/services/data-service";
+import { getUsuario } from "@/lib/actions/data";
 import { Usuario } from "@/lib/types/api-responses";
 
 export function useUser() {
@@ -9,7 +9,7 @@ export function useUser() {
   useEffect(() => {
     const fetchUser = async () => {
       setLoading(true);
-      const response = await dataService.getUsuario();
+      const response = await getUsuario();
       if (response.success) {
         setUser(response.data);
       } else {

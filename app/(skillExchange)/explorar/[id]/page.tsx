@@ -23,7 +23,7 @@ import {
   ExternalLink,
 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { dataService } from "@/lib/services/data-service"
+import { getServicioDetalle, getServicioReviews } from "@/lib/actions/data"
 import { ContactServiceForm } from "@/components/contact-service-form"
 import type { ServicioDetalle, ReviewsServicio, ComentarioServicio } from "@/lib/types/api-responses"
 
@@ -42,16 +42,24 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     const fetchServicioData = async () => {
       try {
         setLoading(true)
-        const { servicio, reviews, error } = await dataService.getServicioCompletoConReviews(params.id)
+        const [servicioResponse, reviewsResponse] = await Promise.all([
+          getServicioDetalle(params.id),
+          getServicioReviews(params.id),
+        ])
 
-        if (error) {
-          setError(error)
+        if (!servicioResponse.success) {
+          setError(servicioResponse.message)
         } else {
-          setServicio(servicio)
-          setReviews(reviews)
+          setServicio(servicioResponse.data)
+        }
+
+        if (reviewsResponse.success) {
+          setReviews(reviewsResponse.data)
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar el servicio")
+        setError(
+          err instanceof Error ? err.message : "Error al cargar el servicio"
+        )
       } finally {
         setLoading(false)
       }

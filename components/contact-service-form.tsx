@@ -19,8 +19,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Upload, X, FileText, ImageIcon, CheckCircle, AlertCircle, Loader2, MessageSquare } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
+import { uploadFile, createMatchServicio, sendChatMessage } from "@/lib/actions/data"
 import type { ServicioDetalle } from "@/lib/types/api-responses"
+import { getCurrentUserId } from "@/lib/config/environment"
 
 interface ContactServiceFormProps {
   servicio: ServicioDetalle
@@ -171,15 +172,39 @@ export function ContactServiceForm({ servicio, onSuccess }: ContactServiceFormPr
     setError(null)
 
     try {
-      const result = await dataService.contactarProveedor(
-        servicio.id,
-        servicio.proveedor.id,
-        mensaje.trim(),
-        Number.parseFloat(presupuesto),
-        archivo || undefined,
-      )
+      const idCliente = getCurrentUserId();
 
-      if (result.success) {
+      // 1. Subir archivo si existe
+      let resourceUrl: string | undefined;
+      if (archivo) {
+        const uploadResponse = await uploadFile(archivo);
+        if (uploadResponse.success) {
+          resourceUrl = uploadResponse.data.url;
+        } else {
+          throw new Error("Error al subir el archivo: " + uploadResponse.message);
+        }
+      }
+
+      // 2. Crear match del servicio
+      const matchResponse = await createMatchServicio({
+        idServicio: servicio.id,
+        idCliente,
+        puntuacion: 0,
+        costo: Number.parseFloat(presupuesto),
+      });
+
+      if (!matchResponse.success) {
+        throw new Error("Error al crear la solicitud: " + matchResponse.message);
+      }
+
+      // 3. Enviar mensaje inicial
+      const chatResponse = await sendChatMessage({
+        idReceptor: servicio.proveedor.id,
+        mensaje: mensaje.trim(),
+        resourceUrl,
+      });
+
+      if (chatResponse.success) {
         setSuccess(true)
         setTimeout(() => {
           handleClose()
@@ -190,7 +215,7 @@ export function ContactServiceForm({ servicio, onSuccess }: ContactServiceFormPr
           }
         }, 2000)
       } else {
-        setError(result.message)
+        setError(chatResponse.message)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al enviar la solicitud")

@@ -22,7 +22,7 @@ import {
   AlertTriangle,
   Loader2,
 } from "lucide-react";
-import { dataService } from "@/lib/services/data-service";
+import { getProcesoFinalizacion, finalizarServicio } from "@/lib/actions/data";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
 import type { ProcesoFinalizacion } from "@/lib/types/solicitud-updates";
 
@@ -61,7 +61,7 @@ export function FinalizarServicioDialog({
 
   const loadProcesoInfo = async () => {
     try {
-      const info = await dataService.getProcesoFinalizacion();
+      const info = await getProcesoFinalizacion();
       setProcesoInfo(info);
       setRequisitosConfirmados(new Array(info.requisitos.length).fill(false));
     } catch (error) {
@@ -81,7 +81,7 @@ export function FinalizarServicioDialog({
     try {
       setLoading(true);
 
-      const response = await dataService.finalizarServicio({
+      const response = await finalizarServicio({
         idSolicitud: solicitud.id,
         resumenTrabajo,
         tiempoEmpleado: tiempoEmpleado

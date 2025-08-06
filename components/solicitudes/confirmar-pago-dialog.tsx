@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DollarSign, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { dataService } from "@/lib/services/data-service";
+import { getConfirmacionPago, confirmarPago } from "@/lib/actions/data";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
 import type { ConfirmacionPago } from "@/lib/types/solicitud-updates";
 
@@ -68,7 +68,7 @@ export function ConfirmarPagoDialog({
 
   const loadConfirmacionInfo = async () => {
     try {
-      const info = await dataService.getConfirmacionPago();
+      const info = await getConfirmacionPago();
       setConfirmacionInfo(info);
       setVerificacionesConfirmadas(
         new Array(info.verificaciones.length).fill(false)
@@ -90,7 +90,7 @@ export function ConfirmarPagoDialog({
     try {
       setLoading(true);
 
-      const response = await dataService.confirmarPago({
+      const response = await confirmarPago({
         idSolicitud: solicitud.id,
         metodoPagoRecibido: metodoPago as any,
         montoRecibido: Number.parseFloat(montoRecibido),

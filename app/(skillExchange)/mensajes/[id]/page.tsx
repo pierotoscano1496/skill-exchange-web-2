@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Loader2, Send, ChevronLeft } from "lucide-react";
-import { dataService } from "@/lib/services/data-service";
+import { getChatConversation, sendChatMessage } from "@/lib/actions/data";
 import { getCurrentUserId } from "@/lib/config/environment";
 import type {
   ChatConversation,
@@ -32,7 +32,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
     const fetchConversation = async () => {
       try {
         setLoading(true);
-        const response = await dataService.getChatConversation(conversationId);
+        const response = await getChatConversation(conversationId);
         if (response.success) {
           setConversation(response.data);
         } else {
@@ -87,7 +87,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
       });
       setNewMessage("");
 
-      const response = await dataService.sendChatMessage({
+      const response = await sendChatMessage({
         idReceptor: recipientId,
         mensaje: newMessage.trim(),
       });

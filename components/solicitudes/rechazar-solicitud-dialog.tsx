@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { XCircle, AlertTriangle, Loader2 } from "lucide-react"
-import { dataService } from "@/lib/services/data-service"
+import { rechazarSolicitud } from "@/lib/actions/data"
 import type { SolicitudRecibida } from "@/lib/types/api-responses"
 
 interface RechazarSolicitudDialogProps {
@@ -45,7 +45,7 @@ export function RechazarSolicitudDialog({ open, onOpenChange, solicitud, onSucce
     try {
       setLoading(true)
 
-      const response = await dataService.rechazarSolicitud({
+      const response = await rechazarSolicitud({
         idSolicitud: solicitud.id,
         motivo: motivo as any,
         detalleMotivo: detalleMotivo,

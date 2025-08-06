@@ -13,7 +13,12 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Clock, User, Plus } from "lucide-react";
-import { dataService } from "@/lib/services/data-service";
+import {
+  buscarServicios,
+  getCategorias,
+  getSubCategoriasByCategoria,
+  getSkillsBySubCategoria,
+} from "@/lib/actions/data";
 import type {
   ServicioBusqueda,
   Categoria,
@@ -45,11 +50,11 @@ export default function ExplorarPage() {
     const cargarCategorias = async () => {
       setLoading(true);
       try {
-        const categoriasResponse = await dataService.getCategorias();
+        const categoriasResponse = await getCategorias();
         if (categoriasResponse.success) {
           setCategorias(categoriasResponse.data || []);
         }
-        const serviciosResponse = await dataService.buscarServicios({});
+        const serviciosResponse = await buscarServicios({});
         if (serviciosResponse.success) {
           setServicios(serviciosResponse.data || []);
         }
@@ -71,7 +76,7 @@ export default function ExplorarPage() {
       if (selectedCategoria && selectedCategoria !== "all") {
         setLoading(true);
         try {
-          const response = await dataService.getSubCategoriasByCategoria(
+          const response = await getSubCategoriasByCategoria(
             selectedCategoria
           );
           if (response.success) {
@@ -100,7 +105,7 @@ export default function ExplorarPage() {
       if (selectedSubcategoria && selectedSubcategoria !== "all") {
         setLoading(true);
         try {
-          const response = await dataService.getSkillsBySubCategoria(
+          const response = await getSkillsBySubCategoria(
             selectedSubcategoria
           );
           if (response.success) {
@@ -134,7 +139,7 @@ export default function ExplorarPage() {
         idSkill: selectedSkill !== "all" ? selectedSkill : undefined,
       };
 
-      const response = await dataService.buscarServicios(filtros);
+      const response = await buscarServicios(filtros);
       if (response.success) {
         setServicios(response.data || []);
       }

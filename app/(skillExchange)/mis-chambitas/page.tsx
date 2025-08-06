@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Edit, Eye, PlusCircle, Star } from "lucide-react";
 import Link from "next/link";
-import { dataService } from "@/lib/services/data-service";
+import { getServiciosUsuario } from "@/lib/actions/data";
 import { getCurrentUserId } from "@/lib/config/environment";
 import type { ServicioBusqueda } from "@/lib/types/api-responses";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -23,7 +23,7 @@ export default function MisChambitasPage() {
       try {
         setLoading(true);
         const userId = getCurrentUserId(); // En un caso real, esto vendría de un contexto de autenticación
-        const response = await dataService.getServiciosUsuario(userId);
+        const response = await getServiciosUsuario(userId);
 
         if (response.success) {
           setServicios(response.data);

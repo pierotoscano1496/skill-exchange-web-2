@@ -19,7 +19,7 @@ import {
   Play,
   Square,
 } from "lucide-react";
-import { dataService } from "@/lib/services/data-service";
+import { getSolicitudesPrestamista } from "@/lib/actions/data";
 import { getCurrentUserId } from "@/lib/config/environment";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
 import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicitud-dialog";
@@ -95,7 +95,7 @@ export default function SolicitudesRecibidasPage() {
       setLoading(true);
       setError(null);
       const idPrestamista = getCurrentUserId();
-      const response = await dataService.getSolicitudesPrestamista(
+      const response = await getSolicitudesPrestamista(
         idPrestamista
       );
 
