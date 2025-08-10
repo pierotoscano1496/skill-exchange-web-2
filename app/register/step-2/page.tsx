@@ -15,13 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { UsuarioTipo } from "@/lib/constants/enums";
 
 export default function RegisterStep2Page() {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [userType, setUserType] = useState<"cliente" | "trabajador">("cliente");
+  const [userType, setUserType] = useState<UsuarioTipo>(UsuarioTipo.CLIENTE);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -177,21 +178,28 @@ export default function RegisterStep2Page() {
             <Label>Tipo de cuenta</Label>
             <RadioGroup
               value={userType}
-              onValueChange={(type: "cliente" | "trabajador") =>
-                setUserType(type)
-              }
+              onValueChange={(type: UsuarioTipo) => setUserType(type)}
               className="flex flex-col space-y-1"
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="cliente" id="cliente" />
-                <Label htmlFor="cliente" className="cursor-pointer">
+                <RadioGroupItem
+                  value={UsuarioTipo.CLIENTE}
+                  id={UsuarioTipo.CLIENTE}
+                />
+                <Label htmlFor={UsuarioTipo.CLIENTE} className="cursor-pointer">
                   Soy Cliente (Quiero contratar servicios)
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="trabajador" id="trabajador" />
-                <Label htmlFor="trabajador" className="cursor-pointer">
-                  Soy Trabajador (Quiero ofrecer mis servicios)
+                <RadioGroupItem
+                  value={UsuarioTipo.PROVEEDOR}
+                  id={UsuarioTipo.PROVEEDOR}
+                />
+                <Label
+                  htmlFor={UsuarioTipo.PROVEEDOR}
+                  className="cursor-pointer"
+                >
+                  Soy Proveedor (Quiero ofrecer mis servicios)
                 </Label>
               </div>
             </RadioGroup>

@@ -1,3 +1,5 @@
+import { UsuarioTipo } from "../constants/enums";
+
 // Tipos de respuesta que coinciden con el backend
 export interface User {
   id: string;
@@ -14,7 +16,7 @@ export interface Usuario {
   correo: string;
   nombres: string;
   apellidos: string;
-  tipo: "cliente" | "prestamista" | "ambos";
+  tipo: UsuarioTipo;
   fechaNacimiento: string;
   perfilLinkedin: string;
   perfilFacebook: string;

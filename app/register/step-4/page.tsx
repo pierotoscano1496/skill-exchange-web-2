@@ -22,7 +22,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getSkillsInfo } from "@/lib/actions/data";
+import { getSkillsInfo, registerUser } from "@/lib/actions/data";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 import { SkillInfo } from "@/lib/types/api-responses";
+import { RegisterUserRequest } from "@/lib/types/user-registration";
 
 interface UserSkill {
   id: string;
@@ -150,7 +151,7 @@ export default function RegisterStep4Page() {
         })),
       };
 
-      const response = await userService.registerUser(requestData);
+      const response = await registerUser(requestData);
 
       if (response.success) {
         setSuccess(true);

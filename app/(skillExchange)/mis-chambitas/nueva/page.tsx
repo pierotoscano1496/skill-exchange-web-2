@@ -31,6 +31,7 @@ import {
 } from "@/lib/constants/enums";
 import { uploadFile, createServicio } from "@/lib/actions/data";
 import { Stepper } from "@/components/ui/stepper";
+import { useUser } from "@/hooks/use-user";
 
 // Actualizar la interfaz para usar los enums
 export interface ServicioFormData {
@@ -110,6 +111,7 @@ export default function NuevoServicioPage() {
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string>("");
+  const { user, loading } = useUser();
 
   const totalSteps = stepsConfig.length;
 
@@ -284,7 +286,7 @@ export default function NuevoServicioPage() {
           titulo: formData.titulo,
           descripcion: formData.descripcion,
           precio: Number.parseFloat(formData.precio) || 0,
-          idProveedor: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // TODO: Obtener del contexto de usuario
+          idProveedor: user!.id,
           tipoPrecio: formData.tipoPrecio,
           precioMinimo: formData.precioMinimo
             ? Number.parseFloat(formData.precioMinimo)

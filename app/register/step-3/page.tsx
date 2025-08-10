@@ -22,7 +22,6 @@ import {
   TwitterIcon as TikTok,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { userService, RegisterUserRequest } from "@/lib/services/user-service";
 
 export default function RegisterStep3Page() {
   const router = useRouter();

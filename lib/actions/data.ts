@@ -37,6 +37,7 @@ import type {
   ServicioRequestBody,
   ServicioResponse,
 } from "../api/servicio-api";
+import { RegisterUserRequest } from "../types/user-registration";
 
 const getService = () => (isStaticMode() ? staticService : apiService);
 
@@ -76,7 +77,9 @@ export async function createServicio(
   return getService().createServicio(data);
 }
 
-export async function uploadFile(file: File): Promise<ApiResponse<UploadResponse>> {
+export async function uploadFile(
+  file: File
+): Promise<ApiResponse<UploadResponse>> {
   return getService().uploadFile(file);
 }
 
@@ -172,6 +175,16 @@ export async function getChatConversation(
   return getService().getChatConversation(idConversation);
 }
 
-export async function getUsuario(): Promise<ApiResponse<Usuario>> {
+/* export async function getUsuario(): Promise<ApiResponse<Usuario>> {
   return getService().getUsuario();
+} */
+
+export async function registerUser(
+  data: RegisterUserRequest
+): Promise<ApiResponse<Usuario>> {
+  return getService().registerUser(data);
+}
+
+export async function getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+  return getService().getOwnSkillsInfo();
 }

@@ -46,6 +46,8 @@ import type {
   ProcesoFinalizacion,
   ConfirmacionPago,
 } from "../types/solicitud-updates";
+import { RegisterUserRequest } from "../types/user-registration";
+import { UsuarioTipo } from "../constants/enums";
 
 class StaticService {
   // Simular delay de red para hacer más realista
@@ -78,7 +80,8 @@ class StaticService {
       success: true,
       message: "Skills info obtenidos exitosamente",
       data: STATIC_SKILLS.map((skill) => ({
-        ...skill,
+        id: skill.id,
+        descripcion: skill.descripcion || "Descripción de " + skill.id,
         nombreSubCategoria: "Subcategoría de " + skill.idSubCategoria,
         nombreCategoria: "Categoría de " + skill.idSubCategoria,
       })),
@@ -529,7 +532,7 @@ class StaticService {
         correo: "usuario@example.com",
         nombres: "Juan",
         apellidos: "Perez",
-        tipo: "cliente",
+        tipo: UsuarioTipo.CLIENTE,
         fechaNacimiento: "1990-01-01",
         perfilLinkedin: "",
         perfilFacebook: "",
@@ -538,6 +541,64 @@ class StaticService {
         introduccion: "",
         skills: [],
       },
+    };
+  }
+
+  async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
+    await this.delay(800);
+
+    // Simular posible error (2% de probabilidad)
+    if (Math.random() < 0.02) {
+      return {
+        success: false,
+        message: "Error simulado: No se pudo registrar el usuario",
+        data: {} as Usuario,
+      };
+    }
+
+    // Simular registro exitoso
+    const newUser: Usuario = {
+      id: `user-${Date.now()}`,
+      dni: data.dni || "",
+      carnetExtranjeria: data.carnetExtranjeria || "",
+      tipoDocumento: data.tipoDocumento,
+      correo: data.correo,
+      nombres: data.nombres,
+      apellidos: data.apellidos,
+      tipo: data.tipo,
+      fechaNacimiento: data.fechaNacimiento,
+      perfilLinkedin: data.perfilLinkedin || "",
+      perfilFacebook: data.perfilFacebook || "",
+      perfilInstagram: data.perfilInstagram || "",
+      perfilTiktok: data.perfilTiktok || "",
+      introduccion: data.introduccion,
+      skills:
+        data.skills?.map((skill) => ({
+          id: skill.idSkill,
+          nivelConocimiento: skill.nivelConocimiento,
+          descripcion: skill.descripcion,
+        })) || [],
+    };
+
+    return {
+      success: true,
+      message: "Usuario registrado exitosamente",
+      data: newUser,
+    };
+  }
+
+  async getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
+    await this.delay(500);
+    // En un entorno estático, simplemente devolvemos los skills con la info adicional.
+    return {
+      success: true,
+      message: "Skills info obtenidos exitosamente",
+      data: STATIC_SKILLS.map((skill) => ({
+        id: skill.id,
+        descripcion: skill.descripcion || "Descripción de " + skill.id,
+        nombreSubCategoria: "Subcategoría de " + skill.idSubCategoria,
+        nombreCategoria: "Categoría de " + skill.idSubCategoria,
+      })),
     };
   }
 }

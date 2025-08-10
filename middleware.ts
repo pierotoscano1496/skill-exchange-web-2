@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
+import { USER_COOKIE } from "./lib/constants/auth";
 
 const AUTH_COOKIE_NAME = "auth";
 const LOGIN_PATH = "/login";
@@ -54,7 +55,10 @@ export function middleware(request: NextRequest) {
 
   // Leer el token de la cookie
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-  const isAuthenticated = token && !isTokenExpired(token);
+  // Obtener información del usuario de la cookie
+  const userCookie = request.cookies.get(USER_COOKIE)?.value;
+
+  const isAuthenticated = token && !isTokenExpired(token) && userCookie;
 
   if (isPublicPath(pathname)) {
     if (isAuthenticated && pathname.startsWith(LOGIN_PATH)) {

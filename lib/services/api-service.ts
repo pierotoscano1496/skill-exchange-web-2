@@ -35,6 +35,7 @@ import type {
 } from "../api/servicio-api";
 import { cookies } from "next/headers";
 import { AUTH_COOKIE } from "../constants/auth";
+import { RegisterUserRequest } from "../types/user-registration";
 
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
@@ -543,6 +544,13 @@ class ApiService {
 
   async getUsuario(): Promise<ApiResponse<Usuario>> {
     return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {}, true);
+  }
+
+  async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 
   async getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {

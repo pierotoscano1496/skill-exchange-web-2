@@ -25,10 +25,16 @@ import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useUser } from "@/hooks/use-user";
 import { redirect } from "next/navigation";
+import { logoutAction } from "@/app/(auth)/actions";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
   const { user, loading } = useUser();
+
+  const handleLogout = async () => {
+    const logoutSuccess = await logoutAction();
+    if (logoutSuccess.ok) redirect("/login");
+  };
 
   if (loading) {
     return (
@@ -138,7 +144,7 @@ export function SiteHeader() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Cerrar sesión
               </DropdownMenuItem>

@@ -14,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { postSimpleCheck } from "@/lib/actions/data";
 import { loginAction } from "../(auth)/actions";
 import { HOME_PATH } from "@/lib/constants/auth";
 
@@ -34,11 +33,6 @@ export default function LoginPage({ next = HOME_PATH }: { next?: string }) {
     } else {
       setError(result.error || "Error al iniciar sesión");
     }
-  };
-
-  const handleCheck = async (nombre: string) => {
-    const resp = await postSimpleCheck(nombre);
-    alert(resp.success ? resp.data : "Error");
   };
 
   return (
@@ -91,13 +85,6 @@ export default function LoginPage({ next = HOME_PATH }: { next?: string }) {
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full">
               Entrar
-            </Button>
-            <Button
-              type="button"
-              className="w-full"
-              onClick={() => handleCheck("Jorge")}
-            >
-              Pruebas
             </Button>
             <div className="text-center text-sm">
               ¿No tienes cuenta?{" "}

@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PlusCircle, X } from "lucide-react";
-import { userService } from "@/lib/services/user-service";
 import type { SkillInfo } from "@/lib/types/api-responses";
 import {
   Card,
@@ -29,6 +28,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getOwnSkillsInfo } from "@/lib/actions/data";
 
 interface StepCategorizacionProps {
   formData: ServicioFormData;
@@ -50,7 +50,7 @@ export function StepCategorizacion({
     const cargarSkills = async () => {
       setLoadingSkills(true);
       try {
-        const response = await userService.getOwnSkillsInfo();
+        const response = await getOwnSkillsInfo();
         if (response.success) {
           setAvailableSkills(response.data);
         } else {
