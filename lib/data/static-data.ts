@@ -578,11 +578,9 @@ export function buscarServiciosEstaticos(
 }
 
 // Obtener servicios de un usuario específico
-export function getServiciosUsuarioEstaticos(
-  idUsuario: string
-): ServicioBusqueda[] {
+export function getServiciosUsuarioEstaticos(): ServicioBusqueda[] {
   return STATIC_SERVICIOS.filter(
-    (servicio) => servicio.proveedor.id === idUsuario
+    (servicio) => servicio.proveedor.id === "user-1"
   );
 }
 

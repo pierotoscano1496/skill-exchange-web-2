@@ -14,7 +14,7 @@ export const ENV_CONFIG = {
       BUSQUEDA_SERVICIOS: "/servicio/busqueda",
       SERVICIO_DETALLE: "/servicio/details/preview",
       SERVICIO_REVIEWS: "/servicios/review",
-      SERVICIOS_USUARIO: "/servicio/usuario",
+      SERVICIOS_PROVEEDOR: "/servicio/proveedor",
       SOLICITUDES_PRESTAMISTA: "/match/details/prestamista",
       MATCH: "/match",
       CHAT: "/chat",

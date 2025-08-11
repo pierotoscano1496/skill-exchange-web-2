@@ -101,10 +101,10 @@ export async function getServicioReviews(
   return getService().getServicioReviews(id);
 }
 
-export async function getServiciosUsuario(
-  idUsuario: string
-): Promise<ApiResponse<ServicioBusqueda[]>> {
-  return getService().getServiciosUsuario(idUsuario);
+export async function getServiciosByProveedor(): Promise<
+  ApiResponse<ServicioBusqueda[]>
+> {
+  return getService().getServiciosByProveedor();
 }
 
 export async function getSolicitudesPrestamista(

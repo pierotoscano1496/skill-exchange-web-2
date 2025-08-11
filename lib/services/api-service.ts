@@ -201,11 +201,9 @@ class ApiService {
     );
   }
 
-  async getServiciosUsuario(
-    idUsuario: string
-  ): Promise<ApiResponse<ServicioBusqueda[]>> {
+  async getServiciosByProveedor(): Promise<ApiResponse<ServicioBusqueda[]>> {
     return this.fetchApi<ServicioBusqueda[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_USUARIO}`,
+      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_PROVEEDOR}`,
       {},
       true
     );

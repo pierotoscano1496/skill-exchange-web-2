@@ -212,12 +212,10 @@ class StaticService {
     };
   }
 
-  async getServiciosUsuario(
-    idUsuario: string
-  ): Promise<ApiResponse<ServicioBusqueda[]>> {
+  async getServiciosByProveedor(): Promise<ApiResponse<ServicioBusqueda[]>> {
     await this.delay(500);
 
-    const servicios = getServiciosUsuarioEstaticos(idUsuario);
+    const servicios = getServiciosUsuarioEstaticos();
 
     return {
       success: true,

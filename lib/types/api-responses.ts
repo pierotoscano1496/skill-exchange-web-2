@@ -114,18 +114,8 @@ export interface DisponibilidadServicio {
     | "viernes"
     | "sabado"
     | "domingo";
-  horaInicio: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  horaFin: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
+  horaInicio: string;
+  horaFin: string;
 }
 
 export interface SkillServicio {
