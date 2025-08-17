@@ -38,6 +38,7 @@ import type {
   ServicioResponse,
 } from "../api/servicio-api";
 import { RegisterUserRequest } from "../types/user-registration";
+import { UsuarioTipoDocumento } from "../constants/enums";
 
 const getService = () => (isStaticMode() ? staticService : apiService);
 
@@ -178,6 +179,14 @@ export async function getChatConversation(
 /* export async function getUsuario(): Promise<ApiResponse<Usuario>> {
   return getService().getUsuario();
 } */
+
+export async function checkUserExists(
+  tipo?: UsuarioTipoDocumento,
+  documento?: string,
+  correo?: string
+): Promise<ApiResponse<boolean>> {
+  return getService().checkUserExists(tipo, documento, correo);
+}
 
 export async function registerUser(
   data: RegisterUserRequest

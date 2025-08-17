@@ -99,7 +99,7 @@ export function SiteHeader() {
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src="/placeholder-user.jpg" alt={user.nombres} />
                   <AvatarFallback className="rounded-lg">
-                    {user.nombres.charAt(0)}
+                    {user.nombres?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <span className="hidden md:inline-block font-medium">
@@ -117,7 +117,7 @@ export function SiteHeader() {
                       alt={user.nombres}
                     />
                     <AvatarFallback className="rounded-lg">
-                      {user.nombres.charAt(0)}
+                      {user.nombres?.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">

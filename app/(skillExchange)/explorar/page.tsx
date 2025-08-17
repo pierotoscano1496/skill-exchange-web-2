@@ -24,6 +24,7 @@ import type {
   Categoria,
   Subcategoria,
   Skill,
+  BusquedaServiciosRequest,
 } from "@/lib/types/api-responses";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -76,9 +77,7 @@ export default function ExplorarPage() {
       if (selectedCategoria && selectedCategoria !== "all") {
         setLoading(true);
         try {
-          const response = await getSubCategoriasByCategoria(
-            selectedCategoria
-          );
+          const response = await getSubCategoriasByCategoria(selectedCategoria);
           if (response.success) {
             setSubcategorias(response.data || []);
           }
@@ -105,9 +104,7 @@ export default function ExplorarPage() {
       if (selectedSubcategoria && selectedSubcategoria !== "all") {
         setLoading(true);
         try {
-          const response = await getSkillsBySubCategoria(
-            selectedSubcategoria
-          );
+          const response = await getSkillsBySubCategoria(selectedSubcategoria);
           if (response.success) {
             setSkills(response.data || []);
           }
@@ -130,7 +127,7 @@ export default function ExplorarPage() {
   const realizarBusqueda = async () => {
     setLoading(true);
     try {
-      const filtros = {
+      const filtros: BusquedaServiciosRequest = {
         keyWord: searchTerm || undefined,
         idCategoria:
           selectedCategoria !== "all" ? selectedCategoria : undefined,
@@ -369,13 +366,8 @@ export default function ExplorarPage() {
                           <Clock className="h-3 w-3" />
                           <span className="capitalize">
                             {servicio.disponibilidades[0].dia}{" "}
-                            {formatearHorario(
-                              servicio.disponibilidades[0].horaInicio
-                            )}{" "}
-                            -{" "}
-                            {formatearHorario(
-                              servicio.disponibilidades[0].horaFin
-                            )}
+                            {servicio.disponibilidades[0].horaInicio} -{" "}
+                            {servicio.disponibilidades[0].horaFin}
                           </span>
                         </div>
                       )}

@@ -36,6 +36,7 @@ import type {
 import { cookies } from "next/headers";
 import { AUTH_COOKIE } from "../constants/auth";
 import { RegisterUserRequest } from "../types/user-registration";
+import { UsuarioTipoDocumento } from "../constants/enums";
 
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
@@ -176,7 +177,7 @@ class ApiService {
   async buscarServicios(
     filtros: BusquedaServiciosRequest
   ): Promise<ApiResponse<ServicioBusqueda[]>> {
-    const params = new URLSearchParams();
+    /* const params = new URLSearchParams();
     if (filtros.keyWord) params.append("keyWord", filtros.keyWord);
     if (filtros.idSkill) params.append("idSkill", filtros.idSkill);
     if (filtros.idSubcategoria)
@@ -185,8 +186,14 @@ class ApiService {
 
     const endpoint = `${
       ENV_CONFIG.API.ENDPOINTS.BUSQUEDA_SERVICIOS
-    }?${params.toString()}`;
-    return this.fetchApi<ServicioBusqueda[]>(endpoint);
+    }?${params.toString()}`; */
+    return this.fetchApi<ServicioBusqueda[]>(
+      ENV_CONFIG.API.ENDPOINTS.BUSQUEDA_SERVICIOS,
+      {
+        method: "POST",
+        body: JSON.stringify(filtros),
+      }
+    );
   }
 
   async getServicioDetalle(id: string): Promise<ApiResponse<ServicioDetalle>> {
@@ -541,11 +548,31 @@ class ApiService {
   }
 
   async getUsuario(): Promise<ApiResponse<Usuario>> {
-    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {}, true);
+    return this.fetchApi<Usuario>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_AUTH,
+      {},
+      true
+    );
+  }
+
+  async checkUserExists(
+    tipo?: UsuarioTipoDocumento,
+    documento?: string,
+    correo?: string
+  ): Promise<ApiResponse<boolean>> {
+    let paramsBuilder: string[] = [];
+    if (tipo) paramsBuilder.push(`tipoDocumento=${encodeURIComponent(tipo)}`);
+    if (documento)
+      paramsBuilder.push(`documento=${encodeURIComponent(documento)}`);
+    if (correo) paramsBuilder.push(`correo=${encodeURIComponent(correo)}`);
+
+    return this.fetchApi<boolean>(
+      `${ENV_CONFIG.API.ENDPOINTS.CHECK_USER_EXISTS}?${paramsBuilder.join("&")}`
+    );
   }
 
   async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
-    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO_AUTH, {
       method: "POST",
       body: JSON.stringify(data),
     });

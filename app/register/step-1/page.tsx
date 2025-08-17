@@ -16,10 +16,14 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { UsuarioTipoDocumento } from "@/lib/constants/enums";
+import { checkUserExists } from "@/lib/actions/data";
 
 export default function RegisterStep1Page() {
   const router = useRouter();
-  const [tipoDocumento, setTipoDocumento] = useState<string>("dni");
+  const [tipoDocumento, setTipoDocumento] = useState<UsuarioTipoDocumento>(
+    UsuarioTipoDocumento.DNI
+  );
   const [documentNumber, setDocumentNumber] = useState<string>("");
   const [nombres, setNombres] = useState<string>("");
   const [apellidos, setApellidos] = useState<string>("");
@@ -42,7 +46,7 @@ export default function RegisterStep1Page() {
     setFechaNacimiento(value);
   };
 
-  const validateForm = () => {
+  const validateForm = async () => {
     const newErrors: Record<string, string> = {};
 
     if (!documentNumber) {
@@ -110,12 +114,20 @@ export default function RegisterStep1Page() {
         "La descripción debe tener al menos 10 caracteres";
     }
 
+    const usuarioIsRegistered = await checkUserExists(
+      tipoDocumento,
+      documentNumber
+    );
+    if (usuarioIsRegistered.success && usuarioIsRegistered.data) {
+      newErrors.documentNumber = "El usuario ya está registrado";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateForm()) {
+  const handleNext = async () => {
+    if (await validateForm()) {
       const parts = fechaNacimiento.split("/");
       const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
       localStorage.setItem(
@@ -160,26 +172,35 @@ export default function RegisterStep1Page() {
           <div className="space-y-2">
             <Label>Tipo de documento</Label>
             <RadioGroup
-              defaultValue="dni"
+              defaultValue={UsuarioTipoDocumento.DNI}
               value={tipoDocumento}
-              onValueChange={(type) => {
+              onValueChange={(type: UsuarioTipoDocumento) => {
                 setTipoDocumento(type);
                 setDocumentNumber("");
               }}
               className="flex flex-col space-y-1"
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="dni" id="dni" />
-                <Label htmlFor="dni" className="cursor-pointer">
+                <RadioGroupItem
+                  value={UsuarioTipoDocumento.DNI}
+                  id={UsuarioTipoDocumento.DNI}
+                />
+                <Label
+                  htmlFor={UsuarioTipoDocumento.DNI}
+                  className="cursor-pointer"
+                >
                   DNI
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem
-                  value="carnet_extranjeria"
-                  id="carnet_extranjeria"
+                  value={UsuarioTipoDocumento.CARNET_EXTRANJERIA}
+                  id={UsuarioTipoDocumento.CARNET_EXTRANJERIA}
                 />
-                <Label htmlFor="carnet_extranjeria" className="cursor-pointer">
+                <Label
+                  htmlFor={UsuarioTipoDocumento.CARNET_EXTRANJERIA}
+                  className="cursor-pointer"
+                >
                   Carné de extranjería
                 </Label>
               </div>

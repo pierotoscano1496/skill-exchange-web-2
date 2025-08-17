@@ -47,7 +47,7 @@ import type {
   ConfirmacionPago,
 } from "../types/solicitud-updates";
 import { RegisterUserRequest } from "../types/user-registration";
-import { UsuarioTipo } from "../constants/enums";
+import { UsuarioTipo, UsuarioTipoDocumento } from "../constants/enums";
 
 class StaticService {
   // Simular delay de red para hacer más realista
@@ -539,6 +539,20 @@ class StaticService {
         introduccion: "",
         skills: [],
       },
+    };
+  }
+
+  async checkUserExists(
+    tipo?: UsuarioTipoDocumento,
+    documento?: string,
+    correo?: string
+  ): Promise<ApiResponse<boolean>> {
+    await this.delay(500);
+    const exists = Math.random() < 0.5; // 50% de probabilidad de que el usuario exista
+    return {
+      success: true,
+      message: exists ? "Usuario existe" : "Usuario no existe",
+      data: exists,
     };
   }
 

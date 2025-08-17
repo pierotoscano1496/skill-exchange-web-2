@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { UsuarioTipo } from "@/lib/constants/enums";
+import { checkUserExists } from "@/lib/actions/data";
 
 export default function RegisterStep2Page() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export default function RegisterStep2Page() {
     }
   }, []);
 
-  const validateForm = () => {
+  const validateForm = async () => {
     const newErrors: Record<string, string> = {};
 
     if (!email) {
@@ -56,12 +57,21 @@ export default function RegisterStep2Page() {
       newErrors.confirmPassword = "Las contraseñas no coinciden";
     }
 
+    const usuarioIsRegistered = await checkUserExists(
+      undefined,
+      undefined,
+      email
+    );
+    if (usuarioIsRegistered.success && usuarioIsRegistered.data) {
+      newErrors.email = "El correo electrónico ya está registrado";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateForm()) {
+  const handleNext = async () => {
+    if (await validateForm()) {
       const savedData = localStorage.getItem("registrationData");
       const prevData = savedData ? JSON.parse(savedData) : {};
 
