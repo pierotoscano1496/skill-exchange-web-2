@@ -36,7 +36,8 @@ import type {
 import { cookies } from "next/headers";
 import { AUTH_COOKIE } from "../constants/auth";
 import { RegisterUserRequest } from "../types/user-registration";
-import { UsuarioTipoDocumento } from "../constants/enums";
+import { MatchServicioEstado, UsuarioTipoDocumento } from "../constants/enums";
+import { id } from "date-fns/locale";
 
 class ApiService {
   private baseUrl = ENV_CONFIG.API.BASE_URL;
@@ -220,7 +221,7 @@ class ApiService {
     idPrestamista: string
   ): Promise<ApiResponse<SolicitudRecibida[]>> {
     return this.fetchApi<SolicitudRecibida[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PRESTAMISTA}/${idPrestamista}`,
+      `${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PROVEEDOR}/${idPrestamista}`,
       {},
       true
     );
@@ -543,6 +544,40 @@ class ApiService {
     return this.fetchApi<ChatConversation>(
       `${ENV_CONFIG.API.ENDPOINTS.CHAT_CONVERSATION_BY_ID}/${idConversation}`,
       {},
+      true
+    );
+  }
+
+  async getAverageScoreMatchsProveedor(
+    idProveedor: string
+  ): Promise<ApiResponse<number>> {
+    const endpoint =
+      ENV_CONFIG.API.ENDPOINTS.AVERAGE_SCORE_MATCHS_PROVEEDOR.replace(
+        "$1",
+        idProveedor
+      );
+    return this.fetchApi<number>(endpoint, {}, true);
+  }
+
+  async checkIfSkillIsPresentInServiciosFromProveedor(
+    idSkill: string
+  ): Promise<ApiResponse<boolean>> {
+    return this.fetchApi<boolean>(
+      ENV_CONFIG.API.ENDPOINTS.CHECK_SKILL_IN_SERVICIOS_PROVEEDOR.replace(
+        "$1",
+        idSkill
+      ),
+      {},
+      true
+    );
+  }
+
+  async deleteSkillFromProfile(idSkill: string): Promise<ApiResponse<boolean>> {
+    return this.fetchApi<boolean>(
+      ENV_CONFIG.API.ENDPOINTS.DELETE_SKILL_FROM_PROFILE.replace("$1", idSkill),
+      {
+        method: "DELETE",
+      },
       true
     );
   }

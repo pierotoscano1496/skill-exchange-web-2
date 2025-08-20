@@ -1,4 +1,4 @@
-import { UsuarioTipo } from "../constants/enums";
+import { MatchServicioEstado, UsuarioTipo } from "../constants/enums";
 
 // Tipos de respuesta que coinciden con el backend
 export interface User {
@@ -28,6 +28,9 @@ export interface Usuario {
     id: string;
     nivelConocimiento: number;
     descripcion: string;
+    descripcionDesempeno?: string;
+    nombreCategoria?: string;
+    nombreSubCategoria?: string;
   }[];
 }
 
@@ -51,6 +54,8 @@ export interface SkillInfo {
   nombreSubCategoria: string;
   nombreCategoria: string;
 }
+
+export interface SkillUsuario {}
 
 export interface Categoria {
   id: string;
@@ -205,12 +210,7 @@ export interface SolicitudRecibida {
   fecha: string;
   fechaInicio: string;
   fechaCierre: string;
-  estado:
-    | "solicitado"
-    | "pendiente_pago"
-    | "rechazado"
-    | "ejecucion"
-    | "finalizado";
+  estado: MatchServicioEstado;
   puntuacion: number;
   costo: number;
   mensaje: string;

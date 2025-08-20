@@ -176,6 +176,22 @@ export async function getChatConversation(
   return getService().getChatConversation(idConversation);
 }
 
+export async function getAverageScoreMatchsProveedor(idProveedor: string) {
+  return getService().getAverageScoreMatchsProveedor(idProveedor);
+}
+
+export async function checkIfSkillIsPresentInServiciosFromProveedor(
+  idSkill: string
+): Promise<ApiResponse<boolean>> {
+  return getService().checkIfSkillIsPresentInServiciosFromProveedor(idSkill);
+}
+
+export async function deleteSkillFromProfile(
+  skillId: string
+): Promise<ApiResponse<boolean>> {
+  return getService().deleteSkillFromProfile(skillId);
+}
+
 /* export async function getUsuario(): Promise<ApiResponse<Usuario>> {
   return getService().getUsuario();
 } */

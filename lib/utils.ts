@@ -41,3 +41,12 @@ export function isTokenExpired(token: string): boolean {
   if (!expDate) return true; // inválido ⇒ lo tratamos como expirado
   return expDate.getTime() <= Date.now();
 }
+
+export function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("es-PE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}

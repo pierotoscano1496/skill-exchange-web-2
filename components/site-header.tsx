@@ -9,6 +9,7 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -130,10 +131,12 @@ export function SiteHeader() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  Mi perfil
-                </DropdownMenuItem>
+                <Link href="/perfil">
+                  <DropdownMenuItem>
+                    <User className="mr-2 h-4 w-4" />
+                    Mi perfil
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   Configuración

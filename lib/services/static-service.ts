@@ -517,6 +517,44 @@ class StaticService {
     }
   }
 
+  async getAverageScoreMatchsProveedor(
+    idProveedor: string
+  ): Promise<ApiResponse<number>> {
+    await this.delay(400);
+    // Simular un promedio aleatorio entre 1 y 5
+    const averageScore = parseFloat((Math.random() * 4 + 1).toFixed(2));
+    return {
+      success: true,
+      message: "Promedio de calificaciones obtenido exitosamente",
+      data: averageScore,
+    };
+  }
+
+  async checkIfSkillIsPresentInServiciosFromProveedor(
+    idSkill: string
+  ): Promise<ApiResponse<boolean>> {
+    await this.delay(500);
+    // Simular una verificación aleatoria (50% de probabilidad)
+    const exists = Math.random() < 0.5;
+    return {
+      success: true,
+      message: exists
+        ? "La habilidad está presente en los servicios del proveedor"
+        : "La habilidad no está presente en los servicios del proveedor",
+      data: exists,
+    };
+  }
+
+  async deleteSkillFromProfile(skillId: string): Promise<ApiResponse<boolean>> {
+    await this.delay(500);
+    // Simular una eliminación exitosa
+    return {
+      success: true,
+      message: "Habilidad eliminada del perfil exitosamente",
+      data: true,
+    };
+  }
+
   async getUsuario(): Promise<ApiResponse<Usuario>> {
     await this.delay(500);
     return {

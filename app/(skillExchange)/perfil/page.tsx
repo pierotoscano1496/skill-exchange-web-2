@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -164,6 +164,12 @@ const categories = [
 
 import { useUser } from "@/hooks/use-user";
 import { Skill } from "@/lib/types/api-responses";
+import { formatDate } from "@/lib/utils";
+import {
+  checkIfSkillIsPresentInServiciosFromProveedor,
+  deleteSkillFromProfile,
+  getAverageScoreMatchsProveedor,
+} from "@/lib/actions/data";
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -172,24 +178,55 @@ export default function ProfilePage() {
   const [isEditingSocial, setIsEditingSocial] = useState(false);
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [personalData, setPersonalData] = useState({
-    nombres: user?.nombres || "",
-    apellidos: user?.apellidos || "",
-    correo: user?.correo || "",
-    dni: user?.dni || "",
-    carnetExtranjeria: user?.carnetExtranjeria || "",
-    tipoDocumento: user?.tipoDocumento || "dni",
-    fechaNacimiento: user?.fechaNacimiento || "",
-    introduccion: user?.introduccion || "",
+    nombres: "",
+    apellidos: "",
+    correo: "",
+    dni: "",
+    carnetExtranjeria: "",
+    tipoDocumento: "dni",
+    fechaNacimiento: "",
+    introduccion: "",
   });
   const [socialData, setSocialData] = useState({
-    linkedin: user?.perfilLinkedin || "",
-    facebook: user?.perfilFacebook || "",
-    instagram: user?.perfilInstagram || "",
-    tiktok: user?.perfilTiktok || "",
+    linkedin: "",
+    facebook: "",
+    instagram: "",
+    tiktok: "",
   });
   const [skills, setSkills] = useState<
     { id: string; nivelConocimiento: number; descripcion: string }[]
-  >(user?.skills || []);
+  >([]);
+
+  const [averageScore, setAverageScore] = useState<number>(0);
+
+  useEffect(() => {
+    if (user) {
+      setPersonalData({
+        nombres: user.nombres || "",
+        apellidos: user.apellidos || "",
+        correo: user.correo || "",
+        dni: user.dni || "",
+        carnetExtranjeria: user.carnetExtranjeria || "",
+        tipoDocumento: user.tipoDocumento || "dni",
+        fechaNacimiento: user.fechaNacimiento || "",
+        introduccion: user.introduccion || "",
+      });
+      setSocialData({
+        linkedin: user.perfilLinkedin || "",
+        facebook: user.perfilFacebook || "",
+        instagram: user.perfilInstagram || "",
+        tiktok: user.perfilTiktok || "",
+      });
+      setSkills(user.skills || []);
+
+      (async () => {
+        setAverageScore(
+          (await getAverageScoreMatchsProveedor(user.id)).data || 0
+        );
+      })();
+    }
+  }, [user]);
+
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
   const [selectedSkill, setSelectedSkill] = useState<string>("");
@@ -277,9 +314,27 @@ export default function ProfilePage() {
   };
 
   // Eliminar una habilidad
-  const removeSkill = (skillId: string) => {
-    setSkills(skills.filter((skill) => skill.id !== skillId));
-    setSuccessMessage("Habilidad eliminada correctamente");
+  const removeSkill = async (skillId: string) => {
+    const skillIsPresentInServicios =
+      await checkIfSkillIsPresentInServiciosFromProveedor(skillId);
+    if (skillIsPresentInServicios.data) {
+      // TODO: Modal de error
+      /* setErrors({
+        skill:
+          "No puedes eliminar esta habilidad porque está asociada a un servicio.",
+      }); */
+      return;
+    } else {
+      // Eliminar la habilidad
+      const skillDeletedResp = await deleteSkillFromProfile(skillId);
+      if (skillDeletedResp.data) {
+        setSkills(skills.filter((skill) => skill.id !== skillId));
+        setSuccessMessage("Habilidad eliminada correctamente");
+      } else {
+        // TODO: Modal de error
+        /* setErrors({ skill: "Error al eliminar la habilidad" }); */
+      }
+    }
     setTimeout(() => setSuccessMessage(""), 3000);
   };
 
@@ -324,7 +379,7 @@ export default function ProfilePage() {
               </h2>
               <div className="flex items-center text-sm text-muted-foreground mt-1">
                 <Star className="h-4 w-4 text-yellow-500 fill-current mr-1" />
-                <span>4.9</span>
+                <span>{averageScore}</span>
                 <span className="mx-1">•</span>
                 <span>18 reseñas</span>
               </div>
@@ -341,7 +396,12 @@ export default function ProfilePage() {
               </div>
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
-                <span>Nacimiento: {user?.fechaNacimiento}</span>
+                <span>
+                  Nacimiento:{" "}
+                  {user?.fechaNacimiento
+                    ? formatDate(user.fechaNacimiento)
+                    : "No disponible"}
+                </span>
               </div>
             </div>
 
@@ -392,7 +452,7 @@ export default function ProfilePage() {
                   <span className="text-muted-foreground">Calificación</span>
                   <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-500 fill-current mr-1" />
-                    <span>4.9</span>
+                    <span>{averageScore}</span>
                   </div>
                 </div>
               </div>
@@ -436,9 +496,10 @@ export default function ProfilePage() {
                     {isEditingPersonal ? (
                       "Cancelar"
                     ) : (
-                      <Edit className="h-4 w-4 mr-2" />
+                      <>
+                        <Edit className="h-4 w-4 mr-2" /> Editar{" "}
+                      </>
                     )}
-                    {isEditingPersonal ? "Cancelar" : "Editar"}
                   </Button>
                 </div>
 
