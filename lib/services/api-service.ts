@@ -19,6 +19,9 @@ import type {
   ChatConversation,
   Usuario,
   SkillInfo,
+  SkillUsuario,
+  AsignacionSkillToUsuarioRequest,
+  SkillAsignadoResponse,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -586,6 +589,20 @@ class ApiService {
     return this.fetchApi<Usuario>(
       ENV_CONFIG.API.ENDPOINTS.USUARIO_AUTH,
       {},
+      true
+    );
+  }
+
+  async addSkillToProfile(
+    skillUsuario: AsignacionSkillToUsuarioRequest
+  ): Promise<ApiResponse<SkillAsignadoResponse>> {
+    return this.fetchApi<SkillAsignadoResponse>(
+      ENV_CONFIG.API.ENDPOINTS.ADD_SKILL_TO_PROFILE,
+      {
+        method: "PATCH",
+        body: JSON.stringify(skillUsuario),
+        headers: { "Content-Type": "application/json" },
+      },
       true
     );
   }

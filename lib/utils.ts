@@ -50,3 +50,7 @@ export function formatDate(dateStr: string): string {
     day: "numeric",
   });
 }
+
+export const generateUUID = (): string => {
+  return crypto.randomUUID();
+};

@@ -23,6 +23,9 @@ import type {
   ChatConversation,
   Usuario,
   SkillInfo,
+  SkillUsuario,
+  SkillAsignadoResponse,
+  AsignacionSkillToUsuarioRequest,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -190,6 +193,12 @@ export async function deleteSkillFromProfile(
   skillId: string
 ): Promise<ApiResponse<boolean>> {
   return getService().deleteSkillFromProfile(skillId);
+}
+
+export async function addSkillToProfile(
+  skillUsuario: AsignacionSkillToUsuarioRequest
+): Promise<ApiResponse<SkillAsignadoResponse>> {
+  return getService().addSkillToProfile(skillUsuario);
 }
 
 /* export async function getUsuario(): Promise<ApiResponse<Usuario>> {

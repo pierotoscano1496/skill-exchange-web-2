@@ -34,6 +34,24 @@ export interface Usuario {
   }[];
 }
 
+export interface SkillUsuario {
+  idSkill: string;
+  descripcion: string;
+  idUsuario: string;
+  nivelConocimiento: number;
+}
+
+export interface AsignacionSkillToUsuarioRequest {
+  idSkill: string;
+  descripcion: string;
+  nivelConocimiento: number;
+}
+
+export interface SkillAsignadoResponse extends SkillInfo {
+  nivelConocimiento: number;
+  descripcionDesempeno: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -55,7 +73,7 @@ export interface SkillInfo {
   nombreCategoria: string;
 }
 
-export interface SkillUsuario {}
+//export interface SkillUsuario {}
 
 export interface Categoria {
   id: string;

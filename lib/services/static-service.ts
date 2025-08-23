@@ -18,6 +18,8 @@ import type {
   ChatConversation,
   Usuario,
   SkillInfo,
+  AsignacionSkillToUsuarioRequest,
+  SkillAsignadoResponse,
 } from "../types/api-responses";
 import type {
   ServicioRequestBody,
@@ -48,6 +50,7 @@ import type {
 } from "../types/solicitud-updates";
 import { RegisterUserRequest } from "../types/user-registration";
 import { UsuarioTipo, UsuarioTipoDocumento } from "../constants/enums";
+import { generateUUID } from "../utils";
 
 class StaticService {
   // Simular delay de red para hacer más realista
@@ -576,6 +579,26 @@ class StaticService {
         perfilTiktok: "",
         introduccion: "",
         skills: [],
+      },
+    };
+  }
+
+  async addSkillToProfile(
+    skillUsuario: AsignacionSkillToUsuarioRequest
+  ): Promise<ApiResponse<SkillAsignadoResponse>> {
+    await this.delay(500);
+    // Simular una adición exitosa
+    return {
+      success: true,
+      message: "Habilidad añadida al perfil exitosamente",
+      data: {
+        id: generateUUID(),
+        descripcion: skillUsuario.descripcion,
+        nombreSubCategoria: "Subcategoría de " + skillUsuario.idSkill,
+        nombreCategoria: "Categoría de " + skillUsuario.idSkill,
+        descripcionDesempeno:
+          "Descripción de desempeño de " + skillUsuario.idSkill,
+        nivelConocimiento: skillUsuario.nivelConocimiento,
       },
     };
   }

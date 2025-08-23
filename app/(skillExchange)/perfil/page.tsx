@@ -43,6 +43,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CustomDialog } from "@/components/ui/custom-dialog";
 
 // Datos de ejemplo para categorías y subcategorías (igual que en el registro)
 const categories = [
@@ -163,9 +164,10 @@ const categories = [
 ];
 
 import { useUser } from "@/hooks/use-user";
-import { Skill } from "@/lib/types/api-responses";
+import { Skill, SkillUsuario } from "@/lib/types/api-responses";
 import { formatDate } from "@/lib/utils";
 import {
+  addSkillToProfile,
   checkIfSkillIsPresentInServiciosFromProveedor,
   deleteSkillFromProfile,
   getAverageScoreMatchsProveedor,
@@ -198,6 +200,17 @@ export default function ProfilePage() {
   >([]);
 
   const [averageScore, setAverageScore] = useState<number>(0);
+  const [dialogState, setDialogState] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "success" | "error" | "confirmation" | "info";
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   useEffect(() => {
     if (user) {
@@ -283,9 +296,9 @@ export default function ProfilePage() {
   };
 
   // Agregar una nueva habilidad
-  const addSkill = () => {
+  const addSkill = async () => {
     if (validateSkillForm()) {
-      const newSkill: {
+      /* const newSkill: {
         id: string;
         nivelConocimiento: number;
         descripcion: string;
@@ -293,6 +306,34 @@ export default function ProfilePage() {
         id: `skill-${Date.now()}`,
         nivelConocimiento: skillLevel[0],
         descripcion: `${selectedSkill}: ${comment}`,
+      }; */
+
+      const skillAsignadoResp = await addSkillToProfile({
+        idSkill: selectedSkill,
+        descripcion: comment,
+        nivelConocimiento: skillLevel[0],
+      });
+
+      if (!skillAsignadoResp.success) {
+        setDialogState({
+          isOpen: true,
+          type: "error",
+          title: "Error",
+          message: "Ocurrió un error al agregar la habilidad.",
+        });
+        return;
+      }
+
+      const skillAsignado = skillAsignadoResp.data;
+
+      const newSkill: {
+        id: string;
+        nivelConocimiento: number;
+        descripcion: string;
+      } = {
+        id: skillAsignado.id,
+        nivelConocimiento: skillAsignado.nivelConocimiento,
+        descripcion: skillAsignado.descripcionDesempeno,
       };
 
       setSkills([...skills, newSkill]);
@@ -318,24 +359,35 @@ export default function ProfilePage() {
     const skillIsPresentInServicios =
       await checkIfSkillIsPresentInServiciosFromProveedor(skillId);
     if (skillIsPresentInServicios.data) {
-      // TODO: Modal de error
-      /* setErrors({
-        skill:
+      setDialogState({
+        isOpen: true,
+        type: "error",
+        title: "Error al eliminar habilidad",
+        message:
           "No puedes eliminar esta habilidad porque está asociada a un servicio.",
-      }); */
+      });
       return;
     } else {
       // Eliminar la habilidad
       const skillDeletedResp = await deleteSkillFromProfile(skillId);
       if (skillDeletedResp.data) {
         setSkills(skills.filter((skill) => skill.id !== skillId));
-        setSuccessMessage("Habilidad eliminada correctamente");
+        setDialogState({
+          isOpen: true,
+          type: "success",
+          title: "Habilidad eliminada",
+          message: "La habilidad ha sido eliminada correctamente.",
+        });
       } else {
-        // TODO: Modal de error
-        /* setErrors({ skill: "Error al eliminar la habilidad" }); */
+        setDialogState({
+          isOpen: true,
+          type: "error",
+          title: "Error al eliminar habilidad",
+          message:
+            "Ocurrió un error al eliminar la habilidad. Por favor, inténtalo de nuevo.",
+        });
       }
     }
-    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
   // Guardar datos personales
@@ -1058,6 +1110,13 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
+      <CustomDialog
+        isOpen={dialogState.isOpen}
+        onClose={() => setDialogState({ ...dialogState, isOpen: false })}
+        title={dialogState.title}
+        message={dialogState.message}
+        type={dialogState.type}
+      />
     </div>
   );
 }
