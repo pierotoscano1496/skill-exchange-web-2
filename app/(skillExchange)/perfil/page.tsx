@@ -9,13 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import {
   Mail,
@@ -32,6 +25,7 @@ import {
   Edit,
   Camera,
   CheckCircle,
+  PlusCircle,
 } from "lucide-react";
 import {
   Dialog,
@@ -42,136 +36,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CustomDialog } from "@/components/ui/custom-dialog";
-
-// Datos de ejemplo para categorías y subcategorías (igual que en el registro)
-const categories = [
-  {
-    id: "tech",
-    name: "Tecnología",
-    subcategories: [
-      {
-        id: "programming",
-        name: "Programación",
-        skills: [
-          "JavaScript",
-          "Python",
-          "Java",
-          "React",
-          "Angular",
-          "Node.js",
-          "PHP",
-        ],
-      },
-      {
-        id: "design",
-        name: "Diseño",
-        skills: [
-          "Photoshop",
-          "Illustrator",
-          "Figma",
-          "UI/UX",
-          "Diseño web",
-          "Diseño gráfico",
-        ],
-      },
-      {
-        id: "hardware",
-        name: "Hardware",
-        skills: [
-          "Reparación de PC",
-          "Reparación de celulares",
-          "Instalación de redes",
-          "Soporte técnico",
-        ],
-      },
-    ],
-  },
-  {
-    id: "home",
-    name: "Hogar",
-    subcategories: [
-      {
-        id: "cleaning",
-        name: "Limpieza",
-        skills: [
-          "Limpieza general",
-          "Limpieza profunda",
-          "Lavado de alfombras",
-          "Limpieza de vidrios",
-        ],
-      },
-      {
-        id: "gardening",
-        name: "Jardinería",
-        skills: [
-          "Mantenimiento de jardines",
-          "Poda de árboles",
-          "Diseño de jardines",
-          "Fumigación",
-        ],
-      },
-      {
-        id: "repairs",
-        name: "Reparaciones",
-        skills: [
-          "Plomería",
-          "Electricidad",
-          "Carpintería",
-          "Pintura",
-          "Albañilería",
-        ],
-      },
-    ],
-  },
-  {
-    id: "education",
-    name: "Educación",
-    subcategories: [
-      {
-        id: "languages",
-        name: "Idiomas",
-        skills: [
-          "Inglés",
-          "Español",
-          "Francés",
-          "Alemán",
-          "Portugués",
-          "Italiano",
-          "Chino",
-        ],
-      },
-      {
-        id: "tutoring",
-        name: "Tutoría",
-        skills: [
-          "Matemáticas",
-          "Física",
-          "Química",
-          "Biología",
-          "Historia",
-          "Literatura",
-        ],
-      },
-      {
-        id: "arts",
-        name: "Artes",
-        skills: ["Música", "Pintura", "Danza", "Teatro", "Fotografía", "Canto"],
-      },
-    ],
-  },
-];
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 import { useUser } from "@/hooks/use-user";
-import { Skill, SkillUsuario } from "@/lib/types/api-responses";
+import {
+  SkillAsignadoResponse,
+  SkillInfo,
+  SkillUsuario,
+} from "@/lib/types/api-responses";
 import { formatDate } from "@/lib/utils";
 import {
   addSkillToProfile,
   checkIfSkillIsPresentInServiciosFromProveedor,
   deleteSkillFromProfile,
   getAverageScoreMatchsProveedor,
+  getOwnSkillsInfo,
+  getSkillsInfo,
 } from "@/lib/actions/data";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ProfilePage() {
   const { user } = useUser();
@@ -195,9 +96,14 @@ export default function ProfilePage() {
     instagram: "",
     tiktok: "",
   });
-  const [skills, setSkills] = useState<
-    { id: string; nivelConocimiento: number; descripcion: string }[]
-  >([]);
+  const [userSkills, setUserSkills] = useState<SkillAsignadoResponse[]>([]);
+  const [allSkills, setAllSkills] = useState<SkillInfo[]>([]);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [newSkillInfo, setNewSkillInfo] = useState<SkillInfo | null>(null);
+  const [newSkillLevel, setNewSkillLevel] = useState<number>(5);
+  const [newSkillComment, setNewSkillComment] = useState<string>("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const [averageScore, setAverageScore] = useState<number>(0);
   const [dialogState, setDialogState] = useState<{
@@ -230,7 +136,8 @@ export default function ProfilePage() {
         instagram: user.perfilInstagram || "",
         tiktok: user.perfilTiktok || "",
       });
-      setSkills(user.skills || []);
+
+      setUserSkills(user.skills || []);
 
       (async () => {
         setAverageScore(
@@ -240,118 +147,75 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [selectedSkill, setSelectedSkill] = useState<string>("");
-  const [skillLevel, setSkillLevel] = useState<number[]>([5]);
-  const [comment, setComment] = useState<string>("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [successMessage, setSuccessMessage] = useState<string>("");
-
-  // Obtener subcategorías basadas en la categoría seleccionada
-  const getSubcategories = () => {
-    const category = categories.find((cat) => cat.id === selectedCategory);
-    return category ? category.subcategories : [];
-  };
-
-  // Obtener habilidades basadas en la subcategoría seleccionada
-  const getSkills = () => {
-    const subcategory = getSubcategories().find(
-      (subcat) => subcat.id === selectedSubcategory
-    );
-    return subcategory ? subcategory.skills : [];
-  };
-
-  // Validar el formulario de habilidad
-  const validateSkillForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!selectedCategory) {
-      newErrors.category = "Debes seleccionar una categoría";
-    }
-
-    if (!selectedSubcategory) {
-      newErrors.subcategory = "Debes seleccionar una subcategoría";
-    }
-
-    if (!selectedSkill) {
-      newErrors.skill = "Debes seleccionar una habilidad";
-    }
-
-    if (!comment) {
-      newErrors.comment = "Debes agregar un comentario sobre tu desempeño";
-    }
-
-    // Verificar si la habilidad ya existe
-    const skillExists = skills.some((s) =>
-      s.descripcion.includes(selectedSkill)
-    );
-
-    if (skillExists) {
-      newErrors.skill = "Esta habilidad ya ha sido agregada";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Agregar una nueva habilidad
-  const addSkill = async () => {
-    if (validateSkillForm()) {
-      /* const newSkill: {
-        id: string;
-        nivelConocimiento: number;
-        descripcion: string;
-      } = {
-        id: `skill-${Date.now()}`,
-        nivelConocimiento: skillLevel[0],
-        descripcion: `${selectedSkill}: ${comment}`,
-      }; */
-
-      const skillAsignadoResp = await addSkillToProfile({
-        idSkill: selectedSkill,
-        descripcion: comment,
-        nivelConocimiento: skillLevel[0],
-      });
-
-      if (!skillAsignadoResp.success) {
-        setDialogState({
-          isOpen: true,
-          type: "error",
-          title: "Error",
-          message: "Ocurrió un error al agregar la habilidad.",
-        });
-        return;
+  useEffect(() => {
+    const fetchAndProcessSkills = async () => {
+      const response = await getSkillsInfo();
+      if (response.success) {
+        setAllSkills(response.data);
       }
+    };
+    fetchAndProcessSkills();
+  }, []);
 
-      const skillAsignado = skillAsignadoResp.data;
+  const handleSelectSkill = (skill: SkillInfo) => {
+    setNewSkillInfo(skill);
+    setIsPopoverOpen(false);
+  };
 
-      const newSkill: {
-        id: string;
-        nivelConocimiento: number;
-        descripcion: string;
-      } = {
-        id: skillAsignado.id,
-        nivelConocimiento: skillAsignado.nivelConocimiento,
-        descripcion: skillAsignado.descripcionDesempeno,
-      };
-
-      setSkills([...skills, newSkill]);
-
-      // Limpiar el formulario
-      setSelectedCategory("");
-      setSelectedSubcategory("");
-      setSelectedSkill("");
-      setSkillLevel([5]);
-      setComment("");
-
-      // Cerrar el diálogo
-      setIsAddingSkill(false);
-
-      // Mostrar mensaje de éxito
-      setSuccessMessage("Habilidad agregada correctamente");
-      setTimeout(() => setSuccessMessage(""), 3000);
+  const addSkill = async () => {
+    const newErrors: Record<string, string> = {};
+    if (!newSkillInfo) {
+      newErrors.skill = "Debes seleccionar una habilidad.";
     }
+    if (!newSkillComment) {
+      newErrors.comment = "Debes agregar un comentario sobre tu desempeño.";
+    }
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    const skillAsignadoResp = await addSkillToProfile({
+      idSkill: newSkillInfo!.id,
+      descripcion: newSkillComment,
+      nivelConocimiento: newSkillLevel,
+    });
+
+    if (!skillAsignadoResp.success) {
+      setDialogState({
+        isOpen: true,
+        type: "error",
+        title: "Error",
+        message: "Ocurrió un error al agregar la habilidad.",
+      });
+      return;
+    }
+
+    const skillAsignado = skillAsignadoResp.data;
+
+    const newSkillForUi: SkillUsuario = {
+      idSkill: skillAsignado.id,
+      nivelConocimiento: skillAsignado.nivelConocimiento,
+      descripcion: `${newSkillInfo!.descripcion}: ${
+        skillAsignado.descripcionDesempeno
+      }`,
+    };
+
+    setUserSkills([...userSkills, skillAsignado]);
+
+    // Limpiar el formulario
+    setNewSkillInfo(null);
+    setNewSkillLevel(5);
+    setNewSkillComment("");
+    setErrors({});
+
+    // Cerrar el diálogo
+    setIsAddingSkill(false);
+
+    // Mostrar mensaje de éxito
+    setSuccessMessage("Habilidad agregada correctamente");
+    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
   // Eliminar una habilidad
@@ -371,7 +235,7 @@ export default function ProfilePage() {
       // Eliminar la habilidad
       const skillDeletedResp = await deleteSkillFromProfile(skillId);
       if (skillDeletedResp.data) {
-        setSkills(skills.filter((skill) => skill.id !== skillId));
+        setUserSkills(userSkills.filter((skill) => skill.id !== skillId));
         setDialogState({
           isOpen: true,
           type: "success",
@@ -764,118 +628,71 @@ export default function ProfilePage() {
                       <DialogHeader>
                         <DialogTitle>Agregar nueva habilidad</DialogTitle>
                         <DialogDescription>
-                          Selecciona una categoría, subcategoría y habilidad
-                          para agregar a tu perfil.
+                          Busca y añade una habilidad a tu perfil.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="category">Categoría</Label>
-                          <Select
-                            value={selectedCategory}
-                            onValueChange={setSelectedCategory}
-                          >
-                            <SelectTrigger
-                              id="category"
-                              className={
-                                errors.category ? "border-red-500" : ""
-                              }
+                        <Popover
+                          open={isPopoverOpen}
+                          onOpenChange={setIsPopoverOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start"
                             >
-                              <SelectValue placeholder="Selecciona una categoría" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {categories.map((category) => (
-                                <SelectItem
-                                  key={category.id}
-                                  value={category.id}
-                                >
-                                  {category.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          {errors.category && (
-                            <p className="text-sm text-red-500">
-                              {errors.category}
-                            </p>
-                          )}
-                        </div>
-
-                        {selectedCategory && (
-                          <div className="space-y-2">
-                            <Label htmlFor="subcategory">Subcategoría</Label>
-                            <Select
-                              value={selectedSubcategory}
-                              onValueChange={(value) => {
-                                setSelectedSubcategory(value);
-                                setSelectedSkill("");
-                              }}
-                            >
-                              <SelectTrigger
-                                id="subcategory"
-                                className={
-                                  errors.subcategory ? "border-red-500" : ""
-                                }
-                              >
-                                <SelectValue placeholder="Selecciona una subcategoría" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getSubcategories().map((subcategory) => (
-                                  <SelectItem
-                                    key={subcategory.id}
-                                    value={subcategory.id}
-                                  >
-                                    {subcategory.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {errors.subcategory && (
-                              <p className="text-sm text-red-500">
-                                {errors.subcategory}
-                              </p>
-                            )}
-                          </div>
+                              <PlusCircle className="mr-2 h-4 w-4" />
+                              {newSkillInfo
+                                ? newSkillInfo.descripcion
+                                : "Seleccionar habilidad"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                            <Command>
+                              <CommandInput placeholder="Buscar habilidad..." />
+                              <CommandList>
+                                <CommandEmpty>
+                                  No se encontraron resultados.
+                                </CommandEmpty>
+                                <CommandGroup>
+                                  {allSkills.map((skill) => (
+                                    <CommandItem
+                                      key={skill.id}
+                                      value={`${skill.descripcion} ${skill.nombreCategoria} ${skill.nombreSubCategoria}`}
+                                      onSelect={() => handleSelectSkill(skill)}
+                                      disabled={userSkills.some((s) =>
+                                        s.descripcion.startsWith(
+                                          skill.descripcion
+                                        )
+                                      )}
+                                    >
+                                      <div className="flex flex-col">
+                                        <span>{skill.descripcion}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                          {skill.nombreCategoria} &gt;{" "}
+                                          {skill.nombreSubCategoria}
+                                        </span>
+                                      </div>
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        {errors.skill && (
+                          <p className="text-sm text-red-500">{errors.skill}</p>
                         )}
 
-                        {selectedSubcategory && (
-                          <div className="space-y-2">
-                            <Label htmlFor="skill">Habilidad</Label>
-                            <Select
-                              value={selectedSkill}
-                              onValueChange={setSelectedSkill}
-                            >
-                              <SelectTrigger
-                                id="skill"
-                                className={errors.skill ? "border-red-500" : ""}
-                              >
-                                <SelectValue placeholder="Selecciona una habilidad" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getSkills().map((skill) => (
-                                  <SelectItem key={skill} value={skill}>
-                                    {skill}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {errors.skill && (
-                              <p className="text-sm text-red-500">
-                                {errors.skill}
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        {selectedSkill && (
-                          <>
+                        {newSkillInfo && (
+                          <div className="space-y-4 pt-4 border-t">
                             <div className="space-y-2">
                               <div className="flex justify-between">
                                 <Label htmlFor="skill-level">
-                                  Nivel de conocimiento (1-10)
+                                  Nivel de conocimiento
                                 </Label>
                                 <span className="text-sm font-medium">
-                                  {skillLevel[0]}
+                                  {newSkillLevel}
                                 </span>
                               </div>
                               <Slider
@@ -883,19 +700,22 @@ export default function ProfilePage() {
                                 min={1}
                                 max={10}
                                 step={1}
-                                value={skillLevel}
-                                onValueChange={setSkillLevel}
+                                value={[newSkillLevel]}
+                                onValueChange={(value) =>
+                                  setNewSkillLevel(value[0])
+                                }
                               />
                             </div>
-
                             <div className="space-y-2">
                               <Label htmlFor="comment">
                                 ¿Cómo te desempeñas en esta habilidad?
                               </Label>
                               <Textarea
                                 id="comment"
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
+                                value={newSkillComment}
+                                onChange={(e) =>
+                                  setNewSkillComment(e.target.value)
+                                }
                                 placeholder="Describe tu experiencia y nivel de conocimiento..."
                                 className={
                                   errors.comment ? "border-red-500" : ""
@@ -907,13 +727,19 @@ export default function ProfilePage() {
                                 </p>
                               )}
                             </div>
-                          </>
+                          </div>
                         )}
                       </div>
                       <DialogFooter>
                         <Button
                           variant="outline"
-                          onClick={() => setIsAddingSkill(false)}
+                          onClick={() => {
+                            setIsAddingSkill(false);
+                            setNewSkillInfo(null);
+                            setNewSkillLevel(5);
+                            setNewSkillComment("");
+                            setErrors({});
+                          }}
                         >
                           Cancelar
                         </Button>
@@ -924,8 +750,8 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-4">
-                  {skills.length > 0 ? (
-                    skills.map((skill) => (
+                  {userSkills.length > 0 ? (
+                    userSkills.map((skill) => (
                       <div
                         key={skill.id}
                         className="flex items-start justify-between p-4 border rounded-md bg-muted/20"

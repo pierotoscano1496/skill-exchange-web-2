@@ -24,20 +24,13 @@ export interface Usuario {
   perfilTiktok: string;
   introduccion: string;
   foto?: string;
-  skills: {
-    id: string;
-    nivelConocimiento: number;
-    descripcion: string;
-    descripcionDesempeno?: string;
-    nombreCategoria?: string;
-    nombreSubCategoria?: string;
-  }[];
+  skills: SkillAsignadoResponse[];
 }
 
 export interface SkillUsuario {
   idSkill: string;
   descripcion: string;
-  idUsuario: string;
+  idUsuario?: string;
   nivelConocimiento: number;
 }
 
