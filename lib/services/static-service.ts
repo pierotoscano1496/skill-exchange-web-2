@@ -38,6 +38,7 @@ import {
   getSolicitudesEnviadasEstaticas,
   STATIC_CHAT_OWN_LAST_MESSAGE,
   getChatConversationStatic,
+  STATIC_SKILLS_ASIGNADOS,
 } from "../data/static-data";
 import type {
   AceptarSolicitudRequest,
@@ -583,6 +584,15 @@ class StaticService {
     };
   }
 
+  async getOwnSkillsAsignados(): Promise<ApiResponse<SkillAsignadoResponse[]>> {
+    await this.delay(500);
+    return {
+      success: true,
+      message: "Skills asignados obtenidos exitosamente",
+      data: STATIC_SKILLS_ASIGNADOS,
+    };
+  }
+
   async addSkillToProfile(
     skillUsuario: AsignacionSkillToUsuarioRequest
   ): Promise<ApiResponse<SkillAsignadoResponse>> {
@@ -646,10 +656,13 @@ class StaticService {
       perfilTiktok: data.perfilTiktok || "",
       introduccion: data.introduccion,
       skills:
-        data.skills?.map((skill) => ({
+        data.skills?.map((skill, i) => ({
           id: skill.idSkill,
           nivelConocimiento: skill.nivelConocimiento,
-          descripcion: skill.descripcion,
+          descripcion: `Habilidad ${i + 1}`,
+          nombreSubCategoria: `Subcategoría ${i + 1}`,
+          nombreCategoria: `Categoría ${i + 1}`,
+          descripcionDesempeno: skill.descripcion,
         })) || [],
     };
 

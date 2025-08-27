@@ -24,6 +24,7 @@ export const ENV_CONFIG = {
       CHECK_USER_EXISTS: "/usuario/exists",
       USUARIO_OWN_SKILLS_INFO: "/usuario/own/skills/info",
       AVERAGE_SCORE_MATCHS_PROVEEDOR: "match/average-score/proveedor/$1",
+      USUARIO_OWN_SKILLS: "/usuario/own/skills",
       ADD_SKILL_TO_PROFILE: "/usuario/own/skill",
       CHECK_SKILL_IN_SERVICIOS_PROVEEDOR:
         "/usuario/own/skill/$1/exists-in-servicios",

@@ -205,6 +205,12 @@ export async function addSkillToProfile(
   return getService().getUsuario();
 } */
 
+export async function getOwnSkillsAsignados(): Promise<
+  ApiResponse<SkillAsignadoResponse[]>
+> {
+  return getService().getOwnSkillsAsignados();
+}
+
 export async function checkUserExists(
   tipo?: UsuarioTipoDocumento,
   documento?: string,

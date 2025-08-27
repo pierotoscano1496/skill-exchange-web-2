@@ -19,6 +19,7 @@ import type {
   SolicitudRecibida,
   SolicitudEnviada,
   OwnLastMessage,
+  SkillAsignadoResponse,
 } from "../types/api-responses";
 
 // Skills estáticos (solo los datos, sin ApiResponse wrapper)
@@ -417,6 +418,57 @@ export const STATIC_SOLICITUDES_PRESTAMISTA: SolicitudRecibida[] = [
     costo: 120,
     mensaje:
       "Hola, necesito que mantengan mi jardín. Tengo muchas plantas que requieren cuidado especializado.",
+  },
+];
+
+export const STATIC_SKILLS_ASIGNADOS: SkillAsignadoResponse[] = [
+  {
+    id: "skill-1",
+    descripcion: "Reparación y mantenimiento de dispositivos móviles",
+    nombreSubCategoria: "Reparación de dispositivos",
+    nombreCategoria: "Tecnología",
+    nivelConocimiento: 4,
+    descripcionDesempeno: "Experto en reparación de celulares y tablets, manejo de herramientas especializadas y diagnóstico avanzado.",
+  },
+  {
+    id: "skill-2",
+    descripcion: "Enseñanza de guitarra para principiantes y avanzados",
+    nombreSubCategoria: "Música",
+    nombreCategoria: "Educación",
+    nivelConocimiento: 5,
+    descripcionDesempeno: "Profesor con experiencia en clases grupales e individuales, método adaptado a cada estudiante.",
+  },
+  {
+    id: "skill-3",
+    descripcion: "Cuidado y paseo de mascotas",
+    nombreSubCategoria: "Jardinería",
+    nombreCategoria: "Hogar",
+    nivelConocimiento: 3,
+    descripcionDesempeno: "Responsable y puntual, experiencia con perros de diferentes razas y tamaños.",
+  },
+  {
+    id: "skill-4",
+    descripcion: "Servicios de peluquería y estilismo",
+    nombreSubCategoria: "Belleza",
+    nombreCategoria: "Hogar",
+    nivelConocimiento: 4,
+    descripcionDesempeno: "Especialista en cortes modernos y clásicos, atención personalizada.",
+  },
+  {
+    id: "skill-5",
+    descripcion: "Reparaciones e instalaciones de plomería",
+    nombreSubCategoria: "Reparaciones",
+    nombreCategoria: "Hogar",
+    nivelConocimiento: 3,
+    descripcionDesempeno: "Solución rápida y eficiente de problemas de plomería doméstica.",
+  },
+  {
+    id: "skill-6",
+    descripcion: "Servicios de limpieza doméstica",
+    nombreSubCategoria: "Limpieza",
+    nombreCategoria: "Hogar",
+    nivelConocimiento: 5,
+    descripcionDesempeno: "Limpieza profunda y mantenimiento regular, uso de productos ecológicos.",
   },
 ];
 

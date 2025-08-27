@@ -63,6 +63,7 @@ import {
   checkIfSkillIsPresentInServiciosFromProveedor,
   deleteSkillFromProfile,
   getAverageScoreMatchsProveedor,
+  getOwnSkillsAsignados,
   getOwnSkillsInfo,
   getSkillsInfo,
 } from "@/lib/actions/data";
@@ -104,6 +105,7 @@ export default function ProfilePage() {
   const [newSkillComment, setNewSkillComment] = useState<string>("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const [skillToDelete, setSkillToDelete] = useState<string | null>(null);
 
   const [averageScore, setAverageScore] = useState<number>(0);
   const [dialogState, setDialogState] = useState<{
@@ -137,7 +139,7 @@ export default function ProfilePage() {
         tiktok: user.perfilTiktok || "",
       });
 
-      setUserSkills(user.skills || []);
+      loadAllUsuarioSkills();
 
       (async () => {
         setAverageScore(
@@ -156,6 +158,13 @@ export default function ProfilePage() {
     };
     fetchAndProcessSkills();
   }, []);
+
+  const loadAllUsuarioSkills = async () => {
+    const resp = await getOwnSkillsAsignados();
+    if (resp.success) {
+      setUserSkills(resp.data);
+    }
+  };
 
   const handleSelectSkill = (skill: SkillInfo) => {
     setNewSkillInfo(skill);
@@ -202,7 +211,7 @@ export default function ProfilePage() {
       }`,
     };
 
-    setUserSkills([...userSkills, skillAsignado]);
+    loadAllUsuarioSkills();
 
     // Limpiar el formulario
     setNewSkillInfo(null);
@@ -218,6 +227,31 @@ export default function ProfilePage() {
     setTimeout(() => setSuccessMessage(""), 3000);
   };
 
+  const handleConfirmRemoveSkill = async () => {
+    if (!skillToDelete) return;
+
+    // Eliminar la habilidad
+    const skillDeletedResp = await deleteSkillFromProfile(skillToDelete);
+    if (skillDeletedResp.data) {
+      loadAllUsuarioSkills();
+      setDialogState({
+        isOpen: true,
+        type: "success",
+        title: "Habilidad eliminada",
+        message: "La habilidad ha sido eliminada correctamente.",
+      });
+    } else {
+      setDialogState({
+        isOpen: true,
+        type: "error",
+        title: "Error al eliminar habilidad",
+        message:
+          "Ocurrió un error al eliminar la habilidad. Por favor, inténtalo de nuevo.",
+      });
+    }
+    setSkillToDelete(null);
+  };
+
   // Eliminar una habilidad
   const removeSkill = async (skillId: string) => {
     const skillIsPresentInServicios =
@@ -231,27 +265,8 @@ export default function ProfilePage() {
           "No puedes eliminar esta habilidad porque está asociada a un servicio.",
       });
       return;
-    } else {
-      // Eliminar la habilidad
-      const skillDeletedResp = await deleteSkillFromProfile(skillId);
-      if (skillDeletedResp.data) {
-        setUserSkills(userSkills.filter((skill) => skill.id !== skillId));
-        setDialogState({
-          isOpen: true,
-          type: "success",
-          title: "Habilidad eliminada",
-          message: "La habilidad ha sido eliminada correctamente.",
-        });
-      } else {
-        setDialogState({
-          isOpen: true,
-          type: "error",
-          title: "Error al eliminar habilidad",
-          message:
-            "Ocurrió un error al eliminar la habilidad. Por favor, inténtalo de nuevo.",
-        });
-      }
     }
+    setSkillToDelete(skillId);
   };
 
   // Guardar datos personales
@@ -936,6 +951,28 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       </div>
+      <Dialog
+        open={!!skillToDelete}
+        onOpenChange={(open) => !open && setSkillToDelete(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar eliminación</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que quieres eliminar esta habilidad? Esta acción
+              no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSkillToDelete(null)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmRemoveSkill}>
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <CustomDialog
         isOpen={dialogState.isOpen}
         onClose={() => setDialogState({ ...dialogState, isOpen: false })}

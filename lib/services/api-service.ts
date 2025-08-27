@@ -593,6 +593,14 @@ class ApiService {
     );
   }
 
+  async getOwnSkillsAsignados(): Promise<ApiResponse<SkillAsignadoResponse[]>> {
+    return this.fetchApi<SkillAsignadoResponse[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_OWN_SKILLS,
+      {},
+      true
+    );
+  }
+
   async addSkillToProfile(
     skillUsuario: AsignacionSkillToUsuarioRequest
   ): Promise<ApiResponse<SkillAsignadoResponse>> {
