@@ -355,3 +355,26 @@ Response body:
   ]
 }
 ```
+
+## Endpoint: POST /usuario/own/match
+### Request body:
+```json
+{
+  "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "mensaje": "string"
+}
+```
+### Response body:
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "idCliente": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fecha": "2025-08-28T01:51:47.225Z",
+  "fechaInicio": "2025-08-28T01:51:47.225Z",
+  "fechaCierre": "2025-08-28T01:51:47.225Z",
+  "estado": "solicitado",
+  "puntuacion": 0,
+  "costo": 0
+}
+```

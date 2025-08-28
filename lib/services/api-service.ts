@@ -22,6 +22,7 @@ import type {
   SkillUsuario,
   AsignacionSkillToUsuarioRequest,
   SkillAsignadoResponse,
+  CreateFirstMatchServicioBody,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -245,6 +246,19 @@ class ApiService {
   ): Promise<ApiResponse<MatchServicioResponse>> {
     return this.fetchApi<MatchServicioResponse>(
       ENV_CONFIG.API.ENDPOINTS.MATCH,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
+  }
+
+  async registrarMatch(
+    data: CreateFirstMatchServicioBody
+  ): Promise<ApiResponse<MatchServicioResponse>> {
+    return this.fetchApi<MatchServicioResponse>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_OWN_MATCH,
       {
         method: "POST",
         body: JSON.stringify(data),

@@ -189,11 +189,15 @@ export interface ReviewsServicio {
 }
 
 // Tipos para match de servicio
-export interface MatchServicioRequest {
-  idServicio: string;
+export interface MatchServicioRequest extends CreateFirstMatchServicioBody {
   idCliente: string;
   puntuacion: number;
   costo: number;
+}
+
+export interface CreateFirstMatchServicioBody {
+  idServicio: string;
+  mensaje: string;
 }
 
 export interface MatchServicioResponse {

@@ -20,6 +20,7 @@ import type {
   SkillInfo,
   AsignacionSkillToUsuarioRequest,
   SkillAsignadoResponse,
+  CreateFirstMatchServicioBody,
 } from "../types/api-responses";
 import type {
   ServicioRequestBody,
@@ -282,6 +283,40 @@ class StaticService {
       estado: "solicitado",
       puntuacion: data.puntuacion,
       costo: data.costo,
+    };
+
+    return {
+      success: true,
+      message: "Match creado exitosamente",
+      data: mockResponse,
+    };
+  }
+
+  async registrarMatch(
+    data: CreateFirstMatchServicioBody
+  ): Promise<ApiResponse<MatchServicioResponse>> {
+    await this.delay(800);
+
+    if (Math.random() < 0.03) {
+      return {
+        success: false,
+        message: "Error simulado: No se pudo crear el match",
+        data: {} as MatchServicioResponse,
+      };
+    }
+
+    const mockResponse: MatchServicioResponse = {
+      id: `match-${Date.now()}`,
+      idServicio: data.idServicio,
+      idCliente: "static-user-id",
+      fecha: new Date().toISOString().split("T")[0],
+      fechaInicio: new Date().toISOString().split("T")[0],
+      fechaCierre: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+      estado: "solicitado",
+      puntuacion: 0,
+      costo: 0,
     };
 
     return {

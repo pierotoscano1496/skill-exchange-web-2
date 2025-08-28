@@ -26,6 +26,7 @@ import type {
   SkillUsuario,
   SkillAsignadoResponse,
   AsignacionSkillToUsuarioRequest,
+  CreateFirstMatchServicioBody,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -127,6 +128,12 @@ export async function createMatchServicio(
   data: MatchServicioRequest
 ): Promise<ApiResponse<MatchServicioResponse>> {
   return getService().createMatchServicio(data);
+}
+
+export async function registrarMatch(
+  data: CreateFirstMatchServicioBody
+): Promise<ApiResponse<MatchServicioResponse>> {
+  return getService().registrarMatch(data);
 }
 
 export async function sendChatMessage(

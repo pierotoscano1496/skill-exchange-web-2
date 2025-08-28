@@ -137,14 +137,14 @@ export function SiteHeader() {
                     Mi perfil
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   Configuración
-                </DropdownMenuItem>
-                <DropdownMenuItem>
+                </DropdownMenuItem> */}
+                {/* <DropdownMenuItem>
                   <BadgeCheck className="mr-2 h-4 w-4" />
                   Verificar cuenta
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
