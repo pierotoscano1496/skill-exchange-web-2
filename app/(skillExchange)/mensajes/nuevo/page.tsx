@@ -31,11 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { chatMessagingService } from "@/lib/services/chat-messaging-service";
-import {
-  findStaticChatConversationByContactId,
-  STATIC_CHAT_CONVERSATIONS,
-} from "@/lib/data/static-data";
-import { isStaticMode } from "@/lib/config/environment";
+
 import { apiService } from "@/lib/services/api-service";
 
 interface Usuario {
@@ -58,41 +54,7 @@ export default function NuevoMensajePage() {
   const [mostrarBusqueda, setMostrarBusqueda] = useState(false);
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-  // Cargar usuarios desde las conversaciones existentes
-  useEffect(() => {
-    // Extrae usuarios de las conversaciones estáticas (contacts)
-    const usuariosDeConversaciones: Usuario[] = STATIC_CHAT_CONVERSATIONS.map(
-      (conv) => {
-        const contacto = conv.contacts[0];
-        return {
-          id: contacto.idContact,
-          nombre: contacto.fullName,
-          email: contacto.email,
-          avatar: "/placeholder.svg?height=40&width=40",
-        };
-      }
-    );
-
-    // Agregar algunos usuarios adicionales
-    const usuariosAdicionales: Usuario[] = [
-      {
-        id: "user-6",
-        nombre: "Pedro Sánchez",
-        email: "pedro.sanchez@email.com",
-        avatar: "/placeholder.svg?height=40&width=40",
-        ultimoServicio: "Electricidad",
-      },
-      {
-        id: "user-7",
-        nombre: "Carmen López",
-        email: "carmen.lopez@email.com",
-        avatar: "/placeholder.svg?height=40&width=40",
-        ultimoServicio: "Diseño gráfico",
-      },
-    ];
-
-    setUsuarios([...usuariosDeConversaciones, ...usuariosAdicionales]);
-  }, []);
+  
 
   const usuariosFiltrados = usuarios.filter(
     (usuario) =>
@@ -120,31 +82,7 @@ export default function NuevoMensajePage() {
     setError(null);
 
     try {
-      let conversacionId: string | undefined;
-
-      if (isStaticMode()) {
-        // Buscar conversación existente o crear nueva (modo estático)
-        const conversacion = findStaticChatConversationByContactId(
-          destinatario.id
-        );
-        conversacionId = conversacion?.id;
-
-        if (!conversacionId) {
-          conversacionId = `chat-${Date.now()}`;
-        }
-
-        chatMessagingService.sendMessage(conversacionId, {
-          sentBy: "user-1", // Usuario actual
-          mensaje: mensaje.trim(),
-        });
-
-        setExito(true);
-        setTimeout(() => {
-          router.push(`/mensajes/${conversacionId}`);
-        }, 2000);
-      } else {
-        // Lógica real: crear conversación en backend
-        const resp = await apiService.createChatConversation({
+      const resp = await apiService.createChatConversation({
           idReceptor: destinatario.id,
           mensaje: mensaje.trim(),
         });
@@ -157,7 +95,6 @@ export default function NuevoMensajePage() {
         } else {
           setError("No se pudo crear la conversación. Inténtalo de nuevo.");
         }
-      }
     } catch (err) {
       setError("Error al enviar el mensaje. Inténtalo de nuevo.");
       console.error("Error enviando mensaje:", err);

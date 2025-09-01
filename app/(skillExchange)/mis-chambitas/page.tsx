@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, Edit, Eye, PlusCircle, Star } from "lucide-react";
 import Link from "next/link";
 import { getServiciosByProveedor } from "@/lib/actions/data";
-import { getCurrentUserId } from "@/lib/config/environment";
+
 import type { ServicioBusqueda } from "@/lib/types/api-responses";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 

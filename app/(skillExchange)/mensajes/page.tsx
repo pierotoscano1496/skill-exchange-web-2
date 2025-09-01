@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/use-user";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ export default function MensajesBandejaPage() {
     []
   );
   const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
   useEffect(() => {
     async function cargarConversaciones() {
@@ -48,7 +50,7 @@ export default function MensajesBandejaPage() {
         chats = [];
       }
 
-      const currentUserId = getCurrentUserId();
+      const currentUserId = user?.id;
 
       const mapped: ConversacionPreview[] = chats.map((conv, idx) => {
         const contact = conv.contact;
@@ -72,8 +74,10 @@ export default function MensajesBandejaPage() {
       setConversaciones(mapped);
       setLoading(false);
     }
-    cargarConversaciones();
-  }, []);
+    if (user) {
+      cargarConversaciones();
+    }
+  }, [user]);
 
   function formatearFechaRelativa(fecha: string): string {
     const date = new Date(fecha);

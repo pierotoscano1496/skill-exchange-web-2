@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Loader2, Send, ChevronLeft } from "lucide-react";
 import { getChatConversation, sendChatMessage } from "@/lib/actions/data";
-import { getCurrentUserId } from "@/lib/config/environment";
+import { useUser } from "@/hooks/use-user";
 import type {
   ChatConversation,
   ChatMessage,
@@ -26,7 +26,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const currentUserId = getCurrentUserId();
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchConversation = async () => {
@@ -73,7 +73,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
     try {
       // Optimistic update
       const tempMessage: ChatMessage = {
-        sentBy: currentUserId,
+        sentBy: user?.id,
         fecha: new Date().toISOString(),
         mensaje: newMessage.trim(),
       };
@@ -170,7 +170,7 @@ export default function ChatPage({ params }: { params: { id: string } }) {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/20">
         {conversation.messages.map((message, index) => {
-          const isSentByCurrentUser = message.sentBy === currentUserId;
+          const isSentByCurrentUser = message.sentBy === user?.id;
           // Determine sender for avatar and fallback. If sent by current user, use a generic representation or a placeholder for self.
           // Otherwise, use the other participant's info.
           const sender = isSentByCurrentUser

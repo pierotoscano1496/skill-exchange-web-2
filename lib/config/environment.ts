@@ -1,6 +1,5 @@
 // Configuración de ambientes
 export const ENV_CONFIG = {
-  MODE: "api" as "static" | "api", // Cambiar a 'api' para usar la API real
   API: {
     BASE_URL: "http://localhost:9081/api",
     ENDPOINTS: {
@@ -33,18 +32,4 @@ export const ENV_CONFIG = {
       SIMPLE_CHECK: "/simple-check",
     },
   },
-  // Usuario actual simulado para modo estático
-  CURRENT_USER: {
-    id: "user-1",
-    nombre: "Usuario Actual",
-  },
 };
-
-export function isStaticMode(): boolean {
-  return ENV_CONFIG.MODE === "static";
-}
-
-export function getCurrentUserId(): string {
-  // En un caso real, esto vendría de un contexto de autenticación
-  return ENV_CONFIG.CURRENT_USER.id;
-}

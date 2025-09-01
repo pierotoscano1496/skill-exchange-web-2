@@ -20,7 +20,7 @@ import {
   Square,
 } from "lucide-react";
 import { getSolicitudesPrestamista } from "@/lib/actions/data";
-import { getCurrentUserId } from "@/lib/config/environment";
+import { useUser } from "@/hooks/use-user";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
 import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicitud-dialog";
 import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog";
@@ -85,16 +85,24 @@ export default function SolicitudesRecibidasPage() {
   const [dialogoRechazar, setDialogoRechazar] = useState(false);
   const [dialogoConfirmarPago, setDialogoConfirmarPago] = useState(false);
   const [dialogoFinalizar, setDialogoFinalizar] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
-    cargarSolicitudes();
-  }, []);
+    if (user) {
+      cargarSolicitudes();
+    }
+  }, [user]);
 
   const cargarSolicitudes = async () => {
     try {
       setLoading(true);
       setError(null);
-      const idPrestamista = getCurrentUserId();
+      const idPrestamista = user?.id;
+      if (!idPrestamista) {
+        setError("No se pudo obtener el ID del usuario.");
+        setLoading(false);
+        return;
+      }
       const response = await getSolicitudesPrestamista(
         idPrestamista
       );

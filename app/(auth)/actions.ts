@@ -2,15 +2,12 @@
 
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
-import { ENV_CONFIG, isStaticMode } from "@/lib/config/environment";
+import { ENV_CONFIG } from "@/lib/config/environment";
 import { AUTH_COOKIE, USER_COOKIE } from "@/lib/constants/auth";
-import { staticService } from "@/lib/services/static-service";
 import { apiService } from "@/lib/services/api-service";
 import { Usuario } from "@/lib/types/api-responses";
 
 type JwtPayload = { exp: number; [k: string]: unknown };
-
-const getService = () => (isStaticMode() ? staticService : apiService);
 
 export async function loginAction(email: string, password: string) {
   try {
@@ -45,7 +42,7 @@ export async function loginAction(email: string, password: string) {
       expires,
     });
 
-    const usuario: Usuario = (await getService().getUsuario()).data;
+    const usuario: Usuario = (await apiService.getUsuario()).data;
     if (!usuario) {
       return { ok: false, error: "Usuario no encontrado." };
     }
