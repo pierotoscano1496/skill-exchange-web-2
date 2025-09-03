@@ -102,6 +102,12 @@ export async function getServicioReviews(
   return apiService.getServicioReviews(id);
 }
 
+export async function checkAvailableMatchForServicio(
+  idServicio: string
+): Promise<ApiResponse<boolean>> {
+  return apiService.checkAvailableMatchForServicio(idServicio);
+}
+
 export async function getServiciosByProveedor(): Promise<
   ApiResponse<ServicioBusqueda[]>
 > {

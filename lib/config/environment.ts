@@ -27,6 +27,7 @@ export const ENV_CONFIG = {
       ADD_SKILL_TO_PROFILE: "/usuario/own/skill",
       CHECK_SKILL_IN_SERVICIOS_PROVEEDOR:
         "/usuario/own/skill/$1/exists-in-servicios",
+      CHECK_AVAILABLE_MATCH_FOR_SERVICIO: "/usuario/own/match/available/$1",
       USUARIO_OWN_MATCH: "/usuario/own/match",
       DELETE_SKILL_FROM_PROFILE: "/usuario/own/skill/$1",
       SIMPLE_CHECK: "/simple-check",

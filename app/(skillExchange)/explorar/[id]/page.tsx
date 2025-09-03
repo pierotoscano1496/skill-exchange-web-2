@@ -4,7 +4,11 @@ import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, ChevronLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getServicioDetalle, getServicioReviews } from "@/lib/actions/data";
+import {
+  checkAvailableMatchForServicio,
+  getServicioDetalle,
+  getServicioReviews,
+} from "@/lib/actions/data";
 import { ServiceDetailView } from "@/components/servicios/servicio-details-preview";
 import type {
   ServicioDetalle,
@@ -24,15 +28,18 @@ export default function ServiceDetailPage({
   const [error, setError] = useState<string | null>(null);
   const [servicio, setServicio] = useState<ServicioDetalle | null>(null);
   const [reviews, setReviews] = useState<ReviewsServicio | null>(null);
+  const [isMatchInProgress, setIsMatchInProgress] = useState(false);
 
   useEffect(() => {
     const fetchServicioData = async () => {
       try {
         setLoading(true);
-        const [servicioResponse, reviewsResponse] = await Promise.all([
-          getServicioDetalle(id),
-          getServicioReviews(id),
-        ]);
+        const [servicioResponse, reviewsResponse, matchProgressResponse] =
+          await Promise.all([
+            getServicioDetalle(id),
+            getServicioReviews(id),
+            checkAvailableMatchForServicio(id),
+          ]);
 
         if (!servicioResponse.success) {
           setError(servicioResponse.message);
@@ -42,6 +49,10 @@ export default function ServiceDetailPage({
 
         if (reviewsResponse.success) {
           setReviews(reviewsResponse.data);
+        }
+
+        if (matchProgressResponse.success) {
+          setIsMatchInProgress(matchProgressResponse.data);
         }
       } catch (err) {
         setError(
@@ -95,6 +106,7 @@ export default function ServiceDetailPage({
       servicio={servicio}
       reviews={reviews}
       isOwnService={isOwnService}
+      isMatchInProgress={isMatchInProgress}
     />
   );
 }

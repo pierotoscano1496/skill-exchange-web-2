@@ -35,12 +35,14 @@ interface ServiceDetailViewProps {
   servicio: ServicioDetalle;
   reviews: ReviewsServicio | null;
   isOwnService?: boolean;
+  isMatchInProgress?: boolean;
 }
 
 export function ServiceDetailView({
   servicio,
   reviews,
   isOwnService = false,
+  isMatchInProgress = false,
 }: ServiceDetailViewProps) {
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -446,6 +448,7 @@ export function ServiceDetailView({
                   <ContactServiceForm
                     servicio={servicio}
                     onSuccess={() => router.push("/explorar")}
+                    isMatchInProgress={isMatchInProgress}
                   />
 
                   <Button variant="outline" className="w-full">

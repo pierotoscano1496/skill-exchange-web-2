@@ -23,12 +23,14 @@ import type { ServicioDetalle } from "@/lib/types/api-responses";
 
 interface ContactServiceFormProps {
   servicio: ServicioDetalle;
+  isMatchInProgress?: boolean;
   onSuccess?: () => void;
 }
 
 export function ContactServiceForm({
   servicio,
   onSuccess,
+  isMatchInProgress = false,
 }: ContactServiceFormProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -100,9 +102,13 @@ export function ContactServiceForm({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full" onClick={() => setIsOpen(true)}>
+        <Button
+          className="w-full"
+          onClick={() => setIsOpen(true)}
+          disabled={isMatchInProgress}
+        >
           <MessageSquare className="mr-2 h-4 w-4" />
-          Solicitar servicio
+          {isMatchInProgress ? "Solicitud pendiente" : "Solicitar servicio"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

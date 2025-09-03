@@ -213,6 +213,13 @@ class ApiService {
     );
   }
 
+  async checkAvailableMatchForServicio(idServicio: string) {
+    let endpoint = ENV_CONFIG.API.ENDPOINTS.CHECK_AVAILABLE_MATCH_FOR_SERVICIO;
+    endpoint = endpoint.replace("$1", idServicio);
+
+    return this.fetchApi<boolean>(endpoint, {}, true);
+  }
+
   async getServiciosByProveedor(): Promise<ApiResponse<ServicioBusqueda[]>> {
     return this.fetchApi<ServicioBusqueda[]>(
       `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS_PROVEEDOR}`,
