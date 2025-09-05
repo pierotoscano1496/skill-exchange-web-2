@@ -90,3 +90,7 @@ export async function logoutAction() {
 
   return { ok: false, error: "Usuario no autenticado." };
 }
+
+export async function getToken() {
+  return (await cookies()).get(AUTH_COOKIE)?.value || "";
+}

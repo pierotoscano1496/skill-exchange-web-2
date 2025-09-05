@@ -265,10 +265,13 @@ export interface ChatContact {
 }
 
 export interface ChatMessage {
+  id?: string;
+  clientId?: string;
   sentBy: string;
   fecha: string;
   mensaje: string;
-  resourceUrl?: string;
+  resourceUrl?: string | null;
+  status?: "sending" | "sent" | "failed";
 }
 
 export interface ChatResponse {

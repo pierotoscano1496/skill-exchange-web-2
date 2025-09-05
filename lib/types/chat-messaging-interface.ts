@@ -1,14 +1,19 @@
 export type Message = {
   id: string;
+  clientId?: string;
   sentBy: string;
   fecha: string;
   mensaje: string;
   resourceUrl?: string;
 };
 
-export type ChatListener = (message: Message) => void;
+export type ChatListener = (
+  message: Message,
+  meta?: { replaceClientId?: string }
+) => void;
 
 export interface IChatMessagingService {
+  setToken(token?: string): void;
   subscribe(conversationId: string, listener: ChatListener): () => void;
   sendMessage(
     conversationId: string,
