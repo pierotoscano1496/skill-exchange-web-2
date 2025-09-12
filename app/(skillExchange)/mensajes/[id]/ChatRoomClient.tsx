@@ -68,13 +68,17 @@ export default function ChatRoomClient({
             }
           }
 
+          if (msg.sentBy === myId) {
+            return prev;
+          }
+
           return { ...prev, messages: [...prev.messages, msg] };
         });
       }
     );
 
     return () => unsubscribe();
-  }, [conversationId]);
+  }, [conversationId, myId]);
 
   const getOtherParticipant = (): ChatContact | undefined =>
     conversation?.otherContact;
