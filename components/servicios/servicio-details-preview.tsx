@@ -451,9 +451,9 @@ export function ServiceDetailView({
                     isMatchInProgress={isMatchInProgress}
                   />
 
-                  <Button variant="outline" className="w-full">
+                  {/* <Button variant="outline" className="w-full">
                     <MessageSquare className="mr-2 h-4 w-4" /> Contactar
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>
