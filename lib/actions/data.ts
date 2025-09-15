@@ -40,7 +40,7 @@ import type {
   ServicioResponse,
 } from "../api/servicio-api";
 import { RegisterUserRequest } from "../types/user-registration";
-import { UsuarioTipoDocumento } from "../constants/enums";
+import { MatchServicioEstado, UsuarioTipoDocumento } from "../constants/enums";
 
 export async function postSimpleCheck(
   nombre: string
@@ -115,9 +115,9 @@ export async function getServiciosByProveedor(): Promise<
 }
 
 export async function getSolicitudesPrestamista(
-  idPrestamista: string
+  estado: MatchServicioEstado
 ): Promise<ApiResponse<SolicitudRecibida[]>> {
-  return apiService.getSolicitudesPrestamista(idPrestamista);
+  return apiService.getSolicitudesPrestamista(estado);
 }
 
 export async function getSolicitudesEnviadas(
@@ -146,7 +146,7 @@ export async function sendChatMessage(
 
 export async function aceptarSolicitud(
   data: AceptarSolicitudRequest
-): Promise<ApiResponse<ActualizarSolicitudResponse>> {
+): Promise<ApiResponse<MatchServicioResponse>> {
   return apiService.aceptarSolicitud(data);
 }
 

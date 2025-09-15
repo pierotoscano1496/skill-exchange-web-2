@@ -26,6 +26,7 @@ import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicit
 import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog";
 import { ConfirmarPagoDialog } from "@/components/solicitudes/confirmar-pago-dialog";
 import { FinalizarServicioDialog } from "@/components/solicitudes/finalizar-servicio-dialog";
+import { MatchServicioEstado } from "@/lib/constants/enums";
 
 export function getEstadoBadge(estado: string) {
   switch (estado) {
@@ -104,7 +105,7 @@ export default function SolicitudesRecibidasPage() {
         return;
       }
       const response = await getSolicitudesPrestamista(
-        idPrestamista
+        MatchServicioEstado.SOLICITADO
       );
 
       if (response.success) {

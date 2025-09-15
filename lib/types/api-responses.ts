@@ -207,12 +207,7 @@ export interface MatchServicioResponse {
   fecha: string;
   fechaInicio: string;
   fechaCierre: string;
-  estado:
-    | "solicitado"
-    | "pendiente_pago"
-    | "rechazado"
-    | "ejecucion"
-    | "finalizado";
+  estado: MatchServicioEstado;
   puntuacion: number;
   costo: number;
 }

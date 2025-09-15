@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,51 +9,85 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Input } from "@/components/ui/input"
-import { CheckCircle, Calendar, FileText, Loader2 } from "lucide-react"
-import { aceptarSolicitud } from "@/lib/actions/data"
-import type { SolicitudRecibida } from "@/lib/types/api-responses"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { CheckCircle, Calendar, FileText, Loader2 } from "lucide-react";
+import { aceptarSolicitud } from "@/lib/actions/data";
+import type { SolicitudRecibida } from "@/lib/types/api-responses";
 
-interface AceptarSolicitudDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  solicitud: SolicitudRecibida
-  onSuccess: () => void
+function toLocalISODate(d: Date) {
+  // Convierte a YYYY-MM-DD en zona horaria local (evita desfaces por UTC)
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
 }
 
-export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSuccess }: AceptarSolicitudDialogProps) {
-  const [loading, setLoading] = useState(false)
-  const [fechaInicio, setFechaInicio] = useState("")
-  const [notas, setNotas] = useState("")
+export function AceptarSolicitudDialog({
+  open,
+  onOpenChange,
+  solicitud,
+  onSuccess,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  solicitud: SolicitudRecibida;
+  onSuccess: () => void;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [notas, setNotas] = useState("");
+
+  // ✅ mínimo = mañana (local)
+  const minDateTomorrow = useMemo(() => {
+    const t = new Date();
+    t.setDate(t.getDate() + 1);
+    return toLocalISODate(t);
+  }, []);
 
   const handleAceptar = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
+
+      // ✅ Validación defensiva en el submit (por si el navegador no respeta "min" o el usuario fuerza el valor)
+      if (fechaInicio) {
+        const picked = new Date(`${fechaInicio}T00:00:00`);
+        const min = new Date(`${minDateTomorrow}T00:00:00`);
+        if (picked < min) {
+          // muestra el tooltip nativo de validación
+          const el = document.getElementById(
+            "fecha-inicio"
+          ) as HTMLInputElement | null;
+          if (el) {
+            el.setCustomValidity(
+              `La fecha mínima permitida es ${minDateTomorrow}.`
+            );
+            el.reportValidity();
+          }
+          setLoading(false);
+          return;
+        }
+      }
 
       const response = await aceptarSolicitud({
         idSolicitud: solicitud.id,
-        fechaInicioEstimada: fechaInicio || undefined,
-        notasProveedor: notas || undefined,
-      })
+        fechaInicio: fechaInicio || undefined
+      });
 
       if (response.success) {
-        onSuccess()
-        onOpenChange(false)
-        // Reset form
-        setFechaInicio("")
-        setNotas("")
+        onSuccess();
+        onOpenChange(false);
+        setFechaInicio("");
+        setNotas("");
       } else {
-        console.error("Error al aceptar solicitud:", response.message)
+        console.error("Error al aceptar solicitud:", response.message);
       }
     } catch (error) {
-      console.error("Error al aceptar solicitud:", error)
+      console.error("Error al aceptar solicitud:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -73,15 +107,7 @@ export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSucces
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-2">¿Qué sucede al aceptar?</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• El cliente será notificado de tu aceptación</li>
-              <li>• La solicitud pasará a estado "Pendiente de Pago"</li>
-              <li>• El cliente deberá realizar el pago acordado</li>
-              <li>• Una vez pagado, podrás iniciar el servicio</li>
-            </ul>
-          </div>
+          {/* ... tu bloque informativo ... */}
 
           <div className="space-y-2">
             <Label htmlFor="fecha-inicio" className="flex items-center gap-2">
@@ -92,9 +118,22 @@ export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSucces
               id="fecha-inicio"
               type="date"
               value={fechaInicio}
-              onChange={(e) => setFechaInicio(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                const v = e.target.value;
+                setFechaInicio(v);
+                // limpia mensaje custom para que el navegador revalide
+                e.currentTarget.setCustomValidity("");
+              }}
+              onInvalid={(e) => {
+                (e.currentTarget as HTMLInputElement).setCustomValidity(
+                  `La fecha mínima permitida es ${minDateTomorrow}.`
+                );
+              }}
+              min={minDateTomorrow} // ✅ aquí el cambio clave
             />
+            <p className="text-xs text-muted-foreground">
+              La fecha mínima permitida es {minDateTomorrow}.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -113,14 +152,19 @@ export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSucces
 
           <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
             <p className="text-sm text-amber-800">
-              <strong>Importante:</strong> Al aceptar te comprometes a realizar el servicio. Asegúrate de tener
-              disponibilidad y los recursos necesarios.
+              <strong>Importante:</strong> Al aceptar te comprometes a realizar
+              el servicio. Asegúrate de tener disponibilidad y los recursos
+              necesarios.
             </p>
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={loading}
+          >
             Cancelar
           </Button>
           <Button onClick={handleAceptar} disabled={loading}>
@@ -139,5 +183,5 @@ export function AceptarSolicitudDialog({ open, onOpenChange, solicitud, onSucces
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

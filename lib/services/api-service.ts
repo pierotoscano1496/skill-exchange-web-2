@@ -229,10 +229,11 @@ class ApiService {
   }
 
   async getSolicitudesPrestamista(
-    idPrestamista: string
+    estado: MatchServicioEstado
   ): Promise<ApiResponse<SolicitudRecibida[]>> {
+    let endpoint = ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PROVEEDOR;
     return this.fetchApi<SolicitudRecibida[]>(
-      `${ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PROVEEDOR}/${idPrestamista}`,
+      endpoint.replace("$1", estado),
       {},
       true
     );
@@ -307,47 +308,15 @@ class ApiService {
 
   async aceptarSolicitud(
     data: AceptarSolicitudRequest
-  ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
-    try {
-      const response = await this.actualizarEstadoSolicitud(
-        data.idSolicitud,
-        "pendiente_pago"
-      );
-
-      if (response.success) {
-        const actualizacionResponse: ActualizarSolicitudResponse = {
-          success: true,
-          message:
-            "Solicitud aceptada exitosamente. El cliente ha sido notificado y debe proceder con el pago.",
-          solicitudActualizada: {
-            id: response.data.id,
-            estadoAnterior: "solicitado",
-            estadoNuevo: "pendiente_pago",
-            fechaActualizacion: new Date().toISOString(),
-          },
-        };
-
-        return {
-          success: true,
-          message: actualizacionResponse.message,
-          data: actualizacionResponse,
-        };
-      }
-
-      return {
-        success: false,
-        message: response.message,
-        data: {} as ActualizarSolicitudResponse,
-      };
-    } catch (error) {
-      console.error("Error al aceptar solicitud:", error);
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Error al aceptar solicitud",
-        data: {} as ActualizarSolicitudResponse,
-      };
-    }
+  ): Promise<ApiResponse<MatchServicioResponse>> {
+    return this.fetchApi<MatchServicioResponse>(
+      ENV_CONFIG.API.ENDPOINTS.ACCEPT_SOLICITUD.replace("$1", data.idSolicitud),
+      {
+        method: "PATCH",
+        body: JSON.stringify({ fechaInicio: data.fechaInicio }),
+      },
+      true
+    );
   }
 
   async rechazarSolicitud(
