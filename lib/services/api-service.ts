@@ -231,9 +231,8 @@ class ApiService {
   async getSolicitudesPrestamista(
     estado: MatchServicioEstado
   ): Promise<ApiResponse<SolicitudRecibida[]>> {
-    let endpoint = ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PROVEEDOR;
     return this.fetchApi<SolicitudRecibida[]>(
-      endpoint.replace("$1", estado),
+      ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_PROVEEDOR,
       {},
       true
     );

@@ -71,7 +71,7 @@ export function AceptarSolicitudDialog({
 
       const response = await aceptarSolicitud({
         idSolicitud: solicitud.id,
-        fechaInicio: fechaInicio || undefined
+        fechaInicio: fechaInicio ? `${fechaInicio}T00:00:00` : undefined,
       });
 
       if (response.success) {

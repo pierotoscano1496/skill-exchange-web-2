@@ -111,7 +111,11 @@ export default function SolicitudesRecibidasPage() {
       if (response.success) {
         setSolicitudes(response.data);
       } else {
-        setError(response.message);
+        if (response.statusCode === 404) {
+          setSolicitudes([]);
+        } else {
+          setError(response.message);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -135,7 +139,7 @@ export default function SolicitudesRecibidasPage() {
     return `S/ ${precio.toFixed(2)}`;
   };
 
-  const contarPorEstado = (estado: string) => {
+  const contarPorEstado = (estado: MatchServicioEstado) => {
     return solicitudes.filter((s) => s.estado === estado).length;
   };
 
@@ -302,7 +306,7 @@ export default function SolicitudesRecibidasPage() {
     </Card>
   );
 
-  const filtrarPorEstado = (estado: string) => {
+  const filtrarPorEstado = (estado: MatchServicioEstado | "todas") => {
     if (estado === "todas") return solicitudes;
     return solicitudes.filter((s) => s.estado === estado);
   };
@@ -353,20 +357,21 @@ export default function SolicitudesRecibidasPage() {
       <Tabs defaultValue="todas" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="todas">Todas ({solicitudes.length})</TabsTrigger>
-          <TabsTrigger value="solicitado">
-            Solicitadas ({contarPorEstado("solicitado")})
+          <TabsTrigger value={MatchServicioEstado.SOLICITADO}>
+            Solicitadas ({contarPorEstado(MatchServicioEstado.SOLICITADO)})
           </TabsTrigger>
-          <TabsTrigger value="pendiente_pago">
-            Pendiente Pago ({contarPorEstado("pendiente_pago")})
+          <TabsTrigger value={MatchServicioEstado.PENDIENTE_PAGO}>
+            Pendiente Pago (
+            {contarPorEstado(MatchServicioEstado.PENDIENTE_PAGO)})
           </TabsTrigger>
-          <TabsTrigger value="ejecucion">
-            En Ejecución ({contarPorEstado("ejecucion")})
+          <TabsTrigger value={MatchServicioEstado.EJECUCION}>
+            En Ejecución ({contarPorEstado(MatchServicioEstado.EJECUCION)})
           </TabsTrigger>
-          <TabsTrigger value="finalizado">
-            Finalizadas ({contarPorEstado("finalizado")})
+          <TabsTrigger value={MatchServicioEstado.FINALIZADO}>
+            Finalizadas ({contarPorEstado(MatchServicioEstado.FINALIZADO)})
           </TabsTrigger>
-          <TabsTrigger value="rechazado">
-            Rechazadas ({contarPorEstado("rechazado")})
+          <TabsTrigger value={MatchServicioEstado.RECHAZADO}>
+            Rechazadas ({contarPorEstado(MatchServicioEstado.RECHAZADO)})
           </TabsTrigger>
         </TabsList>
 
@@ -384,33 +389,43 @@ export default function SolicitudesRecibidasPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="solicitado">
+        <TabsContent value={MatchServicioEstado.SOLICITADO}>
           <div className="space-y-4">
-            {filtrarPorEstado("solicitado").map(renderSolicitudCard)}
+            {filtrarPorEstado(MatchServicioEstado.SOLICITADO).map(
+              renderSolicitudCard
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="pendiente_pago">
+        <TabsContent value={MatchServicioEstado.PENDIENTE_PAGO}>
           <div className="space-y-4">
-            {filtrarPorEstado("pendiente_pago").map(renderSolicitudCard)}
+            {filtrarPorEstado(MatchServicioEstado.PENDIENTE_PAGO).map(
+              renderSolicitudCard
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="ejecucion">
+        <TabsContent value={MatchServicioEstado.EJECUCION}>
           <div className="space-y-4">
-            {filtrarPorEstado("ejecucion").map(renderSolicitudCard)}
+            {filtrarPorEstado(MatchServicioEstado.EJECUCION).map(
+              renderSolicitudCard
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="finalizado">
+        <TabsContent value={MatchServicioEstado.FINALIZADO}>
           <div className="space-y-4">
-            {filtrarPorEstado("finalizado").map(renderSolicitudCard)}
+            {filtrarPorEstado(MatchServicioEstado.FINALIZADO).map(
+              renderSolicitudCard
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="rechazado">
+        <TabsContent value={MatchServicioEstado.RECHAZADO}>
           <div className="space-y-4">
-            {filtrarPorEstado("rechazado").map(renderSolicitudCard)}
+            {filtrarPorEstado(MatchServicioEstado.RECHAZADO).map(
+              renderSolicitudCard
+            )}
           </div>
         </TabsContent>
       </Tabs>

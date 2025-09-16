@@ -382,3 +382,29 @@ Response body:
   "costo": 0
 }
 ```
+
+## Endpoint: PATCH /match/accept/{idMatch}
+
+### Request body:
+
+```json
+{
+  "fechaInicio": "2025-09-16T00:35:49.396Z"
+}
+```
+
+### Response body:
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "idCliente": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "fecha": "2025-09-16T00:35:49.416Z",
+  "fechaInicio": "2025-09-16T00:35:49.416Z",
+  "fechaCierre": "2025-09-16T00:35:49.416Z",
+  "estado": "solicitado",
+  "puntuacion": 0,
+  "costo": 0
+}
+```
