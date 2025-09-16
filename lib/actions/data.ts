@@ -114,6 +114,12 @@ export async function getServiciosByProveedor(): Promise<
   return apiService.getServiciosByProveedor();
 }
 
+export async function getServiciosCliente(): Promise<
+  ApiResponse<SolicitudRecibida[]>
+> {
+  return apiService.getServiciosCliente();
+}
+
 export async function getSolicitudesPrestamista(
   estado: MatchServicioEstado
 ): Promise<ApiResponse<SolicitudRecibida[]>> {

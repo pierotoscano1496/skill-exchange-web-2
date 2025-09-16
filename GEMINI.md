@@ -408,3 +408,113 @@ Response body:
   "costo": 0
 }
 ```
+
+## Endpoint: GET /usuario/proveedor/match
+
+### Response body:
+
+```json
+[
+  {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "servicio": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "proveedor": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "dni": "string",
+        "carnetExtranjeria": "string",
+        "tipoDocumento": "dni",
+        "introduccion": "string",
+        "correo": "string",
+        "nombres": "string",
+        "apellidos": "string",
+        "fechaNacimiento": "2025-09-16",
+        "perfilLinkedin": "string",
+        "perfilFacebook": "string",
+        "perfilInstagram": "string",
+        "perfilTiktok": "string",
+        "skillsAsignados": [
+          {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "descripcion": "string",
+            "nombreSubCategoria": "string",
+            "nombreCategoria": "string",
+            "nivelConocimiento": 0,
+            "descripcionDesempeno": "string"
+          }
+        ]
+      },
+      "titulo": "string",
+      "descripcion": "string",
+      "precio": 0,
+      "precioMaximo": 0,
+      "precioMinimo": 0,
+      "tipoPrecio": "fijo",
+      "ubicacion": "string",
+      "modalidad": "presencial",
+      "aceptaTerminos": true,
+      "disponibilidades": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "dia": "lunes",
+          "horaInicio": {
+            "hour": 0,
+            "minute": 0,
+            "second": 0,
+            "nano": 0
+          },
+          "horaFin": {
+            "hour": 0,
+            "minute": 0,
+            "second": 0,
+            "nano": 0
+          }
+        }
+      ],
+      "modalidadesPago": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "tipo": "yape",
+          "cuentaBancaria": "string",
+          "numeroCelular": "string",
+          "url": "string"
+        }
+      ],
+      "urlImagePreview": "string"
+    },
+    "cliente": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "dni": "string",
+      "carnetExtranjeria": "string",
+      "tipoDocumento": "dni",
+      "introduccion": "string",
+      "correo": "string",
+      "nombres": "string",
+      "apellidos": "string",
+      "fechaNacimiento": "2025-09-16",
+      "perfilLinkedin": "string",
+      "perfilFacebook": "string",
+      "perfilInstagram": "string",
+      "perfilTiktok": "string",
+      "skillsAsignados": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "descripcion": "string",
+          "nombreSubCategoria": "string",
+          "nombreCategoria": "string",
+          "nivelConocimiento": 0,
+          "descripcionDesempeno": "string"
+        }
+      ]
+    },
+    "fecha": "2025-09-16T03:57:49.749Z",
+    "fechaInicio": "2025-09-16T03:57:49.749Z",
+    "fechaCierre": "2025-09-16T03:57:49.749Z",
+    "estado": "solicitado",
+    "puntuacion": 0,
+    "costo": 0,
+    "mensaje": "string"
+  }
+]
+```

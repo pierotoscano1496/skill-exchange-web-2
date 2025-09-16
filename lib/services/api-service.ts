@@ -228,6 +228,14 @@ class ApiService {
     );
   }
 
+  async getServiciosCliente(): Promise<ApiResponse<SolicitudRecibida[]>> {
+    return this.fetchApi<SolicitudRecibida[]>(
+      ENV_CONFIG.API.ENDPOINTS.SOLICITUDES_CLIENTE,
+      {},
+      true
+    );
+  }
+
   async getSolicitudesPrestamista(
     estado: MatchServicioEstado
   ): Promise<ApiResponse<SolicitudRecibida[]>> {
