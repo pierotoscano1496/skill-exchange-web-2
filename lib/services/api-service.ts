@@ -642,6 +642,17 @@ class ApiService {
       true
     );
   }
+
+  async updateService(service: Partial<ServicioDetalle>): Promise<ApiResponse<ServicioDetalle>> {
+    return this.fetchApi<ServicioDetalle>(
+      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS}/${service.id}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(service),
+      },
+      true
+    );
+  }
 }
 
 export const apiService = new ApiService();

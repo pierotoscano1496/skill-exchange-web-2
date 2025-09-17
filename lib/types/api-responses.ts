@@ -1,6 +1,7 @@
 import {
   MatchServicioEstado,
   ModalidadPagoTipo,
+  ServicioTipoPrecio,
   UsuarioTipo,
 } from "../constants/enums";
 
@@ -162,7 +163,7 @@ export interface ServicioBusqueda {
   precio: number;
   precioMaximo?: number;
   precioMinimo?: number;
-  tipoPrecio: "fijo" | "hora" | "rango";
+  tipoPrecio: ServicioTipoPrecio;
   ubicacion: string;
   modalidad: "presencial" | "remoto" | "mixto";
   aceptaTerminos: boolean;

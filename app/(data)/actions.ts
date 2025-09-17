@@ -1,0 +1,1 @@
+export { getServiceById, updateService } from '@/lib/actions/data';
