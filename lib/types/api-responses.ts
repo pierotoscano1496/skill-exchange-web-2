@@ -1,4 +1,8 @@
-import { MatchServicioEstado, UsuarioTipo } from "../constants/enums";
+import {
+  MatchServicioEstado,
+  ModalidadPagoTipo,
+  UsuarioTipo,
+} from "../constants/enums";
 
 // Tipos de respuesta que coinciden con el backend
 export interface User {
@@ -144,7 +148,7 @@ export interface SkillServicio {
 
 export interface ModalidadPagoServicio {
   id: string;
-  tipo: "yape" | "tarjeta" | "linea" | "efectivo";
+  tipo: ModalidadPagoTipo;
   cuentaBancaria?: string;
   numeroCelular?: string;
   url?: string;

@@ -22,11 +22,18 @@ import { getServiciosCliente } from "@/lib/actions/data";
 import { getEstadoBadge } from "../page";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@/components/ui/tabs";
+import { RealizarPagoDialog } from "@/components/solicitudes/realizar-pago-dialog";
+import { useRouter } from "next/navigation";
 
 export default function SolicitudesEnviadasPage() {
   const [solicitudes, setSolicitudes] = useState<SolicitudRecibida[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pagoDialogState, setPagoDialogState] = useState<{
+    open: boolean;
+    solicitud: SolicitudRecibida | null;
+  }>({ open: false, solicitud: null });
+  const router = useRouter();
 
   useEffect(() => {
     cargarSolicitudes();
@@ -72,6 +79,10 @@ export default function SolicitudesEnviadasPage() {
 
   const contarPorEstado = (estado: string) => {
     return solicitudes.filter((s) => s.estado === estado).length;
+  };
+
+  const handleContactarProveedor = (solicitud: SolicitudRecibida) => {
+    router.push(`/skillExchange/mensajes`);
   };
 
   const renderSolicitudCard = (solicitud: SolicitudRecibida) => (
@@ -145,7 +156,11 @@ export default function SolicitudesEnviadasPage() {
               <XCircle className="w-4 h-4 mr-1" />
               Cancelar
             </Button>
-            <Button size="sm" variant="ghost">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => handleContactarProveedor(solicitud)}
+            >
               <MessageSquare className="w-4 h-4 mr-1" />
               Contactar Proveedor
             </Button>
@@ -154,11 +169,19 @@ export default function SolicitudesEnviadasPage() {
       case "pendiente_pago":
         return (
           <div className="flex gap-2 pt-2">
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+            <Button
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => setPagoDialogState({ open: true, solicitud })}
+            >
               <Play className="w-4 h-4 mr-1" />
               Realizar Pago
             </Button>
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleContactarProveedor(solicitud)}
+            >
               <MessageSquare className="w-4 h-4 mr-1" />
               Contactar Proveedor
             </Button>
@@ -167,7 +190,11 @@ export default function SolicitudesEnviadasPage() {
       case "ejecucion":
         return (
           <div className="flex gap-2 pt-2">
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleContactarProveedor(solicitud)}
+            >
               <MessageSquare className="w-4 h-4 mr-1" />
               Contactar Proveedor
             </Button>
@@ -223,108 +250,120 @@ export default function SolicitudesEnviadasPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Solicitudes enviadas</h1>
-      </div>
-      <p className="text-muted-foreground">
-        Aquí puedes ver todas las solicitudes que has enviado a los proveedores.
-      </p>
-      <Tabs defaultValue="todas" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="todas">Todas ({solicitudes.length})</TabsTrigger>
-          <TabsTrigger value="solicitado">
-            Solicitadas ({contarPorEstado("solicitado")})
-          </TabsTrigger>
-          <TabsTrigger value="pendiente_pago">
-            Pendiente Pago ({contarPorEstado("pendiente_pago")})
-          </TabsTrigger>
-          <TabsTrigger value="ejecucion">
-            En Ejecución ({contarPorEstado("ejecucion")})
-          </TabsTrigger>
-          <TabsTrigger value="finalizado">
-            Finalizadas ({contarPorEstado("finalizado")})
-          </TabsTrigger>
-          <TabsTrigger value="rechazado">
-            Rechazadas ({contarPorEstado("rechazado")})
-          </TabsTrigger>
-        </TabsList>
+    <>
+      <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Solicitudes enviadas</h1>
+        </div>
+        <p className="text-muted-foreground">
+          Aquí puedes ver todas las solicitudes que has enviado a los
+          proveedores.
+        </p>
+        <Tabs defaultValue="todas" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="todas">
+              Todas ({solicitudes.length})
+            </TabsTrigger>
+            <TabsTrigger value="solicitado">
+              Solicitadas ({contarPorEstado("solicitado")})
+            </TabsTrigger>
+            <TabsTrigger value="pendiente_pago">
+              Pendiente Pago ({contarPorEstado("pendiente_pago")})
+            </TabsTrigger>
+            <TabsTrigger value="ejecucion">
+              En Ejecución ({contarPorEstado("ejecucion")})
+            </TabsTrigger>
+            <TabsTrigger value="finalizado">
+              Finalizadas ({contarPorEstado("finalizado")})
+            </TabsTrigger>
+            <TabsTrigger value="rechazado">
+              Rechazadas ({contarPorEstado("rechazado")})
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="todas">
-          <div className="space-y-4">
-            {solicitudes.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
-                  No has enviado ninguna solicitud.
+          <TabsContent value="todas">
+            <div className="space-y-4">
+              {solicitudes.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    No has enviado ninguna solicitud.
+                  </p>
+                </div>
+              ) : (
+                solicitudes.map(renderSolicitudCard)
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="solicitado">
+            <div className="space-y-4">
+              {filtrarPorEstado("solicitado").length > 0 ? (
+                filtrarPorEstado("solicitado").map(renderSolicitudCard)
+              ) : (
+                <p className="text-muted-foreground text-center py-4">
+                  No hay solicitudes en este estado.
                 </p>
-              </div>
-            ) : (
-              solicitudes.map(renderSolicitudCard)
-            )}
-          </div>
-        </TabsContent>
+              )}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="solicitado">
-          <div className="space-y-4">
-            {filtrarPorEstado("solicitado").length > 0 ? (
-              filtrarPorEstado("solicitado").map(renderSolicitudCard)
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay solicitudes en este estado.
-              </p>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="pendiente_pago">
+            <div className="space-y-4">
+              {filtrarPorEstado("pendiente_pago").length > 0 ? (
+                filtrarPorEstado("pendiente_pago").map(renderSolicitudCard)
+              ) : (
+                <p className="text-muted-foreground text-center py-4">
+                  No hay solicitudes en este estado.
+                </p>
+              )}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="pendiente_pago">
-          <div className="space-y-4">
-            {filtrarPorEstado("pendiente_pago").length > 0 ? (
-              filtrarPorEstado("pendiente_pago").map(renderSolicitudCard)
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay solicitudes en este estado.
-              </p>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="ejecucion">
+            <div className="space-y-4">
+              {filtrarPorEstado("ejecucion").length > 0 ? (
+                filtrarPorEstado("ejecucion").map(renderSolicitudCard)
+              ) : (
+                <p className="text-muted-foreground text-center py-4">
+                  No hay solicitudes en este estado.
+                </p>
+              )}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="ejecucion">
-          <div className="space-y-4">
-            {filtrarPorEstado("ejecucion").length > 0 ? (
-              filtrarPorEstado("ejecucion").map(renderSolicitudCard)
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay solicitudes en este estado.
-              </p>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="finalizado">
+            <div className="space-y-4">
+              {filtrarPorEstado("finalizado").length > 0 ? (
+                filtrarPorEstado("finalizado").map(renderSolicitudCard)
+              ) : (
+                <p className="text-muted-foreground text-center py-4">
+                  No hay solicitudes en este estado.
+                </p>
+              )}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="finalizado">
-          <div className="space-y-4">
-            {filtrarPorEstado("finalizado").length > 0 ? (
-              filtrarPorEstado("finalizado").map(renderSolicitudCard)
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay solicitudes en este estado.
-              </p>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="rechazado">
-          <div className="space-y-4">
-            {filtrarPorEstado("rechazado").length > 0 ? (
-              filtrarPorEstado("rechazado").map(renderSolicitudCard)
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No hay solicitudes en este estado.
-              </p>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+          <TabsContent value="rechazado">
+            <div className="space-y-4">
+              {filtrarPorEstado("rechazado").length > 0 ? (
+                filtrarPorEstado("rechazado").map(renderSolicitudCard)
+              ) : (
+                <p className="text-muted-foreground text-center py-4">
+                  No hay solicitudes en este estado.
+                </p>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+      <RealizarPagoDialog
+        open={pagoDialogState.open}
+        onOpenChange={(open) =>
+          setPagoDialogState({ ...pagoDialogState, open })
+        }
+        solicitud={pagoDialogState.solicitud}
+      />
+    </>
   );
 }
 
