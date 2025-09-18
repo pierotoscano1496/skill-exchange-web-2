@@ -51,6 +51,7 @@ export interface ServicioRequestBody {
     modalidadesPago: ModalidadPagoAPI[];
   };
   multimedia: (File | string)[];
+  yapeMultimedia?: File | string;
 }
 
 export interface ServicioResponse {

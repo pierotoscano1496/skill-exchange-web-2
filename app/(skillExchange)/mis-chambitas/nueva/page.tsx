@@ -68,6 +68,7 @@ export interface ServicioFormData {
     imagen?: File | string;
   }[];
   modalidadesPagoImagenes?: (File | string)[];
+  yapeMultimedia?: File | string;
   // Términos y condiciones
   aceptaTerminos: boolean;
 }

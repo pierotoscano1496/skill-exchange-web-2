@@ -116,9 +116,12 @@ export function StepModalidadesPago({
     if (nuevaModalidad.tipo === ModalidadPagoTipo.YAPE) {
       if (!nuevaModalidad.numeroCelular) {
         errores.numeroCelular = "El número de celular es requerido.";
-      } else if (!/^9\d{8}$/.test(nuevaModalidad.numeroCelular)) {
+      } else if (!/^9\\d{8}$/.test(nuevaModalidad.numeroCelular)) {
         errores.numeroCelular =
           "Ingresa un número de celular válido (9 dígitos, empezando con 9).";
+      }
+      if (!nuevaModalidad.imagen) {
+        errores.imagen = "La imagen del QR de Yape es requerida.";
       }
     } else if (nuevaModalidad.tipo === ModalidadPagoTipo.TARJETA) {
       if (!nuevaModalidad.cuentaBancaria) {
@@ -142,9 +145,16 @@ export function StepModalidadesPago({
 
   const agregarModalidad = () => {
     if (validarNuevaModalidad()) {
-      updateFormData({
+      const updatedData: Partial<ServicioFormData> = {
         modalidadesPago: [...formData.modalidadesPago, nuevaModalidad],
-      });
+      };
+      if (
+        nuevaModalidad.tipo === ModalidadPagoTipo.YAPE &&
+        nuevaModalidad.imagen instanceof File
+      ) {
+        updatedData.yapeMultimedia = nuevaModalidad.imagen;
+      }
+      updateFormData(updatedData);
       setNuevaModalidad({ tipo: ModalidadPagoTipo.YAPE });
       setErroresModalidad({});
       setIsDialogOpen(false);
@@ -152,9 +162,19 @@ export function StepModalidadesPago({
   };
 
   const eliminarModalidad = (index: number) => {
-    updateFormData({
-      modalidadesPago: formData.modalidadesPago.filter((_, i) => i !== index),
-    });
+    const modalidadAEliminar = formData.modalidadesPago[index];
+    const nuevasModalidades = formData.modalidadesPago.filter(
+      (_, i) => i !== index
+    );
+    const updatedData: Partial<ServicioFormData> = {
+      modalidadesPago: nuevasModalidades,
+    };
+
+    if (modalidadAEliminar.tipo === ModalidadPagoTipo.YAPE) {
+      updatedData.yapeMultimedia = undefined;
+    }
+
+    updateFormData(updatedData);
   };
 
   const obtenerConfigTipo = (tipo: string) =>
@@ -257,6 +277,31 @@ export function StepModalidadesPago({
                           {erroresModalidad.numeroCelular}
                         </p>
                       )}
+                      <div className="space-y-2">
+                        <Label htmlFor="yape-qr">Imagen QR de Yape</Label>
+                        <Input
+                          id="yape-qr"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setNuevaModalidad({
+                                ...nuevaModalidad,
+                                imagen: file,
+                              });
+                            }
+                          }}
+                          className={
+                            erroresModalidad.imagen ? "border-red-500" : ""
+                          }
+                        />
+                        {erroresModalidad.imagen && (
+                          <p className="text-sm text-red-500">
+                            {erroresModalidad.imagen}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   )}
 

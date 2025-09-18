@@ -155,6 +155,17 @@ class ApiService {
       }
     });
 
+    if (
+      requestBody.yapeMultimedia &&
+      requestBody.yapeMultimedia instanceof File
+    ) {
+      formData.append(
+        "yapeMultimedia",
+        requestBody.yapeMultimedia,
+        requestBody.yapeMultimedia.name
+      );
+    }
+
     return this.fetchApi<ServicioResponse>(
       ENV_CONFIG.API.ENDPOINTS.SERVICIOS,
       {
@@ -643,11 +654,13 @@ class ApiService {
     );
   }
 
-  async updateService(service: Partial<ServicioDetalle>): Promise<ApiResponse<ServicioDetalle>> {
+  async updateService(
+    service: Partial<ServicioDetalle>
+  ): Promise<ApiResponse<ServicioDetalle>> {
     return this.fetchApi<ServicioDetalle>(
       `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS}/${service.id}`,
       {
-        method: 'PATCH',
+        method: "PATCH",
         body: JSON.stringify(service),
       },
       true

@@ -287,32 +287,21 @@ Response body:
       }
     ]
   },
-  "multimedia": ["string"]
+  "multimedia": ["string"],
+  "yapeMultimedia": "string"
 }
 ```
 
 Código de Spring Boot para el endpoint POST /servicio:
 
 ```java
-@PostMapping
-@Operation(summary = "Guarda un servicio con su metadata", description = "Guarda primero los archivos de los recursos multimedia de un servicio a S3: imágenes, videos cortos, etc. y la información del servicio adicionalmente con: habilidades, disponibilidades y modalidades de pago")
-private ServicioRegisteredResponse registrar(@RequestPart("data") CreateServicioBody requestBody,
-        @RequestPart(value = "multimedia", required = false) List<MultipartFile> recursosMultimedia) {
-    if (recursosMultimedia == null || recursosMultimedia.isEmpty()) {
-        logger.warn("No se han proporcionado recursos multimedia para el servicio.");
-    } else {
-        recursosMultimedia = recursosMultimedia.stream()
-                .filter(file -> file != null && !file.isEmpty())
-                .collect(Collectors.toList());
-        if (recursosMultimedia.isEmpty()) {
-            logger.warn("Todos los archivos multimedia proporcionados están vacíos.");
-        } else {
-            logger.info("Recursos multimedia proporcionados: {}", recursosMultimedia.size());
-        }
-    }
-    logger.info("Iniciando registro de servicio. Datos recibidos: {}", requestBody);
+@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+@Operation(summary = "Guarda un servicio con su metadata", description = "Guarda primero los archivos de los recursos multimedia de un servicio a S3: imágenes, videos cortos, métodos de pago, etc. y la información del servicio adicionalmente con: habilidades, disponibilidades y modalidades de pago")
+public ServicioRegisteredResponse registrar(@RequestPart("data") CreateServicioBody requestBody,
+        @RequestPart(value = "multimedia", required = false) List<MultipartFile> recursosMultimedia,
+        @RequestPart(value = "yapeMultimedia", required = false) MultipartFile yapeFile) {
     try {
-        ServicioRegisteredResponse response = service.registrar(requestBody, recursosMultimedia);
+        ServicioRegisteredResponse response = service.registrar(requestBody, recursosMultimedia, yapeFile);
         logger.info("Registro de servicio exitoso. ID generado: {}", response.getId());
         return response;
     } catch (DatabaseNotWorkingException | NotCreatedException | IOException | InvalidFileException
