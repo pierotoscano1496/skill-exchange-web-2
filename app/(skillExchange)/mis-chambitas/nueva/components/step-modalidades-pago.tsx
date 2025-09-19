@@ -103,14 +103,16 @@ export function StepModalidadesPago({
   const [erroresModalidad, setErroresModalidad] = useState<
     Record<string, string>
   >({});
+  const [yapeQrPreview, setYapeQrPreview] = useState<string | null>(null);
 
   const validarNuevaModalidad = (): boolean => {
     const errores: Record<string, string> = {};
-    const yaExiste = formData.modalidadesPago.some(
-      (m) => m.tipo === nuevaModalidad.tipo
-    );
-    if (yaExiste) {
-      errores.tipo = "Ya has agregado esta modalidad de pago.";
+
+    if (
+      nuevaModalidad.tipo === ModalidadPagoTipo.YAPE &&
+      formData.modalidadesPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
+    ) {
+      errores.tipo = "Solo puedes agregar una modalidad de pago Yape.";
     }
 
     if (nuevaModalidad.tipo === ModalidadPagoTipo.YAPE) {
@@ -206,7 +208,17 @@ export function StepModalidadesPago({
                 Configura las formas de pago que aceptas para tu servicio.
               </CardDescription>
             </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog
+              open={isDialogOpen}
+              onOpenChange={(open) => {
+                setIsDialogOpen(open);
+                if (!open) {
+                  setNuevaModalidad({ tipo: ModalidadPagoTipo.YAPE });
+                  setErroresModalidad({});
+                  setYapeQrPreview(null);
+                }
+              }}
+            >
               <DialogTrigger asChild>
                 <Button size="sm">
                   <Plus className="mr-2 h-4 w-4" />
@@ -225,9 +237,10 @@ export function StepModalidadesPago({
                     <Label htmlFor="tipo-pago">Tipo de pago</Label>
                     <Select
                       value={nuevaModalidad.tipo}
-                      onValueChange={(value: ModalidadPagoTipo) =>
-                        setNuevaModalidad({ tipo: value })
-                      }
+                      onValueChange={(value: ModalidadPagoTipo) => {
+                        setNuevaModalidad({ tipo: value });
+                        setYapeQrPreview(null);
+                      }}
                     >
                       <SelectTrigger
                         id="tipo-pago"
@@ -279,23 +292,57 @@ export function StepModalidadesPago({
                       )}
                       <div className="space-y-2">
                         <Label htmlFor="yape-qr">Imagen QR de Yape</Label>
-                        <Input
-                          id="yape-qr"
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              setNuevaModalidad({
-                                ...nuevaModalidad,
-                                imagen: file,
-                              });
+                        {!yapeQrPreview ? (
+                          <Input
+                            id="yape-qr"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                setNuevaModalidad({
+                                  ...nuevaModalidad,
+                                  imagen: file,
+                                });
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                  setYapeQrPreview(reader.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                              }
+                            }}
+                            className={
+                              erroresModalidad.imagen ? "border-red-500" : ""
                             }
-                          }}
-                          className={
-                            erroresModalidad.imagen ? "border-red-500" : ""
-                          }
-                        />
+                          />
+                        ) : (
+                          <div className="relative w-fit">
+                            <img
+                              src={yapeQrPreview}
+                              alt="Vista previa del QR"
+                              className="h-32 w-32 rounded-md object-cover"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-1 right-1 h-6 w-6"
+                              onClick={() => {
+                                setYapeQrPreview(null);
+                                setNuevaModalidad({
+                                  ...nuevaModalidad,
+                                  imagen: undefined,
+                                });
+                                const fileInput = document.getElementById(
+                                  "yape-qr"
+                                ) as HTMLInputElement;
+                                if (fileInput) fileInput.value = "";
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
                         {erroresModalidad.imagen && (
                           <p className="text-sm text-red-500">
                             {erroresModalidad.imagen}

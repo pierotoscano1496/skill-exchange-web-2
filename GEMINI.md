@@ -238,8 +238,9 @@ Response body:
 ]
 ```
 
-- Endpoint: POST /servicio
-  Request body:
+## Endpoint: POST /servicio
+
+### Request body:
 
 ```json
 {
@@ -292,7 +293,7 @@ Response body:
 }
 ```
 
-Código de Spring Boot para el endpoint POST /servicio:
+### Código de Spring Boot para el endpoint POST /servicio:
 
 ```java
 @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -317,7 +318,7 @@ public ServicioRegisteredResponse registrar(@RequestPart("data") CreateServicioB
 }
 ```
 
-Response body:
+### Response body:
 
 ```json
 {
@@ -344,6 +345,10 @@ Response body:
   ]
 }
 ```
+
+## Endpoint: PATCH /servicio/{idServicio}
+
+### Request body:
 
 ## Endpoint: POST /usuario/own/match
 
