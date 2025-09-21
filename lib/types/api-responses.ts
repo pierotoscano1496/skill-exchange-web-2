@@ -1,5 +1,7 @@
+import { ServicioResponse } from "../api/servicio-api";
 import {
   MatchServicioEstado,
+  Medio,
   ModalidadPagoTipo,
   ServicioTipoPrecio,
   UsuarioTipo,
@@ -155,6 +157,13 @@ export interface ModalidadPagoServicio {
   url?: string;
 }
 
+export interface RecursoMultimediaServicioResponse {
+  id: string;
+  servicio: ServicioResponse;
+  url: string;
+  medio: Medio;
+}
+
 export interface ServicioBusqueda {
   id: string;
   proveedor: Proveedor;
@@ -170,6 +179,7 @@ export interface ServicioBusqueda {
   disponibilidades: DisponibilidadServicio[];
   skills: SkillServicio[];
   modalidadesPago: ModalidadPagoServicio[];
+  recursosMultimedia: RecursoMultimediaServicioResponse[];
   urlImagePreview?: string;
 }
 

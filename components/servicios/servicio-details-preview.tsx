@@ -22,6 +22,13 @@ import {
   AlertCircle,
   ExternalLink,
 } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getServicioDetalle, getServicioReviews } from "@/lib/actions/data";
 import { ContactServiceForm } from "@/components/contact-service-form";
@@ -152,23 +159,34 @@ export function ServiceDetailView({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {servicio.urlImagePreview ? (
-                  <div className="md:col-span-3">
-                    <img
-                      src={servicio.urlImagePreview || "/placeholder.svg"}
-                      alt={servicio.titulo}
-                      className="rounded-lg w-full h-auto object-cover max-h-80"
-                    />
-                  </div>
-                ) : (
-                  <div className="md:col-span-3">
-                    <img
-                      src="/placeholder.svg?height=300&width=800"
-                      alt={servicio.titulo}
-                      className="rounded-lg w-full h-auto object-cover"
-                    />
-                  </div>
-                )}
+                <div className="md:col-span-3">
+                  <Carousel className="w-full">
+                    <CarouselContent>
+                      {servicio.recursosMultimedia &&
+                      servicio.recursosMultimedia.length > 0 ? (
+                        servicio.recursosMultimedia.map((media) => (
+                          <CarouselItem key={media.id}>
+                            <img
+                              src={media.url || "/placeholder.svg"}
+                              alt={servicio.titulo}
+                              className="rounded-lg w-full h-auto object-cover"
+                            />
+                          </CarouselItem>
+                        ))
+                      ) : (
+                        <CarouselItem>
+                          <img
+                            src="/placeholder.svg?height=300&width=800"
+                            alt={servicio.titulo}
+                            className="rounded-lg w-full h-auto object-cover"
+                          />
+                        </CarouselItem>
+                      )}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                  </Carousel>
+                </div>
               </div>
 
               <Tabs defaultValue="details" className="w-full">
