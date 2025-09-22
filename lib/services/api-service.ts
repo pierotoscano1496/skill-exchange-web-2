@@ -23,6 +23,7 @@ import type {
   AsignacionSkillToUsuarioRequest,
   SkillAsignadoResponse,
   CreateFirstMatchServicioBody,
+  UpdateServicioRequestBody,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -655,13 +656,14 @@ class ApiService {
   }
 
   async updateService(
-    service: Partial<ServicioDetalle>
+    idServicio: string,
+    formData: FormData
   ): Promise<ApiResponse<ServicioDetalle>> {
     return this.fetchApi<ServicioDetalle>(
-      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS}/${service.id}`,
+      `${ENV_CONFIG.API.ENDPOINTS.SERVICIOS}/${idServicio}`,
       {
         method: "PATCH",
-        body: JSON.stringify(service),
+        body: formData,
       },
       true
     );

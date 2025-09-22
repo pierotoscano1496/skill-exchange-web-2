@@ -35,9 +35,10 @@ interface EditPaymentMethodDialogProps {
   metodo?: ModalidadPagoServicio;
   onSave: (metodo: ModalidadPagoServicio, yapeFile?: File) => void;
   children: React.ReactNode;
+  hasYape?: boolean;
 }
 
-const tiposPago = [
+let tiposPago = [
   {
     id: ModalidadPagoTipo.YAPE,
     nombre: "Yape",
@@ -76,6 +77,7 @@ export function EditPaymentMethodDialog({
   metodo,
   onSave,
   children,
+  hasYape = false,
 }: EditPaymentMethodDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [nuevaModalidad, setNuevaModalidad] = useState<ModalidadPagoServicio>(
@@ -89,6 +91,10 @@ export function EditPaymentMethodDialog({
   );
   const [yapeFile, setYapeFile] = useState<File | null>(null);
 
+  if (hasYape && !metodo) {
+    tiposPago = tiposPago.filter((tipo) => tipo.id !== ModalidadPagoTipo.YAPE);
+  }
+
   const validarNuevaModalidad = (): boolean => {
     const errores: Record<string, string> = {};
 
@@ -98,9 +104,6 @@ export function EditPaymentMethodDialog({
       } else if (!/^9\d{8}$/.test(nuevaModalidad.numeroCelular)) {
         errores.numeroCelular =
           "Ingresa un número de celular válido (9 dígitos, empezando con 9).";
-      }
-      if (!yapeQrPreview && !yapeFile) {
-        errores.imagen = "La imagen del QR de Yape es requerida.";
       }
     } else if (nuevaModalidad.tipo === ModalidadPagoTipo.TARJETA) {
       if (!nuevaModalidad.cuentaBancaria) {
@@ -154,37 +157,39 @@ export function EditPaymentMethodDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <Label htmlFor="tipo-pago">Tipo de pago</Label>
-            <Select
-              value={nuevaModalidad.tipo}
-              onValueChange={(value: ModalidadPagoTipo) => {
-                setNuevaModalidad({ ...nuevaModalidad, tipo: value, url: "" });
-                setYapeFile(null);
-                setYapeQrPreview(null);
-              }}
-            >
-              <SelectTrigger
-                id="tipo-pago"
-                className={erroresModalidad.tipo ? "border-red-500" : ""}
+          {!metodo &&
+            <div className="space-y-2">
+              <Label htmlFor="tipo-pago">Tipo de pago</Label>
+              <Select
+                value={nuevaModalidad.tipo}
+                onValueChange={(value: ModalidadPagoTipo) => {
+                  setNuevaModalidad({ ...nuevaModalidad, tipo: value, url: "" });
+                  setYapeFile(null);
+                  setYapeQrPreview(null);
+                }}
               >
-                <SelectValue placeholder="Selecciona un tipo de pago" />
-              </SelectTrigger>
-              <SelectContent>
-                {tiposPago.map((tipo) => (
-                  <SelectItem key={tipo.id} value={tipo.id}>
-                    <div className="flex items-center gap-2">
-                      <tipo.icono className={`h-4 w-4 ${tipo.color}`} />
-                      <span>{tipo.nombre}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {erroresModalidad.tipo && (
-              <p className="text-sm text-red-500">{erroresModalidad.tipo}</p>
-            )}
-          </div>
+                <SelectTrigger
+                  id="tipo-pago"
+                  className={erroresModalidad.tipo ? "border-red-500" : ""}
+                >
+                  <SelectValue placeholder="Selecciona un tipo de pago" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tiposPago.map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id}>
+                      <div className="flex items-center gap-2">
+                        <tipo.icono className={`h-4 w-4 ${tipo.color}`} />
+                        <span>{tipo.nombre}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {erroresModalidad.tipo && (
+                <p className="text-sm text-red-500">{erroresModalidad.tipo}</p>
+              )}
+            </div>
+          }
 
           {nuevaModalidad.tipo === ModalidadPagoTipo.YAPE && (
             <div className="space-y-2">
@@ -208,58 +213,6 @@ export function EditPaymentMethodDialog({
                   {erroresModalidad.numeroCelular}
                 </p>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="yape-qr">Imagen QR de Yape</Label>
-                {!yapeQrPreview ? (
-                  <Input
-                    id="yape-qr"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        setYapeFile(file);
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setYapeQrPreview(reader.result as string);
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className={erroresModalidad.imagen ? "border-red-500" : ""}
-                  />
-                ) : (
-                  <div className="relative w-fit">
-                    <img
-                      src={yapeQrPreview}
-                      alt="Vista previa del QR"
-                      className="h-32 w-32 rounded-md object-cover"
-                    />
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      className="absolute top-1 right-1 h-6 w-6"
-                      onClick={() => {
-                        setYapeQrPreview(null);
-                        setYapeFile(null);
-                        setNuevaModalidad({ ...nuevaModalidad, url: "" });
-                        const fileInput = document.getElementById(
-                          "yape-qr"
-                        ) as HTMLInputElement;
-                        if (fileInput) fileInput.value = "";
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-                {erroresModalidad.imagen && (
-                  <p className="text-sm text-red-500">
-                    {erroresModalidad.imagen}
-                  </p>
-                )}
-              </div>
             </div>
           )}
 

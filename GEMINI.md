@@ -248,36 +248,11 @@ Response body:
     "titulo": "string",
     "descripcion": "string",
     "precio": 0,
-    "idProveedor": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     "tipoPrecio": "fijo",
     "precioMinimo": 0,
     "precioMaximo": 0,
-    "ubicacion": "string",
-    "modalidad": "presencial",
-    "aceptaTerminos": true,
-    "skills": [
-      {
-        "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "idSkill": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-      }
-    ],
-    "disponibilidades": [
-      {
-        "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-        "dia": "lunes",
-        "horaInicio": {
-          "hour": 0,
-          "minute": 0,
-          "second": 0,
-          "nano": 0
-        },
-        "horaFin": {
-          "hour": 0,
-          "minute": 0,
-          "second": 0,
-          "nano": 0
-        }
-      }
+    "urlRecursosMultimediaToDelete": [
+      "string"
     ],
     "modalidadesPago": [
       {
@@ -296,24 +271,17 @@ Response body:
 ### Código de Spring Boot para el endpoint POST /servicio:
 
 ```java
-@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-@Operation(summary = "Guarda un servicio con su metadata", description = "Guarda primero los archivos de los recursos multimedia de un servicio a S3: imágenes, videos cortos, métodos de pago, etc. y la información del servicio adicionalmente con: habilidades, disponibilidades y modalidades de pago")
-public ServicioRegisteredResponse registrar(@RequestPart("data") CreateServicioBody requestBody,
+@PatchMapping("/{id}")
+@Operation(summary = "Actualiza un servicio por su ID", description = "Actualiza la información de un servicio en específico: título, descripción, tipo de precio, precio, métodos de pago.")
+public ServicioResponse actualizar(@PathVariable UUID id, @RequestPart("data") UpdateServicioBody requestBody,
         @RequestPart(value = "multimedia", required = false) List<MultipartFile> recursosMultimedia,
         @RequestPart(value = "yapeMultimedia", required = false) MultipartFile yapeFile) {
     try {
-        ServicioRegisteredResponse response = service.registrar(requestBody, recursosMultimedia, yapeFile);
-        logger.info("Registro de servicio exitoso. ID generado: {}", response.getId());
-        return response;
-    } catch (DatabaseNotWorkingException | NotCreatedException | IOException | InvalidFileException
-            | FileNotUploadedException e) {
-        if (e instanceof IOException) {
-            logger.error("Error al registrar el servicio: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al registrar el servicio");
-        } else {
-            logger.error("Respuesta de error del servicio: {}", e.getMessage(), e);
-        }
+        return service.actualizar(id, requestBody);
+    } catch (DatabaseNotWorkingException | NotUpdatedException e) {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    } catch (BadRequestException e) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }
 ```

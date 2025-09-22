@@ -25,6 +25,7 @@ import type {
   SkillAsignadoResponse,
   AsignacionSkillToUsuarioRequest,
   CreateFirstMatchServicioBody,
+  UpdateServicioRequestBody,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -244,10 +245,15 @@ export async function getOwnSkillsInfo(): Promise<ApiResponse<SkillInfo[]>> {
   return apiService.getOwnSkillsInfo();
 }
 
-export async function getServiceById(id: string): Promise<ApiResponse<ServicioDetalle>> {
+export async function getServiceById(
+  id: string
+): Promise<ApiResponse<ServicioDetalle>> {
   return apiService.getServicioDetalle(id);
 }
 
-export async function updateService(service: Partial<ServicioDetalle>): Promise<ApiResponse<ServicioDetalle>> {
-  return apiService.updateService(service);
+export async function updateService(
+  idServicio: string,
+  formData: FormData
+): Promise<ApiResponse<ServicioDetalle>> {
+  return apiService.updateService(idServicio, formData);
 }

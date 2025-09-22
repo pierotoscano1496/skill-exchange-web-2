@@ -183,9 +183,26 @@ export interface ServicioBusqueda {
   urlImagePreview?: string;
 }
 
+export interface BasicServicioRequestBody {
+  titulo: string;
+  descripcion: string;
+  precio: number;
+  tipoPrecio: ServicioTipoPrecio;
+  precioMinimo?: number;
+  precioMaximo?: number;
+  urlRecursosMultimediaToDelete?: string[];
+  modalidadesPago?: ModalidadPagoServicio[];
+}
+
 // Tipos para detalles de servicio y reviews
 export interface ServicioDetalle extends ServicioBusqueda {
   // Extiende ServicioBusqueda ya que tienen la misma estructura
+}
+
+export interface UpdateServicioRequestBody {
+  data: Partial<BasicServicioRequestBody>;
+  multimedia: (File | string)[];
+  yapeMultimedia?: File | string;
 }
 
 export interface ComentarioServicio {

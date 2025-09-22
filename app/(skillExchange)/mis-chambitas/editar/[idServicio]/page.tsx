@@ -13,24 +13,24 @@ import {
 } from '@/lib/types/api-responses'
 import { useParams } from 'next/navigation'
 import { ModalidadPagoTipo, ServicioTipoPrecio } from '@/lib/constants/enums'
-import { EditPaymentMethodDialog } from "@/components/servicios/edit-payment-method-dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2, Edit, Plus } from "lucide-react";
+import { EditPaymentMethodDialog } from '@/components/servicios/edit-payment-method-dialog'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Trash2, Edit, Plus } from 'lucide-react'
 
 const formatearInfoModalidad = (modalidad: ModalidadPagoServicio) => {
   switch (modalidad.tipo) {
     case ModalidadPagoTipo.YAPE:
-      return `Celular: ${modalidad.numeroCelular}`;
+      return `Celular: ${modalidad.numeroCelular}`
     case ModalidadPagoTipo.TARJETA:
-      return `Cuenta: ***${modalidad.cuentaBancaria?.slice(-4)}`;
+      return `Cuenta: ***${modalidad.cuentaBancaria?.slice(-4)}`
     case ModalidadPagoTipo.LINEA:
-      return `URL: ${modalidad.url}`;
+      return `URL: ${modalidad.url}`
     case ModalidadPagoTipo.EFECTIVO:
-      return "Pago al momento del servicio";
+      return 'Pago al momento del servicio'
     default:
-      return "";
+      return ''
   }
-};
+}
 
 export default function Page() {
   const [servicio, setServicio] = useState<ServicioDetalle | null>(null)
@@ -43,6 +43,8 @@ export default function Page() {
   const [precioMinimo, setPrecioMinimo] = useState<number | undefined>(0)
   const [precioMaximo, setPrecioMaximo] = useState<number | undefined>(0)
   const [metodosPago, setMetodosPago] = useState<ModalidadPagoServicio[]>([])
+  const [multimedia, setMultimedia] = useState<File[]>([])
+  const [yapeMultimedia, setYapeMultimedia] = useState<File | null>(null)
   const params = useParams()
   const { idServicio } = params
 
@@ -68,8 +70,7 @@ export default function Page() {
     e.preventDefault()
     if (!servicio) return
 
-    const updatedService: Partial<ServicioDetalle> = {
-      ...servicio,
+    const serviceData = {
       titulo,
       descripcion,
       tipoPrecio,
@@ -77,22 +78,42 @@ export default function Page() {
       precioMinimo,
       precioMaximo,
       modalidadesPago: metodosPago,
+      urlRecursosMultimediaToDelete: [], // TODO: Implementar logica para eliminar imagenes
     }
-    await updateService(updatedService)
+
+    const formData = new FormData()
+    formData.append('data', JSON.stringify(serviceData))
+
+    multimedia.forEach((file) => {
+      formData.append('multimedia', file)
+    })
+
+    if (yapeMultimedia) {
+      formData.append('yapeMultimedia', yapeMultimedia)
+    }
+
+    await updateService(servicio.id, formData)
   }
 
   const handleMetodoPagoChange = (
     index: number,
     metodo: ModalidadPagoServicio
   ) => {
-    const newMetodosPago = [...metodosPago];
-    newMetodosPago[index] = metodo;
-    setMetodosPago(newMetodosPago);
-  };
+    const newMetodosPago = [...metodosPago]
+    newMetodosPago[index] = metodo
+    setMetodosPago(newMetodosPago)
+  }
 
   const addMetodoPago = (metodo: ModalidadPagoServicio) => {
-    setMetodosPago([...metodosPago, metodo]);
-  };
+    if (
+      metodo.tipo === ModalidadPagoTipo.YAPE &&
+      metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
+    ) {
+      console.warn('Solo se puede agregar un método de pago Yape.')
+      return
+    }
+    setMetodosPago([...metodosPago, metodo])
+  }
 
   const removeMetodoPago = (index: number) => {
     const newMetodosPago = [...metodosPago]
@@ -104,8 +125,10 @@ export default function Page() {
     return <div>Cargando...</div>
   }
 
+  const hasYape = metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
+
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-6 px-4">
       <h1 className="text-3xl font-bold mb-6">Editar Servicio</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -173,6 +196,16 @@ export default function Page() {
           </div>
         )}
 
+        <div className="mb-4">
+          <Label htmlFor="multimedia">Archivos Multimedia</Label>
+          <Input
+            id="multimedia"
+            type="file"
+            multiple
+            onChange={(e) => setMultimedia(Array.from(e.target.files || []))}
+          />
+        </div>
+
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-4">Métodos de Pago</h2>
           <Card>
@@ -181,7 +214,7 @@ export default function Page() {
                 <div>
                   <CardTitle>Modalidades de pago</CardTitle>
                 </div>
-                <EditPaymentMethodDialog onSave={addMetodoPago}>
+                <EditPaymentMethodDialog onSave={addMetodoPago} hasYape={hasYape}>
                   <Button size="sm">
                     <Plus className="mr-2 h-4 w-4" />
                     Agregar
@@ -198,7 +231,9 @@ export default function Page() {
                         <CardContent className="p-4 flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <div>
-                              <h4 className="font-semibold">{modalidad.tipo}</h4>
+                              <h4 className="font-semibold">
+                                {modalidad.tipo}
+                              </h4>
                               <p className="text-sm text-muted-foreground">
                                 {formatearInfoModalidad(modalidad)}
                               </p>
@@ -207,7 +242,9 @@ export default function Page() {
                           <div className="flex gap-2">
                             <EditPaymentMethodDialog
                               metodo={modalidad}
-                              onSave={(editedMetodo) => handleMetodoPagoChange(index, editedMetodo)}
+                              onSave={(editedMetodo) =>
+                                handleMetodoPagoChange(index, editedMetodo)
+                              }
                             >
                               <Button variant="ghost" size="icon">
                                 <Edit className="h-4 w-4" />
@@ -220,12 +257,14 @@ export default function Page() {
                               className="text-red-500 hover:text-red-700 hover:bg-red-50"
                             >
                               <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Eliminar modalidad</span>
+                              <span className="sr-only">
+                                Eliminar modalidad
+                              </span>
                             </Button>
                           </div>
                         </CardContent>
                       </Card>
-                    );
+                    )
                   })}
                 </div>
               ) : (
@@ -234,13 +273,27 @@ export default function Page() {
                     No has agregado modalidades de pago
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Agrega al menos una forma de pago para que los clientes puedan contratarte.
+                    Agrega al menos una forma de pago para que los clientes
+                    puedan contratarte.
                   </p>
                 </div>
               )}
             </CardContent>
           </Card>
         </div>
+
+        {hasYape && (
+          <div className="mb-4">
+            <Label htmlFor="yapeMultimedia">Imagen QR de Yape</Label>
+            <Input
+              id="yapeMultimedia"
+              type="file"
+              onChange={(e) =>
+                setYapeMultimedia(e.target.files ? e.target.files[0] : null)
+              }
+            />
+          </div>
+        )}
 
         <Button type="submit">Guardar Cambios</Button>
       </form>
