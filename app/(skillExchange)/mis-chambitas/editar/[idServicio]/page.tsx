@@ -10,6 +10,7 @@ import { getServiceById, updateService } from '@/lib/actions/data'
 import {
   ServicioDetalle,
   ModalidadPagoServicio,
+  RecursoMultimediaServicioResponse
 } from '@/lib/types/api-responses'
 import { useParams } from 'next/navigation'
 import { ModalidadPagoTipo, ServicioTipoPrecio } from '@/lib/constants/enums'
@@ -43,8 +44,13 @@ export default function Page() {
   const [precioMinimo, setPrecioMinimo] = useState<number | undefined>(0)
   const [precioMaximo, setPrecioMaximo] = useState<number | undefined>(0)
   const [metodosPago, setMetodosPago] = useState<ModalidadPagoServicio[]>([])
-  const [multimedia, setMultimedia] = useState<File[]>([])
+  const [newMultimedia, setNewMultimedia] = useState<File[]>([])
   const [yapeMultimedia, setYapeMultimedia] = useState<File | null>(null)
+  const [existingMultimedia, setExistingMultimedia] = useState<
+    RecursoMultimediaServicioResponse[]
+  >([])
+  const [multimediaToDelete, setMultimediaToDelete] = useState<string[]>([])
+
   const params = useParams()
   const { idServicio } = params
 
@@ -61,6 +67,7 @@ export default function Page() {
           setPrecioMinimo(data.precioMinimo)
           setPrecioMaximo(data.precioMaximo)
           setMetodosPago(data.modalidadesPago)
+          setExistingMultimedia(data.recursosMultimedia || [])
         }
       })
     }
@@ -78,18 +85,18 @@ export default function Page() {
       precioMinimo,
       precioMaximo,
       modalidadesPago: metodosPago,
-      urlRecursosMultimediaToDelete: [], // TODO: Implementar logica para eliminar imagenes
+      recursosMultimediaToDelete: multimediaToDelete,
     }
 
     const formData = new FormData()
-    formData.append('data', JSON.stringify(serviceData))
+    formData.append('data', new Blob([JSON.stringify(serviceData)], { type: 'application/json' }));
 
-    multimedia.forEach((file) => {
-      formData.append('multimedia', file)
+    newMultimedia.forEach((file) => {
+      formData.append('multimedia', file, file.name);
     })
 
     if (yapeMultimedia) {
-      formData.append('yapeMultimedia', yapeMultimedia)
+      formData.append('yapeMultimedia', yapeMultimedia, yapeMultimedia.name);
     }
 
     await updateService(servicio.id, formData)
@@ -119,6 +126,25 @@ export default function Page() {
     const newMetodosPago = [...metodosPago]
     newMetodosPago.splice(index, 1)
     setMetodosPago(newMetodosPago)
+  }
+
+  const handleRemoveExistingMultimedia = (id: string) => {
+    setMultimediaToDelete([...multimediaToDelete, id])
+    setExistingMultimedia(existingMultimedia.filter((m) => m.id !== id))
+  }
+
+  const handleRemoveNewMultimedia = (index: number) => {
+    const newFiles = [...newMultimedia]
+    newFiles.splice(index, 1)
+    setNewMultimedia(newFiles)
+  }
+
+  const handleNewMultimediaChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files) {
+      setNewMultimedia([...newMultimedia, ...Array.from(e.target.files)])
+    }
   }
 
   if (!servicio) {
@@ -197,12 +223,56 @@ export default function Page() {
         )}
 
         <div className="mb-4">
-          <Label htmlFor="multimedia">Archivos Multimedia</Label>
+          <Label>Recursos Multimedia Actuales</Label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {existingMultimedia.map((media) => (
+              <div key={media.id} className="relative">
+                <img
+                  src={media.url}
+                  alt="Recurso multimedia"
+                  className="w-full h-auto rounded-md"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-1 right-1 h-6 w-6"
+                  onClick={() => handleRemoveExistingMultimedia(media.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <Label>Nuevos Recursos Multimedia</Label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+            {newMultimedia.map((file, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt="Nuevo recurso"
+                  className="w-full h-auto rounded-md"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-1 right-1 h-6 w-6"
+                  onClick={() => handleRemoveNewMultimedia(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
           <Input
             id="multimedia"
             type="file"
             multiple
-            onChange={(e) => setMultimedia(Array.from(e.target.files || []))}
+            onChange={handleNewMultimediaChange}
           />
         </div>
 
@@ -245,6 +315,10 @@ export default function Page() {
                               onSave={(editedMetodo) =>
                                 handleMetodoPagoChange(index, editedMetodo)
                               }
+                              hasYape={
+                                hasYape &&
+                                modalidad.tipo !== ModalidadPagoTipo.YAPE
+                              }
                             >
                               <Button variant="ghost" size="icon">
                                 <Edit className="h-4 w-4" />
@@ -281,20 +355,6 @@ export default function Page() {
             </CardContent>
           </Card>
         </div>
-
-        {hasYape && (
-          <div className="mb-4">
-            <Label htmlFor="yapeMultimedia">Imagen QR de Yape</Label>
-            <Input
-              id="yapeMultimedia"
-              type="file"
-              onChange={(e) =>
-                setYapeMultimedia(e.target.files ? e.target.files[0] : null)
-              }
-            />
-          </div>
-        )}
-
         <Button type="submit">Guardar Cambios</Button>
       </form>
     </div>

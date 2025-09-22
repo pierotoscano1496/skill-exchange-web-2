@@ -213,6 +213,58 @@ export function EditPaymentMethodDialog({
                   {erroresModalidad.numeroCelular}
                 </p>
               )}
+              <div className="space-y-2">
+                <Label htmlFor="yape-qr">Imagen QR de Yape</Label>
+                {!yapeQrPreview ? (
+                  <Input
+                    id="yape-qr"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setYapeFile(file);
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setYapeQrPreview(reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className={erroresModalidad.imagen ? "border-red-500" : ""}
+                  />
+                ) : (
+                  <div className="relative w-fit">
+                    <img
+                      src={yapeQrPreview}
+                      alt="Vista previa del QR"
+                      className="h-32 w-32 rounded-md object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-1 right-1 h-6 w-6"
+                      onClick={() => {
+                        setYapeQrPreview(null);
+                        setYapeFile(null);
+                        setNuevaModalidad({ ...nuevaModalidad, url: "" });
+                        const fileInput = document.getElementById(
+                          "yape-qr"
+                        ) as HTMLInputElement;
+                        if (fileInput) fileInput.value = "";
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+                {erroresModalidad.imagen && (
+                  <p className="text-sm text-red-500">
+                    {erroresModalidad.imagen}
+                  </p>
+                )}
+              </div>
             </div>
           )}
 
