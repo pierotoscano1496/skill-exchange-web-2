@@ -1,81 +1,81 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { getServiceById, updateService } from '@/lib/actions/data'
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { getServiceById, updateService } from "@/lib/actions/data";
 import {
   ServicioDetalle,
   ModalidadPagoServicio,
-  RecursoMultimediaServicioResponse
-} from '@/lib/types/api-responses'
-import { useParams } from 'next/navigation'
-import { ModalidadPagoTipo, ServicioTipoPrecio } from '@/lib/constants/enums'
-import { EditPaymentMethodDialog } from '@/components/servicios/edit-payment-method-dialog'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Trash2, Edit, Plus } from 'lucide-react'
+  RecursoMultimediaServicioResponse,
+} from "@/lib/types/api-responses";
+import { useParams } from "next/navigation";
+import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums";
+import { EditPaymentMethodDialog } from "@/components/servicios/edit-payment-method-dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trash2, Edit, Plus } from "lucide-react";
 
 const formatearInfoModalidad = (modalidad: ModalidadPagoServicio) => {
   switch (modalidad.tipo) {
     case ModalidadPagoTipo.YAPE:
-      return `Celular: ${modalidad.numeroCelular}`
+      return `Celular: ${modalidad.numeroCelular}`;
     case ModalidadPagoTipo.TARJETA:
-      return `Cuenta: ***${modalidad.cuentaBancaria?.slice(-4)}`
+      return `Cuenta: ***${modalidad.cuentaBancaria?.slice(-4)}`;
     case ModalidadPagoTipo.LINEA:
-      return `URL: ${modalidad.url}`
+      return `URL: ${modalidad.url}`;
     case ModalidadPagoTipo.EFECTIVO:
-      return 'Pago al momento del servicio'
+      return "Pago al momento del servicio";
     default:
-      return ''
+      return "";
   }
-}
+};
 
 export default function Page() {
-  const [servicio, setServicio] = useState<ServicioDetalle | null>(null)
-  const [titulo, setTitulo] = useState('')
-  const [descripcion, setDescripcion] = useState('')
+  const [servicio, setServicio] = useState<ServicioDetalle | null>(null);
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const [tipoPrecio, setTipoPrecio] = useState<ServicioTipoPrecio>(
     ServicioTipoPrecio.FIJO
-  )
-  const [precio, setPrecio] = useState(0)
-  const [precioMinimo, setPrecioMinimo] = useState<number | undefined>(0)
-  const [precioMaximo, setPrecioMaximo] = useState<number | undefined>(0)
-  const [metodosPago, setMetodosPago] = useState<ModalidadPagoServicio[]>([])
-  const [newMultimedia, setNewMultimedia] = useState<File[]>([])
-  const [yapeMultimedia, setYapeMultimedia] = useState<File | null>(null)
+  );
+  const [precio, setPrecio] = useState(0);
+  const [precioMinimo, setPrecioMinimo] = useState<number | undefined>(0);
+  const [precioMaximo, setPrecioMaximo] = useState<number | undefined>(0);
+  const [metodosPago, setMetodosPago] = useState<ModalidadPagoServicio[]>([]);
+  const [newMultimedia, setNewMultimedia] = useState<File[]>([]);
+  const [yapeMultimedia, setYapeMultimedia] = useState<File | null>(null);
   const [existingMultimedia, setExistingMultimedia] = useState<
     RecursoMultimediaServicioResponse[]
-  >([])
-  const [multimediaToDelete, setMultimediaToDelete] = useState<string[]>([])
+  >([]);
+  const [multimediaToDelete, setMultimediaToDelete] = useState<string[]>([]);
 
-  const params = useParams()
-  const { idServicio } = params
+  const params = useParams();
+  const { idServicio } = params;
 
   useEffect(() => {
     if (idServicio) {
       getServiceById(idServicio as string).then((response) => {
         if (response.success) {
-          const data = response.data
-          setServicio(data)
-          setTitulo(data.titulo)
-          setDescripcion(data.descripcion)
-          setTipoPrecio(data.tipoPrecio)
-          setPrecio(data.precio)
-          setPrecioMinimo(data.precioMinimo)
-          setPrecioMaximo(data.precioMaximo)
-          setMetodosPago(data.modalidadesPago)
-          setExistingMultimedia(data.recursosMultimedia || [])
+          const data = response.data;
+          setServicio(data);
+          setTitulo(data.titulo);
+          setDescripcion(data.descripcion);
+          setTipoPrecio(data.tipoPrecio);
+          setPrecio(data.precio);
+          setPrecioMinimo(data.precioMinimo);
+          setPrecioMaximo(data.precioMaximo);
+          setMetodosPago(data.modalidadesPago);
+          setExistingMultimedia(data.recursosMultimedia || []);
         }
-      })
+      });
     }
-  }, [idServicio])
+  }, [idServicio]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!servicio) return
+    e.preventDefault();
+    if (!servicio) return;
 
     const serviceData = {
       titulo,
@@ -86,72 +86,83 @@ export default function Page() {
       precioMaximo,
       modalidadesPago: metodosPago,
       recursosMultimediaToDelete: multimediaToDelete,
-    }
+    };
 
-    const formData = new FormData()
-    formData.append('data', new Blob([JSON.stringify(serviceData)], { type: 'application/json' }));
+    const formData = new FormData();
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(serviceData)], { type: "application/json" })
+    );
 
     newMultimedia.forEach((file) => {
-      formData.append('multimedia', file, file.name);
-    })
+      formData.append("multimedia", file, file.name);
+    });
 
     if (yapeMultimedia) {
-      formData.append('yapeMultimedia', yapeMultimedia, yapeMultimedia.name);
+      formData.set("yapeMultimedia", yapeMultimedia, yapeMultimedia.name);
     }
 
-    await updateService(servicio.id, formData)
-  }
+    await updateService(servicio.id, formData);
+  };
 
   const handleMetodoPagoChange = (
     index: number,
     metodo: ModalidadPagoServicio
   ) => {
-    const newMetodosPago = [...metodosPago]
-    newMetodosPago[index] = metodo
-    setMetodosPago(newMetodosPago)
-  }
+    const newMetodosPago = [...metodosPago];
+    newMetodosPago[index] = metodo;
+    setMetodosPago(newMetodosPago);
+  };
 
-  const addMetodoPago = (metodo: ModalidadPagoServicio) => {
+  const addMetodoPago = (metodo: ModalidadPagoServicio, yapeFile?: File) => {
+    console.log("Agregando método");
     if (
       metodo.tipo === ModalidadPagoTipo.YAPE &&
       metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
     ) {
-      console.warn('Solo se puede agregar un método de pago Yape.')
-      return
+      console.warn("Solo se puede agregar un método de pago Yape.");
+      return;
     }
-    setMetodosPago([...metodosPago, metodo])
-  }
+    setMetodosPago([...metodosPago, metodo]);
+    if (metodo.tipo === ModalidadPagoTipo.YAPE && yapeFile) {
+      setYapeMultimedia(yapeFile);
+    }
+  };
 
   const removeMetodoPago = (index: number) => {
-    const newMetodosPago = [...metodosPago]
-    newMetodosPago.splice(index, 1)
-    setMetodosPago(newMetodosPago)
-  }
+    const newMetodosPago = [...metodosPago];
+    newMetodosPago.splice(index, 1);
+    setMetodosPago(newMetodosPago);
+
+    if (metodosPago[index].tipo === ModalidadPagoTipo.YAPE) {
+      setYapeMultimedia(null);
+    }
+  };
 
   const handleRemoveExistingMultimedia = (id: string) => {
-    setMultimediaToDelete([...multimediaToDelete, id])
-    setExistingMultimedia(existingMultimedia.filter((m) => m.id !== id))
-  }
+    setMultimediaToDelete([...multimediaToDelete, id]);
+    setExistingMultimedia(existingMultimedia.filter((m) => m.id !== id));
+  };
 
   const handleRemoveNewMultimedia = (index: number) => {
-    const newFiles = [...newMultimedia]
-    newFiles.splice(index, 1)
-    setNewMultimedia(newFiles)
-  }
+    const newFiles = [...newMultimedia];
+    newFiles.splice(index, 1);
+    setNewMultimedia(newFiles);
+  };
 
   const handleNewMultimediaChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files) {
-      setNewMultimedia([...newMultimedia, ...Array.from(e.target.files)])
+      setNewMultimedia([...newMultimedia, ...Array.from(e.target.files)]);
     }
-  }
+  };
 
   if (!servicio) {
-    return <div>Cargando...</div>
+    return <div>Cargando...</div>;
   }
 
-  const hasYape = metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
+  const hasYape = metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE);
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -189,7 +200,7 @@ export default function Page() {
             </div>
           </RadioGroup>
         </div>
-        {tipoPrecio === 'fijo' || tipoPrecio === 'hora' ? (
+        {tipoPrecio === "fijo" || tipoPrecio === "hora" ? (
           <div className="mb-4">
             <Label htmlFor="precio">Precio</Label>
             <Input
@@ -284,8 +295,11 @@ export default function Page() {
                 <div>
                   <CardTitle>Modalidades de pago</CardTitle>
                 </div>
-                <EditPaymentMethodDialog onSave={addMetodoPago} hasYape={hasYape}>
-                  <Button size="sm">
+                <EditPaymentMethodDialog
+                  onSave={addMetodoPago}
+                  hasYape={hasYape}
+                >
+                  <Button type="button" size="sm">
                     <Plus className="mr-2 h-4 w-4" />
                     Agregar
                   </Button>
@@ -338,7 +352,7 @@ export default function Page() {
                           </div>
                         </CardContent>
                       </Card>
-                    )
+                    );
                   })}
                 </div>
               ) : (
@@ -358,5 +372,5 @@ export default function Page() {
         <Button type="submit">Guardar Cambios</Button>
       </form>
     </div>
-  )
+  );
 }

@@ -157,13 +157,17 @@ export function EditPaymentMethodDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
-          {!metodo &&
+          {!metodo && (
             <div className="space-y-2">
               <Label htmlFor="tipo-pago">Tipo de pago</Label>
               <Select
                 value={nuevaModalidad.tipo}
                 onValueChange={(value: ModalidadPagoTipo) => {
-                  setNuevaModalidad({ ...nuevaModalidad, tipo: value, url: "" });
+                  setNuevaModalidad({
+                    ...nuevaModalidad,
+                    tipo: value,
+                    url: "",
+                  });
                   setYapeFile(null);
                   setYapeQrPreview(null);
                 }}
@@ -189,7 +193,7 @@ export function EditPaymentMethodDialog({
                 <p className="text-sm text-red-500">{erroresModalidad.tipo}</p>
               )}
             </div>
-          }
+          )}
 
           {nuevaModalidad.tipo === ModalidadPagoTipo.YAPE && (
             <div className="space-y-2">
@@ -327,7 +331,9 @@ export function EditPaymentMethodDialog({
           <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
             Cancelar
           </Button>
-          <Button onClick={handleSave}>Guardar</Button>
+          <Button type="button" onClick={handleSave}>
+            Guardar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
