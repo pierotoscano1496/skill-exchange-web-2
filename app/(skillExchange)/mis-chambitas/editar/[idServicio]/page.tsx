@@ -12,7 +12,8 @@ import {
   ModalidadPagoServicio,
   RecursoMultimediaServicioResponse,
 } from "@/lib/types/api-responses";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums";
 import { EditPaymentMethodDialog } from "@/components/servicios/edit-payment-method-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,8 +51,12 @@ export default function Page() {
     RecursoMultimediaServicioResponse[]
   >([]);
   const [multimediaToDelete, setMultimediaToDelete] = useState<string[]>([]);
+  const [modalidadesPagoToDelete, setModalidadesPagoToDelete] = useState<
+    string[]
+  >([]);
 
   const params = useParams();
+  const router = useRouter();
   const { idServicio } = params;
 
   useEffect(() => {
@@ -85,7 +90,8 @@ export default function Page() {
       precioMinimo,
       precioMaximo,
       modalidadesPago: metodosPago,
-      recursosMultimediaToDelete: multimediaToDelete,
+      idRecursosMultimediaToDelete: multimediaToDelete,
+      idModalidadesPagoToDelete: modalidadesPagoToDelete,
     };
 
     const formData = new FormData();
@@ -102,16 +108,29 @@ export default function Page() {
       formData.set("yapeMultimedia", yapeMultimedia, yapeMultimedia.name);
     }
 
-    await updateService(servicio.id, formData);
+    const result = await updateService(servicio.id, formData);
+
+    if (result.success) {
+      toast.success("Servicio actualizado con éxito");
+      router.push("/mis-chambitas");
+    } else {
+      toast.error("Error al actualizar el servicio", {
+        description: result.message,
+      });
+    }
   };
 
   const handleMetodoPagoChange = (
     index: number,
-    metodo: ModalidadPagoServicio
+    metodo: ModalidadPagoServicio,
+    yapeFile?: File
   ) => {
     const newMetodosPago = [...metodosPago];
     newMetodosPago[index] = metodo;
     setMetodosPago(newMetodosPago);
+    if (metodo.tipo === ModalidadPagoTipo.YAPE && yapeFile) {
+      setYapeMultimedia(yapeFile);
+    }
   };
 
   const addMetodoPago = (metodo: ModalidadPagoServicio, yapeFile?: File) => {
@@ -130,6 +149,11 @@ export default function Page() {
   };
 
   const removeMetodoPago = (index: number) => {
+    setModalidadesPagoToDelete([
+      ...modalidadesPagoToDelete,
+      metodosPago[index].id,
+    ]);
+
     const newMetodosPago = [...metodosPago];
     newMetodosPago.splice(index, 1);
     setMetodosPago(newMetodosPago);
@@ -326,8 +350,12 @@ export default function Page() {
                           <div className="flex gap-2">
                             <EditPaymentMethodDialog
                               metodo={modalidad}
-                              onSave={(editedMetodo) =>
-                                handleMetodoPagoChange(index, editedMetodo)
+                              onSave={(editedMetodo, yapeFile) =>
+                                handleMetodoPagoChange(
+                                  index,
+                                  editedMetodo,
+                                  yapeFile
+                                )
                               }
                               hasYape={
                                 hasYape &&
