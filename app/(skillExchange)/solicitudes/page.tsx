@@ -284,12 +284,12 @@ export default function SolicitudesRecibidasPage() {
               <MapPin className="w-4 h-4" />
               <span>{solicitud.servicio.ubicacion}</span>
             </div>
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <DollarSign className="w-4 h-4" />
               <span className="font-medium text-foreground">
                 {formatearPrecio(solicitud.costo)}
               </span>
-            </div>
+            </div> */}
           </div>
 
           <div className="text-xs text-muted-foreground">
