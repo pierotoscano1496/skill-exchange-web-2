@@ -54,3 +54,31 @@ export interface ConfirmacionPago {
   verificaciones: string[];
   advertencias: string[];
 }
+
+export interface ConfirmacionPagoRecepcionRequest {
+  id: string;
+  pagoCompletoAcordado: boolean;
+  metodoPagoAcordado: boolean;
+  comprobanteRecibido: boolean;
+  montoRecibidoCorrecto: boolean;
+  metodoPagoRecibido: "yape" | "transferencia" | "efectivo" | "tarjeta";
+  montoRecibido: number;
+  numeroComprobante?: string;
+  notasAdicionales?: string;
+  confirmacionEjecucionServicio: boolean;
+  idMatchServicio: string;
+}
+
+export interface ConfirmacionPagoRecepcionResponse {
+  id: string;
+  matchServicio: import("../types/api-responses").MatchServicioResponse;
+  pagoCompletoAcordado: boolean;
+  metodoPagoAcordado: boolean;
+  comprobanteRecibido: boolean;
+  montoRecibidoCorrecto: boolean;
+  metodoPagoRecibido: "yape" | "transferencia" | "efectivo" | "tarjeta";
+  montoRecibido: number;
+  numeroComprobante?: string;
+  notasAdicionales?: string;
+  confirmacionEjecucionServicio: boolean;
+}

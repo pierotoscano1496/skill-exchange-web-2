@@ -35,6 +35,8 @@ import type {
   ActualizarSolicitudResponse,
   ProcesoFinalizacion,
   ConfirmacionPago,
+  ConfirmacionPagoRecepcionRequest,
+  ConfirmacionPagoRecepcionResponse,
 } from "../types/solicitud-updates";
 import type {
   ServicioRequestBody,
@@ -161,6 +163,12 @@ export async function rechazarSolicitud(
   data: RechazarSolicitudRequest
 ): Promise<ApiResponse<ActualizarSolicitudResponse>> {
   return apiService.rechazarSolicitud(data);
+}
+
+export async function confirmarPagoRecepcion(
+  data: ConfirmacionPagoRecepcionRequest
+): Promise<ApiResponse<ConfirmacionPagoRecepcionResponse>> {
+  return apiService.confirmarPagoRecepcion(data);
 }
 
 export async function confirmarPago(

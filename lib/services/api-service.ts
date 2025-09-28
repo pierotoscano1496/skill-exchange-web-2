@@ -33,6 +33,8 @@ import type {
   ActualizarSolicitudResponse,
   ProcesoFinalizacion,
   ConfirmacionPago,
+  ConfirmacionPagoRecepcionRequest,
+  ConfirmacionPagoRecepcionResponse,
 } from "../types/solicitud-updates";
 import type {
   ServicioRequestBody,
@@ -383,6 +385,19 @@ class ApiService {
         data: {} as ActualizarSolicitudResponse,
       };
     }
+  }
+
+  async confirmarPagoRecepcion(
+    data: ConfirmacionPagoRecepcionRequest
+  ): Promise<ApiResponse<ConfirmacionPagoRecepcionResponse>> {
+    return this.fetchApi<ConfirmacionPagoRecepcionResponse>(
+      ENV_CONFIG.API.ENDPOINTS.CONFIRMACION_PAGO_RECEPCION,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
   }
 
   async confirmarPago(

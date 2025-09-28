@@ -22,9 +22,9 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DollarSign, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { getConfirmacionPago, confirmarPago } from "@/lib/actions/data";
+import { getConfirmacionPago, confirmarPagoRecepcion } from "@/lib/actions/data";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
-import type { ConfirmacionPago } from "@/lib/types/solicitud-updates";
+import type { ConfirmacionPago, ConfirmacionPagoRecepcionRequest } from "@/lib/types/solicitud-updates";
 
 interface ConfirmarPagoDialogProps {
   open: boolean;
@@ -90,13 +90,21 @@ export function ConfirmarPagoDialog({
     try {
       setLoading(true);
 
-      const response = await confirmarPago({
-        idSolicitud: solicitud.id,
+      const request: ConfirmacionPagoRecepcionRequest = {
+        id: solicitud.id, // Using solicitud.id as the confirmation id
+        pagoCompletoAcordado: verificacionesConfirmadas[0] || false,
+        metodoPagoAcordado: verificacionesConfirmadas[1] || false,
+        comprobanteRecibido: verificacionesConfirmadas[2] || false,
+        montoRecibidoCorrecto: verificacionesConfirmadas[3] || false,
         metodoPagoRecibido: metodoPago as any,
         montoRecibido: Number.parseFloat(montoRecibido),
-        comprobantePago: comprobante || undefined,
-        notasProveedor: notas || undefined,
-      });
+        numeroComprobante: comprobante || undefined,
+        notasAdicionales: notas || undefined,
+        confirmacionEjecucionServicio: aceptaResponsabilidad,
+        idMatchServicio: solicitud.id,
+      };
+
+      const response = await confirmarPagoRecepcion(request);
 
       if (response.success) {
         onSuccess();

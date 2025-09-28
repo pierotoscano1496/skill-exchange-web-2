@@ -480,3 +480,48 @@ public ServicioResponse actualizar(@PathVariable UUID id, @RequestPart("data") U
   }
 ]
 ```
+## Endpoint: POST /match/confirmacion-recepcion-pago
+### Request body:
+
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "pagoCompletoAcordado": true,
+  "metodoPagoAcordado": true,
+  "comprobanteRecibido": true,
+  "montoRecibidoCorrecto": true,
+  "metodoPagoRecibido": "yape",
+  "montoRecibido": 0,
+  "numeroComprobante": "string",
+  "notasAdicionales": "string",
+  "confirmacionEjecucionServicio": true,
+  "idMatchServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+### Response body:
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "matchServicio": {
+    "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "idServicio": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "idCliente": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "fecha": "2025-09-28T00:07:50.596Z",
+    "fechaInicio": "2025-09-28T00:07:50.596Z",
+    "fechaCierre": "2025-09-28T00:07:50.596Z",
+    "estado": "solicitado",
+    "puntuacion": 0,
+    "costo": 0
+  },
+  "pagoCompletoAcordado": true,
+  "metodoPagoAcordado": true,
+  "comprobanteRecibido": true,
+  "montoRecibidoCorrecto": true,
+  "metodoPagoRecibido": "yape",
+  "montoRecibido": 0,
+  "numeroComprobante": "string",
+  "notasAdicionales": "string",
+  "confirmacionEjecucionServicio": true
+}
+```
