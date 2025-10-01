@@ -84,7 +84,18 @@ class ApiService {
         throw new Error(`${response.status}`);
       }
 
-      const data = (await response.json()) as T;
+      const responseText = await response.text();
+      if (responseText === "") {
+        // If the body is empty, return success with null data, as there's nothing to parse.
+        return {
+          success: true,
+          message: "Operación exitosa",
+          data: null as any,
+        };
+      }
+
+      // If we have a body, try to parse it.
+      const data = JSON.parse(responseText) as T;
       return {
         success: true,
         message: "Operación exitosa",
@@ -92,16 +103,29 @@ class ApiService {
       };
     } catch (error) {
       console.error("API Error:", error);
-      const statusCode =
-        error instanceof Error ? parseInt(error.message, 10) : 500;
+      if (error instanceof Error) {
+        const statusCode = parseInt(error.message, 10);
+        if (isNaN(statusCode)) {
+          return {
+            success: false,
+            message: `Fallo en la solicitud a la API: ${error.message}`,
+            data: null as any,
+            statusCode: undefined,
+          };
+        }
+        return {
+          success: false,
+          message: `HTTP error! status: ${statusCode}`,
+          data: null as any,
+          statusCode,
+        };
+      }
+
       return {
         success: false,
-        message:
-          error instanceof Error
-            ? `HTTP error! status: ${statusCode}`
-            : "Ocurrió un error",
+        message: "Ocurrió un error inesperado",
         data: null as any,
-        statusCode,
+        statusCode: 500,
       };
     }
   }
