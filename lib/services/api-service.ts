@@ -389,15 +389,40 @@ class ApiService {
 
   async confirmarPagoRecepcion(
     data: ConfirmacionPagoRecepcionRequest
-  ): Promise<ApiResponse<ConfirmacionPagoRecepcionResponse>> {
-    return this.fetchApi<ConfirmacionPagoRecepcionResponse>(
-      ENV_CONFIG.API.ENDPOINTS.CONFIRMACION_PAGO_RECEPCION,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-      },
-      true
+  ): Promise<
+    (
+      | ApiResponse<MatchServicioResponse>
+      | ApiResponse<ConfirmacionPagoRecepcionResponse>
+    )[]
+  > {
+    /**
+     * 1. Registrar confirmación
+     */
+
+    const confirmarPagoRequest =
+      this.fetchApi<ConfirmacionPagoRecepcionResponse>(
+        ENV_CONFIG.API.ENDPOINTS.CONFIRMACION_PAGO_RECEPCION,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+        },
+        true
+      );
+
+    /**
+     * 2. Actualizar estado de match
+     */
+    const actualizarEstadoMatchRequest = this.actualizarEstadoSolicitud(
+      data.idMatchServicio,
+      "ejecucion"
     );
+
+    const [confirmarPagoResp, actualizarEstadoMatchResp] = await Promise.all([
+      confirmarPagoRequest,
+      actualizarEstadoMatchRequest,
+    ]);
+
+    return [confirmarPagoResp, actualizarEstadoMatchResp];
   }
 
   async confirmarPago(

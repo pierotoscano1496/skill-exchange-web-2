@@ -167,7 +167,12 @@ export async function rechazarSolicitud(
 
 export async function confirmarPagoRecepcion(
   data: ConfirmacionPagoRecepcionRequest
-): Promise<ApiResponse<ConfirmacionPagoRecepcionResponse>> {
+): Promise<
+  (
+    | ApiResponse<MatchServicioResponse>
+    | ApiResponse<ConfirmacionPagoRecepcionResponse>
+  )[]
+> {
   return apiService.confirmarPagoRecepcion(data);
 }
 

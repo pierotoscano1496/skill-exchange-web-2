@@ -22,9 +22,16 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DollarSign, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { getConfirmacionPago, confirmarPagoRecepcion } from "@/lib/actions/data";
+import {
+  getConfirmacionPago,
+  confirmarPagoRecepcion,
+  confirmarPago,
+} from "@/lib/actions/data";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
-import type { ConfirmacionPago, ConfirmacionPagoRecepcionRequest } from "@/lib/types/solicitud-updates";
+import type {
+  ConfirmacionPago,
+  ConfirmacionPagoRecepcionRequest,
+} from "@/lib/types/solicitud-updates";
 
 interface ConfirmarPagoDialogProps {
   open: boolean;
@@ -104,15 +111,15 @@ export function ConfirmarPagoDialog({
         idMatchServicio: solicitud.id,
       };
 
-      const response = await confirmarPagoRecepcion(request);
+      const responses = await confirmarPagoRecepcion(request);
 
-      if (response.success) {
+      if (responses.every((r) => r.success)) {
         onSuccess();
         onOpenChange(false);
         // Reset form
         resetForm();
       } else {
-        console.error("Error al confirmar pago:", response.message);
+        console.error("Error al confirmar pago:", responses[0].message);
       }
     } catch (error) {
       console.error("Error al confirmar pago:", error);
