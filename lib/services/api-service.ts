@@ -1,3 +1,5 @@
+"use server";
+
 import { ENV_CONFIG } from "../config/environment";
 import type {
   ApiResponse,
