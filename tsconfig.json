@@ -2,10 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-<<<<<<< HEAD
-=======
     "target": "ES6",
->>>>>>> dev_v3
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -22,11 +19,7 @@
       }
     ],
     "paths": {
-<<<<<<< HEAD
-      "@/*": ["./src/*"]
-=======
       "@/*": ["./*"]
->>>>>>> dev_v3
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
