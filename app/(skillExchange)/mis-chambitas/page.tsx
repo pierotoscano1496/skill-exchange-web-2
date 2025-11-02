@@ -140,7 +140,7 @@ export default function MisChambitasPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/explorar/${servicio.id}`}>
+                      <Link href={`/explorar/detalle?id=${servicio.id}`}>
                         <Button size="sm" variant="outline">
                           <Eye className="mr-1 h-4 w-4" />
                           Ver
@@ -234,7 +234,7 @@ export default function MisChambitasPage() {
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/explorar/${servicio.id}`}>
+                      <Link href={`/explorar/detalle?id=${servicio.id}`}>
                         <Button size="sm" variant="outline">
                           <Eye className="mr-1 h-4 w-4" />
                           Ver

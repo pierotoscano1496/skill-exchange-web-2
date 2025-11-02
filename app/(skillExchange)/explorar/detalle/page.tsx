@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, ChevronLeft } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,12 +17,10 @@ import type {
 } from "@/lib/types/api-responses";
 import { useUser } from "@/hooks/use-user";
 
-export default function ServiceDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function ServiceDetailPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const servicioId = searchParams.get("id");
   const { user } = useUser();
 
   const [loading, setLoading] = useState(true);
@@ -31,14 +30,20 @@ export default function ServiceDetailPage({
   const [isMatchInProgress, setIsMatchInProgress] = useState(false);
 
   useEffect(() => {
+    if (!servicioId) {
+      setError("No se encontró el identificador del servicio.");
+      setLoading(false);
+      return;
+    }
+
     const fetchServicioData = async () => {
       try {
         setLoading(true);
         const [servicioResponse, reviewsResponse, matchProgressResponse] =
           await Promise.all([
-            getServicioDetalle(id),
-            getServicioReviews(id),
-            checkAvailableMatchForServicio(id),
+            getServicioDetalle(servicioId),
+            getServicioReviews(servicioId),
+            checkAvailableMatchForServicio(servicioId),
           ]);
 
         if (!servicioResponse.success) {
@@ -64,10 +69,10 @@ export default function ServiceDetailPage({
     };
 
     fetchServicioData();
-  }, [id]);
+  }, [servicioId]);
 
   const handleBack = () => {
-    window.history.back();
+    router.back();
   };
 
   if (loading) {
