@@ -379,7 +379,9 @@ export default function ExplorarPage() {
                       </span>
                       <Button
                         size="sm"
-                        onClick={() => router.push(`/explorar/${servicio.id}`)}
+                        onClick={() =>
+                          router.push(`/explorar/detalle?id=${servicio.id}`)
+                        }
                       >
                         Ver detalles
                       </Button>
