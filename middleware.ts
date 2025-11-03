@@ -13,23 +13,6 @@ function isPublicPath(path: string) {
   );
 }
 
-function getJwtExpiration(token: string): number | null {
-  try {
-    const payload = token.split(".")[1];
-    if (!payload) return null;
-    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const padded = base64.padEnd(
-      base64.length + ((4 - (base64.length % 4)) % 4),
-      "="
-    );
-    const json = JSON.parse(atob(padded));
-    // 'exp' viene en segundos UNIX
-    return typeof json?.exp === "number" ? json.exp : null;
-  } catch {
-    return null;
-  }
-}
-
 // Decodifica el JWT y verifica expiración
 function isTokenExpired(token: string): boolean {
   try {
@@ -44,6 +27,15 @@ function isTokenExpired(token: string): boolean {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Para static export, el middleware solo se ejecuta en desarrollo
+  // En producción, la autenticación se maneja en el cliente
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.NEXT_PUBLIC_STATIC_EXPORT === "true"
+  ) {
+    return NextResponse.next();
+  }
 
   if (
     pathname === "/favicon.ico" ||

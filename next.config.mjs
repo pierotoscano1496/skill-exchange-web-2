@@ -10,11 +10,19 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  trailingSlash: true,
   experimental: {
     serverActions: {
       bodySizeLimit: "50mb",
     },
   },
+  // Configuración para export estático con funcionalidades híbridas
+  generateBuildId: async () => {
+    return "build-" + Date.now();
+  },
+  // Deshabilitar funcionalidades que no funcionan en static export
+  // Server Actions se ejecutarán en el cliente
+  // API routes se mantendrán para desarrollo pero no estarán disponibles en producción
 };
 
 export default nextConfig;
