@@ -12,7 +12,7 @@ import {
   ModalidadPagoServicio,
   RecursoMultimediaServicioResponse,
 } from "@/lib/types/api-responses";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ModalidadPagoTipo, ServicioTipoPrecio } from "@/lib/constants/enums";
 import { EditPaymentMethodDialog } from "@/components/servicios/edit-payment-method-dialog";
@@ -55,9 +55,9 @@ export default function Page() {
     string[]
   >([]);
 
-  const params = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const { idServicio } = params;
+  const idServicio = searchParams.get("idServicio");
 
   useEffect(() => {
     if (idServicio) {
@@ -134,12 +134,10 @@ export default function Page() {
   };
 
   const addMetodoPago = (metodo: ModalidadPagoServicio, yapeFile?: File) => {
-    console.log("Agregando método");
     if (
       metodo.tipo === ModalidadPagoTipo.YAPE &&
       metodosPago.some((m) => m.tipo === ModalidadPagoTipo.YAPE)
     ) {
-      console.warn("Solo se puede agregar un método de pago Yape.");
       return;
     }
     setMetodosPago([...metodosPago, metodo]);
@@ -181,6 +179,10 @@ export default function Page() {
       setNewMultimedia([...newMultimedia, ...Array.from(e.target.files)]);
     }
   };
+
+  if (!idServicio) {
+    return <div>Falta el parámetro idServicio.</div>;
+  }
 
   if (!servicio) {
     return <div>Cargando...</div>;
@@ -402,3 +404,4 @@ export default function Page() {
     </div>
   );
 }
+

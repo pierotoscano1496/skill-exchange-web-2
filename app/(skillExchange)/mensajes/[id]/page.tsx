@@ -1,8 +1,19 @@
-import { cookies } from "next/headers";
 import ChatRoomClient from "./ChatRoomClient";
-import { getChatConversation } from "@/lib/actions/data";
-import { AUTH_COOKIE } from "@/lib/constants/auth";
+import {
+  getChatConversation,
+  getOwnChatConversations,
+} from "@/lib/actions/data";
 import { getToken } from "@/app/(auth)/actions";
+
+export async function generateStaticParams() {
+  try {
+    const resp = await getOwnChatConversations();
+    return resp.data.map((conv) => ({ id: conv.conversationId }));
+  } catch (e) {
+    console.error("Error al buscar obtener datos de conversación:", e);
+    return [] as { id: string }[];
+  }
+}
 
 export default async function ChatPage({ params }: { params: { id: string } }) {
   const { id: conversationId } = params;

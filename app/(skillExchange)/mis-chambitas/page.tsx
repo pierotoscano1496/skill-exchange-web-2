@@ -146,7 +146,7 @@ export default function MisChambitasPage() {
                           Ver
                         </Button>
                       </Link>
-                      <Link href={`/mis-chambitas/editar/${servicio.id}`}>
+                      <Link href={`/mis-chambitas/editar?idServicio=${servicio.id}`}>
                         <Button size="sm">
                           <Edit className="mr-1 h-4 w-4" />
                           Editar
@@ -240,7 +240,7 @@ export default function MisChambitasPage() {
                           Ver
                         </Button>
                       </Link>
-                      <Link href={`/mis-chambitas/editar/${servicio.id}`}>
+                      <Link href={`/mis-chambitas/editar?idServicio=${servicio.id}`}>
                         <Button size="sm">
                           <Edit className="mr-1 h-4 w-4" />
                           Editar
