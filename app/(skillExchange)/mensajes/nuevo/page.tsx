@@ -32,8 +32,6 @@ import {
 } from "@/components/ui/popover";
 import { chatMessagingService } from "@/lib/services/chat-messaging-service";
 
-import { apiService } from "@/lib/services/api-service";
-
 interface Usuario {
   id: string;
   nombre: string;
@@ -82,19 +80,24 @@ export default function NuevoMensajePage() {
     setError(null);
 
     try {
-      const resp = await apiService.createChatConversation({
+      const res = await fetch("/api/chat/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           idReceptor: destinatario.id,
           mensaje: mensaje.trim(),
-        });
+        }),
+      });
+      const resp = await res.json();
 
-        if (resp.success && resp.data?.id) {
-          setExito(true);
-          setTimeout(() => {
-            router.push("/mensajes");
-          }, 2000);
-        } else {
-          setError("No se pudo crear la conversación. Inténtalo de nuevo.");
-        }
+      if (resp.success && resp.data?.id) {
+        setExito(true);
+        setTimeout(() => {
+          router.push("/mensajes");
+        }, 2000);
+      } else {
+        setError("No se pudo crear la conversación. Inténtalo de nuevo.");
+      }
     } catch (err) {
       setError("Error al enviar el mensaje. Inténtalo de nuevo.");
       console.error("Error enviando mensaje:", err);

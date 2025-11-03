@@ -1,4 +1,4 @@
-"use server";
+// Note: This module is server-only by usage, no explicit directive needed.
 
 import { ENV_CONFIG } from "../config/environment";
 import type {
