@@ -11,10 +11,9 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
+  // Deshabilitar Server Actions para static export
   experimental: {
-    serverActions: {
-      bodySizeLimit: "50mb",
-    },
+    serverActions: false,
   },
   // Configuración para export estático con funcionalidades híbridas
   generateBuildId: async () => {
