@@ -1,4 +1,4 @@
-import Usuario from "@/interfaces/Usuario";
+import Usuario from "@/src/interfaces/Usuario";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {

@@ -25,16 +25,20 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useUser } from "@/hooks/use-user";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { logoutAction } from "@/app/(auth)/actions";
 
 export function SiteHeader() {
+  const router = useRouter();
   const { toggleSidebar } = useSidebar();
   const { user, loading } = useUser();
 
   const handleLogout = async () => {
     const logoutSuccess = await logoutAction();
-    if (logoutSuccess.ok) redirect("/login");
+    if (logoutSuccess.ok) {
+      router.replace("/login");
+      router.refresh();
+    }
   };
 
   if (loading) {

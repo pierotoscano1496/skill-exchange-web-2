@@ -11,10 +11,7 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  // Deshabilitar Server Actions para static export
-  experimental: {
-    serverActions: false,
-  },
+  // Server Actions config removed for Next 15 compatibility (no server actions used)
   // Configuración para export estático con funcionalidades híbridas
   generateBuildId: async () => {
     return "build-" + Date.now();

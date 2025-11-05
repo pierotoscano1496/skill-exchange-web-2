@@ -23,9 +23,9 @@ const ChatApplication: React.FC<ChatProps> = ({ roomId }) => {
 
     useEffect(() => {
         const socket = new WebSocket(socketUrl);
-        const token=cookies.
+        const token=cookies().get("Authorization")?.value;
         stompClient = new Client({
-            brokerURL: `ws://localhost:9081/api/websockets?token=${}`
+            brokerURL: `ws://localhost:9081/api/websockets?token=${token}`
         });
 
         stompClient.onConnect = (frame) => {
