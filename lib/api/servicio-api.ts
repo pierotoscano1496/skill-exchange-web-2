@@ -6,6 +6,7 @@ import type {
   ServicioModalidad,
   ServicioTipoPrecio,
 } from "../constants/enums";
+import { ENV_CONFIG } from "../config/environment";
 
 export interface SkillAPI {
   idServicio?: string;
@@ -73,7 +74,7 @@ export interface ServicioResponse {
 }
 
 // Configuración de la API
-const API_BASE_URL = "http://localhost:9081/api";
+const API_BASE_URL = ENV_CONFIG.API.BASE_URL;
 
 // Función para subir archivos a S3
 export async function uploadFile(file: File): Promise<string> {
@@ -81,7 +82,7 @@ export async function uploadFile(file: File): Promise<string> {
   formData.append("file", file);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/upload`, {
+    const response = await fetch(`${API_BASE_URL}${ENV_CONFIG.API.ENDPOINTS.UPLOAD}`, {
       method: "POST",
       body: formData,
     });
@@ -113,7 +114,7 @@ export async function crearServicio(
       }
     });
 
-    const response = await fetch(`${API_BASE_URL}/servicio`, {
+    const response = await fetch(`${API_BASE_URL}${ENV_CONFIG.API.ENDPOINTS.SERVICIOS}`, {
       method: "POST",
       body: formData, // FormData se encarga de los headers
     });
@@ -138,7 +139,7 @@ export async function obtenerSkills(): Promise<
   { id: string; nombre: string; categoria: string }[]
 > {
   try {
-    const response = await fetch(`${API_BASE_URL}/skills`, {
+    const response = await fetch(`${API_BASE_URL}${ENV_CONFIG.API.ENDPOINTS.SKILLS}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

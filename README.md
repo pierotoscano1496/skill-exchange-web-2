@@ -45,7 +45,7 @@ Este proyecto ha sido configurado para compilar estáticamente mientras mantiene
 Crear un archivo `.env.local` con:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://tu-backend.com/api
+NEXT_PUBLIC_API_BASE_URL=https://tu-backend.com/api
 NEXT_PUBLIC_STATIC_EXPORT=true
 ```
 
