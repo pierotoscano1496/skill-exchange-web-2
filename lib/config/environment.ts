@@ -22,6 +22,7 @@ export const ENV_CONFIG = {
       CHAT: "/chat",
       UPLOAD: "/upload",
       CHAT_CONVERSATION_BY_ID: "/chat",
+      USUARIO: "/usuario",
       USUARIO_AUTH: "/usuario/auth",
       CHECK_USER_EXISTS: "/usuario/exists",
       USUARIO_OWN_SKILLS_INFO: "/usuario/own/skills/info",

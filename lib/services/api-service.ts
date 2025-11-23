@@ -722,7 +722,7 @@ class ApiService {
   }
 
   async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
-    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO_AUTH, {
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {
       method: "POST",
       body: JSON.stringify(data),
     });
