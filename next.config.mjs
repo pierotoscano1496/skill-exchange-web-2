@@ -10,11 +10,15 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "50mb",
-    },
+  trailingSlash: true,
+  // Server Actions config removed for Next 15 compatibility (no server actions used)
+  // Configuración para export estático con funcionalidades híbridas
+  generateBuildId: async () => {
+    return "build-" + Date.now();
   },
+  // Deshabilitar funcionalidades que no funcionan en static export
+  // Server Actions se ejecutarán en el cliente
+  // API routes se mantendrán para desarrollo pero no estarán disponibles en producción
 };
 
 export default nextConfig;

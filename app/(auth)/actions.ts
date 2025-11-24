@@ -1,13 +1,37 @@
-"use server";
+"use client";
 
-import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import { ENV_CONFIG } from "@/lib/config/environment";
 import { AUTH_COOKIE, USER_COOKIE } from "@/lib/constants/auth";
 import { apiService } from "@/lib/services/api-service";
-import { Usuario } from "@/lib/types/api-responses";
+import type { Usuario } from "@/lib/types/api-responses";
 
 type JwtPayload = { exp: number; [k: string]: unknown };
+
+// Cookie helpers (client-side)
+function setCookie(
+  name: string,
+  value: string,
+  opts: { expires?: Date; path?: string; secure?: boolean; sameSite?: "lax" | "strict" | "none" } = {}
+) {
+  let cookie = `${name}=${encodeURIComponent(value)}`;
+  if (opts.expires) cookie += `; Expires=${opts.expires.toUTCString()}`;
+  cookie += `; Path=${opts.path ?? "/"}`;
+  if (opts.secure) cookie += "; Secure";
+  if (opts.sameSite) cookie += `; SameSite=${opts.sameSite}`;
+  document.cookie = cookie;
+}
+
+function deleteCookie(name: string) {
+  document.cookie = `${name}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/`;
+}
+
+function readCookie(name: string): string | undefined {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`))
+    ?.split("=")[1];
+}
 
 export async function loginAction(email: string, password: string) {
   try {
@@ -34,24 +58,23 @@ export async function loginAction(email: string, password: string) {
     const { exp } = jwtDecode<JwtPayload>(token);
     const expires = new Date(exp * 1000);
 
-    (await cookies()).set(AUTH_COOKIE, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+    // Guardar token (no httpOnly en static export)
+    setCookie(AUTH_COOKIE, token, {
       sameSite: "lax",
-      path: "/",
+      secure: process.env.NODE_ENV === "production",
       expires,
     });
 
-    const usuario: Usuario = (await apiService.getUsuario()).data;
+    // Obtener usuario y guardarlo en cookie legible por el cliente
+    const usuarioResp = await apiService.getUsuario();
+    const usuario: Usuario | null = usuarioResp?.data ?? null;
     if (!usuario) {
       return { ok: false, error: "Usuario no encontrado." };
     }
 
-    (await cookies()).set(USER_COOKIE, JSON.stringify(usuario), {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+    setCookie(USER_COOKIE, JSON.stringify(usuario), {
       sameSite: "lax",
-      path: "/",
+      secure: process.env.NODE_ENV === "production",
       expires,
     });
 
@@ -63,34 +86,33 @@ export async function loginAction(email: string, password: string) {
 }
 
 export async function logoutAction() {
-  let token = (await cookies()).get(AUTH_COOKIE)?.value;
-  if (token) {
-    const res = await fetch(
-      `${ENV_CONFIG.API.BASE_URL}${ENV_CONFIG.API.ENDPOINTS.LOGOUT}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token.startsWith("Bearer ")
-            ? token
-            : `Bearer ${token}`,
-        },
-        cache: "no-store",
-      }
-    );
-
-    if (!res.ok) {
-      return { ok: false, error: "Error al cerrar sesión." };
+  try {
+    const token = readCookie(AUTH_COOKIE);
+    if (token) {
+      await fetch(
+        `${ENV_CONFIG.API.BASE_URL}${ENV_CONFIG.API.ENDPOINTS.LOGOUT}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token.startsWith("Bearer ")
+              ? token
+              : `Bearer ${token}`,
+          },
+          cache: "no-store",
+        }
+      );
     }
-
-    (await cookies()).delete(AUTH_COOKIE);
-    (await cookies()).delete(USER_COOKIE);
+    deleteCookie(AUTH_COOKIE);
+    deleteCookie(USER_COOKIE);
     return { ok: true };
+  } catch {
+    return { ok: false, error: "Error al cerrar sesión." };
   }
-
-  return { ok: false, error: "Usuario no autenticado." };
 }
 
 export async function getToken() {
-  return (await cookies()).get(AUTH_COOKIE)?.value || "";
+  if (typeof window === "undefined") return "";
+  const v = readCookie(AUTH_COOKIE);
+  return v ? decodeURIComponent(v) : "";
 }

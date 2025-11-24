@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { apiService } from "../services/api-service";
 import type {

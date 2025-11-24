@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/hooks/use-user";
+import ChatPageClient from "./ChatPageClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +33,11 @@ interface ConversacionPreview {
 
 export default function MensajesBandejaPage() {
   const router = useRouter();
+  const search = useSearchParams();
+  const chatId = search.get("chatId");
+  if (chatId) {
+    return <ChatPageClient conversationId={chatId} />;
+  }
   const [busqueda, setBusqueda] = useState("");
   const [conversaciones, setConversaciones] = useState<ConversacionPreview[]>(
     []
@@ -108,7 +114,7 @@ export default function MensajesBandejaPage() {
   const totalNoLeidos = conversaciones.filter((c) => !c.enviadoPorMi).length;
 
   const abrirChat = (chatId: string) => {
-    router.push(`/mensajes/${chatId}`);
+    router.push(`/mensajes?chatId=${encodeURIComponent(chatId)}`);
   };
 
   return (

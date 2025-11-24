@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,7 +34,7 @@ const formatearInfoModalidad = (modalidad: ModalidadPagoServicio) => {
   }
 };
 
-export default function Page() {
+function EditarServicioPageInner() {
   const [servicio, setServicio] = useState<ServicioDetalle | null>(null);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -405,3 +405,12 @@ export default function Page() {
   );
 }
 
+
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <EditarServicioPageInner />
+    </Suspense>
+  );
+}

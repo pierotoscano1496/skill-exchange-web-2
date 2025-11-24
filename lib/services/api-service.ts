@@ -42,7 +42,6 @@ import type {
   ServicioRequestBody,
   ServicioResponse,
 } from "../api/servicio-api";
-import { cookies } from "next/headers";
 import { AUTH_COOKIE } from "../constants/auth";
 import { RegisterUserRequest } from "../types/user-registration";
 import { MatchServicioEstado, UsuarioTipoDocumento } from "../constants/enums";
@@ -64,7 +63,23 @@ class ApiService {
       }
 
       if (isPrivate) {
-        let token = (await cookies()).get(AUTH_COOKIE)?.value;
+        let token: string | undefined;
+        if (typeof window !== "undefined") {
+          // Cliente: obtener token de cookies del navegador
+          token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith(`${AUTH_COOKIE}=`))
+            ?.split("=")[1];
+        } else {
+          // Servidor: intentar obtener de headers (aunque en static export esto no funcionará)
+          try {
+            const { cookies } = await import("next/headers");
+            token = (await cookies()).get(AUTH_COOKIE)?.value;
+          } catch {
+            // En static export, cookies no están disponibles
+            token = undefined;
+          }
+        }
         if (token) {
           headers.Authorization = token.startsWith("Bearer ")
             ? token
@@ -707,7 +722,7 @@ class ApiService {
   }
 
   async registerUser(data: RegisterUserRequest): Promise<ApiResponse<Usuario>> {
-    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO_AUTH, {
+    return this.fetchApi<Usuario>(ENV_CONFIG.API.ENDPOINTS.USUARIO, {
       method: "POST",
       body: JSON.stringify(data),
     });
