@@ -29,17 +29,18 @@ jobs:
       - name: Compress build output
         run: zip -r out.zip ./out/
 
-      - name: Deploy to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy and extract to SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # Sube desde la raíz del proyecto
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          include: out.zip # Solo sube el ZIP
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/out/**  # Excluye la carpeta original
+          local_path: ./out.zip
+          remote_path: ${{ secrets.FTP_REMOTE_DIR }}
+          sftp_only: true
+          post_upload_commands: |
+            cd ${{ secrets.FTP_REMOTE_DIR }}
+            unzip -o out.zip
+            mv out/* .
+            rmdir out
+            rm out.zip
