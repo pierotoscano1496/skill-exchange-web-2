@@ -26,15 +26,20 @@ jobs:
       - name: Build application
         run: npm run build
 
+      - name: Compress build output
+        run: zip -r out.zip ./out/
+
       - name: Deploy to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4 # Acción popular para FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./out/
+          local-dir: ./ # Sube desde la raíz del proyecto
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          include: out.zip # Solo sube el ZIP
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/out/**  # Excluye la carpeta original
