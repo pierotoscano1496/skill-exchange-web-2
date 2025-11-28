@@ -749,6 +749,27 @@ class ApiService {
       true
     );
   }
+
+  async agendarReunion(data: {
+    idMatchServicio: string;
+    plataforma: string;
+    fechaHora: string;
+    descripcion: string;
+  }): Promise<ApiResponse<any>> {
+    return this.fetchApi<any>(
+      "/api/match/reunion",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          matchServicio: { id: data.idMatchServicio },
+          plataforma: data.plataforma,
+          fechaHora: data.fechaHora,
+          descripcion: data.descripcion,
+        }),
+      },
+      true
+    );
+  }
 }
 
 export const apiService = new ApiService();

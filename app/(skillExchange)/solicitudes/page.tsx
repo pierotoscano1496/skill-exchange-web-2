@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Play,
   Square,
+  Video,
 } from "lucide-react";
 import { getSolicitudesPrestamista } from "@/lib/actions/data";
 import { useUser } from "@/hooks/use-user";
@@ -26,6 +27,7 @@ import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicit
 import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog";
 import { ConfirmarPagoDialog } from "@/components/solicitudes/confirmar-pago-dialog";
 import { FinalizarServicioDialog } from "@/components/solicitudes/finalizar-servicio-dialog";
+import { AgendarReunionDialog } from "@/components/solicitudes/agendar-reunion-dialog";
 import { MatchServicioEstado } from "@/lib/constants/enums";
 
 export function getEstadoBadge(estado: string) {
@@ -86,6 +88,7 @@ export default function SolicitudesRecibidasPage() {
   const [dialogoRechazar, setDialogoRechazar] = useState(false);
   const [dialogoConfirmarPago, setDialogoConfirmarPago] = useState(false);
   const [dialogoFinalizar, setDialogoFinalizar] = useState(false);
+  const [dialogoAgendarReunion, setDialogoAgendarReunion] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
@@ -202,6 +205,17 @@ export default function SolicitudesRecibidasPage() {
       case "ejecucion":
         return (
           <div className="flex gap-2 pt-2">
+            <Button
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => {
+                setSolicitudSeleccionada(solicitud);
+                setDialogoAgendarReunion(true);
+              }}
+            >
+              <Video className="w-4 h-4 mr-1" />
+              Agendar Reunión
+            </Button>
             <Button
               size="sm"
               className="bg-green-600 hover:bg-green-700"
@@ -453,6 +467,12 @@ export default function SolicitudesRecibidasPage() {
           <FinalizarServicioDialog
             open={dialogoFinalizar}
             onOpenChange={setDialogoFinalizar}
+            solicitud={solicitudSeleccionada}
+            onSuccess={handleOperacionExitosa}
+          />
+          <AgendarReunionDialog
+            open={dialogoAgendarReunion}
+            onOpenChange={setDialogoAgendarReunion}
             solicitud={solicitudSeleccionada}
             onSuccess={handleOperacionExitosa}
           />
