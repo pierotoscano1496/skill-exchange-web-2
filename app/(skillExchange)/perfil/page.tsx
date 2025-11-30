@@ -67,6 +67,7 @@ import {
   getOwnSkillsInfo,
   getSkillsInfo,
 } from "@/lib/actions/data";
+import { DisponibilidadHorariaForm } from "@/components/disponibilidad-horaria-form";
 import {
   Select,
   SelectContent,
@@ -401,16 +402,11 @@ export default function ProfilePage() {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="w-full rounded-none border-b">
-                <TabsTrigger value="personal" className="flex-1">
-                  Información personal
-                </TabsTrigger>
-                <TabsTrigger value="skills" className="flex-1">
-                  Habilidades
-                </TabsTrigger>
-                <TabsTrigger value="social" className="flex-1">
-                  Redes sociales
-                </TabsTrigger>
+              <TabsList className="w-full rounded-none border-b grid grid-cols-4">
+                <TabsTrigger value="personal">Información personal</TabsTrigger>
+                <TabsTrigger value="skills">Habilidades</TabsTrigger>
+                <TabsTrigger value="disponibilidad">Disponibilidad</TabsTrigger>
+                <TabsTrigger value="social">Redes sociales</TabsTrigger>
               </TabsList>
 
               {/* Pestaña de información personal */}
@@ -804,6 +800,11 @@ export default function ProfilePage() {
                     </div>
                   )}
                 </div>
+              </TabsContent>
+
+              {/* Pestaña de disponibilidad */}
+              <TabsContent value="disponibilidad" className="p-6">
+                <DisponibilidadHorariaForm />
               </TabsContent>
 
               {/* Pestaña de redes sociales */}

@@ -770,6 +770,23 @@ class ApiService {
       true
     );
   }
+
+  async setDisponibilidad(
+    data: {
+      dia: string;
+      horaInicio: string;
+      horaFin: string;
+    }[]
+  ): Promise<ApiResponse<any[]>> {
+    return this.fetchApi<any[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_DISPONIBILIDAD,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
+  }
 }
 
 export const apiService = new ApiService();

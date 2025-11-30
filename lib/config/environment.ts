@@ -36,6 +36,7 @@ export const ENV_CONFIG = {
       DELETE_SKILL_FROM_PROFILE: "/usuario/own/skill/$1",
       CONFIRMACION_PAGO_RECEPCION: "/match/confirmacion-recepcion-pago",
       MATCH_REUNION: "/match/reunion",
+      USUARIO_DISPONIBILIDAD: "/usuario/own/disponibilidad",
       SIMPLE_CHECK: "/simple-check",
     },
   },
