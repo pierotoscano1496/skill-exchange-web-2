@@ -53,7 +53,7 @@ export function DisponibilidadHorariaForm() {
             horaFin: item.horaFin.slice(0, 5),
           }));
           setDisponibilidad(slots);
-          setInitialDisponibilidad(slots);
+          setInitialDisponibilidad(slots.map((slot) => ({ ...slot })));
         }
       } catch (error) {
         console.error("Error fetching disponibilidad:", error);
@@ -219,7 +219,9 @@ export function DisponibilidadHorariaForm() {
 
       if (response.success) {
         // Actualizar initialDisponibilidad con la nueva data
-        setInitialDisponibilidad([...disponibilidad]);
+        setInitialDisponibilidad(
+          [...disponibilidad].map((slot) => ({ ...slot }))
+        );
         toast.success("Disponibilidad guardada exitosamente");
       } else {
         if (response.statusCode === 400) {
