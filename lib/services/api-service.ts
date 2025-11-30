@@ -757,7 +757,7 @@ class ApiService {
     descripcion: string;
   }): Promise<ApiResponse<any>> {
     return this.fetchApi<any>(
-      "/api/match/reunion",
+      ENV_CONFIG.API.ENDPOINTS.MATCH_REUNION,
       {
         method: "POST",
         body: JSON.stringify({
