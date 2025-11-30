@@ -26,6 +26,9 @@ import type {
   SkillAsignadoResponse,
   CreateFirstMatchServicioBody,
   UpdateServicioRequestBody,
+  DisponibilidadUsuario,
+  UsuarioDisponibilidadBody,
+  UsuarioDisponibilidadResponse,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -772,18 +775,22 @@ class ApiService {
   }
 
   async setDisponibilidad(
-    data: {
-      dia: string;
-      horaInicio: string;
-      horaFin: string;
-    }[]
-  ): Promise<ApiResponse<any[]>> {
-    return this.fetchApi<any[]>(
+    data: UsuarioDisponibilidadBody[]
+  ): Promise<ApiResponse<UsuarioDisponibilidadResponse[]>> {
+    return this.fetchApi<UsuarioDisponibilidadResponse[]>(
       ENV_CONFIG.API.ENDPOINTS.USUARIO_DISPONIBILIDAD,
       {
         method: "POST",
         body: JSON.stringify(data),
       },
+      true
+    );
+  }
+
+  async getDisponibilidad(): Promise<ApiResponse<DisponibilidadUsuario[]>> {
+    return this.fetchApi<DisponibilidadUsuario[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_DISPONIBILIDAD,
+      {},
       true
     );
   }

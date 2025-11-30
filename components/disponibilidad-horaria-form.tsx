@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -8,14 +8,20 @@ import { Input } from "@/components/ui/input";
 import { Plus, Trash2, Clock, Loader2 } from "lucide-react";
 import { apiService } from "@/lib/services/api-service";
 import { toast } from "sonner";
+import type {
+  DisponibilidadUsuario,
+  UsuarioDisponibilidadBody,
+  DiaSemana,
+} from "@/lib/types/api-responses";
 
 interface DisponibilidadSlot {
-  dia: string;
+  id?: string;
+  dia: DiaSemana;
   horaInicio: string;
   horaFin: string;
 }
 
-const DIAS_SEMANA = [
+const DIAS_SEMANA: { value: DiaSemana; label: string }[] = [
   { value: "lunes", label: "Lunes" },
   { value: "martes", label: "Martes" },
   { value: "miercoles", label: "Miércoles" },
@@ -29,9 +35,38 @@ export function DisponibilidadHorariaForm() {
   const [disponibilidad, setDisponibilidad] = useState<DisponibilidadSlot[]>(
     []
   );
+  const [initialDisponibilidad, setInitialDisponibilidad] = useState<
+    DisponibilidadSlot[]
+  >([]);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
-  const agregarSlot = (dia: string) => {
+  useEffect(() => {
+    const fetchDisponibilidad = async () => {
+      try {
+        const response = await apiService.getDisponibilidad();
+        if (response.success && response.data) {
+          const slots = response.data.map((item) => ({
+            id: item.id,
+            dia: item.dia,
+            horaInicio: item.horaInicio.slice(0, 5), // Remove seconds
+            horaFin: item.horaFin.slice(0, 5),
+          }));
+          setDisponibilidad(slots);
+          setInitialDisponibilidad(slots);
+        }
+      } catch (error) {
+        console.error("Error fetching disponibilidad:", error);
+        toast.error("Error al cargar la disponibilidad");
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchDisponibilidad();
+  }, []);
+
+  const agregarSlot = (dia: DiaSemana) => {
     const nuevoSlot: DisponibilidadSlot = {
       dia,
       horaInicio: "09:00",
@@ -51,7 +86,11 @@ export function DisponibilidadHorariaForm() {
     valor: string
   ) => {
     const nuevaDisponibilidad = [...disponibilidad];
-    nuevaDisponibilidad[index][campo] = valor;
+    if (campo === "dia") {
+      nuevaDisponibilidad[index][campo] = valor as DiaSemana;
+    } else {
+      nuevaDisponibilidad[index][campo] = valor;
+    }
     setDisponibilidad(nuevaDisponibilidad);
   };
 
@@ -101,6 +140,60 @@ export function DisponibilidadHorariaForm() {
     return null;
   };
 
+  const generarOperaciones = (): UsuarioDisponibilidadBody[] => {
+    const operaciones: UsuarioDisponibilidadBody[] = [];
+
+    // Crear un mapa de slots iniciales por id
+    const initialMap = new Map(
+      initialDisponibilidad.map((slot) => [slot.id, slot])
+    );
+    const currentMap = new Map(disponibilidad.map((slot) => [slot.id, slot]));
+
+    // Detectar DELETE: slots en initial pero no en current
+    for (const initialSlot of initialDisponibilidad) {
+      if (!currentMap.has(initialSlot.id)) {
+        operaciones.push({
+          id: initialSlot.id,
+          accion: "DELETE",
+          dia: initialSlot.dia,
+          horaInicio: initialSlot.horaInicio,
+          horaFin: initialSlot.horaFin,
+        });
+      }
+    }
+
+    // Detectar CREATE y UPDATE
+    for (const currentSlot of disponibilidad) {
+      const initialSlot = initialMap.get(currentSlot.id);
+      if (!initialSlot) {
+        // CREATE: slot nuevo
+        operaciones.push({
+          accion: "CREATE",
+          dia: currentSlot.dia,
+          horaInicio: currentSlot.horaInicio,
+          horaFin: currentSlot.horaFin,
+        });
+      } else {
+        // Verificar si cambió
+        if (
+          initialSlot.dia !== currentSlot.dia ||
+          initialSlot.horaInicio !== currentSlot.horaInicio ||
+          initialSlot.horaFin !== currentSlot.horaFin
+        ) {
+          operaciones.push({
+            id: currentSlot.id,
+            accion: "UPDATE",
+            dia: currentSlot.dia,
+            horaInicio: currentSlot.horaInicio,
+            horaFin: currentSlot.horaFin,
+          });
+        }
+      }
+    }
+
+    return operaciones;
+  };
+
   const guardarDisponibilidad = async () => {
     const error = validarSlots();
     if (error) {
@@ -108,17 +201,25 @@ export function DisponibilidadHorariaForm() {
       return;
     }
 
+    const operaciones = generarOperaciones();
+    if (operaciones.length === 0) {
+      toast.info("No hay cambios para guardar");
+      return;
+    }
+
     try {
       setLoading(true);
-      const data = disponibilidad.map((slot) => ({
-        dia: slot.dia,
-        horaInicio: `${slot.horaInicio}:00`,
-        horaFin: `${slot.horaFin}:00`,
+      const data = operaciones.map((op) => ({
+        ...op,
+        horaInicio: `${op.horaInicio}:00`,
+        horaFin: `${op.horaFin}:00`,
       }));
 
       const response = await apiService.setDisponibilidad(data);
 
       if (response.success) {
+        // Actualizar initialDisponibilidad con la nueva data
+        setInitialDisponibilidad([...disponibilidad]);
         toast.success("Disponibilidad guardada exitosamente");
       } else {
         if (response.statusCode === 400) {
@@ -145,15 +246,24 @@ export function DisponibilidadHorariaForm() {
     return acc;
   }, {} as Record<string, (DisponibilidadSlot & { index: number })[]>);
 
+  if (fetching) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <Loader2 className="w-6 h-6 animate-spin" />
+        <span className="ml-2">Cargando disponibilidad...</span>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h3 className="text-lg font-semibold mb-2">
-          Configura tu disponibilidad semanal
+          Tu disponibilidad semanal
         </h3>
         <p className="text-sm text-muted-foreground">
-          Selecciona los días y horarios en los que estás disponible para
-          servicios
+          Revisa y configura los días y horarios en los que estás disponible
+          para servicios
         </p>
       </div>
 
