@@ -319,6 +319,15 @@ export interface ChatConversation {
   messages: ChatMessage[];
 }
 
+export interface ReunionFutura {
+  id: string;
+  idMatchServicio: string;
+  plataforma: string;
+  linkReunion: string;
+  fechaHora: string;
+  descripcion: string;
+}
+
 export type DiaSemana =
   | "lunes"
   | "martes"

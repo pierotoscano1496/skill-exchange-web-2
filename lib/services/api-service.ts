@@ -29,6 +29,7 @@ import type {
   DisponibilidadUsuario,
   UsuarioDisponibilidadBody,
   UsuarioDisponibilidadResponse,
+  ReunionFutura,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -767,6 +768,16 @@ class ApiService {
       },
       true
     );
+  }
+
+  async getReunionesFuturas(
+    idMatch: string
+  ): Promise<ApiResponse<ReunionFutura[]>> {
+    const endpoint = ENV_CONFIG.API.ENDPOINTS.MATCH_REUNIONES_FUTURAS.replace(
+      "$1",
+      idMatch
+    );
+    return this.fetchApi<ReunionFutura[]>(endpoint, {}, true);
   }
 
   async setDisponibilidad(

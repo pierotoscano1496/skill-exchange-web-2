@@ -25,6 +25,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@/components/ui/tabs";
 import { RealizarPagoDialog } from "@/components/solicitudes/realizar-pago-dialog";
 import { AgendarReunionDialog } from "@/components/solicitudes/agendar-reunion-dialog";
+import { ReunionesFuturas } from "@/components/reuniones-futuras";
 import { useRouter } from "next/navigation";
 
 export default function SolicitudesEnviadasPage() {
@@ -146,6 +147,12 @@ export default function SolicitudesEnviadasPage() {
           </div>
 
           {renderAcciones(solicitud)}
+
+          {solicitud.estado === "ejecucion" && (
+            <div className="mt-4 pt-4 border-t">
+              <ReunionesFuturas idMatch={solicitud.id} />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
