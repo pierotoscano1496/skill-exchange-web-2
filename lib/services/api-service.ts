@@ -763,12 +763,7 @@ class ApiService {
       ENV_CONFIG.API.ENDPOINTS.MATCH_REUNION,
       {
         method: "POST",
-        body: JSON.stringify({
-          matchServicio: { id: data.idMatchServicio },
-          plataforma: data.plataforma,
-          fechaHora: data.fechaHora,
-          descripcion: data.descripcion,
-        }),
+        body: JSON.stringify(data),
       },
       true
     );
