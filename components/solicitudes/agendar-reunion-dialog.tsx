@@ -89,7 +89,11 @@ export function AgendarReunionDialog({
         setPlataforma("zoom");
       } else {
         if (response.statusCode === 400) {
-          toast.error("Verifica los datos e intenta nuevamente");
+          // Mostrar mensaje específico del backend, especialmente para disponibilidad
+          toast.error(
+            response.message ||
+              "La reunión no puede ser agendada en este horario. Verifica la disponibilidad del proveedor."
+          );
         } else if (response.statusCode === 401) {
           toast.error("Sesión expirada. Inicia sesión nuevamente");
         } else if (response.statusCode === 500) {
