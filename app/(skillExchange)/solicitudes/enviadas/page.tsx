@@ -16,6 +16,7 @@ import {
   Play,
   Square,
   MessageSquare,
+  Video,
 } from "lucide-react";
 import type { SolicitudRecibida } from "@/lib/types/api-responses";
 import { getServiciosCliente } from "@/lib/actions/data";
@@ -23,6 +24,8 @@ import { getEstadoBadge } from "../page";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@/components/ui/tabs";
 import { RealizarPagoDialog } from "@/components/solicitudes/realizar-pago-dialog";
+import { AgendarReunionDialog } from "@/components/solicitudes/agendar-reunion-dialog";
+import { ReunionesFuturas } from "@/components/reuniones-futuras";
 import { useRouter } from "next/navigation";
 
 export default function SolicitudesEnviadasPage() {
@@ -33,6 +36,9 @@ export default function SolicitudesEnviadasPage() {
     open: boolean;
     solicitud: SolicitudRecibida | null;
   }>({ open: false, solicitud: null });
+  const [dialogoAgendarReunion, setDialogoAgendarReunion] = useState(false);
+  const [solicitudSeleccionada, setSolicitudSeleccionada] =
+    useState<SolicitudRecibida | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -83,6 +89,10 @@ export default function SolicitudesEnviadasPage() {
 
   const handleContactarProveedor = (solicitud: SolicitudRecibida) => {
     router.push(`/skillExchange/mensajes`);
+  };
+
+  const handleOperacionExitosa = () => {
+    cargarSolicitudes(); // Recargar las solicitudes
   };
 
   const renderSolicitudCard = (solicitud: SolicitudRecibida) => (
@@ -137,6 +147,12 @@ export default function SolicitudesEnviadasPage() {
           </div>
 
           {renderAcciones(solicitud)}
+
+          {solicitud.estado === "ejecucion" && (
+            <div className="mt-4 pt-4 border-t">
+              <ReunionesFuturas idMatch={solicitud.id} />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -192,11 +208,22 @@ export default function SolicitudesEnviadasPage() {
           <div className="flex gap-2 pt-2">
             <Button
               size="sm"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => {
+                setSolicitudSeleccionada(solicitud);
+                setDialogoAgendarReunion(true);
+              }}
+            >
+              <Video className="w-4 h-4 mr-1" />
+              Agendar Reunión
+            </Button>
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => handleContactarProveedor(solicitud)}
             >
               <MessageSquare className="w-4 h-4 mr-1" />
-              Contactar Proveedor
+              Enviar mensaje
             </Button>
             <Button size="sm" variant="ghost">
               Ver Progreso
@@ -363,6 +390,14 @@ export default function SolicitudesEnviadasPage() {
         }
         solicitud={pagoDialogState.solicitud}
       />
+      {solicitudSeleccionada && (
+        <AgendarReunionDialog
+          open={dialogoAgendarReunion}
+          onOpenChange={setDialogoAgendarReunion}
+          solicitud={solicitudSeleccionada}
+          onSuccess={handleOperacionExitosa}
+        />
+      )}
     </>
   );
 }

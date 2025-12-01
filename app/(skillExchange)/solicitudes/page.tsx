@@ -26,6 +26,7 @@ import { AceptarSolicitudDialog } from "@/components/solicitudes/aceptar-solicit
 import { RechazarSolicitudDialog } from "@/components/solicitudes/rechazar-solicitud-dialog";
 import { ConfirmarPagoDialog } from "@/components/solicitudes/confirmar-pago-dialog";
 import { FinalizarServicioDialog } from "@/components/solicitudes/finalizar-servicio-dialog";
+import { ReunionesFuturas } from "@/components/reuniones-futuras";
 import { MatchServicioEstado } from "@/lib/constants/enums";
 
 export function getEstadoBadge(estado: string) {
@@ -104,19 +105,35 @@ export default function SolicitudesRecibidasPage() {
         setLoading(false);
         return;
       }
-      const response = await getSolicitudesPrestamista(
-        MatchServicioEstado.SOLICITADO
-      );
 
-      if (response.success) {
-        setSolicitudes(response.data);
-      } else {
-        if (response.statusCode === 404) {
-          setSolicitudes([]);
-        } else {
-          setError(response.message);
+      // Cargar todas las solicitudes del prestamista (todos los estados)
+      const estados = [
+        MatchServicioEstado.SOLICITADO,
+        MatchServicioEstado.PENDIENTE_PAGO,
+        MatchServicioEstado.EJECUCION,
+        MatchServicioEstado.FINALIZADO,
+        MatchServicioEstado.RECHAZADO,
+      ];
+
+      const promises = estados.map((estado) =>
+        getSolicitudesPrestamista(estado)
+      );
+      const responses = await Promise.all(promises);
+
+      const allSolicitudes: SolicitudRecibida[] = [];
+      for (const response of responses) {
+        if (response.success && response.data) {
+          allSolicitudes.push(...response.data);
         }
       }
+
+      // Remover duplicados por id
+      const uniqueSolicitudes = allSolicitudes.filter(
+        (solicitud, index, self) =>
+          index === self.findIndex((s) => s.id === solicitud.id)
+      );
+
+      setSolicitudes(uniqueSolicitudes);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
@@ -192,7 +209,7 @@ export default function SolicitudesRecibidasPage() {
             </Button>
             <Button size="sm" variant="outline">
               <MessageSquare className="w-4 h-4 mr-1" />
-              Contactar Cliente
+              Enviar mensaje
             </Button>
             <Button size="sm" variant="ghost">
               Ver Detalles
@@ -215,7 +232,7 @@ export default function SolicitudesRecibidasPage() {
             </Button>
             <Button size="sm" variant="outline">
               <MessageSquare className="w-4 h-4 mr-1" />
-              Contactar Cliente
+              Enviar mensaje
             </Button>
             <Button size="sm" variant="ghost">
               Ver Progreso
@@ -301,6 +318,12 @@ export default function SolicitudesRecibidasPage() {
           </div>
 
           {renderAcciones(solicitud)}
+
+          {solicitud.estado === "ejecucion" && (
+            <div className="mt-4 pt-4 border-t">
+              <ReunionesFuturas idMatch={solicitud.id} />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

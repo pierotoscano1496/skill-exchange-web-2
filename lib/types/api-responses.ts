@@ -318,3 +318,44 @@ export interface ChatConversation {
   otherContact: ChatContact;
   messages: ChatMessage[];
 }
+
+export interface ReunionFutura {
+  id: string;
+  idMatchServicio: string;
+  plataforma: string;
+  linkReunion: string;
+  fechaHora: string;
+  descripcion: string;
+}
+
+export type DiaSemana =
+  | "lunes"
+  | "martes"
+  | "miercoles"
+  | "jueves"
+  | "viernes"
+  | "sabado"
+  | "domingo";
+
+export interface DisponibilidadUsuario {
+  id: string;
+  idUsuario: string;
+  dia: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface UsuarioDisponibilidadBody {
+  id?: string;
+  accion: "CREATE" | "UPDATE" | "DELETE";
+  dia: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface UsuarioDisponibilidadResponse {
+  id: string;
+  dia: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}

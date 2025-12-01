@@ -26,6 +26,10 @@ import type {
   SkillAsignadoResponse,
   CreateFirstMatchServicioBody,
   UpdateServicioRequestBody,
+  DisponibilidadUsuario,
+  UsuarioDisponibilidadBody,
+  UsuarioDisponibilidadResponse,
+  ReunionFutura,
 } from "../types/api-responses";
 import type {
   AceptarSolicitudRequest,
@@ -746,6 +750,53 @@ class ApiService {
         method: "PATCH",
         body: formData,
       },
+      true
+    );
+  }
+
+  async agendarReunion(data: {
+    idMatchServicio: string;
+    plataforma: string;
+    fechaHora: string;
+    descripcion: string;
+  }): Promise<ApiResponse<any>> {
+    return this.fetchApi<any>(
+      ENV_CONFIG.API.ENDPOINTS.MATCH_REUNION,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
+  }
+
+  async getReunionesFuturas(
+    idMatch: string
+  ): Promise<ApiResponse<ReunionFutura[]>> {
+    const endpoint = ENV_CONFIG.API.ENDPOINTS.MATCH_REUNIONES_FUTURAS.replace(
+      "$1",
+      idMatch
+    );
+    return this.fetchApi<ReunionFutura[]>(endpoint, {}, true);
+  }
+
+  async setDisponibilidad(
+    data: UsuarioDisponibilidadBody[]
+  ): Promise<ApiResponse<UsuarioDisponibilidadResponse[]>> {
+    return this.fetchApi<UsuarioDisponibilidadResponse[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_DISPONIBILIDAD,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+      },
+      true
+    );
+  }
+
+  async getDisponibilidad(): Promise<ApiResponse<DisponibilidadUsuario[]>> {
+    return this.fetchApi<DisponibilidadUsuario[]>(
+      ENV_CONFIG.API.ENDPOINTS.USUARIO_DISPONIBILIDAD,
+      {},
       true
     );
   }
