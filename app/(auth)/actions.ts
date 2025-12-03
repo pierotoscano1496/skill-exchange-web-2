@@ -12,7 +12,12 @@ type JwtPayload = { exp: number; [k: string]: unknown };
 function setCookie(
   name: string,
   value: string,
-  opts: { expires?: Date; path?: string; secure?: boolean; sameSite?: "lax" | "strict" | "none" } = {}
+  opts: {
+    expires?: Date;
+    path?: string;
+    secure?: boolean;
+    sameSite?: "lax" | "strict" | "none";
+  } = {}
 ) {
   let cookie = `${name}=${encodeURIComponent(value)}`;
   if (opts.expires) cookie += `; Expires=${opts.expires.toUTCString()}`;
@@ -46,6 +51,20 @@ export async function loginAction(email: string, password: string) {
     );
 
     if (!res.ok) {
+      if (res.status === 401) {
+        // Intentar obtener el mensaje del body
+        const errorData = await res.json().catch(() => ({}));
+        if (
+          errorData.message?.includes("verifica") ||
+          errorData.message?.includes("email")
+        ) {
+          return {
+            ok: false,
+            error:
+              "Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.",
+          };
+        }
+      }
       return { ok: false, error: "Credenciales inválidas." };
     }
 

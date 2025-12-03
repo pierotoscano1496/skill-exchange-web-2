@@ -156,9 +156,7 @@ export default function RegisterStep4Page() {
       if (response.success) {
         setSuccess(true);
         localStorage.removeItem("registrationData");
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
+        // No redirigir automáticamente, mostrar mensaje de verificación
       } else {
         setApiError(response.message || "Ocurrió un error desconocido.");
       }
@@ -199,8 +197,8 @@ export default function RegisterStep4Page() {
               <Check className="h-4 w-4" />
               <AlertTitle>¡Registro completado!</AlertTitle>
               <AlertDescription>
-                Tu cuenta ha sido creada exitosamente. Serás redirigido al
-                inicio de sesión en unos segundos.
+                Tu cuenta ha sido creada exitosamente. Revisa tu email para
+                verificar tu cuenta antes de iniciar sesión.
               </AlertDescription>
             </Alert>
           ) : (
@@ -332,13 +330,19 @@ export default function RegisterStep4Page() {
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> Atrás
           </Button>
-          <Button onClick={handleRegister} disabled={isLoading || success}>
-            {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              "Finalizar registro"
-            )}
-          </Button>
+          {success ? (
+            <Button onClick={() => router.push("/login")}>
+              Ir al inicio de sesión
+            </Button>
+          ) : (
+            <Button onClick={handleRegister} disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Finalizar registro"
+              )}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </div>

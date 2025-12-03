@@ -31,6 +31,7 @@ export interface Usuario {
   perfilTiktok: string;
   introduccion: string;
   foto?: string;
+  emailVerified: boolean;
   skills: SkillAsignadoResponse[];
 }
 

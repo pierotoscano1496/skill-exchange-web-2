@@ -6,6 +6,8 @@ export const ENV_CONFIG = {
     ENDPOINTS: {
       LOGIN: "/auth/login",
       LOGOUT: "/auth/logout",
+      VERIFY_EMAIL: "/auth/verify-email",
+      RESEND_VERIFICATION: "/auth/resend-verification",
       SKILLS: "/skill",
       CATEGORIAS: "/categoria",
       SUB_CATEGORIAS_BY_CATEGORIA: "/sub-categoria/categoria",
